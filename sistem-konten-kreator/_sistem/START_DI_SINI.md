@@ -1,6 +1,6 @@
 # Start Di Sini
 
-### Buka file ini setiap kali mau MEMBUAT sesuatu yang baru di sistem ini (bukan untuk produksi konten harian — untuk itu langsung ke `05_CONTENT_PRODUCTION_PIPELINE.md` via Channel Brief/Model Konten Brief yang relevan). File ini cuma peta pendek, bukan prompt itu sendiri. Ini file untuk agent (dibaca sebagai bagian dari sistem), untuk panduan lengkap cara mulai dari nol lihat `PANDUAN_PENGGUNA.md`.
+### Buka file ini setiap kali mau MEMBUAT sesuatu yang baru di sistem ini (bukan untuk produksi konten harian — untuk itu langsung ke `05_CONTENT_PRODUCTION_PIPELINE.md` via Channel Brief/Model Konten Brief yang relevan). File ini cuma peta pendek, bukan prompt itu sendiri. Ini file untuk agent (dibaca sebagai bagian dari sistem), untuk panduan lengkap cara mulai dari nol lihat `panduan/PANDUAN_PENGGUNA.md`.
 
 ---
 

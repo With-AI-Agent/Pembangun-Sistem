@@ -71,3 +71,14 @@ Dibaca sekali saat Discovery Level-0 sistem baru dimulai (lihat `01_DISCOVERY_LE
 **Pemisahan Konsistensi Visual vs Non-Visual** — ini prinsip dari Sistem Konten Kreator yang SPESIFIK ke domain itu, TIDAK otomatis berlaku ke sistem lain. Prinsip ini soal jangkar visual (gambar referensi) vs jangkar teks (deskripsi + contoh) — cuma relevan kalau sistem yang dibangun memang melibatkan elemen visual yang harus konsisten. Sistem berbasis teks murni (misal beberapa jenis ruang belajar atau fondasi aplikasi) mungkin tidak butuh pemisahan ini sama sekali — tapi MUNGKIN SAJA butuh jenis "konsistensi" lain yang analog (misal konsistensi skema data, konsistensi gaya penilaian) yang perlu digali sendiri saat Discovery Level-0, bukan mewarisi definisi dari sistem konten kreator.
 
 Ini dicantumkan sebagai contoh supaya jelas: **tidak semua yang terbukti works di 1 sistem otomatis jadi "universal"** — 5 prinsip di atas sudah dipilah khusus karena memang generik, prinsip lain yang tidak disebutkan di dokumen ini dianggap spesifik-domain kecuali dibuktikan sebaliknya lewat pemakaian nyata.
+
+
+## 6. Prinsip Quality Assurance & Evolusi
+
+**Inti:** setiap sistem yang dibangun harus memiliki cara untuk memeriksa kualitas dirinya, memperbaiki diri berdasarkan bukti, dan memverifikasi outputnya. Prinsip ini terdiri dari tiga lapisan: meta-sistem terhadap dirinya sendiri, sistem domain terhadap dirinya sendiri, dan sistem terhadap output yang dihasilkan.
+
+**Syarat berlaku:** default berlaku untuk semua sistem. Kedalaman audit disesuaikan dengan risiko. Lapisan atau bagian tertentu boleh di-override jika tidak relevan atau pengguna meminta secara eksplisit, tetapi override wajib dicatat beserta alasan, dampak, dan approval.
+
+**Batas penting:** audit menghasilkan temuan atau proposal; audit tidak otomatis mengubah keputusan yang sudah dikunci. Perubahan mengikuti alur observasi → analisis → proposal → diskusi → keputusan → implementasi → verifikasi → rilis. Setiap perubahan harus memiliki bukti, regression check, versi, dan rencana rollback yang sesuai risikonya. Detail prosedur ada di `QUALITY_ASSURANCE_AND_EVOLUTION.md`.
+
+**Kenapa universal:** semua sistem dapat mengalami drift, bug, perubahan kebutuhan, dan penurunan kualitas. Yang berbeda per domain adalah objek output, indikator kualitas, kedalaman pemeriksaan, dan cara rollback — bukan kebutuhan dasarnya untuk memiliki loop perbaikan yang terkendali.

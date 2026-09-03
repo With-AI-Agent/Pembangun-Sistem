@@ -26,7 +26,8 @@ repo-utama/
 │   ├── SYSTEM_MANIFEST_TEMPLATE.md   ← kontrak identitas tiap sistem
 │   ├── DEFINITION_OF_DONE.md         ← kriteria selesai dan rilis
 │   ├── PROTOKOL_CHECKPOINT_RECOVERY.md ← status persisten dan pemulihan
-│   └── QUALITY_ASSURANCE_AND_EVOLUTION.md ← audit, upgrade, dan rollback tiga lapisan
+│   ├── QUALITY_ASSURANCE_AND_EVOLUTION.md ← audit, upgrade, dan rollback tiga lapisan
+│   └── ACCEPTANCE_TESTS.md            ← skenario uji perilaku meta-sistem
 │
 ├── sistem-[nama-1]/                  ← misal sistem-konten-kreator/
 │   └── (struktur & jumlah file BEDA-BEDA per sistem, ditentukan hasil
@@ -170,7 +171,7 @@ Dokumen audit dan draft di `_meta/_internal/` adalah referensi master, bukan ins
 
 ## Prinsip yang Berlaku di Semua Sistem
 
-Lihat `02_PRINSIP_UNIVERSAL.md` untuk daftar lengkap + penjelasan. Ringkasnya: Hierarki (kalau relevan), Rantai/Chaining, Approval Bertingkat, Checkpoint & Verifikasi Konsistensi (kalau relevan), Log Keputusan tetap dipertahankan. Semua ini DEFAULT berlaku, tapi tiap sistem boleh override kalau memang tidak cocok untuk domainnya — asal dicatat alasannya di dokumen sistem itu.
+Lihat `02_PRINSIP_UNIVERSAL.md` untuk daftar lengkap + penjelasan. Ringkasnya: Hierarki (kalau relevan), Rantai/Chaining, Approval Bertingkat, Checkpoint & Verifikasi Konsistensi (kalau relevan), Log Keputusan, serta Quality Assurance & Evolusi tetap dipertahankan. Semua ini DEFAULT berlaku, tapi tiap sistem boleh override kalau memang tidak cocok untuk domainnya — asal dicatat alasannya di dokumen sistem itu.
 
 ---
 
