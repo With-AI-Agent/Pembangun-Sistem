@@ -19,6 +19,7 @@ Setelah 1 sistem berhasil dibangun dan teruji (Sistem Konten Kreator — lihat `
 ```
 repo-utama/
 ├── _meta/
+│   ├── SYSTEM_MANIFEST.md            ← manifest meta-sistem ini
 │   ├── 00_CARA_KERJA_META.md         ← file ini
 │   ├── 01_DISCOVERY_LEVEL_0.md       ← gali "sistem apa ini, struktur macam apa"
 │   ├── 02_PRINSIP_UNIVERSAL.md       ← prinsip default untuk semua sistem

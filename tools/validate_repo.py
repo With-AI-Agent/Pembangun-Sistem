@@ -5,6 +5,7 @@ import sys
 
 ROOT = Path(__file__).resolve().parents[1]
 required = [
+    "_meta/SYSTEM_MANIFEST.md",
     "_meta/00_CARA_KERJA_META.md",
     "_meta/01_DISCOVERY_LEVEL_0.md",
     "_meta/02_PRINSIP_UNIVERSAL.md",
@@ -13,6 +14,7 @@ required = [
     "_meta/DEFINITION_OF_DONE.md",
     "_meta/PROTOKOL_CHECKPOINT_RECOVERY.md",
     "_meta/QUALITY_ASSURANCE_AND_EVOLUTION.md",
+    "_meta/ACCEPTANCE_TESTS.md",
     "PANDUAN_PENGGUNA.md",
     "_cadangan-claude/RINGKASAN_sistem-konten-kreator.md",
     "sistem-konten-kreator/SYSTEM_MANIFEST.md",
