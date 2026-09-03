@@ -4,7 +4,8 @@ Repo ini berisi sistem lengkap untuk membangun dan memproduksi konten kreator de
 
 ## Struktur Cepat
 
-- `_sistem/` — 10 dokumen sistem (00–08, 09_AUDIT) + START_DI_SINI.md
+- `SYSTEM_MANIFEST.md` — kartu identitas, dependency, risiko, dan gate rilis
+- `_sistem/` — dokumen instruksi sistem (00–08, START_DI_SINI, status template, dan audit historis)
 - `panduan/` — PANDUAN_PENGGUNA.md (panduan praktis + prompt universal)
 - `channel-[nama]/` — akan dibuat saat ada channel baru
 - `konsistensi-visual/` / `konsistensi-lintas-channel/` — bank konsistensi visual
