@@ -19,10 +19,18 @@ Setelah 1 sistem berhasil dibangun dan teruji (Sistem Konten Kreator — lihat `
 ```
 repo-utama/
 ├── _meta/
+│   ├── SYSTEM_MANIFEST.md            ← manifest meta-sistem ini
 │   ├── 00_CARA_KERJA_META.md         ← file ini
 │   ├── 01_DISCOVERY_LEVEL_0.md       ← gali "sistem apa ini, struktur macam apa"
 │   ├── 02_PRINSIP_UNIVERSAL.md       ← prinsip default untuk semua sistem
-│   └── INDEKS_SISTEM.md              ← daftar semua sistem + status
+│   ├── INDEKS_SISTEM.md              ← daftar semua sistem + status
+│   ├── SYSTEM_MANIFEST_TEMPLATE.md   ← kontrak identitas tiap sistem
+│   ├── DEFINITION_OF_DONE.md         ← kriteria selesai dan rilis
+│   ├── PROTOKOL_CHECKPOINT_RECOVERY.md ← status persisten dan pemulihan
+│   ├── QUALITY_ASSURANCE_AND_EVOLUTION.md ← audit, upgrade, dan rollback tiga lapisan
+│   ├── ACCEPTANCE_TESTS.md            ← skenario uji perilaku meta-sistem
+│   ├── SESSION_REPORT_TEMPLATE.md     ← format laporan awal setiap sesi
+│   └── FAILURE_INJECTION_TESTS.md    ← uji jalur gagal dan state abnormal
 │
 ├── sistem-[nama-1]/                  ← misal sistem-konten-kreator/
 │   └── (struktur & jumlah file BEDA-BEDA per sistem, ditentukan hasil
@@ -58,10 +66,11 @@ Berlaku sama seperti yang sudah terbukti penting di Sistem Konten Kreator: GitHu
 ## Kapan Pakai File yang Mana
 
 **APAPUN tujuan sesi ini, WAJIB dilakukan dulu di awal (Entry Point tingkat repo):**
-1. Cek apakah ada PR yang masih terbuka/menggantung di repo ini — dari SISTEM MANAPUN, bukan cuma sistem yang mau dikerjakan sekarang. Karena repo ini menampung banyak sistem sekaligus, PR menggantung dari sistem lain bisa gampang terlupakan kalau tidak dicek di level repo, bukan cuma di level 1 sistem.
-2. Cek `INDEKS_SISTEM.md` untuk tahu sistem apa saja yang ada dan statusnya.
+1. Buat laporan awal mengikuti `SESSION_REPORT_TEMPLATE.md`; verifikasi repo, branch, working tree, commit, dan PR.
+2. Cek apakah ada PR yang masih terbuka/menggantung di repo ini — dari SISTEM MANAPUN, bukan cuma sistem yang mau dikerjakan sekarang. Karena repo ini menampung banyak sistem sekaligus, PR menggantung dari sistem lain bisa gampang terlupakan kalau tidak dicek di level repo, bukan cuma di level 1 sistem.
+3. Cek `INDEKS_SISTEM.md` untuk tahu sistem apa saja yang ada dan statusnya.
 
-Baru setelah itu, arahkan sesuai tujuan:
+Baru setelah itu, arahkan sesuai tujuan. Jika state tidak konsisten, gunakan `FAILURE_INJECTION_TESTS.md` sebagai aturan berhenti dan recovery:
 
 **Mau bangun sistem BARU dari nol** → mulai dari `01_DISCOVERY_LEVEL_0.md`, ikuti alur di bagian "Alur Kerja: Membangun Sistem Baru dari Nol" di bawah.
 
@@ -83,8 +92,9 @@ Baru setelah itu, arahkan sesuai tujuan:
      JUGA prompt Discovery detailnya — baru peta dokumen apa saja yang
      akan dibangun, dengan fungsi masing-masing)
 
-2. BUAT FOLDER sistem-[nama-baru]/, skeleton KOSONG sesuai rencana
-   kerangka dari Langkah 1
+2. BUAT folder `sistem-[nama-baru]/` dan salin `SYSTEM_MANIFEST_TEMPLATE.md`
+   menjadi manifest sistem tersebut. Buat skeleton kosong sesuai rencana
+   kerangka dari Langkah 1.
 
 3. UNTUK TIAP DOKUMEN yang direncanakan: TULIS DULU prompt Discovery
    detailnya (dokumen generator, setara 01_BRAND_CORE.md/
@@ -99,11 +109,11 @@ Baru setelah itu, arahkan sesuai tujuan:
 
 5. AUDIT MENYELURUH sebelum dianggap selesai — baca ulang semua dokumen,
    cross-check konsistensi rujukan, verifikasi tidak ada yang hilang/
-   kontradiktif (lakukan lebih dari 1 putaran kalau sistemnya kompleks —
-   lihat pengalaman audit Sistem Konten Kreator sebagai acuan seberapa
-   dalam ini perlu dilakukan)
+   kontradiktif, jalankan `DEFINITION_OF_DONE.md`, dan uji recovery.
+   Lakukan lebih dari 1 putaran kalau sistemnya kompleks — lihat pengalaman
+   audit Sistem Konten Kreator sebagai acuan seberapa dalam ini perlu dilakukan.
 
-6. UPDATE INDEKS_SISTEM.md — tambah entri sistem baru ini, tanggal dibuat
+6. UPDATE `INDEKS_SISTEM.md` — tambah entri sistem baru ini, tanggal dibuat
 
 7. BUAT RINGKASAN_sistem-[nama-baru].md di _cadangan-claude/
 ```
@@ -155,9 +165,17 @@ Baru setelah itu, arahkan sesuai tujuan:
 
 ---
 
+## Lapisan Kendali dan Definition of Done
+
+Selain dokumen instruksi aktif, setiap sistem baru wajib mewarisi mekanisme pemeriksaan, audit, evolusi, dan verifikasi output tiga lapisan dari `QUALITY_ASSURANCE_AND_EVOLUTION.md`, kecuali override eksplisit dicatat di manifest. Setiap sistem baru juga wajib memiliki manifest dan status kerja yang dapat dibaca lintas sesi. Gunakan `SYSTEM_MANIFEST_TEMPLATE.md` sebagai dasar, `DEFINITION_OF_DONE.md` untuk menentukan apakah hasil benar-benar selesai, dan `PROTOKOL_CHECKPOINT_RECOVERY.md` untuk menyimpan progres serta memulihkan sesi yang terputus.
+
+Status “selesai” tidak berarti file sudah ditulis. Status tersebut baru boleh digunakan setelah acceptance checklist terpenuhi, dependency diverifikasi, approval selesai, dan perubahan tersedia di branch/PR yang benar.
+
+Dokumen audit dan draft di `_meta/_internal/` adalah referensi master, bukan instruksi kerja yang harus diikuti pada setiap sesi. Jika instruksi aktif bertentangan dengan catatan sejarah, instruksi aktif dan keputusan terbaru yang sudah disetujui menjadi acuan; konflik tetap harus dilaporkan, bukan ditebak.
+
 ## Prinsip yang Berlaku di Semua Sistem
 
-Lihat `02_PRINSIP_UNIVERSAL.md` untuk daftar lengkap + penjelasan. Ringkasnya: Hierarki (kalau relevan), Rantai/Chaining, Approval Bertingkat, Checkpoint & Verifikasi Konsistensi (kalau relevan), Log Keputusan tetap dipertahankan. Semua ini DEFAULT berlaku, tapi tiap sistem boleh override kalau memang tidak cocok untuk domainnya — asal dicatat alasannya di dokumen sistem itu.
+Lihat `02_PRINSIP_UNIVERSAL.md` untuk daftar lengkap + penjelasan. Ringkasnya: Hierarki (kalau relevan), Rantai/Chaining, Approval Bertingkat, Checkpoint & Verifikasi Konsistensi (kalau relevan), Log Keputusan, serta Quality Assurance & Evolusi tetap dipertahankan. Semua ini DEFAULT berlaku, tapi tiap sistem boleh override kalau memang tidak cocok untuk domainnya — asal dicatat alasannya di dokumen sistem itu.
 
 ---
 

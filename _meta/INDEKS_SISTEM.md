@@ -16,7 +16,7 @@
 
 | Nama Sistem | Folder | Status | Terakhir Disentuh | Catatan |
 |---|---|---|---|---|
-| Sistem Konten Kreator | `sistem-konten-kreator/` | Selesai, teraudit 2x | 2 September 2026 | Sistem pertama, jadi bukti/contoh acuan untuk meta-sistem ini |
+| Sistem Konten Kreator | `sistem-konten-kreator/` | Sedang diperbaiki setelah audit independen | 3 September 2026 | Kandidat sistem contoh; belum ditetapkan sebagai acuan final |
 
 *(Tambah baris baru di bawah ini untuk tiap sistem baru yang dibangun)*
 

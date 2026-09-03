@@ -13,7 +13,8 @@ Baca dulu _meta/00_CARA_KERJA_META.md dari repo ini untuk paham cara
 kerja repo ini secara keseluruhan.
 
 Setelah itu:
-1. Cek apakah ada PR yang masih terbuka/menggantung di repo ini (dari
+1. Minta agent membuat laporan awal sesuai `_meta/SESSION_REPORT_TEMPLATE.md`, termasuk branch, working tree, commit, PR, status sistem, konteks yang dibaca, dan blocker.
+2. Cek apakah ada PR yang masih terbuka/menggantung di repo ini (dari
    sistem manapun, tidak cuma yang mau aku kerjakan sekarang) — laporkan
    ke aku kalau ada, karena itu tandanya ada kerjaan lama yang belum
    selesai di-merge.
@@ -33,6 +34,12 @@ cukup baca yang relevan dengan apa yang aku mau kerjakan.
 **Berlaku untuk SEMUA situasi** — baik kamu baru pertama kali sentuh repo ini, mau bikin sistem baru yang benar-benar baru, atau mau lanjut sistem yang sudah kamu tinggal setahun. Agent akan menyesuaikan sendiri berdasarkan apa yang dia temukan di `INDEKS_SISTEM.md`.
 
 ---
+
+## Setelah Baseline Di-merge — Prompt Handoff
+
+Untuk melanjutkan pekerjaan setelah merge atau setelah sesi terputus, gunakan prompt lengkap yang tersimpan di `_meta/NEXT_SESSION_PROMPT.md`. Prompt tersebut lebih aman daripada hanya berkata "lanjutkan", karena agent diwajibkan memverifikasi ulang repository, branch, PR, manifest, handoff, index, dan konteks yang dibaca.
+
+Prompt tersebut membangun ulang konteks dari file resmi. Ia tidak menjamin agent mengetahui hal yang hanya pernah dibahas di chat atau informasi yang tidak tersimpan di branch.
 
 ## Kalau Kamu Sudah Tahu Persis Mau Ngapain (opsional, boleh dipakai langsung)
 
