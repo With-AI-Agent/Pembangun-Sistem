@@ -13,7 +13,8 @@ Baca dulu _meta/00_CARA_KERJA_META.md dari repo ini untuk paham cara
 kerja repo ini secara keseluruhan.
 
 Setelah itu:
-1. Cek apakah ada PR yang masih terbuka/menggantung di repo ini (dari
+1. Minta agent membuat laporan awal sesuai `_meta/SESSION_REPORT_TEMPLATE.md`, termasuk branch, working tree, commit, PR, status sistem, konteks yang dibaca, dan blocker.
+2. Cek apakah ada PR yang masih terbuka/menggantung di repo ini (dari
    sistem manapun, tidak cuma yang mau aku kerjakan sekarang) — laporkan
    ke aku kalau ada, karena itu tandanya ada kerjaan lama yang belum
    selesai di-merge.

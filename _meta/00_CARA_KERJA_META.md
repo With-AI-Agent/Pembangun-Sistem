@@ -28,7 +28,9 @@ repo-utama/
 │   ├── DEFINITION_OF_DONE.md         ← kriteria selesai dan rilis
 │   ├── PROTOKOL_CHECKPOINT_RECOVERY.md ← status persisten dan pemulihan
 │   ├── QUALITY_ASSURANCE_AND_EVOLUTION.md ← audit, upgrade, dan rollback tiga lapisan
-│   └── ACCEPTANCE_TESTS.md            ← skenario uji perilaku meta-sistem
+│   ├── ACCEPTANCE_TESTS.md            ← skenario uji perilaku meta-sistem
+│   ├── SESSION_REPORT_TEMPLATE.md     ← format laporan awal setiap sesi
+│   └── FAILURE_INJECTION_TESTS.md    ← uji jalur gagal dan state abnormal
 │
 ├── sistem-[nama-1]/                  ← misal sistem-konten-kreator/
 │   └── (struktur & jumlah file BEDA-BEDA per sistem, ditentukan hasil
@@ -64,10 +66,11 @@ Berlaku sama seperti yang sudah terbukti penting di Sistem Konten Kreator: GitHu
 ## Kapan Pakai File yang Mana
 
 **APAPUN tujuan sesi ini, WAJIB dilakukan dulu di awal (Entry Point tingkat repo):**
-1. Cek apakah ada PR yang masih terbuka/menggantung di repo ini — dari SISTEM MANAPUN, bukan cuma sistem yang mau dikerjakan sekarang. Karena repo ini menampung banyak sistem sekaligus, PR menggantung dari sistem lain bisa gampang terlupakan kalau tidak dicek di level repo, bukan cuma di level 1 sistem.
-2. Cek `INDEKS_SISTEM.md` untuk tahu sistem apa saja yang ada dan statusnya.
+1. Buat laporan awal mengikuti `SESSION_REPORT_TEMPLATE.md`; verifikasi repo, branch, working tree, commit, dan PR.
+2. Cek apakah ada PR yang masih terbuka/menggantung di repo ini — dari SISTEM MANAPUN, bukan cuma sistem yang mau dikerjakan sekarang. Karena repo ini menampung banyak sistem sekaligus, PR menggantung dari sistem lain bisa gampang terlupakan kalau tidak dicek di level repo, bukan cuma di level 1 sistem.
+3. Cek `INDEKS_SISTEM.md` untuk tahu sistem apa saja yang ada dan statusnya.
 
-Baru setelah itu, arahkan sesuai tujuan:
+Baru setelah itu, arahkan sesuai tujuan. Jika state tidak konsisten, gunakan `FAILURE_INJECTION_TESTS.md` sebagai aturan berhenti dan recovery:
 
 **Mau bangun sistem BARU dari nol** → mulai dari `01_DISCOVERY_LEVEL_0.md`, ikuti alur di bagian "Alur Kerja: Membangun Sistem Baru dari Nol" di bawah.
 

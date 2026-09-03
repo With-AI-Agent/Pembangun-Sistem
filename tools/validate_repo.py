@@ -15,6 +15,8 @@ required = [
     "_meta/PROTOKOL_CHECKPOINT_RECOVERY.md",
     "_meta/QUALITY_ASSURANCE_AND_EVOLUTION.md",
     "_meta/ACCEPTANCE_TESTS.md",
+    "_meta/SESSION_REPORT_TEMPLATE.md",
+    "_meta/FAILURE_INJECTION_TESTS.md",
     "PANDUAN_PENGGUNA.md",
     "_cadangan-claude/RINGKASAN_sistem-konten-kreator.md",
     "sistem-konten-kreator/SYSTEM_MANIFEST.md",
