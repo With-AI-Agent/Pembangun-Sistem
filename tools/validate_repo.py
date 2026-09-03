@@ -19,6 +19,14 @@ required = [
     "sistem-konten-kreator/QUALITY_ASSURANCE_AND_EVOLUTION.md",
     "sistem-konten-kreator/_sistem/START_DI_SINI.md",
     "sistem-konten-kreator/_sistem/STATUS_TEMPLATE.md",
+    "sistem-pilot-catatan-belajar/SYSTEM_MANIFEST.md",
+    "sistem-pilot-catatan-belajar/START_DI_SINI.md",
+    "sistem-pilot-catatan-belajar/WORKFLOW.md",
+    "sistem-pilot-catatan-belajar/OUTPUT_TEMPLATE.md",
+    "sistem-pilot-catatan-belajar/QUALITY.md",
+    "sistem-pilot-catatan-belajar/STATUS_TEMPLATE.md",
+    "sistem-pilot-catatan-belajar/unit-aktif/pilot-001/STATUS.md",
+    "sistem-pilot-catatan-belajar/unit-aktif/pilot-001/OUTPUT.md",
 ]
 errors = []
 for rel in required:
@@ -37,6 +45,8 @@ for p in ROOT.rglob("*.md"):
 index = (ROOT / "_meta/INDEKS_SISTEM.md").read_text(encoding="utf-8")
 if "sistem-konten-kreator/" not in index:
     errors.append("index does not contain the content creator system")
+if "sistem-pilot-catatan-belajar/" in index:
+    errors.append("pilot must not be listed as an active system")
 
 if errors:
     print("VALIDATION FAILED")

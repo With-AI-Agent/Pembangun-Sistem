@@ -5,7 +5,7 @@
 - **Status:** `candidate — remediation in progress`
 - **Versi:** `0.2.0-audit-remediation`
 - **Pemilik keputusan:** pengguna
-- **Entry point agent:** `_sistem/PROMPT_ENTRI_UNIVERSAL.md` atau `PROMPT_ENTRI_UNIVERSAL.md`
+- **Entry point agent:** `PROMPT_ENTRI_UNIVERSAL.md` (atau bagian Prompt Pembuka Universal di `panduan/PANDUAN_PENGGUNA.md`)
 - **Entry point navigasi:** `_sistem/START_DI_SINI.md`
 - **Instruksi utama:** `_sistem/00_CARA_PAKAI_SISTEM.md`
 - **Living documents:** Brand Core, Channel Brief, Bank Konsistensi Visual, Model Konten Brief, arsip naskah
