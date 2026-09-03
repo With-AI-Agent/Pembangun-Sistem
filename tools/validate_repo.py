@@ -23,6 +23,7 @@ required = [
     "sistem-konten-kreator/QUALITY_ASSURANCE_AND_EVOLUTION.md",
     "sistem-konten-kreator/_sistem/START_DI_SINI.md",
     "sistem-konten-kreator/_sistem/STATUS_TEMPLATE.md",
+    "sistem-pilot-catatan-belajar/SESSION_REPORT.md",
     "sistem-pilot-catatan-belajar/SYSTEM_MANIFEST.md",
     "sistem-pilot-catatan-belajar/START_DI_SINI.md",
     "sistem-pilot-catatan-belajar/WORKFLOW.md",

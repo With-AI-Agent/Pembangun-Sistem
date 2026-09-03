@@ -77,3 +77,8 @@ FAILURE-INJECTION TESTS PASSED: 4 fail-closed scenarios
 ```
 
 Tes ini memvalidasi kontrak file dan perilaku fail-closed secara deterministik. Ini belum menggantikan pengujian sesi agent yang benar-benar terputus atau review pengguna.
+
+
+## Session Report Check
+
+Pilot menghasilkan laporan sesi dengan branch, PR, konteks dibaca, konteks dilewati beserta alasan, output terakhir, blocker, dan tujuan sesi. Secara struktural ini menutup B-01 dan B-02 untuk jalur pilot. Verifikasi tool dan interaksi pengguna nyata tetap diperlukan untuk membuktikan perilaku di luar fixture.
