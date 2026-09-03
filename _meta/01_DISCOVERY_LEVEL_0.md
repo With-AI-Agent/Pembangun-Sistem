@@ -120,8 +120,14 @@ sistemnya.
 
 ## Setelah selesai
 
-1. Hasilnya tersimpan di `sistem-[nama-sistem]/00_RENCANA_KERANGKA.md`, sudah lewat PR dan merge ke `main`.
-2. Untuk tiap dokumen yang direncanakan dengan status "perlu prompt Discovery detail" — tulis dulu prompt generatornya (pola sama seperti menulis `02_CHANNEL_DISCOVERY_PROMPT.md` dari nol, disesuaikan isi pertanyaannya dengan kebutuhan sistem ini), simpan di dalam folder `sistem-[nama-sistem]/` yang sama.
-3. Untuk dokumen dengan status "cukup template biasa" — bisa langsung dibuat template-nya (pola sama seperti `03_TEMPLATE_CHANNEL_BRIEF.md`), tidak perlu prompt diskusi panjang.
-4. Setelah semua dokumen generator/template siap, baru mulai jalankan satu-satu untuk mengisi konten sistem yang sebenarnya.
-5. Update `INDEKS_SISTEM.md` dengan entri sistem baru ini begitu rencana kerangka sudah di-merge (statusnya masih "Kerangka dibuat, isi belum" — update lagi statusnya seiring progres).
+1. Salin `SYSTEM_MANIFEST_TEMPLATE.md` ke folder sistem baru dan isi
+   identitas awalnya.
+2. Hasilnya tersimpan di `sistem-[nama-sistem]/00_RENCANA_KERANGKA.md`, sudah lewat PR dan merge ke `main`.
+3. Untuk tiap dokumen yang direncanakan dengan status "perlu prompt Discovery detail" — tulis dulu prompt generatornya (pola sama seperti menulis `02_CHANNEL_DISCOVERY_PROMPT.md` dari nol, disesuaikan isi pertanyaannya dengan kebutuhan sistem ini), simpan di dalam folder `sistem-[nama-sistem]/` yang sama.
+4. Untuk dokumen dengan status "cukup template biasa" — bisa langsung dibuat template-nya (pola sama seperti `03_TEMPLATE_CHANNEL_BRIEF.md`), tidak perlu prompt diskusi panjang.
+5. Setelah semua dokumen generator/template siap, baru mulai jalankan satu-satu untuk mengisi konten sistem yang sebenarnya.
+6. Jalankan `DEFINITION_OF_DONE.md` secara bertahap; jangan tandai
+   sistem sebagai selesai sebelum checkpoint, dependency, dan recovery
+   dapat diverifikasi.
+7. Update `INDEKS_SISTEM.md` dengan entri sistem baru ini begitu rencana kerangka sudah di-merge (statusnya masih "Kerangka dibuat, isi belum" — update lagi statusnya seiring progres).
+8. Buat ringkasan cadangan setelah struktur dan status sistem cukup stabil; ringkasan harus menyebutkan versi serta bagian yang belum selesai.

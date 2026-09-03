@@ -22,7 +22,11 @@ repo-utama/
 │   ├── 00_CARA_KERJA_META.md         ← file ini
 │   ├── 01_DISCOVERY_LEVEL_0.md       ← gali "sistem apa ini, struktur macam apa"
 │   ├── 02_PRINSIP_UNIVERSAL.md       ← prinsip default untuk semua sistem
-│   └── INDEKS_SISTEM.md              ← daftar semua sistem + status
+│   ├── INDEKS_SISTEM.md              ← daftar semua sistem + status
+│   ├── SYSTEM_MANIFEST_TEMPLATE.md   ← kontrak identitas tiap sistem
+│   ├── DEFINITION_OF_DONE.md         ← kriteria selesai dan rilis
+│   ├── PROTOKOL_CHECKPOINT_RECOVERY.md ← status persisten dan pemulihan
+│   └── QUALITY_ASSURANCE_AND_EVOLUTION.md ← audit, upgrade, dan rollback tiga lapisan
 │
 ├── sistem-[nama-1]/                  ← misal sistem-konten-kreator/
 │   └── (struktur & jumlah file BEDA-BEDA per sistem, ditentukan hasil
@@ -83,8 +87,9 @@ Baru setelah itu, arahkan sesuai tujuan:
      JUGA prompt Discovery detailnya — baru peta dokumen apa saja yang
      akan dibangun, dengan fungsi masing-masing)
 
-2. BUAT FOLDER sistem-[nama-baru]/, skeleton KOSONG sesuai rencana
-   kerangka dari Langkah 1
+2. BUAT folder `sistem-[nama-baru]/` dan salin `SYSTEM_MANIFEST_TEMPLATE.md`
+   menjadi manifest sistem tersebut. Buat skeleton kosong sesuai rencana
+   kerangka dari Langkah 1.
 
 3. UNTUK TIAP DOKUMEN yang direncanakan: TULIS DULU prompt Discovery
    detailnya (dokumen generator, setara 01_BRAND_CORE.md/
@@ -99,11 +104,11 @@ Baru setelah itu, arahkan sesuai tujuan:
 
 5. AUDIT MENYELURUH sebelum dianggap selesai — baca ulang semua dokumen,
    cross-check konsistensi rujukan, verifikasi tidak ada yang hilang/
-   kontradiktif (lakukan lebih dari 1 putaran kalau sistemnya kompleks —
-   lihat pengalaman audit Sistem Konten Kreator sebagai acuan seberapa
-   dalam ini perlu dilakukan)
+   kontradiktif, jalankan `DEFINITION_OF_DONE.md`, dan uji recovery.
+   Lakukan lebih dari 1 putaran kalau sistemnya kompleks — lihat pengalaman
+   audit Sistem Konten Kreator sebagai acuan seberapa dalam ini perlu dilakukan.
 
-6. UPDATE INDEKS_SISTEM.md — tambah entri sistem baru ini, tanggal dibuat
+6. UPDATE `INDEKS_SISTEM.md` — tambah entri sistem baru ini, tanggal dibuat
 
 7. BUAT RINGKASAN_sistem-[nama-baru].md di _cadangan-claude/
 ```
@@ -154,6 +159,14 @@ Baru setelah itu, arahkan sesuai tujuan:
 ```
 
 ---
+
+## Lapisan Kendali dan Definition of Done
+
+Selain dokumen instruksi aktif, setiap sistem baru wajib mewarisi mekanisme pemeriksaan, audit, evolusi, dan verifikasi output tiga lapisan dari `QUALITY_ASSURANCE_AND_EVOLUTION.md`, kecuali override eksplisit dicatat di manifest. Setiap sistem baru juga wajib memiliki manifest dan status kerja yang dapat dibaca lintas sesi. Gunakan `SYSTEM_MANIFEST_TEMPLATE.md` sebagai dasar, `DEFINITION_OF_DONE.md` untuk menentukan apakah hasil benar-benar selesai, dan `PROTOKOL_CHECKPOINT_RECOVERY.md` untuk menyimpan progres serta memulihkan sesi yang terputus.
+
+Status “selesai” tidak berarti file sudah ditulis. Status tersebut baru boleh digunakan setelah acceptance checklist terpenuhi, dependency diverifikasi, approval selesai, dan perubahan tersedia di branch/PR yang benar.
+
+Dokumen audit dan draft di `_meta/_internal/` adalah referensi master, bukan instruksi kerja yang harus diikuti pada setiap sesi. Jika instruksi aktif bertentangan dengan catatan sejarah, instruksi aktif dan keputusan terbaru yang sudah disetujui menjadi acuan; konflik tetap harus dilaporkan, bukan ditebak.
 
 ## Prinsip yang Berlaku di Semua Sistem
 
