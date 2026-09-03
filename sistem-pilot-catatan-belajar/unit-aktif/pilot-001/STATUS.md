@@ -1,6 +1,7 @@
 # Status Unit — pilot-001
 
 - **Status:** `released`
+- **Level pemeriksaan:** `Ringan`
 - **Tahap terakhir selesai:** Observe
 - **Tahap berikutnya:** Tidak ada; menunggu observasi lanjutan
 - **Output resmi:** `OUTPUT.md`

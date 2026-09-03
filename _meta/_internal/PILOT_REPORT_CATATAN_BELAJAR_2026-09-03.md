@@ -55,3 +55,10 @@ Pilot ini **belum** dimasukkan ke `INDEKS_SISTEM.md` sebagai sistem aktif dan **
 2. Simulasikan sesi terputus pada setiap tahap utama.
 3. Uji override dan regression check.
 4. Tentukan apakah kontrak meta-sistem perlu disederhanakan sebelum rilis template.
+
+
+## Iterasi Upgrade 1
+
+Berdasarkan pilot, quality protocol diperbaiki agar memakai level Ringan/Sedang/Mendalam. Catatan belajar biasa tidak lagi diasumsikan membutuhkan audit mendalam; audit mendalam dipicu oleh risiko, output yang dipakai berulang sebagai keputusan, perubahan workflow, atau failure berulang. Level pemeriksaan kini dicatat di manifest, STATUS, dan output.
+
+**Status upgrade:** diterapkan pada pilot, perlu regression check dan observasi pengguna nyata.

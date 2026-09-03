@@ -45,6 +45,8 @@ Catatan yang dapat diandalkan menyimpan fakta bersama rujukannya, memisahkan int
 
 ## Quality Check
 
+- **Level pemeriksaan:** Ringan
+
 - [x] Klaim penting memiliki rujukan
 - [x] Fakta dan inferensi dibedakan
 - [x] Ketidakpastian tidak disembunyikan

@@ -12,6 +12,8 @@
 - **Template output:** `OUTPUT_TEMPLATE.md`
 - **Quality protocol:** `QUALITY.md`
 - **Override quality protocol:** tidak ada
+- **Level audit default:** Ringan untuk catatan biasa; Mendalam jika sumber berisiko, output dipakai sebagai keputusan, atau failure berulang
+- **Trigger audit:** klaim tidak terlacak, kesalahan berulang, perubahan workflow, atau permintaan pengguna
 
 ## Prinsip yang Dipakai
 

@@ -4,10 +4,19 @@
 
 Audit sistem dipicu oleh kegagalan berulang, perubahan workflow, atau hasil pilot yang tidak dapat diverifikasi. Proposal perubahan wajib menjelaskan masalah, bukti, trade-off, regression check, versi, dan rollback.
 
+## Level pemeriksaan
+
+- **Ringan:** struktur template, sumber, status, dan quality checklist untuk catatan biasa.
+- **Sedang:** cross-check semua klaim inti dan review pengguna jika catatan dipakai berulang.
+- **Mendalam:** audit sumber, asumsi, failure mode, regression, dan rollback jika output berisiko atau workflow berubah.
+
+Jangan menjalankan audit mendalam pada setiap catatan tanpa trigger. Catat level yang dipakai di STATUS.
+
 ## Lapisan output
 
 Sebelum catatan berstatus `released`, agent memeriksa:
 
+- level pemeriksaan sudah dipilih dan dicatat;
 - sumber dan tanggal akses tersedia;
 - klaim penting dapat ditelusuri;
 - fakta, inferensi, dan ketidakpastian dipisahkan;
