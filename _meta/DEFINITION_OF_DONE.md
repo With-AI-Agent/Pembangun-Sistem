@@ -24,6 +24,7 @@ Dokumen atau sistem **tidak boleh disebut selesai hanya karena file sudah dituli
 - [ ] Semua living document memiliki status dan log keputusan
 - [ ] Jalur normal dan jalur recovery diuji
 - [ ] Acceptance tests yang relevan di `ACCEPTANCE_TESTS.md` lulus
+- [ ] Handoff prompt tersedia untuk sesi baru bila pekerjaan berlanjut lintas sesi
 - [ ] Cross-reference dan dependency diverifikasi
 - [ ] Audit minimal satu putaran selesai
 - [ ] Ringkasan cadangan sinkron

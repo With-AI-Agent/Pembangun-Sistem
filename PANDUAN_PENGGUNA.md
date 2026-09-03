@@ -35,6 +35,12 @@ cukup baca yang relevan dengan apa yang aku mau kerjakan.
 
 ---
 
+## Setelah Baseline Di-merge — Prompt Handoff
+
+Untuk melanjutkan pekerjaan setelah merge atau setelah sesi terputus, gunakan prompt lengkap yang tersimpan di `_meta/NEXT_SESSION_PROMPT.md`. Prompt tersebut lebih aman daripada hanya berkata "lanjutkan", karena agent diwajibkan memverifikasi ulang repository, branch, PR, manifest, handoff, index, dan konteks yang dibaca.
+
+Prompt tersebut membangun ulang konteks dari file resmi. Ia tidak menjamin agent mengetahui hal yang hanya pernah dibahas di chat atau informasi yang tidak tersimpan di branch.
+
 ## Kalau Kamu Sudah Tahu Persis Mau Ngapain (opsional, boleh dipakai langsung)
 
 Prompt universal di atas selalu aman dipakai, tapi kalau kamu sudah yakin mau langsung ke suatu hal spesifik, boleh langsung pakai salah satu ini (tetap akan baca konteks yang perlu, cuma tidak perlu tanya dulu):
