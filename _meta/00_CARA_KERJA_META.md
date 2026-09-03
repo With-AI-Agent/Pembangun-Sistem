@@ -155,6 +155,14 @@ Baru setelah itu, arahkan sesuai tujuan:
 
 ---
 
+## Lapisan Kendali dan Definition of Done
+
+Selain dokumen instruksi aktif, setiap sistem baru wajib memiliki manifest dan status kerja yang dapat dibaca lintas sesi. Gunakan `SYSTEM_MANIFEST_TEMPLATE.md` sebagai dasar, `DEFINITION_OF_DONE.md` untuk menentukan apakah hasil benar-benar selesai, dan `PROTOKOL_CHECKPOINT_RECOVERY.md` untuk menyimpan progres serta memulihkan sesi yang terputus.
+
+Status “selesai” tidak berarti file sudah ditulis. Status tersebut baru boleh digunakan setelah acceptance checklist terpenuhi, dependency diverifikasi, approval selesai, dan perubahan tersedia di branch/PR yang benar.
+
+Dokumen audit dan draft di `_meta/_internal/` adalah referensi master, bukan instruksi kerja yang harus diikuti pada setiap sesi. Jika instruksi aktif bertentangan dengan catatan sejarah, instruksi aktif dan keputusan terbaru yang sudah disetujui menjadi acuan; konflik tetap harus dilaporkan, bukan ditebak.
+
 ## Prinsip yang Berlaku di Semua Sistem
 
 Lihat `02_PRINSIP_UNIVERSAL.md` untuk daftar lengkap + penjelasan. Ringkasnya: Hierarki (kalau relevan), Rantai/Chaining, Approval Bertingkat, Checkpoint & Verifikasi Konsistensi (kalau relevan), Log Keputusan tetap dipertahankan. Semua ini DEFAULT berlaku, tapi tiap sistem boleh override kalau memang tidak cocok untuk domainnya — asal dicatat alasannya di dokumen sistem itu.

@@ -10,8 +10,9 @@ Sistem kerja untuk konten kreator berbasis AI — dari nentuin channel mau ngomo
 ## Struktur folder saat ini
 ```
 sistem-konten-kreator/
-├── START_DI_SINI.md
-├── 00_CARA_PAKAI_SISTEM.md
+├── _sistem/
+│   ├── START_DI_SINI.md
+│   ├── 00_CARA_PAKAI_SISTEM.md
 ├── 01_BRAND_CORE.md
 ├── 02_CHANNEL_DISCOVERY_PROMPT.md
 ├── 03_TEMPLATE_CHANNEL_BRIEF.md
@@ -28,7 +29,7 @@ Ini 10 dokumen SISTEM (instruksi kerja untuk agent) + 1 dokumen panduan pengguna
 Mengikuti semua 5 Prinsip Universal dari `_meta/02_PRINSIP_UNIVERSAL.md` TANPA override — sistem ini justru yang jadi SUMBER dari prinsip-prinsip itu (dipilah dari sini ke level universal setelah terbukti works). Tambahan spesifik-domain: Pemisahan Konsistensi Visual vs Non-Visual (khusus konten kreator, tidak universal).
 
 ## Status sekarang
-**Selesai dan teraudit 2 putaran penuh.** Semua 11 dokumen sudah final, konsisten, tidak ada bug yang diketahui tersisa. Sistem ini siap dipakai produksi nyata — bukan lagi tahap pembangunan.
+**Kandidat sistem contoh — sedang diperbaiki.** Audit independen 3 September 2026 menemukan beberapa celah operasional yang harus ditutup sebelum sistem ini ditetapkan sebagai contoh resmi meta-sistem atau dipakai produksi nyata.
 
 ## PENTING — hasil kerja sesi ini akan dibawa ke mana
 Hasil dari sesi Claude ini akan di-paste manual oleh pengguna ke lokasi yang sesuai di Obsidian (sync otomatis ke GitHub via plugin git). Pastikan format/struktur yang dihasilkan KOMPATIBEL dengan 11 dokumen yang sudah ada — cek dulu dokumen terkait yang diupload bersama ringkasan ini sebelum menulis apa pun. Karena sistem ini sudah final dan teraudit, perubahan apapun ke sistem ini sebaiknya dianggap REVISI terhadap sesuatu yang sudah teruji — pertimbangkan matang-matang sebelum mengubah struktur besar yang sudah ada, kecuali memang ada kebutuhan nyata yang jelas.
