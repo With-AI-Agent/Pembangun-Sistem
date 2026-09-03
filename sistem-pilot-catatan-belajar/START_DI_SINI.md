@@ -8,7 +8,7 @@ Capture → Extract → Structure → Verify → Apply → Observe
 
 Untuk memulai satu unit kerja:
 
-1. Baca `SYSTEM_MANIFEST.md`.
+1. Buat laporan awal mengikuti `SESSION_REPORT.md` atau format laporan sesi dari meta-sistem, lalu baca `SYSTEM_MANIFEST.md`.
 2. Buat folder unit kerja di `unit-aktif/[id-unit]/`.
 3. Salin `STATUS_TEMPLATE.md` menjadi `STATUS.md`.
 4. Ikuti `WORKFLOW.md`.
