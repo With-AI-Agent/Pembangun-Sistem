@@ -59,7 +59,7 @@ Berlaku sama seperti yang sudah terbukti penting di Sistem Konten Kreator: GitHu
 2. **Jangan pernah hapus branch `main`** selama repo ini aktif dipakai — kalaupun ada kebutuhan restrukturisasi besar, itu keputusan sadar yang dicatat, bukan tindakan spontan.
 3. Sebelum deploy/pakai hasil kerja apapun, selalu **merge dulu** PR yang relevan ke `main` — jangan asumsikan hasil kerja di suatu branch otomatis "sudah jadi" sebelum di-merge.
 
-*(Alasan detail di balik 3 poin ini — termasuk kasus nyata yang jadi pelajaran — ada di `sistem-konten-kreator/00_CARA_PAKAI_SISTEM.md` bagian Kategori 0, dan di dokumen audit sistem itu. Prinsipnya sama persis, cuma sekarang berlaku untuk SELURUH repo meta-sistem, bukan cuma 1 sistem.)*
+*(Alasan detail di balik 3 poin ini — termasuk kasus nyata yang jadi pelajaran (repo tes `resto-pro2`) — ada di `sistem-konten-kreator/_sistem/09_AUDIT_MIGRASI_GITHUB_AGENT.md` bagian "KATEGORI 0 — Langkah Persiapan Repo", dan konteks pemakaian sehari-harinya di `sistem-konten-kreator/_sistem/00_CARA_PAKAI_SISTEM.md`. Prinsipnya sama persis, cuma sekarang berlaku untuk SELURUH repo meta-sistem, bukan cuma 1 sistem.)*
 
 ---
 
