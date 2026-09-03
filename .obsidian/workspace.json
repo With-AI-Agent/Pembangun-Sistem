@@ -1,0 +1,203 @@
+{
+  "main": {
+    "id": "55feb480f7b98be5",
+    "type": "split",
+    "children": [
+      {
+        "id": "0f67530c6dc3815e",
+        "type": "tabs",
+        "children": [
+          {
+            "id": "e685ef2b0006af78",
+            "type": "leaf",
+            "state": {
+              "type": "markdown",
+              "state": {
+                "file": "PANDUAN_PENGGUNA.md",
+                "mode": "source",
+                "source": false
+              },
+              "icon": "lucide-file",
+              "title": "PANDUAN_PENGGUNA"
+            }
+          }
+        ]
+      }
+    ],
+    "direction": "vertical"
+  },
+  "left": {
+    "id": "808f627f494a77e5",
+    "type": "split",
+    "children": [
+      {
+        "id": "8336863f100f0c3b",
+        "type": "tabs",
+        "children": [
+          {
+            "id": "c49f1d6b37a5b29e",
+            "type": "leaf",
+            "state": {
+              "type": "file-explorer",
+              "state": {
+                "sortOrder": "alphabetical",
+                "autoReveal": false,
+                "showSearch": false,
+                "searchQuery": ""
+              },
+              "icon": "lucide-folder-closed",
+              "title": "Files"
+            }
+          },
+          {
+            "id": "f035ccff29df0240",
+            "type": "leaf",
+            "state": {
+              "type": "search",
+              "state": {
+                "query": "",
+                "matchingCase": false,
+                "explainSearch": false,
+                "collapseAll": false,
+                "extraContext": false,
+                "sortOrder": "alphabetical"
+              },
+              "icon": "lucide-search",
+              "title": "Search"
+            }
+          },
+          {
+            "id": "fbf5e653e8243591",
+            "type": "leaf",
+            "state": {
+              "type": "bookmarks",
+              "state": {
+                "showSearch": false,
+                "searchQuery": ""
+              },
+              "icon": "lucide-bookmark",
+              "title": "Bookmarks"
+            }
+          }
+        ]
+      }
+    ],
+    "direction": "horizontal",
+    "width": 300
+  },
+  "right": {
+    "id": "8e8f61477368533e",
+    "type": "split",
+    "children": [
+      {
+        "id": "7915a901dcdae367",
+        "type": "tabs",
+        "children": [
+          {
+            "id": "cc4343afdd4c41f4",
+            "type": "leaf",
+            "state": {
+              "type": "backlink",
+              "state": {
+                "file": "PANDUAN_PENGGUNA.md",
+                "collapseAll": false,
+                "extraContext": false,
+                "sortOrder": "alphabetical",
+                "showSearch": false,
+                "searchQuery": "",
+                "backlinkCollapsed": false,
+                "unlinkedCollapsed": true
+              },
+              "icon": "links-coming-in",
+              "title": "Backlinks"
+            }
+          },
+          {
+            "id": "0c331af89381d12e",
+            "type": "leaf",
+            "state": {
+              "type": "outgoing-link",
+              "state": {
+                "file": "PANDUAN_PENGGUNA.md",
+                "linksCollapsed": false,
+                "unlinkedCollapsed": true
+              },
+              "icon": "links-going-out",
+              "title": "Outgoing links"
+            }
+          },
+          {
+            "id": "aaa9b1a70bd2f358",
+            "type": "leaf",
+            "state": {
+              "type": "tag",
+              "state": {
+                "sortOrder": "frequency",
+                "useHierarchy": true,
+                "showSearch": false,
+                "searchQuery": ""
+              },
+              "icon": "lucide-tags",
+              "title": "Tags"
+            }
+          },
+          {
+            "id": "3565d9336caf58ab",
+            "type": "leaf",
+            "state": {
+              "type": "all-properties",
+              "state": {
+                "sortOrder": "frequency",
+                "showSearch": false,
+                "searchQuery": ""
+              },
+              "icon": "lucide-archive",
+              "title": "All properties"
+            }
+          },
+          {
+            "id": "ec0c84e0e4ef2648",
+            "type": "leaf",
+            "state": {
+              "type": "outline",
+              "state": {
+                "file": "PANDUAN_PENGGUNA.md",
+                "followCursor": false,
+                "showSearch": false,
+                "searchQuery": ""
+              },
+              "icon": "lucide-list",
+              "title": "Outline"
+            }
+          }
+        ]
+      }
+    ],
+    "direction": "horizontal",
+    "width": 300,
+    "collapsed": true
+  },
+  "left-ribbon": {
+    "hiddenItems": {
+      "switcher:Open quick switcher": false,
+      "graph:Open graph view": false,
+      "canvas:Create new canvas": false,
+      "daily-notes:Open today's daily note": false,
+      "templates:Insert template": false,
+      "command-palette:Open command palette": false,
+      "bases:Create new base": false
+    }
+  },
+  "active": "e685ef2b0006af78",
+  "lastOpenFiles": [
+    "SISTEM KERJA KONTEN FEAT LMARENA & GITHUB (revisi agent 1).zip",
+    "Pembangun-Sistem/RINGKASAN_sistem-konten-kreator.md",
+    "Pembangun-Sistem/PANDUAN_PENGGUNA.md",
+    "Pembangun-Sistem/INDEKS_SISTEM.md",
+    "Pembangun-Sistem/02_PRINSIP_UNIVERSAL.md",
+    "Pembangun-Sistem/01_DISCOVERY_LEVEL_0.md",
+    "Pembangun-Sistem/00_DRAFT_RANCANGAN_META_SISTEM.md",
+    "Pembangun-Sistem/00_CARA_KERJA_META.md",
+    "Pembangun-Sistem"
+  ]
+}
