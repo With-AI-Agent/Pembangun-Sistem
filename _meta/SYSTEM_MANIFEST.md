@@ -48,6 +48,7 @@
 - [x] Pilot non-kreator tersedia
 - [ ] Behavioral audit dengan sesi agent nyata selesai
 - [ ] Recovery test nyata selesai
+- [x] Executable fail-closed check lulus (4 skenario)
 - [ ] Pilot disetujui pengguna
 - [ ] Backup lokal terverifikasi
 - [ ] Template bersih dirilis

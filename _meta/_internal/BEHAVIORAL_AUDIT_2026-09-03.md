@@ -60,3 +60,20 @@ Pilot menunjukkan protokol dapat dipasang, tetapi belum mengukur biaya waktu/kom
 - Backup final **belum** dibuat.
 - B-01 dan B-02 akan ditutup pada revisi entry point berikutnya.
 - B-03 dan B-04 membutuhkan uji pilot yang melibatkan sesi agent dan/atau pengguna.
+
+## Executable Failure-Injection Check
+
+Pada tahap lanjutan, `tools/test_failure_injection.py` dijalankan terhadap state sementara yang mensimulasikan:
+
+- output tanpa `STATUS.md`;
+- status `released` tanpa output;
+- status `blocked`;
+- state sehat dengan output dan tidak ada pekerjaan yang belum tersimpan.
+
+Hasil:
+
+```text
+FAILURE-INJECTION TESTS PASSED: 4 fail-closed scenarios
+```
+
+Tes ini memvalidasi kontrak file dan perilaku fail-closed secara deterministik. Ini belum menggantikan pengujian sesi agent yang benar-benar terputus atau review pengguna.
