@@ -32,13 +32,13 @@ Audit dilakukan dengan menjalankan alur secara konseptual dari sudut pandang age
 
 Agent diminta membaca dan melaporkan kondisi, tetapi belum ada format wajib untuk melaporkan branch, PR, status sistem, blocker, dan keputusan yang dibutuhkan. Ini membuat kualitas entry point masih bergantung pada gaya agent.
 
-**Perbaikan berikutnya:** tambahkan format `SESSION_REPORT` ke prompt universal meta-sistem.
+**Status:** Ditutup secara struktural. Format `SESSION_REPORT` sudah ditambahkan dan dipasang pada entry point.
 
 ### B-02 — “Relevan” masih merupakan keputusan agent
 
 Meta-sistem sudah memiliki manifest dan tabel konteks sebagai arah, tetapi belum mewajibkan setiap sesi mencatat file yang dibaca dan alasan file kondisional tidak dibaca.
 
-**Perbaikan berikutnya:** session report harus memiliki `context read` dan `context skipped with reason`.
+**Status:** Ditutup secara struktural. Session report memiliki `context read` dan `context skipped with reason`.
 
 ### B-03 — Recovery belum diuji secara failure injection
 
