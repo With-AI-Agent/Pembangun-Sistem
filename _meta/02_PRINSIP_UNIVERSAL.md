@@ -49,10 +49,11 @@ Dibaca sekali saat Discovery Level-0 sistem baru dimulai (lihat `01_DISCOVERY_LE
 **Inti:** untuk sesi kerja yang panjang/berlapis, ada 2 lapis pertahanan terhadap risiko agent "kehilangan jejak" dari yang sudah disepakati:
 - **Checkpoint otomatis** — setiap pindah ke tahap besar berikutnya, agent berhenti sejenak dan meringkas ulang dengan membaca ulang sumber resmi (bukan mengandalkan ingatan sesi).
 - **Perintah manual verifikasi** — pengguna bisa memanggil kapan saja untuk membandingkan hasil kerja terbaru dengan sumber resmi yang sudah dikunci.
+- **Checkpoint diskusi ringan** — jika diskusi sudah >5-7 giliran dan mendekati keputusan, buat file `DISKUSI_MENTAH_*.md` dan commit. **Alasan kausal:** Sesi lmarena bisa crash kapan saja (fakta platform #3 di `PLATFORM_LMARENA.md`), diskusi panjang yang belum jadi file bisa hilang. Checkpoint ringan ini efisien vs aman.
 
-**Syarat berlaku:** relevan kalau sistem itu punya sesi kerja yang BISA panjang/berlapis (misal siklus produksi dengan banyak tahap). Kalau sistemnya sederhana (misal cuma 1-2 tahap pendek), prinsip ini boleh disederhanakan atau tidak dipakai — jangan dipaksakan kalau menambah kerumitan tanpa manfaat nyata.
+**Syarat berlaku:** relevan kalau sistem itu punya sesi kerja yang BISA panjang/berlapis (misal siklus produksi dengan banyak tahap) ATAU dipakai via lmarena Agent Mode. Kalau sistemnya sederhana (misal cuma 1-2 tahap pendek) dan tidak dipakai via lmarena, prinsip ini boleh disederhanakan atau tidak dipakai — jangan dipaksakan kalau menambah kerumitan tanpa manfaat nyata. Untuk sistem yang dipakai via lmarena, prinsip ini **wajib** karena fakta platform: sesi bisa crash, dan setelah PR merge, sesi tidak bisa push lagi (tidak bisa, bukan jangan — lihat `PLATFORM_LMARENA.md`).
 
-**Kenapa universal (dengan syarat):** risiko "agent melenceng di sesi panjang" itu berlaku ke sistem manapun yang memang punya sesi panjang — bukan spesifik ke produksi konten.
+**Kenapa universal (dengan syarat):** risiko "agent melenceng di sesi panjang" itu berlaku ke sistem manapun yang memang punya sesi panjang — bukan spesifik ke produksi konten. Ditambah fakta platform lmarena (branch arena otomatis, loss push setelah merge, crash), maka checkpoint bukan cuma soal konsistensi, tapi syarat fisik supaya sesi baru **bisa** melanjutkan (mencegah FI-03).
 
 ---
 

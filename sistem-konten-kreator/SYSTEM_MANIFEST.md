@@ -29,11 +29,17 @@
 | Checkpoint & recovery | Berlaku | Setiap tahap yang menjadi dependency berikutnya memiliki status persisten |
 | Log keputusan | Berlaku | Living document mencatat tanggal, perubahan, dan alasan |
 
+## Batasan Platform
+
+- **Dipakai via lmarena?** Ya — rujuk `_meta/PLATFORM_LMARENA.md` di repo meta
+- **Fakta:** branch arena otomatis dibuat, tidak bisa push setelah PR merge/close (platform cabut akses), sesi bisa crash
+- **Implikasi:** checkpoint tiap tahap + checkpoint diskusi ringan jika diskusi >5 giliran mendekati keputusan, karena tanpa commit sesi baru tidak bisa melanjutkan (FI-03) dan diskusi bisa hilang
+
 ## Risiko Utama
 
 - Drift voice/visual akibat konteks tidak dibaca.
 - Karakter Tipe B terulang tanpa terdeteksi.
-- Output tahap belum tersimpan ketika sesi terputus.
+- Output tahap belum tersimpan ketika sesi terputus (fakta platform #2 + #3 di PLATFORM_LMARENA.md — tidak bisa push setelah merge, sesi bisa crash).
 - Asset eksternal hilang atau tidak dapat direproduksi.
 - Sumber eksternal memiliki masalah fakta, hak cipta, atau atribusi.
 

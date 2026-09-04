@@ -26,12 +26,18 @@
 | Log keputusan | Ya | Perubahan aturan dan keputusan interpretasi dicatat |
 | Quality assurance & evolusi | Ya | `QUALITY.md` mengatur self-audit dan verifikasi output |
 
+## Batasan Platform
+
+- **Dipakai via lmarena?** Ya — rujuk `_meta/PLATFORM_LMARENA.md`
+- **Fakta:** branch arena otomatis dibuat, tidak bisa push setelah PR merge/close (platform cabut akses), sesi bisa crash
+- **Implikasi:** checkpoint tiap tahap + checkpoint diskusi ringan jika diskusi >5 giliran mendekati keputusan, karena tanpa commit sesi baru tidak bisa melanjutkan (FI-03) dan diskusi bisa hilang
+
 ## Risiko Utama
 
 - Agent mengubah fakta sumber menjadi kesimpulan tanpa menandai inferensi.
 - Sumber tidak tercatat sehingga catatan tidak dapat diverifikasi.
 - Catatan terlihat selesai padahal pertanyaan pemahaman belum diuji.
-- Sesi terputus sebelum output disimpan.
+- Sesi terputus sebelum output disimpan (fakta platform #3 + #2 di PLATFORM_LMARENA.md).
 
 ## Status Pilot
 

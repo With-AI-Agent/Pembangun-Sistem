@@ -27,6 +27,7 @@ repo-utama/
 │   ├── SYSTEM_MANIFEST_TEMPLATE.md   ← kontrak identitas tiap sistem
 │   ├── DEFINITION_OF_DONE.md         ← kriteria selesai dan rilis
 │   ├── PROTOKOL_CHECKPOINT_RECOVERY.md ← status persisten dan pemulihan
+│   ├── PLATFORM_LMARENA.md           ← fakta platform vs policy (baru, wajib baca)
 │   ├── QUALITY_ASSURANCE_AND_EVOLUTION.md ← audit, upgrade, dan rollback tiga lapisan
 │   ├── ACCEPTANCE_TESTS.md            ← skenario uji perilaku meta-sistem
 │   ├── SESSION_REPORT_TEMPLATE.md     ← format laporan awal setiap sesi
@@ -48,6 +49,22 @@ repo-utama/
 ```
 
 **Kenapa dipisah begini:** `_meta/` berisi instruksi yang berlaku LINTAS semua sistem (cara membangun sistem apapun) — dipisah dari `sistem-*/` yang isinya spesifik per sistem, supaya prinsip umum tidak perlu ditulis ulang tiap kali bikin sistem baru, tapi tiap sistem tetap bebas override kalau prinsip umum itu tidak cocok untuk domainnya.
+
+---
+
+## Batasan Platform lmarena (wajib paham, bukan aturan kita)
+
+Platform lmarena Agent Mode memiliki perilaku otomatis yang mempengaruhi semua kerja di repo ini. Ini **fakta platform** (tidak bisa / otomatis), bukan policy yang bisa di-override. Detail lengkap ada di `PLATFORM_LMARENA.md` — baca itu.
+
+Ringkasnya:
+
+1. **Branch kerja otomatis:** Saat sesi dimulai, kamu boleh pilih base branch (misal `main`) di UI, tapi setelah itu lmarena **otomatis** membuat branch baru `arena/[id]-...` dan semua kerja agent terjadi di situ. `main` hanya berubah setelah PR di-merge. Karena itu branch aktif yang harus diverifikasi adalah `arena/...`, bukan asumsi `main`.
+
+2. **Kehilangan akses push setelah merge/close:** Setelah PR di-merge atau di-close, platform mencabut token push untuk sesi tersebut. Sesi tersebut **tidak bisa** push lagi secara teknis — bukan "sebaiknya jangan". File yang dibuat setelah merge akan terjebak di sesi dan tidak bisa dibawa ke sesi baru (workaround resmi: tambah `/download-workspace` di akhir URL sesi untuk download zip).
+
+3. **Sesi bisa crash di tengah jalan:** Chat tidak bisa lanjut, error halaman keluar sendiri. Arena sendiri mengakui dan sediakan workaround download. Karena itu diskusi panjang yang belum jadi file + commit bisa hilang.
+
+**Implikasi untuk sistem:** Karena fakta #2 dan #3, maka policy "commit tiap tahap besar selesai" dan "checkpoint diskusi ringan jika diskusi >5 giliran" bukan birokrasi, tapi syarat fisik supaya sesi baru **bisa** melanjutkan (mencegah FI-03). Lihat `PLATFORM_LMARENA.md` bagian Policy untuk alasan kausal lengkap.
 
 ---
 
@@ -181,6 +198,7 @@ Lihat `02_PRINSIP_UNIVERSAL.md` untuk daftar lengkap + penjelasan. Ringkasnya: H
 
 ## Kebiasaan Umum yang Perlu Dijaga (dipakai ulang dari Sistem Konten Kreator, terbukti works)
 
-- **Branch & merge**: tiap sesi kerja dapat branch sendiri, tidak pernah auto-merge, review sesuai Approval Bertingkat sebelum merge ke `main`
-- **Entry Point**: di awal sesi baru, cek dulu status kerja yang menggantung, tanya tujuan sesi ini, baca file relevan sendiri — tidak perlu ditempel manual
+- **Branch & merge**: tiap sesi kerja dapat branch sendiri (`arena/...` dibuat otomatis oleh platform, bukan manual), tidak pernah auto-merge, review sesuai Approval Bertingkat sebelum merge ke `main`. **Alasan kausal:** Setelah PR di-merge/close, sesi tersebut **tidak bisa** push lagi (platform cabut akses — lihat `PLATFORM_LMARENA.md`). Karena itu pastikan semua sudah push sebelum merge, dan buka sesi baru dari `main` untuk kerja lanjutan. Jangan lanjut kerja di sesi yang PR-nya sudah merge — file baru akan terjebak.
+- **Entry Point**: di awal sesi baru, cek dulu status kerja yang menggantung, tanya tujuan sesi ini, baca file relevan sendiri — tidak perlu ditempel manual. Verifikasi branch aktif via `git branch --show-current` karena branch `arena/...` dibuat otomatis (fakta platform).
+- **Checkpoint diskusi ringan**: Jika diskusi sudah >5-7 giliran dan mendekati keputusan, buat file `DISKUSI_MENTAH_*.md` di unit-aktif dan commit. **Alasan kausal:** Sesi bisa crash kapan saja (fakta platform #3), diskusi panjang yang belum jadi file bisa hilang. Checkpoint ringan ini efisien vs aman.
 - **1 dokumen direvisi/dibangun penuh dulu, baru lanjut ke dokumen berikutnya** — bukan banyak sekaligus, supaya kesalahan kecil tidak menyebar sebelum ketahuan

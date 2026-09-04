@@ -14,6 +14,7 @@ required = [
     "_meta/SYSTEM_MANIFEST_TEMPLATE.md",
     "_meta/DEFINITION_OF_DONE.md",
     "_meta/PROTOKOL_CHECKPOINT_RECOVERY.md",
+    "_meta/PLATFORM_LMARENA.md",
     "_meta/QUALITY_ASSURANCE_AND_EVOLUTION.md",
     "_meta/ACCEPTANCE_TESTS.md",
     "_meta/SESSION_REPORT_TEMPLATE.md",

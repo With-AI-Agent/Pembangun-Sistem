@@ -1,5 +1,9 @@
 # Quality Assurance — Pilot Catatan Belajar
 
+## Batasan Platform
+
+Dipakai via lmarena? Ya — rujuk `_meta/PLATFORM_LMARENA.md`. Fakta: branch arena otomatis, tidak bisa push setelah merge, sesi bisa crash. Karena itu checkpoint tiap tahap + checkpoint diskusi ringan wajib untuk mencegah FI-03.
+
 ## Lapisan sistem
 
 Audit sistem dipicu oleh kegagalan berulang, perubahan workflow, atau hasil pilot yang tidak dapat diverifikasi. Proposal perubahan wajib menjelaskan masalah, bukti, trade-off, regression check, versi, dan rollback.
