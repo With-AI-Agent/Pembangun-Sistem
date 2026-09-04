@@ -4,9 +4,30 @@
 
 ---
 
-## Status: [ ] Draft — masih digali  /  [ ] Terkunci — siap produksi
+## Status: `Draft` → `Reviewed` → `Approved` → `Merged` → `Operational`
 
-*(Ganti status ini jadi "Terkunci" setelah Model Konten Discovery selesai dan sudah di-merge ke `main`. Model Konten Brief termasuk kategori Besar — WAJIB direview isi lengkapnya sebelum merge.)*
+- [ ] **Draft** — masih digali, isi bisa berubah kapan saja
+- [ ] **Reviewed** — sudah dibaca lengkap oleh pengguna, koreksi sudah masuk (belum tentu final)
+- [ ] **Approved** — isi dikunci lewat gerbang **G2**, tapi masih di branch/PR
+- [ ] **Merged** — PR sudah lewat gerbang **G3** dan masuk ke `main`
+- [ ] **Operational** — sudah `Merged` DAN semua dependency wajibnya benar-benar ada (lihat Checklist Kelengkapan di bawah). Hanya status ini yang boleh dipakai untuk mulai produksi.
+
+*(Kenapa dipisah begini: "sudah disetujui" dan "sudah masuk `main`" itu dua hal berbeda — brief bisa disetujui isinya tapi belum di-merge, atau sudah di-merge tapi asset referensi wajibnya belum ada. Kalau keduanya dicampur jadi satu kata "Terkunci", produksi bisa mulai di atas dependency yang sebenarnya belum lengkap. Definisi gerbang G2/G3 ada di `00_CARA_PAKAI_SISTEM.md`.)*
+
+*(Model Konten Brief termasuk kategori Besar — WAJIB direview isi lengkapnya sebelum merge.)*
+
+**Checklist Kelengkapan — syarat naik ke `Operational`:**
+
+- [ ] Semua bagian wajib di bawah terisi (tidak ada placeholder `[...]` tersisa)
+- [ ] Bentuk detail tiap tahap pipeline untuk model ini sudah ditetapkan (unit kerjanya apa: shot/panel/section/track/lainnya)
+- [ ] Override terhadap Channel Brief (kalau ada) sudah dinyatakan eksplisit
+- [ ] Gerbang tambahan (kalau model ini menambah G2) sudah dicatat — ingat, G2/G3 bawaan tidak boleh dihapus
+- [ ] Channel Brief induknya sudah berstatus `Operational`
+- [ ] Sudah `Merged` ke `main`
+
+*(Agent WAJIB menolak menetapkan status `Operational` selama masih ada kotak yang belum tercentang.)*
+
+**Versi:** `[nomor]` — **Terakhir diperbarui:** `[tanggal]`
 
 ## Mewarisi dari: `channel-[nama-channel]/channel-brief.md`
 
