@@ -1,9 +1,22 @@
-# DISKUSI MENTAH — Discovery Level-0 Sistem Pembuat Presentasi
+# DISKUSI MENTAH — Discovery Level-0 Sistem Presentasi
 
 > **Status file ini:** checkpoint diskusi mentah, **bukan** `00_RENCANA_KERANGKA.md` dan **bukan** dokumen instruksi aktif. Dibuat sesuai aturan "Checkpoint diskusi ringan" di `_meta/00_CARA_KERJA_META.md` (diskusi sudah >5 giliran dan mendekati keputusan, sementara sesi lmarena bisa crash — fakta platform #3 di `_meta/PLATFORM_LMARENA.md`). Kalau sesi terputus, lanjutkan dari sini.
 >
 > **Dibuat:** 4 September 2026 (UTC) / 5 September 2026 (WIB) — sesi `arena/01a06d7b-pembangun-sistem`
-> **Nama folder sementara:** `sistem-pembuat-presentasi/` — nama belum dikonfirmasi pengguna, boleh diganti murah selama belum ada banyak rujukan.
+> **Nama folder:** `sistem-presentasi/` — **DIKONFIRMASI pengguna** 4 Sep 2026 ("Sistem Presentasi").
+
+---
+
+## KEPUTUSAN PENGGUNA (4 September 2026) — menutup sebagian butir di bagian 5 & 6
+
+| Hal | Keputusan |
+|---|---|
+| Nama sistem | **Sistem Presentasi**, folder `sistem-presentasi/` |
+| 4 usulan agent (bagian 5) | **Disetujui** — kutipan pengguna: "klo memang itu yang terbaik, aku setuju" |
+| Lingkup versi pertama | Pengguna minta **langsung lengkap sejak awal** ("ini bukan seperti aplikasi yang susah buatnya, semua dieksekusi agent AI"). Agent menyetujui **lingkup desain yang lengkap**, tapi mengajukan keberatan terhadap **verifikasi sekaligus di akhir** — alasan dan jalan tengahnya di `00_RENCANA_KERANGKA.md` bagian "Strategi Verifikasi Bertahap" |
+| Batasan platform | Dipakai via lmarena Agent Mode (terkonfirmasi dari pemakaian nyata sesi ini) → Prinsip Checkpoint & Recovery **wajib** |
+| Branch menggantung tanpa PR | Diserahkan ke agent → diputuskan **selamatkan 4 file** ke `_meta/_internal/arsip-pilot-002-2026-09-03/`; **branch tidak dihapus**. Detail: `_meta/_internal/CABANG_MENGGANTUNG_2026-09-04.md` |
+
 
 ---
 
@@ -102,4 +115,4 @@ Palet warna, font, logo, master/layout, gaya ilustrasi. Sumbernya bisa: template
 2. Tulis `00_RENCANA_KERANGKA.md` (format sesuai `_meta/01_DISCOVERY_LEVEL_0.md`) → **kategori Besar**: wajib direview isi lengkapnya oleh pengguna sebelum merge.
 3. Salin `_meta/SYSTEM_MANIFEST_TEMPLATE.md` → manifest sistem ini.
 4. Tulis prompt Discovery detail untuk tiap dokumen yang butuh penggalian.
-5. Update `_meta/INDEKS_SISTEM.md` + buat `_cadangan-claude/RINGKASAN_sistem-pembuat-presentasi.md`.
+5. Update `_meta/INDEKS_SISTEM.md` + buat `_cadangan-claude/RINGKASAN_sistem-presentasi.md`.

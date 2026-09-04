@@ -66,11 +66,19 @@ Catatan: di `main`, folder `unit-aktif/pilot-002/` sudah **diganti nama** jadi `
 
 Kolom "Hasil 3 Sep" itulah ringkasan run yang artefak mentahnya tertinggal di dua branch tanpa PR. Jadi run 3 Sep **tidak dilupakan**, melainkan **digantikan** oleh run 4 Sep yang lebih kuat (nyata, bukan sekadar lulus desain).
 
-## Pilihan tindak lanjut (keputusan pengguna)
+## Tindak lanjut yang DIPUTUSKAN dan SUDAH DIJALANKAN (4 Sep 2026)
 
-1. **Biarkan apa adanya** — tidak merusak apa pun, tapi branch tanpa PR tetap membingungkan sesi berikutnya.
-2. **Selamatkan 4 file itu** ke `_meta/_internal/arsip-pilot-002-2026-09-03/` sebagai bukti mentah sejarah, lalu hapus 2 branch tanpa PR.
-3. **Hapus 2 branch tanpa PR** tanpa menyelamatkan file, dengan alasan: kesimpulannya sudah ada di audit 4 Sep, artefak mentahnya superseded.
-4. **Hapus semua branch `arena/*` lama yang PR-nya sudah merged** (housekeeping terpisah) — aman karena isinya sudah di `main`, tapi tetap keputusan pengguna.
+Pengguna menyerahkan keputusan ini ke agent ("pastikan isinya, cek apakah kita butuh atau justru mengganggu"). Setelah isinya dibaca, temuan awalnya di atas **direvisi**: ini bukan sekadar artefak mentah.
 
-Yang **tidak** dilakukan tanpa keputusan eksplisit: menghapus branch apa pun, atau memindahkan file ke `main`.
+**Temuan tambahan (mengubah kesimpulan):** `STATUS.md` run 3 Sep mencatat **proposal yang sudah disetujui pengguna sebagai proposal tapi tidak pernah diimplementasikan**, dan **dua celah protokol yang masih terbuka di `main` sampai sekarang**. Diverifikasi dengan `git grep` terhadap `origin/main`: `K-P3`, `K-P4`, `K-P5`, `Q-O2`, `Q-O3` → tidak ada satu pun di `main`.
+
+| Kode | Isi | Status di `main` (4 Sep 2026) |
+|---|---|---|
+| **Q-O2** | Kriteria "alasan" yang sah untuk mengulang tahap `approved`/`merged` | **MASIH CELAH** — `PROTOKOL_CHECKPOINT_RECOVERY.md` baris 61 masih berbunyi "…tanpa alasan" tanpa kriteria |
+| **Q-O3 / K-P3** | Interval/granularitas field "Waktu pembaruan" | **MASIH CELAH** — baris 27 masih field kosong `- Waktu pembaruan:` |
+| **K-P4** | `WORKFLOW.md` belum punya mekanisme verifikasi-ulang pasca-Apply | belum pernah dijawab |
+| **K-P5** | Lokasi draft proposal belum dikontrakkan di repo | ditangguhkan; celahnya nyata dan lintas-sistem |
+
+**Yang dijalankan:** 4 file diselamatkan byte-per-byte (via `git show <branch>:<path>`, tanpa diedit) ke `_meta/_internal/arsip-pilot-002-2026-09-03/` + `README.md` yang menjelaskan asal-usul dan keempat temuan di atas.
+
+**Yang sengaja TIDAK dijalankan:** menghapus branch apa pun. Alasannya: penghapusan branch remote tidak bisa dibatalkan dan tidak mendesak — setelah arsip ini masuk, kedua branch itu redundan, jadi menghapusnya kapan pun nanti tidak menghilangkan apa pun. Housekeeping branch `arena/*` yang PR-nya sudah merged juga dibiarkan untuk keputusan terpisah.
