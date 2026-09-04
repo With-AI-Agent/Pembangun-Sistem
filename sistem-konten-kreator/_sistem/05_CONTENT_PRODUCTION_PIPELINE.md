@@ -215,6 +215,7 @@ Buatkan:
 **Setelah metadata siap, langkah penutup produksi (WAJIB, jangan dilewat):**
 1. Pindahkan naskah final dari `_produksi-aktif/[channel]-[judul-konten]/naskah-draft.md` ke `channel-[nama-channel]/arsip-naskah/[tanggal]-[judul].md` — sertakan juga deskripsi karakter Tipe B kalau ada.
 2. Update `arsip-naskah/indeks.md` dengan entri baru (judul, tanggal, topik singkat).
+2b. **Kalau konten ini memakai karakter Tipe B:** update juga `arsip-naskah/indeks-karakter.md` — tambah baris baru untuk karakter yang belum pernah tercatat, atau tambahkan konten ini ke kolom **Konten lain** pada baris yang sudah ada. Ini WAJIB dan terpisah dari langkah 2: `indeks.md` tidak menyimpan ciri karakter, sehingga tanpa langkah ini pengecekan karakter berulang di produksi berikutnya (`06_PROMPT_LIBRARY.md` bagian A2 langkah 1) akan membaca indeks kosong. Lihat format minimumnya di bagian 9 `03_TEMPLATE_CHANNEL_BRIEF.md`.
 3. Konten produksi final termasuk kategori Besar — siapkan PR, direview isi lengkapnya dulu sebelum merge.
 4. Setelah kamu download hasil akhirnya, folder `_produksi-aktif/[channel]-[judul-konten]/` boleh dihapus dari repo (breakdown dan asset visual itu sementara, sudah tidak diperlukan lagi setelah naskah dipindah ke arsip dan hasil didownload).
 

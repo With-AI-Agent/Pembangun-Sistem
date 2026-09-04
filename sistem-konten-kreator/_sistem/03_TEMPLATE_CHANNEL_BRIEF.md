@@ -104,7 +104,9 @@
 
 | Nama/sebutan | Ciri ringkas | Konten pertama | Konten lain | Status |
 |---|---|---|---|---|
-| | | | | Tipe B / ditinjau untuk Tipe A |
+| | | | | `Tipe B` / `Ditinjau untuk Tipe A` / `Naik ke Tipe A → [path elemen]` |
+
+*(Diisi/diperbarui di langkah penutup produksi — lihat Tahap 6 langkah 2b di `05_CONTENT_PRODUCTION_PIPELINE.md` dan bagian A2 langkah 5-6 di `06_PROMPT_LIBRARY.md`. Kolom **Konten pertama** dan **Konten lain** diisi link ke `[tanggal]-[judul].md` di folder yang sama, supaya agent bisa membuka sumber aslinya kalau ciri ringkas belum cukup untuk memutuskan. Baris berstatus `Naik ke Tipe A` tidak perlu ditawarkan naik kelas lagi.)*
 
 ## 10. Log Keputusan Channel
 

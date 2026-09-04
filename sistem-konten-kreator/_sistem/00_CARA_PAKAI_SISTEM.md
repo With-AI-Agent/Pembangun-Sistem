@@ -93,6 +93,8 @@ nama-repo/
 │   │       └── assets/               ← reference visual khusus model konten ini (opsional)
 │   └── arsip-naskah/                 ← PERMANEN — naskah final konten yang sudah publish
 │       ├── indeks.md                 ← tabel ringkas: judul, tanggal, topik singkat
+│       ├── indeks-karakter.md        ← tabel karakter Tipe B: ciri ringkas + link arsip sumber
+│       │                                (sumber data pengecekan karakter berulang — bukan indeks.md)
 │       └── [tanggal]-[judul].md      ← termasuk deskripsi karakter Tipe B yang dipakai, kalau ada
 │
 └── _produksi-aktif/                  ← SEMENTARA — breakdown shot & asset visual produksi berjalan

@@ -86,7 +86,11 @@ Beda dari Karakter Utama Channel (Tipe A, permanen, ada di Bank Konsistensi Visu
 
 **Cara kerja:**
 
-1. **Sebelum membuat deskripsi karakter Tipe B baru, cek dulu ke `channel-[nama-channel]/arsip-naskah/indeks.md`** — apakah karakter dengan ciri serupa sudah pernah dipakai di konten sebelumnya? Kalau ada kecocokan, tawarkan untuk menaikkannya jadi Tipe A permanen (jalankan `04_CHARACTER_BUILDER_KIT.md`) sebelum lanjut, alih-alih membuat deskripsi Tipe B baru yang terpisah.
+1. **Sebelum membuat deskripsi karakter Tipe B baru, cek dulu ke `channel-[nama-channel]/arsip-naskah/indeks-karakter.md`** — bukan `indeks.md`. `indeks.md` hanya memuat judul/tanggal/topik, jadi tidak memiliki data ciri karakter; `indeks-karakter.md` adalah satu-satunya sumber data yang memuat nama/sebutan, ciri ringkas, dan link ke arsip naskah sumber (formatnya ditetapkan di bagian 9 `03_TEMPLATE_CHANNEL_BRIEF.md`). Baca kolom **Ciri ringkas** untuk mencari karakter serupa; kalau ciri di indeks terasa kurang untuk memutuskan, buka arsip naskah sumber yang ditunjuk barisnya, jangan menebak.
+
+   Kalau ada kandidat kecocokan, **tawarkan** untuk menaikkannya jadi Tipe A permanen (jalankan `04_CHARACTER_BUILDER_KIT.md`) sebelum lanjut, alih-alih membuat deskripsi Tipe B baru yang terpisah. Ini **bantuan agent, bukan deteksi otomatis yang pasti** — "mirip" tetap penilaian agent dan WAJIB dikonfirmasi pengguna sebelum diperlakukan sebagai karakter yang sama.
+
+   Kalau `indeks-karakter.md` belum ada di channel ini (channel baru, atau arsip dibuat sebelum aturan ini berlaku), **buat file itu dulu** dengan format minimum dari bagian 9 `03_TEMPLATE_CHANNEL_BRIEF.md`, lalu lanjutkan. Jangan melewati langkah pengecekan diam-diam dengan alasan filenya tidak ada, dan jangan menyatakan "tidak ada karakter serupa" kalau yang terjadi sebenarnya indeksnya belum pernah dibuat — laporkan kondisi itu apa adanya ke pengguna.
 
 2. Kalau memang karakter baru, begitu dia pertama kali muncul (biasanya saat Tahap Naskah atau Breakdown Visual), buat dulu deskripsinya secara ringkas tapi cukup detail untuk generate visual berulang — pakai format mini di bawah, JANGAN cuma disebut sekilas di narasi lalu dianggap "agent akan ingat sendiri":
 
@@ -100,9 +104,11 @@ Peran dalam konten ini: [siapa dia, hubungannya dengan cerita/narator]
 
 4. Generate 1 gambar acuan karakter ini di awal (unit visual pertama yang memunculkan dia), simpan sebagai file di `_produksi-aktif/[channel]-[judul-konten]/assets/`, lalu pakai gambar itu sebagai referensi untuk semua unit visual berikutnya yang melibatkan karakter ini dalam konten yang sama — sama seperti prinsip Karakter Utama Channel, cuma berlaku untuk 1 konten ini saja.
 
-5. **Setelah konten ini selesai (Tahap 6):** deskripsi karakter Tipe B ini disimpan menempel ke arsip naskah konten yang memakainya (`arsip-naskah/[tanggal]-[judul].md`) — bukan file karakter mandiri terpisah. Ini yang jadi dasar pengecekan di langkah 1 untuk konten-konten berikutnya.
+5. **Setelah konten ini selesai (Tahap 6):** deskripsi lengkap karakter Tipe B disimpan menempel ke arsip naskah konten yang memakainya (`arsip-naskah/[tanggal]-[judul].md`) — bukan file karakter mandiri terpisah. **Di tahap yang sama, WAJIB tambahkan/perbarui satu baris untuk karakter ini di `arsip-naskah/indeks-karakter.md`** (nama/sebutan, ciri ringkas, konten pertama, konten lain, status). Tanpa langkah ini, pengecekan di langkah 1 akan membaca indeks kosong dan karakter berulang tidak akan pernah terdeteksi — jadi baris indeks ini bagian dari "konten selesai", bukan pekerjaan opsional.
 
-6. **Kapan karakter Tipe B "naik kelas" jadi Tipe A (permanen):** kalau ternyata karakter ini dipakai lagi di konten lain (terdeteksi lewat langkah 1, bukan cuma disadari manual), itu tandanya dia harus dipindah jadi Karakter Utama Channel — jalankan `04_CHARACTER_BUILDER_KIT.md` untuk dia, hasilnya disimpan permanen di `konsistensi-visual/`, supaya konsistensinya terjamin lintas-konten, bukan cuma dalam 1 konten.
+   Kalau karakter ini ternyata sudah punya baris di indeks (dipakai ulang), jangan buat baris baru — tambahkan konten ini ke kolom **Konten lain** pada baris yang sudah ada, lalu lanjut ke langkah 6.
+
+6. **Kapan karakter Tipe B "naik kelas" jadi Tipe A (permanen):** kalau ternyata karakter ini dipakai lagi di konten lain (muncul lewat pengecekan langkah 1 dan sudah dikonfirmasi pengguna, bukan cuma disadari manual), itu tandanya dia harus dipindah jadi Karakter Utama Channel — jalankan `04_CHARACTER_BUILDER_KIT.md` untuk dia, hasilnya disimpan permanen di `konsistensi-visual/`, supaya konsistensinya terjamin lintas-konten, bukan cuma dalam 1 konten. Setelah naik kelas, ubah kolom **Status** barisnya di `indeks-karakter.md` menjadi `Naik ke Tipe A` beserta path elemen visualnya, supaya tidak ditawarkan naik kelas berulang kali di konten berikutnya.
 
 ---
 
