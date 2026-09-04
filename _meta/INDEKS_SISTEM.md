@@ -16,7 +16,7 @@
 
 | Nama Sistem | Folder | Status | Terakhir Disentuh | Catatan |
 |---|---|---|---|---|
-| Sistem Konten Kreator | `sistem-konten-kreator/` | Sedang dibangun — audit P0+P1 ditutup, belum divalidasi pemakaian nyata | 4 September 2026 | Manifest `0.3.0-audit-remediation`. Kandidat sistem contoh; belum ditetapkan sebagai acuan final. Acceptance test mulai dijalankan: AT-KK-05 + AT-KK-05b dry run 4 Sep 2026 (`belum LULUS` — butuh sesi agent baru), bukti di `sistem-konten-kreator/ACCEPTANCE_TEST_LOG.md`. Fixture produksi pertama: `channel-fixture-narasi-sejarah/` + `_produksi-aktif/fixture-narasi-sejarah-tiga-benda-di-meja-nenek/` (bahan uji, **bukan** penutup L-04). Gate tersisa: recovery teruji bersih, pilot end-to-end 1 channel terisi penuh (L-04), sisa acceptance test (L-05) |
+| Sistem Konten Kreator | `sistem-konten-kreator/` | Sedang dibangun — audit P0+P1 ditutup, belum divalidasi pemakaian nyata | 4 September 2026 | Manifest `0.3.1-audit-remediation`. Kandidat sistem contoh; belum ditetapkan sebagai acuan final. Acceptance test mulai dijalankan: AT-KK-05 + AT-KK-05b dry run 4 Sep 2026 (`belum LULUS` — butuh sesi agent baru), bukti di `sistem-konten-kreator/ACCEPTANCE_TEST_LOG.md`. Fixture produksi pertama: `channel-fixture-narasi-sejarah/` + `_produksi-aktif/fixture-narasi-sejarah-tiga-benda-di-meja-nenek/` (bahan uji, **bukan** penutup L-04). Gate tersisa: recovery teruji bersih, pilot end-to-end 1 channel terisi penuh (L-04), sisa acceptance test (L-05) |
 
 *(Tambah baris baru di bawah ini untuk tiap sistem baru yang dibangun)*
 

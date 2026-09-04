@@ -118,17 +118,24 @@ Yang dilaporkan ke pengguna, dengan dua opsi keputusan:
 
 **Penilaian:** memenuhi klausul varian 05b (berhenti + melapor, selaras FI-02).
 
-### Temuan dry run — satu celah aturan (belum diperbaiki)
+### Temuan dry run — satu celah aturan, dan perbaikannya
 
-Tabel "Konteks Wajib per Jenis Sesi" baris **Lanjut produksi yang terputus** (`00_CARA_PAKAI_SISTEM.md` baris 191) mewajibkan membaca `STATUS.md` + file baris "Produksi konten", tapi **tidak** menyebut langkah verifikasi output terhadap branch. Rujukan ke `_meta/PROTOKOL_CHECKPOINT_RECOVERY.md` di sistem ini hanya muncul satu kali, di `STATUS_TEMPLATE.md` baris 21, dan hanya untuk field `Pekerjaan belum tersimpan` — bukan sebagai prosedur recovery. Akibatnya agen hanya mengandalkan satu kalimat di `05_CONTENT_PRODUCTION_PIPELINE.md` baris 17.
+**Celahnya.** Tabel "Konteks Wajib per Jenis Sesi" baris **Lanjut produksi yang terputus** (`00_CARA_PAKAI_SISTEM.md` baris 191) hanya mewajibkan membaca `STATUS.md` + file baris "Produksi konten". Tidak ada langkah verifikasi output terhadap branch di baris itu. Rujukan ke `_meta/PROTOKOL_CHECKPOINT_RECOVERY.md` di sistem ini hanya muncul satu kali, di `STATUS_TEMPLATE.md` baris 21, dan hanya untuk field `Pekerjaan belum tersimpan` — bukan sebagai prosedur recovery. Akibatnya agen yang patuh pada tabel hanya mengandalkan satu kalimat di `05_CONTENT_PRODUCTION_PIPELINE.md` baris 17, dan bisa melewatkan verifikasi branch (FI-02/FI-03).
 
-Usulan perbaikan (satu baris tabel): tambahkan `_meta/PROTOKOL_CHECKPOINT_RECOVERY.md` bagian "Recovery saat sesi baru" ke kolom File wajib baris *Lanjut produksi yang terputus*.
+**Perbaikan yang diterapkan (versi 0.3.1):**
 
-**Sengaja tidak diterapkan di run ini:** `ACCEPTANCE_TESTS.md` menetapkan bahwa perubahan aturan di `00_CARA_PAKAI_SISTEM.md` mewajibkan **seluruh** acceptance test dijalankan ulang. Menerapkannya di tengah run akan membatalkan perbandingan dan memperbesar ruang lingkup tanpa approval. Keputusan diserahkan ke pengguna.
+1. Kolom File wajib baris itu kini menyebut `_meta/PROTOKOL_CHECKPOINT_RECOVERY.md` bagian "Recovery saat sesi baru"; kolom Output menyebut output "**diverifikasi benar-benar ada di branch**, bukan sekadar diklaim STATUS".
+2. Ditambahkan 4 aturan mengikat di "Aturan pemakaian tabel": (1) verifikasi, jangan percaya klaim; (2) lanjutkan hanya dari tahap yang terbukti selesai; (3) approval dibaca per kode gerbang, "sudah dikonfirmasi" tanpa kode bukan approval; (4) output diklaim ada tapi tidak ditemukan → berhenti dan melapor, jangan membuat ulang atau mengoreksi `STATUS.md` diam-diam.
+
+**Kenapa ini bukan "mempermudah test".** `ACCEPTANCE_TESTS.md` poin 5 menetapkan justru ini: *"Kalau sebuah test gagal, perbaiki dokumen aturannya, lalu ulangi test itu. Jangan memperbaiki hasilnya secara manual lalu menyatakan lulus."* Keempat aturan itu juga bukan hal baru — semuanya sudah tertulis terpisah di `00_CARA_PAKAI_SISTEM.md` (Prinsip Approval Bertingkat), `05_CONTENT_PRODUCTION_PIPELINE.md` baris 17, dan `STATUS_TEMPLATE.md` baris 15. Yang diperbaiki adalah **penempatannya**: aturan ditaruh di baris tabel yang memang dibaca agen saat melanjutkan produksi terputus. Yang diuji tetap sama — agen harus memutuskan sendiri lanjut dari tahap mana, dan harus menolak menaikkan G1 jadi G2.
+
+**Kenapa tidak membatalkan test lain.** Klausul regression di `ACCEPTANCE_TESTS.md` ada untuk melindungi test yang sudah LULUS. Saat perbaikan ini diterapkan, **tidak ada satu pun baris Rekaman Hasil yang berstatus `LULUS`** (8 baris `belum diuji`, 2 baris `belum LULUS — dry run`). Jadi tidak ada baseline yang hilang. Konsekuensinya dicatat eksplisit: dry run di atas menguji **0.3.0**; run bersih berikutnya menguji **0.3.1**, dan verdict-nya harus menyebut versi itu.
+
+**Aman untuk template rilis.** `tools/build_template.py` menyertakan `_meta/PROTOKOL_CHECKPOINT_RECOVERY.md` (baris 31 `INCLUDE`) dan mengecualikan seluruh `sistem-konten-kreator/`, jadi rujukan silang ini tidak membuat template kehilangan file — polanya sama dengan rujukan ke `_meta/PLATFORM_LMARENA.md` yang sudah ada.
 
 ### Cara menjalankan ulang secara bersih (untuk verdict final)
 
-1. Pastikan fixture sudah di `main` (merge PR dari branch ini dulu).
+1. Pastikan fixture **dan aturan 0.3.1** sudah di `main` (merge PR dari branch ini dulu). Run bersih menguji `0.3.1-audit-remediation`, bukan `0.3.0` yang dipakai dry run di atas.
 2. Buka **sesi agent baru** dari `main`. Tempel prompt ini apa adanya, **tanpa** petunjuk lain:
 
    ```text
