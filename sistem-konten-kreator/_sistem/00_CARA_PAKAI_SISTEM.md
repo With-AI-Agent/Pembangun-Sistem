@@ -188,7 +188,7 @@ Tabel ini mengikat: begitu tujuan sesi diketahui (langkah 3), agent WAJIB membac
 | **Elemen konsistensi visual baru** | Brand Core, Channel Brief channel itu, `_sistem/04_CHARACTER_BUILDER_KIT.md` | `konsistensi-lintas-channel/` kalau elemen dipakai >1 channel | `konsistensi-visual/[elemen]/` + acuan visual sesuai tipe elemen |
 | **Model konten baru** | Brand Core, Channel Brief, `_sistem/07_MODEL_KONTEN_DISCOVERY_PROMPT.md`, `_sistem/08_TEMPLATE_MODEL_KONTEN_BRIEF.md` | Bank Konsistensi Visual channel itu | `channel-[nama]/model-konten/[model]/brief.md` |
 | **Produksi konten** | Brand Core, Channel Brief, Model Konten Brief, `_sistem/05_CONTENT_PRODUCTION_PIPELINE.md`, `_sistem/06_PROMPT_LIBRARY.md` | Bank Konsistensi Visual (kalau konten ini visual), `arsip-naskah/indeks.md` (cek pengulangan topik), `arsip-naskah/indeks-karakter.md` (kalau ada karakter Tipe B) | `_produksi-aktif/[channel]-[judul]/STATUS.md` + output tiap tahap |
-| **Lanjut produksi yang terputus** | `STATUS.md` konten itu, lalu semua file wajib baris "Produksi konten" | Output tahap sebelumnya yang tercatat di `STATUS.md` | `STATUS.md` diperbarui |
+| **Lanjut produksi yang terputus** | `STATUS.md` konten itu, lalu semua file wajib baris "Produksi konten", plus `_meta/PROTOKOL_CHECKPOINT_RECOVERY.md` bagian "Recovery saat sesi baru" | Output tahap sebelumnya yang tercatat di `STATUS.md` — **diverifikasi benar-benar ada di branch**, bukan sekadar diklaim STATUS | `STATUS.md` diperbarui |
 | **Revisi dokumen terkunci** | Dokumen yang direvisi + semua dokumen yang mewarisinya (turunannya) | Log Keputusan terkait | Dokumen revisi + baris Log Keputusan |
 | **Cek konsistensi** | Sumber resmi yang relevan dengan objek yang dicek (Channel Brief, Bank Konsistensi Visual, Persona & Voice) | Output kerja terakhir | Laporan temuan (tanpa mengubah file) |
 
@@ -197,6 +197,11 @@ Tabel ini mengikat: begitu tujuan sesi diketahui (langkah 3), agent WAJIB membac
 - Kalau ada file wajib yang **tidak ditemukan**, agent berhenti dan melapor — bukan melanjutkan dengan asumsi. File wajib yang hilang biasanya berarti dependency belum dibuat atau belum di-merge ke `main`.
 - File kondisional yang **dilewati wajib disebutkan alasannya** di laporan awal sesi (misal: "Bank Konsistensi Visual dilewati — konten ini teks-only"). Ini supaya kelalaian membaca bisa dibedakan dari keputusan sadar.
 - Baris di atas adalah **minimum**, bukan batas atas. Kalau agent butuh file lain untuk mengerjakan tugasnya, silakan baca — tapi jangan kurang dari daftar wajib.
+- **Khusus baris "Lanjut produksi yang terputus" — aturan recovery yang mengikat:**
+  1. **Verifikasi, jangan percaya klaim.** Setiap output yang disebut `STATUS.md` wajib dicek keberadaannya **di branch** (misal `git ls-tree -r HEAD --name-only`, `git log -1 -- [file]`, atau buka file-nya), bukan diterima dari kalimat STATUS. STATUS bisa salah atau tertinggal; branch yang menentukan.
+  2. **Lanjutkan hanya dari tahap yang terbukti selesai.** Jangan mengulang tahap yang output-nya sudah ada, dan jangan melompat ke tahap yang dependency-nya belum ada.
+  3. **Approval dibaca per kode gerbang.** `G1` tahap mana pun **tidak pernah** berarti `G2` atau `G3` (lihat Prinsip Approval Bertingkat di atas). Pernyataan lama seperti "sudah dikonfirmasi"/"sudah oke" **tanpa kode gerbang bukan approval** — minta gerbangnya diulang secara eksplisit.
+  4. **Kalau output diklaim ada tapi tidak ditemukan: berhenti dan melapor.** Jangan membuat ulang diam-diam, jangan menebak isinya, jangan mengoreksi atau menghapus `STATUS.md` tanpa keputusan pengguna. Ini fail-closed sesuai `_meta/FAILURE_INJECTION_TESTS.md` FI-02.
 
 ### Aturan Kerja Bersamaan (Obsidian ↔ Agent ↔ PR)
 

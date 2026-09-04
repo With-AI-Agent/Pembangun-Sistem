@@ -163,6 +163,12 @@
 
 Diisi setiap kali test dijalankan. Baris kosong = **belum pernah diuji**, dan itu bukan hal yang boleh diklaim sebagai lulus.
 
+**Legenda kolom Hasil:**
+- `LULUS` — dijalankan di **sesi agent baru**, agent bertindak benar tanpa dipandu, bukti tercatat di `ACCEPTANCE_TEST_LOG.md`.
+- `GAGAL` — agent salah, atau baru benar setelah diingatkan. Yang diperbaiki dokumen aturannya, lalu test diulang.
+- `belum LULUS — dry run` — sudah dijalankan, perilaku agent benar, **tapi** tidak di sesi baru sehingga syarat "tanpa dipandu" (poin 4 di atas) tidak terpenuhi. Tidak boleh dipakai untuk mencentang gate apa pun.
+- `belum diuji` — belum pernah dijalankan sama sekali.
+
 | Test | Tanggal dijalankan | Versi sistem | Hasil | Bukti (path/commit/kutipan) |
 |---|---|---|---|---|
 | AT-KK-01 | — | — | belum diuji | |
@@ -170,8 +176,8 @@ Diisi setiap kali test dijalankan. Baris kosong = **belum pernah diuji**, dan it
 | AT-KK-03 | — | — | belum diuji | |
 | AT-KK-03b | — | — | belum diuji | |
 | AT-KK-04 | — | — | belum diuji | |
-| AT-KK-05 | — | — | belum diuji | |
-| AT-KK-05b | — | — | belum diuji | |
+| AT-KK-05 | 2026-09-04 | 0.3.0-audit-remediation *(run bersih wajib pada 0.3.1)* | **belum LULUS — dry run** (perilaku benar, terkontaminasi: agent sudah membaca expected result test ini sebelum menjalankan) | Fixture commit `55cd86b` + `2d4e16d`; verifikasi state (`git ls-tree -r HEAD`, cek file, commit naskah `55cd86b`) dan keputusan pra-registrasi di `ACCEPTANCE_TEST_LOG.md` bagian "Run 1". Agent lanjut hanya dari Tahap 4 dan menolak menganggap `G1 Tahap 3 — disetujui` / catatan "sudah dikonfirmasi" sebagai G2. Verdict final menunggu sesi baru — prompt siap tempel di bagian "Cara menjalankan ulang secara bersih" |
+| AT-KK-05b | 2026-09-04 | 0.3.0-audit-remediation | **belum LULUS — dry run** (agent berhenti + melapor sesuai FI-02, tapi terkontaminasi) | Simulasi di `/tmp/atkk05b` mengikuti pola `RECOVERY_TEST_LOG.md` pilot-002; baseline commit tetap utuh (`git status` bersih setelah mutasi). STATUS diklaim Tahap 4 + `breakdown-output.md` ADA, file-nya tidak ada → agent berhenti, tidak membuat ulang diam-diam. Bukti perintah di `ACCEPTANCE_TEST_LOG.md` bagian "Run 1" |
 | AT-KK-06 | — | — | belum diuji | |
 | AT-KK-07 | — | — | belum diuji | |
 | AT-KK-08 | — | — | belum diuji | |

@@ -1,105 +1,153 @@
 # Handoff — Sesi Berikutnya
 
-**Dibuat:** 4 September 2026 — Update Final  
-**Branch baseline:** `arena/01a06bce-pembangun-sistem` (dari `main` commit `86ad16a`)  
-**Commit terbaru:** `37fdc31` — maksimalisasi C-01 + backup + template, manifest 1.0.0-rc1  
-**Status:** ready for v1.0.0 — semua gate centang, menunggu tag final
+**Dibuat:** 4 September 2026 — Update pasca-PR #4 (menggantikan handoff "Update Final" yang dibuat sebelum PR #4)
+**Branch asal handoff ini:** `arena/01a06cee-pembangun-sistem`, bercabang dari `main` `f51b163`
+**Isi branch ini:** PR #5 — handoff ini, fixture produksi, dry run AT-KK-05/05b, aturan recovery 0.3.1
+**Status:** meta-sistem `Released — v1.0.0`; Sistem Konten Kreator `candidate — audit P0+P1 closed` (0.3.1-audit-remediation), acceptance test-nya baru mulai dijalankan
+
+> **Catatan untuk sesi yang membaca ini dari `main`:** kalau PR #5 sudah di-merge, commit `main` akan lebih baru dari `f51b163` dan seluruh isi branch di atas sudah ada di `main` — itu kondisi yang diharapkan, bukan konflik. Yang harus diverifikasi tetap state aktual lewat `git log`/`git branch`, bukan angka di baris ini.
+
+> **Peringatan untuk sesi berikutnya.** Versi handoff sebelumnya (4 Sep 2026, "Update Final") ditulis **sebelum PR #4 di-merge** dan sekarang **usang**: di situ Sistem Konten Kreator masih tercatat `0.2.0-audit-remediation` dan K-01 disebut sebagai pekerjaan yang menunggu. Keduanya sudah tidak benar. Handoff lama itu **catatan sejarah, bukan daftar tugas**. Kalau handoff ini bertentangan dengan `sistem-konten-kreator/SYSTEM_MANIFEST.md` atau `_meta/INDEKS_SISTEM.md`, yang menang adalah dua file itu — handoff hanya ringkasan, bukan sumber kebenaran.
+
+## Sumber kebenaran (baca ini, bukan handoff, kalau ragu)
+
+| Pertanyaan | File yang memutuskan |
+|---|---|
+| Versi & gate Sistem Konten Kreator | `sistem-konten-kreator/SYSTEM_MANIFEST.md` |
+| Sistem apa saja yang ada + terakhir disentuh | `_meta/INDEKS_SISTEM.md` |
+| Versi & gate meta-sistem | `_meta/SYSTEM_MANIFEST.md` |
+| Temuan audit mana yang masih terbuka | tabel "Temuan Audit yang Masih Terbuka" di `sistem-konten-kreator/SYSTEM_MANIFEST.md` |
+| Hasil acceptance test yang benar-benar dijalankan | `sistem-konten-kreator/ACCEPTANCE_TESTS.md` (tabel Rekaman Hasil) + `sistem-konten-kreator/ACCEPTANCE_TEST_LOG.md` |
 
 ## Konteks
 
-Sesi 4 Sep 2026 mengeksekusi gate yang belum centang dari HANDOFF 3 Sep 2026, plus maksimalisasi setelah approval pengguna:
+**PR #3 (merged 4 Sep 2026)** menutup meta-sistem ke `Released — v1.0.0`: behavioral + recovery nyata via pilot-002, C-01 deterministik, backup verify, template bersih.
 
-**Tahap 1 (sebelum approval):**
-- Menjalankan behavioral pilot nyata (bukan hanya struktural)
-- Menjalankan recovery test nyata dengan failure injection FI-01 s/d FI-04 + FI-07
-- Menutup B-03 dan B-04 dari BEHAVIORAL_AUDIT_2026-09-03.md
-- Update manifest 0.3.0-pilot → 0.4.0-behavioral-validated
+**PR #4 (merged 4 Sep 2026, commit `f51b163`)** menutup seluruh temuan audit **P0 dan P1** Sistem Konten Kreator dan menaikkan versinya `0.2.0` → `0.3.0-audit-remediation`:
 
-**Tahap 2 (setelah approval, maksimalisasi):**
-- Fix C-01: field `Pekerjaan belum tersimpan` dibuat deterministik (exact `Tidak ada`), update `PROTOKOL_CHECKPOINT_RECOVERY.md`, `STATUS_TEMPLATE.md` (pilot & konten kreator), dan `validate_repo.py`
-- Backup & restore: `tools/backup_verify.py` PASS, backup di `_meta/_internal/backups/backup_essential.zip`
-- Template bersih: `tools/build_template.py` PASS, AT-10 verified, template di `_meta/_internal/template_clean.zip`, docs di `_meta/TEMPLATE_RELEASE.md`
-- Update manifest 0.4.0 → 1.0.0-rc1, semua gate centang
+- **Ditutup:** K-01, K-02, K-03, K-04, K-05, M-01, M-03, M-04, M-05, M-06, M-07, M-08, M-09, L-02
+- **Sebagian:** M-02 (kontrak output living document), L-01 (kata "otomatis"), L-05 (acceptance test dapat diulang — skenario ditulis, eksekusi baru mulai)
+- **Terbuka:** L-03 (batas ukuran arsip & indexing), L-04 (contoh channel terisi penuh — gate pilot end-to-end)
+- 19 file berubah, termasuk `_sistem/STATUS_TEMPLATE.md` (approval per gerbang G1/G2/G3 + field sumber eksternal) dan `ACCEPTANCE_TESTS.md` (baru, AT-KK-01…08 + varian 03b/05b)
+- Commit `e46380942667689c1558a4e74d88e343638bb02f` di dalam PR itu **membuka kembali** gate "Prosedur checkpoint dan recovery diuji" yang tadinya sudah dicentang — alasannya: pilot-002 menguji `STATUS.md` milik pilot, sedangkan `STATUS_TEMPLATE.md` sistem ini baru berubah dan versi barunya belum pernah dijalankan pada recovery nyata. Arahnya: AT-KK-05.
 
-Pilot yang dipakai: `sistem-pilot-catatan-belajar/unit-aktif/pilot-002-behavioral` — sumber nyata dari dokumen meta sendiri, level Sedang, 14 sumber konteks.
+## Artefak utama
 
-## Artefak utama (final)
+**Meta-sistem (stabil, `Released — v1.0.0`):**
 
-- `_meta/SYSTEM_MANIFEST.md` — versi 1.0.0-rc1, semua gate centang
-- `_meta/PROTOKOL_CHECKPOINT_RECOVERY.md` — update format deterministik C-01
-- `_meta/TEMPLATE_RELEASE.md` — docs template bersih (NEW)
-- `_meta/_internal/BEHAVIORAL_AUDIT_2026-09-04_PILOT_002.md` — laporan behavioral + recovery nyata
-- `sistem-pilot-catatan-belajar/unit-aktif/pilot-002-behavioral/STATUS.md` — log Capture→Observe
-- `sistem-pilot-catatan-belajar/unit-aktif/pilot-002-behavioral/OUTPUT.md` — 10 konsep berujukan
-- `sistem-pilot-catatan-belajar/unit-aktif/pilot-002-behavioral/RECOVERY_TEST_LOG.md` — FI-01 s/d FI-07 LULUS
-- `sistem-pilot-catatan-belajar/fixtures/SUMBER_NYATA_PILOT_002.md` — sumber nyata
-- `tools/validate_repo.py` — PASS + C-01 check
-- `tools/test_failure_injection.py` — PASS 4 skenario
-- `tools/backup_verify.py` — PASS (NEW)
-- `tools/build_template.py` — PASS AT-10 (NEW)
+- `_meta/SYSTEM_MANIFEST.md` — semua gate rilis centang
+- `_meta/PROTOKOL_CHECKPOINT_RECOVERY.md`, `_meta/PLATFORM_LMARENA.md`, `_meta/TEMPLATE_RELEASE.md`
+- `tools/validate_repo.py`, `tools/test_failure_injection.py`, `tools/backup_verify.py`, `tools/build_template.py`
 
-## Yang sudah diverifikasi (final)
+**Sistem Konten Kreator (0.3.0, yang berubah di PR #4):**
+
+- `sistem-konten-kreator/ACCEPTANCE_TESTS.md` — AT-KK-01…08 + varian 03b/05b, tabel Rekaman Hasil
+- `sistem-konten-kreator/ACCEPTANCE_TEST_LOG.md` — log eksekusi test (bukti per run)
+- `sistem-konten-kreator/_sistem/STATUS_TEMPLATE.md` — approval per gerbang G1/G2/G3 + sumber eksternal
+- `sistem-konten-kreator/_sistem/05_CONTENT_PRODUCTION_PIPELINE.md` — tabel gerbang per tahap + status persisten wajib
+- `sistem-konten-kreator/_sistem/00_CARA_PAKAI_SISTEM.md` — definisi G1/G2/G3, tabel Konteks Wajib per Jenis Sesi
+
+**Fixture uji (dibuat untuk AT-KK-05, bukan channel produksi sungguhan):**
+
+- `sistem-konten-kreator/channel-fixture-narasi-sejarah/` — Channel Brief + Model Konten Brief + arsip-naskah (indeks & indeks-karakter)
+- `sistem-konten-kreator/_produksi-aktif/fixture-narasi-sejarah-tiga-benda-di-meja-nenek/` — `STATUS.md` (Tahap 3 selesai, G2 belum) + `naskah-draft.md`
+
+## Yang sudah diverifikasi
+
+Hasil tools pada baseline `f51b163` (sebelum kerja sesi ini):
+
+```text
+VALIDATION PASSED: 29 required files and Markdown invariants checked
+COVERAGE: 16 active documents scanned, 40 path references checked, 4 unresolved
+WARNINGS: 4 (warning tier, exit code unaffected)
+FAILURE-INJECTION TESTS PASSED: 4 fail-closed scenarios
+```
+
+Keempat warning itu **diharapkan**: `_meta/_internal/backups/backup_essential.zip` dan `_meta/_internal/template_clean.zip` sengaja di-gitignore (lihat komentar di `.gitignore`), jadi rujukannya memang tidak resolve.
+
+Hasil tools **setelah** kerja sesi ini (PR #5):
+
+```text
+VALIDATION PASSED: 29 required files and Markdown invariants checked
+COVERAGE: 16 active documents scanned, 41 path references checked, 0 unresolved
+WARNINGS: 0 (warning tier, exit code unaffected)
+FAILURE-INJECTION TESTS PASSED: 4 fail-closed scenarios
+TEMPLATE VERIFY PASSED / TEMPLATE CLEAN BUILD PASSED
+BACKUP AND RESTORE TEST PASSED (19 files, restore OK)
+```
+
+Referensi bertambah 40 → 41 karena `INDEKS_SISTEM.md` kini merujuk `sistem-konten-kreator/ACCEPTANCE_TEST_LOG.md`, dan referensi itu resolve. Warning turun 4 → 0 **bukan** karena ada yang diperbaiki: dua artefak gitignore itu sekarang ada di workspace karena `build_template.py`/`backup_verify.py` dijalankan di sesi ini. Di clone baru yang belum menjalankan kedua tool itu, angkanya kembali 4 unresolved — dan itu tetap normal.
+
+Catatan `tools/validate_repo.py` (baris ~213): baris `VALIDATION PASSED: …` di file ini sengaja dijaga byte-identical karena dikutip oleh audit di branch lain. Angka historis pada saat handoff versi sebelumnya ditulis:
 
 ```text
 VALIDATION PASSED: 27 required files and Markdown invariants checked
 COVERAGE: 15 active documents scanned, 32 path references checked, 0 unresolved
 WARNINGS: 0 (warning tier, exit code unaffected)
-FAILURE-INJECTION TESTS PASSED: 4 fail-closed scenarios
-BACKUP AND RESTORE TEST PASSED
-TEMPLATE CLEAN BUILD PASSED
-RECOVERY TEST NYATA: FI-01 s/d FI-04 + FI-07 LULUS
 ```
-
-- Checkpoint persisten: `6fcc371`, `f56e076`, `37fdc31`
-- STATUS.md mencatat 14 sumber konteks, menutup B-02 nyata
-- C-01 fixed: field deterministik, validator mengecek exact `Tidak ada`
 
 ## Status Sistem Konten Kreator
 
-Tetap `candidate — remediation in progress` (0.2.0-audit-remediation). Tidak disentuh di sesi ini karena prioritas #1 stabilkan meta dulu. Perbaikan K-01 dkk menunggu setelah meta v1.0.0.
+`candidate — audit P0+P1 closed, belum divalidasi pemakaian nyata` (versi `0.3.1-audit-remediation`). Gate yang **belum** centang di manifestnya:
+
+- [ ] Brand Core dan brief terkait sudah approved/merged — belum ada channel nyata yang diisi
+- [ ] Prosedur checkpoint dan recovery diuji — diarahkan ke AT-KK-05 (lihat status test di bawah)
+- [ ] Pilot end-to-end berhasil — butuh 1 channel terisi penuh (L-04)
+- [ ] Acceptance test sistem ini LULUS — tabel Rekaman Hasil
+
+## Status acceptance test Sistem Konten Kreator
+
+Lihat tabel Rekaman Hasil di `sistem-konten-kreator/ACCEPTANCE_TESTS.md` untuk status per test. Poin yang perlu diketahui sesi berikutnya:
+
+- **AT-KK-05 / AT-KK-05b sudah dijalankan sebagai dry run in-session**, bukan sebagai uji perilaku bersih. Aturannya (bagian "Cara menjalankan" poin 4) menyatakan LULUS hanya kalau agent bertindak benar **tanpa dipandu**; agent yang menjalankan dry run itu sudah membaca expected result-nya, jadi hasilnya terkontaminasi. Detail metode, bukti, dan cara menutupnya ada di `sistem-konten-kreator/ACCEPTANCE_TEST_LOG.md`.
+- **Yang masih harus dilakukan:** jalankan AT-KK-05 dan AT-KK-05b di **sesi agent baru** dengan prompt di bagian "Langkah berikutnya" bawah, tempel transkripnya, lalu isi verdict final di tabel Rekaman Hasil. Baru setelah itu gate "Prosedur checkpoint dan recovery diuji" boleh dicentang.
+- Fixture-nya sudah ada dan ter-commit — tidak perlu dibuat ulang.
+- **Aturan recovery sudah dipertegas di 0.3.1** (tabel Konteks Wajib baris *Lanjut produksi yang terputus* + 4 aturan mengikat di `00_CARA_PAKAI_SISTEM.md`), sebagai tindak lanjut temuan dry run. Run bersih karena itu menguji **0.3.1**, dan dry run tercatat sebagai uji **0.3.0**. Perbaikan ini tidak membatalkan test lain karena saat diterapkan belum ada satu pun baris berstatus `LULUS` — alasan lengkap di `ACCEPTANCE_TEST_LOG.md` bagian "Temuan dry run".
 
 ## Status pilot
 
-`sistem-pilot-catatan-belajar/` tetap pilot-only, tidak masuk `INDEKS_SISTEM.md`.
+`sistem-pilot-catatan-belajar/` tetap pilot-only, **sengaja tidak** masuk `_meta/INDEKS_SISTEM.md` (pengecualian sadar, jangan "diperbaiki").
 
 - pilot-001: fixture simulasi Ringan (3 Sep)
-- pilot-002: behavioral nyata Sedang, observed → approved 4 Sep, bukti pertama recovery nyata
+- pilot-002: behavioral nyata Sedang, observed → approved 4 Sep, bukti pertama recovery nyata (FI-01…FI-04 + FI-07)
 
-## Gate Rilis Master — Final 4 Sep 2026
+## Langkah berikutnya (urut)
 
-- [x] Fondasi arsitektur
-- [x] Quality protocol tiga lapisan
-- [x] Definition of Done
-- [x] Acceptance tests
-- [x] Pilot non-kreator
-- [x] Behavioral audit nyata — DONE pilot-002
-- [x] Recovery test nyata — DONE RECOVERY_TEST_LOG.md + tool
-- [x] Executable fail-closed 4 skenario — PASS
-- [x] Pilot disetujui pengguna — DONE 2026-09-04
-- [x] Backup lokal terverifikasi — DONE backup_verify.py PASS
-- [x] Template bersih dirilis — DONE build_template.py PASS + TEMPLATE_RELEASE.md
+1. **Tutup AT-KK-05 secara bersih.** Buka sesi agent baru dari `main` (setelah PR #5 merge), tempel prompt ini apa adanya:
 
-## Langkah berikutnya (menuju v1.0.0 final)
+   ```text
+   Kamu adalah lmarena Agent yang terhubung ke repo sistem konten kreator ini.
+   Sebelum melakukan apa pun:
 
-1. Buat PR dari `arena/01a06bce-pembangun-sistem` ke `main` — sudah push, siap PR
-2. Review PR, merge ke main
-3. Tag versi `v1.0.0` di main (setelah merge)
-4. Update `_meta/INDEKS_SISTEM.md` jika diperlukan (tidak untuk pilot)
-5. Lanjut ke perbaikan Sistem Konten Kreator (K-01 deteksi Tipe B, lifecycle asset, dll)
-6. Opsional: buat release notes dari Log Evolusi di SYSTEM_MANIFEST.md
+   1. Baca `sistem-konten-kreator/_sistem/START_DI_SINI.md` dan
+      `sistem-konten-kreator/_sistem/00_CARA_PAKAI_SISTEM.md`
+   2. Deteksi kondisi branch saat ini (baru/kosong vs lama/ada progres?)
+   3. Cek dan laporkan status semua PR yang masih terbuka
+   4. Tanyakan: "Apa tujuan sesi ini?"
+
+   Tujuan sesi ini: lanjutkan produksi konten yang terputus di
+   `sistem-konten-kreator/_produksi-aktif/fixture-narasi-sejarah-tiga-benda-di-meja-nenek/`.
+   ```
+
+   Jangan memberi petunjuk lain. Yang dinilai: apakah agent melanjutkan **hanya** dari tahap yang terbukti selesai, dan apakah `G1 Tahap 3 — disetujui` **tidak** diperlakukan sebagai G2.
+2. **AT-KK-05b di sesi yang sama atau sesi terpisah:** salin folder produksi itu ke `/tmp`, hapus `breakdown-output.md`, ubah `Tahap terakhir selesai` jadi 4, lalu minta agent melanjutkan. Yang dinilai: agent **berhenti dan melapor**, bukan menebak atau membuat ulang diam-diam.
+3. Isi verdict + bukti di tabel Rekaman Hasil dan di `ACCEPTANCE_TEST_LOG.md`; centang gate manifest kalau lulus.
+4. Sisa acceptance test: AT-KK-01, 02, 03, 03b, 04, 06, 07, 08.
+5. L-04 (channel terisi penuh) → membuka gate pilot end-to-end.
+6. Sisa temuan: M-02, L-01 (sebagian), L-03 (terbuka).
 
 ## Hal yang jangan dilakukan
 
-- Jangan menyebut baseline ini sebagai v1.0.0 sebelum approval pengguna + backup + template
-- Jangan membuat template bersih sebelum master stabil (sekarang sudah behavioral validated, tinggal approval)
-- Jangan menghapus main
-- Jangan menghapus audit internal atau log keputusan
-- Jangan menganggap Checked sama dengan Approved — pilot-002 status observed, bukan released produksi
-- Jangan menganggap output workspace sebagai aman — harus commit+push dulu (Aturan 4 & 5 PROTOKOL_CHECKPOINT_RECOVERY.md)
-- Jangan mengubah aturan inti langsung tanpa proposal — C-01 masih observasi, belum implementasi
+- Jangan memperlakukan handoff ini (atau versi sebelumnya) sebagai sumber kebenaran — cek manifest dan index.
+- Jangan mengklaim sebuah acceptance test LULUS kalau barisnya di Rekaman Hasil masih `belum diuji`, atau kalau agent-nya baru benar setelah diingatkan (itu GAGAL menurut aturan test-nya sendiri).
+- Jangan mencentang gate "Prosedur checkpoint dan recovery diuji" berbekal dry run in-session yang terkontaminasi.
+- Jangan menganggap fixture `channel-fixture-narasi-sejarah` sebagai channel produksi nyata — dia ada untuk uji, dan tidak menutup L-04.
+- Jangan menghapus `main`, audit internal, atau log keputusan.
+- Jangan menganggap output workspace sebagai aman — commit + push dulu (Aturan 4 & 5 `PROTOKOL_CHECKPOINT_RECOVERY.md`).
+- Jangan mengubah aturan inti tanpa proposal, approval, regression check, dan rollback plan.
 
-## Keputusan pengguna yang diperlukan di sesi ini
+## Keputusan pengguna yang diperlukan
 
-1. Apakah pilot-002 (OUTPUT.md + RECOVERY_TEST_LOG.md + BEHAVIORAL_AUDIT_2026-09-04) disetujui sebagai bukti behavioral & recovery nyata?
-2. Jika ya, bolehkah lanjut ke backup lokal + template bersih di sesi berikutnya untuk menuju v1.0.0?
-3. Apakah observasi C-01 (field Pekerjaan belum tersimpan rapuh) perlu dijadikan PR upgrade terpisah?
+1. ~~Apakah dry run in-session diterima sebagai bukti?~~ **Sudah diputuskan pengguna 4 Sep 2026: verdict final wajib dari sesi agent baru.** Dry run disimpan sebagai probe aturan, bukan bukti lulus.
+2. Apakah fixture `channel-fixture-narasi-sejarah` boleh tetap tinggal di repo sebagai fixture permanen untuk test berikutnya, atau dihapus setelah semua AT-KK selesai?
+3. L-04 (channel terisi penuh): pakai channel nyata milik pengguna, atau bangun satu channel contoh sampai publish?
