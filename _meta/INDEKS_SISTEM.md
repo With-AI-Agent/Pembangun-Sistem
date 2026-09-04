@@ -16,9 +16,16 @@
 
 | Nama Sistem | Folder | Status | Terakhir Disentuh | Catatan |
 |---|---|---|---|---|
-| Sistem Konten Kreator | `sistem-konten-kreator/` | Sedang diperbaiki setelah audit independen | 3 September 2026 | Kandidat sistem contoh; belum ditetapkan sebagai acuan final |
+| Sistem Konten Kreator | `sistem-konten-kreator/` | Sedang dibangun — audit P0+P1 ditutup, belum divalidasi pemakaian nyata | 4 September 2026 | Manifest `0.3.0-audit-remediation`. Kandidat sistem contoh; belum ditetapkan sebagai acuan final. Gate tersisa: pilot end-to-end dengan 1 channel terisi penuh (L-04) dan acceptance test yang dapat diulang (L-05) |
 
 *(Tambah baris baru di bawah ini untuk tiap sistem baru yang dibangun)*
+
+---
+
+## Yang sengaja TIDAK didaftarkan di tabel ini
+
+- **`sistem-pilot-catatan-belajar/`** — bukan sistem domain, melainkan **fixture uji** untuk memvalidasi meta-sistem itu sendiri (behavioral test, recovery test FI-01 s/d FI-07). Statusnya `pilot-only — not released` di manifestnya sendiri. Pengecualian ini **keputusan sadar**, bukan kelalaian pencatatan — jangan "diperbaiki" dengan menambahkannya ke tabel di atas. Kalau suatu saat pilot ini dipromosikan jadi sistem nyata, itu keputusan tersendiri yang dicatat dulu.
+- **Meta-sistem (`_meta/`)** — ini kerangka yang menaungi semua sistem, bukan salah satu isinya. Statusnya dilacak di `_meta/SYSTEM_MANIFEST.md` (saat ini `Released — v1.0.0`).
 
 ---
 

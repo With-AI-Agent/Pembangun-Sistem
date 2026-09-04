@@ -137,8 +137,21 @@ commit, push, siapkan PR untuk direview sebelum merge ke main.
 
 Deskripsi teks saja, sebagus apapun, masih longgar untuk generate visual berulang. Setelah Tahap 1 selesai dan di-merge:
 
+**Tentukan dulu tipe reference pack elemen ini** — bentuk acuan yang tepat berbeda per jenis elemen, jadi `acuan-utama.png` TIDAK wajib untuk semua:
+
+| Tipe elemen | Bentuk acuan wajib | Tambahan yang berguna |
+|---|---|---|
+| **Karakter** (Tipe A) | `acuan-utama.png` — kondisi netral/default | `reference-sheet.png` (turnaround, ekspresi), `tambahan-[keterangan].png` |
+| **Props/objek berulang** | `acuan-utama.png` | Beberapa sudut kalau bentuknya rumit |
+| **Latar/lingkungan** | Minimal 2-3 gambar sudut/kondisi berbeda (`sudut-[keterangan].png`) — bukan satu gambar tunggal, karena latar memang berubah menurut waktu/cuaca/posisi kamera | Denah/peta sederhana kalau ruangnya kompleks |
+| **Palet warna** | `palet.png` (swatch) + daftar kode warna hex di `bank-konsistensi.md` | Contoh penerapan pada 1-2 adegan |
+| **Gaya render** | `style-sheet.png` — beberapa contoh yang mewakili gaya, plus **contoh negatif** (`contoh-negatif-[keterangan].png`) yang menunjukkan gaya yang harus dihindari | Kata kunci prompt yang terbukti menghasilkan gaya itu |
+| **Elemen abstrak** (mood, atmosfer) | Deskripsi terstruktur + contoh positif/negatif; boleh tanpa acuan tunggal | Referensi eksternal sebagai arahan gaya (catat di `SUMBER.md`, jangan direproduksi) |
+
+Kalau elemen ini tidak cocok dengan baris manapun, tetapkan tipe reference pack-nya secara eksplisit di `bank-konsistensi.md` beserta alasannya — jangan memaksakan `acuan-utama.png` hanya supaya seragam.
+
 1. Generate gambar dari **Prompt Master** yang sama, pakai kemampuan generate gambar agent — hasilnya WAJIB disimpan sebagai file asli di folder `referensi/` elemen ini, bukan cuma ditampilkan di chat.
-2. Simpan minimal 1 file sebagai **acuan utama** (`acuan-utama.png`) — gambar tunggal kondisi paling netral/default, dipakai kalau tidak ada kebutuhan spesifik.
+2. Simpan acuan wajib sesuai tipe reference pack di tabel atas. Untuk tipe yang memakai **acuan utama** (`acuan-utama.png`): gambar tunggal kondisi paling netral/default, dipakai kalau tidak ada kebutuhan spesifik.
 3. Kalau elemen ini butuh variasi sudut pandang atau keadaan yang jauh beda dari acuan utama (misal karakter perlu ekspresi marah selain netral, atau latar perlu terlihat dari beberapa sisi) — buat juga **reference sheet** (`reference-sheet.png`): 1 file grid berisi beberapa sudut/keadaan sekaligus (teknik "character turnaround sheet"). Ini TIDAK menggantikan acuan utama, melainkan tambahan.
 4. Kalau ada kebutuhan situasional lain (misal 1 outfit spesifik yang cuma dipakai 1 model konten), simpan sebagai file tambahan dengan nama yang jelas (`tambahan-[keterangan].png`).
 5. **Mulai sekarang, setiap kali generate gambar terkait elemen ini lewat agent, agent WAJIB menyertakan file referensi yang relevan** (bisa gabung beberapa sekaligus — acuan utama + reference sheet, sampai 10 gambar referensi dalam 1 kali generate) — tidak perlu diminta manual setiap kali. Untuk video (agent belum bisa generate video langsung, lihat `05_CONTENT_PRODUCTION_PIPELINE.md` Tahap 5) — file-file referensi ini yang sama juga dipakai sebagai acuan visual di tools eksternal (Veo/Dreamina/dst).
@@ -152,6 +165,7 @@ Deskripsi teks saja, sebagus apapun, masih longgar untuk generate visual berulan
 2. **Kalau elemen ini lintas-channel:** hasil tersimpan di `konsistensi-lintas-channel/[nama-elemen]/`, dan tiap Channel Brief yang memakainya cukup tulis rujukan (lihat bagian "Sebelum mulai" di atas).
 3. Kalau elemen ini karakter, pastikan bagian Voice Profile-nya saling merujuk dengan Persona & Voice di Channel Brief (bagian 3) — supaya keterkaitan gaya bicara ↔ karakter tetap terlihat meski dokumennya terpisah.
 4. Setelah ini dikunci, setiap prompt produksi (naskah, generate gambar lewat agent, atau generate video lewat tools eksternal) untuk elemen ini WAJIB menyertakan Bank Konsistensi Visual-nya — lihat `05_CONTENT_PRODUCTION_PIPELINE.md` dan `06_PROMPT_LIBRARY.md`.
+5. **Tetapkan status `Reference-Ready`** di `bank-konsistensi.md` elemen ini — hanya boleh setelah acuan wajib sesuai tipe reference pack-nya benar-benar ADA sebagai file di `referensi/`, bukan sekadar direncanakan. Status ini yang dipakai Channel Brief untuk naik ke `Operational`; kalau ada elemen wajib yang belum `Reference-Ready`, Channel Brief-nya belum boleh dipakai produksi.
 
 ---
 

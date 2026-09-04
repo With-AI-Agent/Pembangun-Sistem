@@ -26,10 +26,13 @@
 → Tidak perlu buka file terpisah, ini otomatis ditangani di alur produksi — lihat `06_PROMPT_LIBRARY.md` bagian A2. Agent akan otomatis cek arsip naskah channel dulu sebelum bikin karakter baru.
 
 **Mau produksi konten (bukan bikin sistem baru)**
-→ Entry Point Universal (lihat `00_CARA_PAKAI_SISTEM.md`) akan otomatis membaca Channel Brief dan Model Konten Brief yang relevan begitu sesi dimulai, lalu ikuti `05_CONTENT_PRODUCTION_PIPELINE.md`
+→ Entry Point Universal (lihat `00_CARA_PAKAI_SISTEM.md`) mewajibkan agent membaca konteks wajib untuk sesi produksi — Brand Core, Channel Brief, Model Konten Brief, pipeline, dan prompt library — sesuai tabel "Konteks Wajib per Jenis Sesi", lalu ikuti `05_CONTENT_PRODUCTION_PIPELINE.md`
 
 **Mau cek apakah hasil kerja masih konsisten dengan yang sudah dikunci**
 → Panggil perintah "cek konsistensi" kapan saja — lihat `00_CARA_PAKAI_SISTEM.md`
+
+**Mau menguji apakah sistem ini sendiri masih berperilaku benar** (setelah aturannya diubah, atau sebelum menaikkan status sistem)
+→ Jalankan skenario di `ACCEPTANCE_TESTS.md` (di root sistem, bukan di `_sistem/`) dan isi tabel Rekaman Hasil
 
 ---
 

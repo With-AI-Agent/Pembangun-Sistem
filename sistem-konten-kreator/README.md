@@ -15,6 +15,6 @@ Repo ini berisi sistem lengkap untuk membangun dan memproduksi konten kreator de
 
 1. Pastikan agent terhubung ke repo ini.
 2. Gunakan prompt universal di `panduan/PANDUAN_PENGGUNA.md` (bagian "Prompt Pembuka Universal").
-3. Agent akan otomatis membaca semua file sistem yang relevan, cek branch, dan tanya tujuan sesi.
+3. Agent membaca konteks wajib untuk jenis sesi itu (tabel "Konteks Wajib per Jenis Sesi" di `_sistem/00_CARA_PAKAI_SISTEM.md`), cek branch dan PR menggantung, lalu tanya tujuan sesi.
 
 Untuk panduan lengkap, baca `panduan/PANDUAN_PENGGUNA.md`.

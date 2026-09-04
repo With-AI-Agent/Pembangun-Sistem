@@ -118,10 +118,19 @@ def build():
             bad.append(rel)
         if "unit-aktif" in rel:
             bad.append(rel)
+        # Historical/reference-only docs must never ship in a clean template,
+        # regardless of where they live (M-09).
+        if p.is_file() and p.suffix == ".md":
+            try:
+                head = p.read_text(encoding="utf-8")[:400]
+            except (OSError, UnicodeDecodeError):
+                head = ""
+            if "agent_instruction: reference_only" in head:
+                bad.append(f"{rel} (reference_only historical doc)")
     if bad:
         print(f"TEMPLATE VERIFY FAILED: should not contain: {bad}")
         return False
-    print("TEMPLATE VERIFY PASSED: no personal data, no production output, no internal audit, no domain example")
+    print("TEMPLATE VERIFY PASSED: no personal data, no production output, no internal audit, no domain example, no reference_only historical doc")
     return True
 
 if __name__ == "__main__":

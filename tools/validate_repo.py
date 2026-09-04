@@ -23,6 +23,7 @@ required = [
     "_cadangan-claude/RINGKASAN_sistem-konten-kreator.md",
     "sistem-konten-kreator/SYSTEM_MANIFEST.md",
     "sistem-konten-kreator/QUALITY_ASSURANCE_AND_EVOLUTION.md",
+    "sistem-konten-kreator/ACCEPTANCE_TESTS.md",
     "sistem-konten-kreator/_sistem/START_DI_SINI.md",
     "sistem-konten-kreator/_sistem/STATUS_TEMPLATE.md",
     "sistem-pilot-catatan-belajar/SESSION_REPORT.md",
@@ -147,8 +148,26 @@ for p in ROOT.rglob("*.md"):
 index = (ROOT / "_meta/INDEKS_SISTEM.md").read_text(encoding="utf-8")
 if "sistem-konten-kreator/" not in index:
     errors.append("index does not contain the content creator system")
-if "sistem-pilot-catatan-belajar/" in index:
-    errors.append("pilot must not be listed as an active system")
+
+# The pilot must not be an ACTIVE SYSTEM ROW in the "Daftar Sistem" table.
+# Prose that explains why it is deliberately excluded is allowed and wanted:
+# a blanket substring ban would forbid documenting the exclusion at all, which
+# is how the same "finding" gets re-raised every session.
+def _system_table_rows(text):
+    rows, in_table = [], False
+    for line in text.splitlines():
+        stripped = line.strip()
+        if stripped.startswith("## "):
+            in_table = stripped.lower().startswith("## daftar sistem")
+            continue
+        if in_table and stripped.startswith("|"):
+            rows.append(stripped)
+    return rows
+
+for row in _system_table_rows(index):
+    if "sistem-pilot-catatan-belajar" in row:
+        errors.append("pilot must not be listed as an active system")
+        break
 
 # --- Deterministic checkpoint field check (C-01) -------------------------
 # Field "Pekerjaan belum tersimpan" must be exact "Tidak ada" when safe,

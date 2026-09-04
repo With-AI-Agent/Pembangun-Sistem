@@ -1,6 +1,6 @@
 # Prompt Pembuka Universal — Sistem Konten Kreator
 
-File ini berisi satu blok prompt siap pakai untuk memulai sesi apa pun di sistem ini. Cukup salin isi bagian "Prompt" di bawah ke chat pertama — kemudian agent akan otomatis memahami semua konteks dan tanya kamu mau melakukan apa.
+File ini berisi satu blok prompt siap pakai untuk memulai sesi apa pun di sistem ini. Cukup salin isi bagian "Prompt" di bawah ke chat pertama — prompt ini mengarahkan agent membangun konteks yang diperlukan lewat entry point (membaca konteks wajib sesuai jenis sesi) lalu menanyakan kamu mau melakukan apa. Ini arahan kerja, bukan jaminan bahwa agent sudah tahu segalanya: kalau ada file wajib yang hilang atau bertentangan, agent harus berhenti dan melapor.
 
 > Untuk panduan lengkap dan penjelasan, baca `panduan/PANDUAN_PENGGUNA.md`.
 
@@ -16,7 +16,7 @@ Sebelum melakukan apa pun:
 2. Deteksi kondisi branch saat ini (baru/kosong vs lama/ada progres?)
 3. Cek dan laporkan status semua PR yang masih terbuka
 4. Tanyakan: "Apa tujuan sesi ini?" (misal: mulai dari nol, buat channel baru, produksi konten, revisi, diskusi, cek konsistensi, atau lainnya)
-5. Berdasarkan jawaban, baca sendiri file sistem yang relevan — TANPA perlu aku tempel manual isinya
+5. Berdasarkan jawaban, baca sendiri file konteks wajib untuk jenis sesi itu — pakai tabel "Konteks Wajib per Jenis Sesi" di `_sistem/00_CARA_PAKAI_SISTEM.md`, bukan tafsiran bebas soal apa yang relevan. Sebutkan file kondisional yang kamu lewati beserta alasannya. TANPA perlu aku tempel manual isinya
 6. Jangan mulai eksekusi/menulis file apa pun sebelum aku konfirmasi tujuan sesi ini sudah jelas
 
 Setelah itu, bawa aku langsung ke langkah yang tepat sesuai tujuan.
@@ -27,5 +27,5 @@ Setelah itu, bawa aku langsung ke langkah yang tepat sesuai tujuan.
 ## Catatan Penggunaan
 
 - Prompt ini bisa dipakai dalam **keadaan apa pun**: sesi baru, sesi lanjutan, diskusi, produksi, revisi, atau hanya sekadar cek konsistensi.
-- Di chat pertama, agent akan membaca semua file sistem yang relevan dan melaporkan kondisi repo. Di chat kedua (atau dalam sesi yang sama), kamu tinggal jelaskan apa yang kamu mau.
+- Di chat pertama, agent membaca konteks wajib untuk jenis sesi yang kamu sebut (tabel "Konteks Wajib per Jenis Sesi" di `_sistem/00_CARA_PAKAI_SISTEM.md`) dan melaporkan kondisi repo, termasuk file kondisional yang dilewati beserta alasannya. Di chat kedua (atau dalam sesi yang sama), kamu tinggal jelaskan apa yang kamu mau.
 - Agent tidak akan memproses file di `panduan/` sebagai instruksi eksekusi kecuali kamu meminta secara eksplisit.

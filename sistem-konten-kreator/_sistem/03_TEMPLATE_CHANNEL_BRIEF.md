@@ -4,9 +4,29 @@
 
 ---
 
-## Status: [ ] Draft — masih digali  /  [ ] Terkunci — siap produksi
+## Status: `Draft` → `Reviewed` → `Approved` → `Merged` → `Operational`
 
-*(Ganti status ini jadi "Terkunci" setelah Channel Discovery selesai dan sudah di-merge ke `main`. Selama masih Draft — termasuk selama masih dalam bentuk PR yang belum di-merge — jangan mulai produksi konten dari brief ini, hasilnya akan berubah-ubah. Channel Brief termasuk kategori Besar, jadi WAJIB direview isi lengkapnya sebelum merge.)*
+- [ ] **Draft** — masih digali, isi bisa berubah kapan saja
+- [ ] **Reviewed** — sudah dibaca lengkap oleh pengguna, koreksi sudah masuk (belum tentu final)
+- [ ] **Approved** — isi dikunci lewat gerbang **G2**, tapi masih di branch/PR
+- [ ] **Merged** — PR sudah lewat gerbang **G3** dan masuk ke `main`
+- [ ] **Operational** — sudah `Merged` DAN semua dependency wajibnya benar-benar ada (lihat Checklist Kelengkapan di bawah). Hanya status ini yang boleh dipakai untuk mulai produksi.
+
+*(Kenapa dipisah begini: "sudah disetujui" dan "sudah masuk `main`" itu dua hal berbeda — brief bisa disetujui isinya tapi belum di-merge, atau sudah di-merge tapi asset referensi wajibnya belum ada. Kalau keduanya dicampur jadi satu kata "Terkunci", produksi bisa mulai di atas dependency yang sebenarnya belum lengkap. Definisi gerbang G2/G3 ada di `00_CARA_PAKAI_SISTEM.md`.)*
+
+*(Channel Brief termasuk kategori Besar — WAJIB direview isi lengkapnya sebelum merge. Jangan mulai produksi konten dari brief yang belum `Operational`; hasilnya akan berubah-ubah.)*
+
+**Checklist Kelengkapan — syarat naik ke `Operational`:**
+
+- [ ] Semua bagian wajib di bawah terisi (tidak ada placeholder `[...]` tersisa)
+- [ ] Semua pertanyaan di checklist konsistensi (bagian 6) sudah dijawab
+- [ ] Setiap elemen visual yang ditandai wajib sudah berstatus `Reference-Ready` (acuan visualnya benar-benar ada di repo, bukan cuma disebut)
+- [ ] `arsip-naskah/indeks.md` dan `arsip-naskah/indeks-karakter.md` sudah dibuat (boleh kosong)
+- [ ] Sudah `Merged` ke `main`
+
+*(Agent WAJIB menolak menetapkan status `Operational` selama masih ada kotak yang belum tercentang — laporkan mana yang kurang, jangan naikkan statusnya diam-diam.)*
+
+**Versi:** `[nomor]` — **Terakhir diperbarui:** `[tanggal]` — **Diwarisi dari:** `_sistem/01_BRAND_CORE.md`
 
 ---
 
@@ -104,7 +124,9 @@
 
 | Nama/sebutan | Ciri ringkas | Konten pertama | Konten lain | Status |
 |---|---|---|---|---|
-| | | | | Tipe B / ditinjau untuk Tipe A |
+| | | | | `Tipe B` / `Ditinjau untuk Tipe A` / `Naik ke Tipe A → [path elemen]` |
+
+*(Diisi/diperbarui di langkah penutup produksi — lihat Tahap 6 langkah 2b di `05_CONTENT_PRODUCTION_PIPELINE.md` dan bagian A2 langkah 5-6 di `06_PROMPT_LIBRARY.md`. Kolom **Konten pertama** dan **Konten lain** diisi link ke `[tanggal]-[judul].md` di folder yang sama, supaya agent bisa membuka sumber aslinya kalau ciri ringkas belum cukup untuk memutuskan. Baris berstatus `Naik ke Tipe A` tidak perlu ditawarkan naik kelas lagi.)*
 
 ## 10. Log Keputusan Channel
 

@@ -19,6 +19,7 @@ Minimum regression check:
 - [ ] Prosedur checkpoint/recovery masih dapat dijalankan
 - [ ] Arsip dan indeks masih memiliki data yang dibutuhkan
 - [ ] Klaim kemampuan tool masih sesuai toolset aktual
+- [ ] Acceptance test di `ACCEPTANCE_TESTS.md` dijalankan ulang untuk skenario yang terdampak perubahan (wajib kalau yang berubah aturan di `00`/`05`/`06`)
 
 ## Lapisan 2 — Memeriksa kesehatan sistem saat digunakan
 

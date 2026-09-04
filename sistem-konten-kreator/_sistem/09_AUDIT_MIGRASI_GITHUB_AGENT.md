@@ -1,3 +1,14 @@
+---
+agent_instruction: reference_only
+active: false
+document_type: historical_audit
+---
+
+> **REFERENSI HISTORIS — BUKAN INSTRUKSI AKTIF.**
+> Dokumen ini adalah catatan audit migrasi yang sudah selesai dieksekusi (per 1 September 2026). Agent **tidak boleh** memperlakukan isinya sebagai aturan kerja yang berlaku sekarang: keputusan di dalamnya sudah dituangkan ke dokumen instruksi aktif (`00`–`08`), dan sebagian sudah berubah oleh audit berikutnya. Baca file ini **hanya** kalau perlu menelusuri alasan historis sebuah keputusan, atau kalau pengguna memintanya secara eksplisit.
+>
+> Kalau isi file ini bertentangan dengan dokumen instruksi aktif, **dokumen aktif yang menang** — dan konflik itu wajib dilaporkan, bukan ditebak. Karena sifatnya historis, file ini **dikecualikan dari template bersih**.
+
 # Audit Migrasi — Sistem Lama (Chat Manual) → Sistem Baru (GitHub + lmarena Agent)
 
 ### Dokumen ini adalah HASIL AUDIT, bukan revisi final. Isinya: setiap asumsi di 10 dokumen lama yang berubah/perlu diputuskan ulang karena sekarang ada akses baca-tulis repo GitHub via agent + kemampuan generate gambar dalam sesi yang sama. Setiap poin butuh KEPUTUSAN kamu sebelum dokumen sumbernya direvisi — dokumen ini tidak menebak jawabannya untukmu.
