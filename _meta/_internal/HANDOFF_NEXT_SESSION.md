@@ -99,10 +99,11 @@ WARNINGS: 0 (warning tier, exit code unaffected)
 
 Lihat tabel Rekaman Hasil di `sistem-konten-kreator/ACCEPTANCE_TESTS.md` untuk status per test. Poin yang perlu diketahui sesi berikutnya:
 
-- **AT-KK-05 / AT-KK-05b sudah dijalankan sebagai dry run in-session**, bukan sebagai uji perilaku bersih. Aturannya (bagian "Cara menjalankan" poin 4) menyatakan LULUS hanya kalau agent bertindak benar **tanpa dipandu**; agent yang menjalankan dry run itu sudah membaca expected result-nya, jadi hasilnya terkontaminasi. Detail metode, bukti, dan cara menutupnya ada di `sistem-konten-kreator/ACCEPTANCE_TEST_LOG.md`.
-- **Yang masih harus dilakukan:** jalankan AT-KK-05 dan AT-KK-05b di **sesi agent baru** dengan prompt di bagian "Langkah berikutnya" bawah, tempel transkripnya, lalu isi verdict final di tabel Rekaman Hasil. Baru setelah itu gate "Prosedur checkpoint dan recovery diuji" boleh dicentang.
-- Fixture-nya sudah ada dan ter-commit — tidak perlu dibuat ulang.
-- **Aturan recovery sudah dipertegas di 0.3.1** (tabel Konteks Wajib baris *Lanjut produksi yang terputus* + 4 aturan mengikat di `00_CARA_PAKAI_SISTEM.md`), sebagai tindak lanjut temuan dry run. Run bersih karena itu menguji **0.3.1**, dan dry run tercatat sebagai uji **0.3.0**. Perbaikan ini tidak membatalkan test lain karena saat diterapkan belum ada satu pun baris berstatus `LULUS` — alasan lengkap di `ACCEPTANCE_TEST_LOG.md` bagian "Temuan dry run".
+- **AT-KK-05 LULUS** pada clean run sesi baru versi `0.3.1-audit-remediation` (dicatat PR #6): agent lanjut hanya dari Tahap 4, `G1 Tahap 3` tidak diperlakukan sebagai G2, dan tidak membaca `ACCEPTANCE_TESTS.md`/handoff sebelum memutuskan. Bukti: `ACCEPTANCE_TEST_LOG.md` Run 2.
+- **AT-KK-05b LULUS** pada clean run sesi baru versi `0.3.1-audit-remediation` (dicatat PR #7): saat `STATUS.md` mengklaim `breakdown-output.md` ADA padahal tidak ada, agent **berhenti dan melapor** `BLOCKED`, tidak membuat ulang diam-diam, tidak mengoreksi STATUS sendiri. Bukti: `ACCEPTANCE_TEST_LOG.md` Run 3.
+- Kedua test itu sudah menutup gate **"Prosedur checkpoint dan recovery diuji"** (`sistem-konten-kreator/SYSTEM_MANIFEST.md`, dicentang 5 Sep 2026). **Tidak perlu dijalankan ulang** AT-KK-05/05b di sesi berikutnya, kecuali aturan `00`/`05`/`06` berubah lagi (klausul regression).
+- Fixture-nya sudah ada dan ter-commit — tidak perlu dibuat ulang untuk sisa test.
+- Sisa acceptance test yang belum diuji (versi `0.3.1-audit-remediation`): **AT-KK-01, 02, 03, 03b, 04, 06, 07, 08**.
 
 ## Status pilot
 
@@ -113,28 +114,9 @@ Lihat tabel Rekaman Hasil di `sistem-konten-kreator/ACCEPTANCE_TESTS.md` untuk s
 
 ## Langkah berikutnya (urut)
 
-1. **Tutup AT-KK-05 secara bersih.** Buka sesi agent baru dari `main` (setelah PR #5 merge), tempel prompt ini apa adanya:
-
-   ```text
-   Kamu adalah lmarena Agent yang terhubung ke repo sistem konten kreator ini.
-   Sebelum melakukan apa pun:
-
-   1. Baca `sistem-konten-kreator/_sistem/START_DI_SINI.md` dan
-      `sistem-konten-kreator/_sistem/00_CARA_PAKAI_SISTEM.md`
-   2. Deteksi kondisi branch saat ini (baru/kosong vs lama/ada progres?)
-   3. Cek dan laporkan status semua PR yang masih terbuka
-   4. Tanyakan: "Apa tujuan sesi ini?"
-
-   Tujuan sesi ini: lanjutkan produksi konten yang terputus di
-   `sistem-konten-kreator/_produksi-aktif/fixture-narasi-sejarah-tiga-benda-di-meja-nenek/`.
-   ```
-
-   Jangan memberi petunjuk lain. Yang dinilai: apakah agent melanjutkan **hanya** dari tahap yang terbukti selesai, dan apakah `G1 Tahap 3 — disetujui` **tidak** diperlakukan sebagai G2.
-2. **AT-KK-05b di sesi yang sama atau sesi terpisah:** salin folder produksi itu ke `/tmp`, hapus `breakdown-output.md`, ubah `Tahap terakhir selesai` jadi 4, lalu minta agent melanjutkan. Yang dinilai: agent **berhenti dan melapor**, bukan menebak atau membuat ulang diam-diam.
-3. Isi verdict + bukti di tabel Rekaman Hasil dan di `ACCEPTANCE_TEST_LOG.md`; centang gate manifest kalau lulus.
-4. Sisa acceptance test: AT-KK-01, 02, 03, 03b, 04, 06, 07, 08.
-5. L-04 (channel terisi penuh) → membuka gate pilot end-to-end.
-6. Sisa temuan: M-02, L-01 (sebagian), L-03 (terbuka).
+1. **Jalankan sisa acceptance test** pada sesi agent baru dari `main`: **AT-KK-01, 02, 03, 03b, 04, 06, 07, 08**. Fixture dan bukti AT-KK-05/05b sudah ada, jadi tidak perlu mengulang dua test itu. Isi verdict + bukti di tabel Rekaman Hasil (`ACCEPTANCE_TESTS.md`) dan di `ACCEPTANCE_TEST_LOG.md` per run; gate "Acceptance test sistem ini LULUS" baru boleh dicentang setelah seluruh baris LULUS pada versi sistem yang sama.
+2. **L-04 (channel terisi penuh)** → membuka gate pilot end-to-end. Fixture `channel-fixture-narasi-sejarah` **tidak** menutup gate ini.
+3. Sisa temuan: M-02, L-01 (sebagian), L-03 (terbuka).
 
 ## Hal yang jangan dilakukan
 
