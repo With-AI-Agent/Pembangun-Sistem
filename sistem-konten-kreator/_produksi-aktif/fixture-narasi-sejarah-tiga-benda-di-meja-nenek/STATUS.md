@@ -33,7 +33,7 @@
   - `G1 Tahap 5 (Asset):` — **dianggap tidak diperlukan** (Tahap 5 dilewati sadar pada fixture uji; tidak ada asset yang digenerate)
   - `G2 konten final + metadata (Tahap 6):` **belum** — sedang diminta
   - `G3 merge:` belum
-- **Commit terakhir:** `08a2354...` — lihat `git log -1 --format=%H -- sistem-konten-kreator/channel-fixture-narasi-sejarah/arsip-naskah/2026-09-04-tiga-benda-di-meja-nenek.md` setelah commit berikutnya. *(Field ini menunjuk commit output, bukan commit `STATUS.md` sendiri.)*
+- **Commit terakhir:** `8d1fa3ff93b44119b476bf00aec65fb91425a687` — commit yang menyimpan **output produksi Tahap 6** (`channel-fixture-narasi-sejarah/arsip-naskah/2026-09-04-tiga-benda-di-meja-nenek.md`). Verifikasi: `git log -1 --format=%H -- sistem-konten-kreator/channel-fixture-narasi-sejarah/arsip-naskah/2026-09-04-tiga-benda-di-meja-nenek.md`. *(Field ini menunjuk commit output, bukan commit `STATUS.md` sendiri.)*
 - **PR terkait:** tidak ada (branch `arena/01a06d25-pembangun-sistem` sudah di-push; PR belum dibuat)
 - **Pekerjaan belum tersimpan:** `Tidak ada`
 - **Risiko atau blocker:** Naskah **sudah** dikunci G2 (final); breakdown **sudah** dikunci G2. Konten belum di-merge (`G3` belum) dan belum punya asset nyata karena Tahap 5 dilewati — konten ini murni fixture uji, tidak untuk dipublish. Perlu **G2 konten final + metadata** sebelum G3 merge.
