@@ -66,10 +66,11 @@
   5. **Slide kaku tidak bisa diedit** — diredam oleh Aturan G-1 (teks tidak boleh tergoreng jadi gambar)
 - **Batasan yang diketahui (semua terverifikasi 4 Sep 2026, bukan asumsi):**
   - **Tidak bisa** render `.pptx` → gambar/PDF; `libreoffice`/`pandoc` tidak ada dan **tidak bisa diinstall** (`deb.debian.org` tidak terjangkau)
-  - **Tidak ada OCR** (`tesseract` tidak ada) → PDF hasil scan tidak terbaca, dan "gambar ini bebas teks" **tidak bisa diverifikasi otomatis**
+  - **OCR tersedia lewat visi model**, bukan lewat `tesseract` (dikoreksi 4 Sep 2026 setelah pengguna mengoreksi). Terbukti: gambar uji berisi kode `XK-4471-QZ` terbaca sempurna lewat `read_file`. `PyMuPDF` bisa merender PDF (termasuk hasil scan) jadi gambar **tanpa poppler**, sehingga PDF scan **bisa** diproses lewat jalur render + visi. Catatan: verifikasi via visi harus dilakukan ulang oleh tiap sesi, tidak diwarisi dari sesi sebelumnya
   - **Tidak bisa** unduh gambar via `curl` (`SSL_ERROR_SYSCALL`, HTTP 000) — gambar internet hanya lewat alat pencari
   - `/tmp` **tidak persisten** antar langkah → semua artefak wajib masuk repo
   - Alat pencari gambar menulis ke **root repo** secara default → wajib dipindahkan ke folder deck dan dibersihkan
+  - **Bahasa dokumen sumber belum tentu Latin.** Kasus nyata pertama (tesis yang diunggah 4 Sep 2026) berbahasa **Arab** (RTL) — kemampuan RTL/shaping python-pptx dan ekstraksi teks Arab dari PDF **belum diuji** di lingkungan ini; wajib diuji saat berkasnya benar-benar sampai (lihat Temuan Sesi)
 - **Prosedur recovery:** `_meta/PROTOKOL_CHECKPOINT_RECOVERY.md` + `STATUS.md` per deck. **Catatan:** protokol itu masih punya 2 celah terbuka (Q-O2 kriteria "alasan" mengulang tahap approved, Q-O3 interval "Waktu pembaruan") — lihat `_meta/_internal/arsip-pilot-002-2026-09-03/README.md`. Usulan penutupannya ada di `00_RENCANA_KERANGKA.md` bagian "Satu butir yang TIDAK boleh kuputuskan sendiri", **menunggu approval pengguna**
 
 ## Batasan Platform
