@@ -1,6 +1,6 @@
 # Model Konten Brief — Narasi 60 Detik (Channel: Narasi Sejarah) (FIXTURE)
 
-> **FIXTURE UJI — bukan model konten produksi sungguhan.** Dibuat untuk acceptance test AT-KK-05/05b di `sistem-konten-kreator/ACCEPTANCE_TESTS.md`. Struktur mengikuti `_sistem/08_TEMPLATE_MODEL_KONTEN_BRIEF.md`.
+> **FIXTURE UJI — bukan model konten produksi sungguhan.** Dibuat untuk acceptance test AT-KK-05/05b di `sistem-konten-kreator/ACCEPTANCE_TESTS.md`. Struktur mengikuti `_sistem/08_TEMPLATE_MODEL_KONTEN_BRIEF.md`. Klaim `Merged` di bawah baru benar secara git setelah PR fixture masuk `main` — lihat catatan yang sama di `../../channel-brief.md`.
 
 ### Dokumen "hidup" milik SATU model konten, dibaca BERSAMAAN dengan Channel Brief channel-nya.
 

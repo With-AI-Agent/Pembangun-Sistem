@@ -1,6 +1,8 @@
 # Channel Brief — Narasi Sejarah (FIXTURE)
 
 > **FIXTURE UJI — bukan channel produksi sungguhan.** Folder ini dibuat untuk menjalankan acceptance test `sistem-konten-kreator/ACCEPTANCE_TESTS.md` (AT-KK-05 dan AT-KK-05b). Isinya dummy, tapi strukturnya sengaja mengikuti alur asli supaya test menguji perilaku nyata, bukan jalur khusus. Jangan pakai brief ini sebagai contoh isi channel yang baik; jangan hitung ini sebagai penutup temuan L-04.
+>
+> **Soal status `Merged` di bawah:** fixture ini dibuat di branch, jadi selama PR-nya belum masuk `main` klaim `Merged` itu **belum benar secara git**. Status ditulis `Operational` lebih dulu supaya fixture memenuhi syarat awal sesi produksi; klaimnya baru sah begitu PR fixture di-merge. Karena itu acceptance test AT-KK-05 wajib dijalankan **dari `main` setelah merge** — lihat `ACCEPTANCE_TEST_LOG.md`.
 
 ### Dokumen "hidup" milik SATU channel, mengikuti struktur `_sistem/03_TEMPLATE_CHANNEL_BRIEF.md`.
 
