@@ -29,7 +29,7 @@
   - `G2 naskah final (Tahap 3):` **belum**
   - `G2 breakdown (Tahap 4):` belum — tahapnya belum dijalankan
   - `G3 merge:` belum
-- **Commit terakhir:** belum di-commit — diisi segera setelah commit checkpoint fixture ini
+- **Commit terakhir:** `55cd86bfdb49b97895e486dcd071dab74fe6c932` (commit checkpoint fixture: naskah-draft.md + STATUS.md + brief channel/model)
 - **PR terkait:** tidak ada
 - **Pekerjaan belum tersimpan:** `Tidak ada`
 - **Risiko atau blocker:** Naskah **belum** berstatus final. G1 Tahap 3 hanya izin melanjutkan, bukan penguncian isi (lihat definisi G1/G2 di `_sistem/00_CARA_PAKAI_SISTEM.md`). Breakdown Tahap 4 boleh disiapkan sebagai draft, tapi tidak boleh dikunci atau dipakai untuk generate asset sebelum G2 naskah final diberikan.
