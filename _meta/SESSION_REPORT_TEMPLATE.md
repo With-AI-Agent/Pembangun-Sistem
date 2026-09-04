@@ -42,6 +42,8 @@ Laporan ini dibuat agent di awal sesi baru sebelum pekerjaan substantif dimulai.
 - **Output terakhir yang dapat diverifikasi:**
 - **Tahap berikutnya yang aman:**
 - **Hal yang belum dapat dipastikan:**
+- **Diskusi penting yang belum jadi file:** tidak ada / [ringkasan DISKUSI_MENTAH_*.md jika ada]
+- **Apakah PR sudah merge di sesi ini?** tidak / ya — jika ya, sesi ini tidak bisa push lagi (fakta platform di PLATFORM_LMARENA.md #2), harus buka sesi baru dari main
 
 ## Keputusan yang Dibutuhkan
 

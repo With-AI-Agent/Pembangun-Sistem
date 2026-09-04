@@ -41,6 +41,10 @@ Untuk melanjutkan pekerjaan setelah merge atau setelah sesi terputus, gunakan pr
 
 Prompt tersebut membangun ulang konteks dari file resmi. Ia tidak menjamin agent mengetahui hal yang hanya pernah dibahas di chat atau informasi yang tidak tersimpan di branch.
 
+**Penting — Batasan Platform lmarena (bukan aturan kita, tapi fakta):**
+- Setelah PR di-merge/close, sesi tersebut **tidak bisa** push lagi ke GitHub (platform cabut akses). File baru setelah merge akan terjebak di sesi. Karena itu pastikan semua sudah push sebelum merge, dan buka sesi baru dari `main` untuk kerja lanjutan. Detail ada di `_meta/PLATFORM_LMARENA.md`.
+- Jika sesi tiba-tiba error / tidak bisa lanjut chat, gunakan workaround resmi Arena: tambah `/download-workspace` di akhir URL sesi untuk download zip workspace, lalu buka sesi baru dan lanjut dari STATUS.md terakhir.
+
 ## Kalau Kamu Sudah Tahu Persis Mau Ngapain (opsional, boleh dipakai langsung)
 
 Prompt universal di atas selalu aman dipakai, tapi kalau kamu sudah yakin mau langsung ke suatu hal spesifik, boleh langsung pakai salah satu ini (tetap akan baca konteks yang perlu, cuma tidak perlu tanya dulu):

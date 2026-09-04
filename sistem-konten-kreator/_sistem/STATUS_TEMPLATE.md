@@ -14,7 +14,7 @@
 - **Approval yang sudah diberikan:**
 - **Commit terakhir:**
 - **PR terkait:**
-- **Pekerjaan yang belum tersimpan:**
+- **Pekerjaan belum tersimpan:** `Tidak ada` (wajib exact, atau daftar path jika ada yang belum tersimpan — lihat `_meta/PROTOKOL_CHECKPOINT_RECOVERY.md`)
 - **Risiko atau blocker:**
 - **Waktu pembaruan:**
 

@@ -128,21 +128,33 @@ Karena tiap channel dan tiap model konten kebutuhannya beda — channel faceless
 
 ---
 
+## Batasan Platform lmarena (fakta, bukan aturan kita)
+
+Sistem ini dipakai via lmarena Agent Mode. Platform memiliki perilaku otomatis yang harus dipahami agar tidak salah asumsi — detail lengkap ada di `_meta/PLATFORM_LMARENA.md` di repo meta:
+
+1. **Branch arena otomatis dibuat:** Saat sesi dimulai, kamu boleh pilih base branch di UI, tapi setelah itu lmarena otomatis membuat branch baru `arena/...` dan semua kerja agent terjadi di situ. `main` hanya berubah setelah PR di-merge. Karena itu branch aktif yang harus diverifikasi adalah `arena/...`.
+
+2. **Tidak bisa push setelah merge/close:** Setelah PR di-merge/close, platform mencabut token push untuk sesi tersebut. Sesi tersebut **tidak bisa** push lagi secara teknis (bukan "sebaiknya jangan"). File baru setelah merge akan terjebak di sesi. Workaround resmi: tambah `/download-workspace` di akhir URL sesi untuk download zip.
+
+3. **Sesi bisa crash:** Chat tidak bisa lanjut, error halaman. Karena itu diskusi panjang yang belum jadi file + commit bisa hilang.
+
+**Implikasi:** Karena fakta #2 dan #3, maka commit tiap tahap besar selesai dan checkpoint diskusi ringan (>5 giliran mendekati keputusan → buat `DISKUSI_MENTAH_*.md` dan commit) bukan birokrasi, tapi syarat fisik supaya sesi baru bisa melanjutkan.
+
 ## Entry Point Universal — Cara Mulai atau Lanjut Sesi
 
 Di awal sesi lmarena Agent, kamu bisa memilih repo DAN branch yang mau dipakai — termasuk melihat daftar branch lama yang belum di-merge dan memilih salah satu secara sengaja. Ini membedakan 2 skenario:
 
-**Skenario A — Lanjut di jendela chat yang sama** (belum ditutup, cuma jeda): tidak butuh langkah khusus, lanjut seperti biasa. Checkpoint otomatis (Prinsip Checkpoint & Verifikasi Konsistensi) akan tetap jalan kalau kamu pindah ke tahap besar berikutnya.
+**Skenario A — Lanjut di jendela chat yang sama** (belum ditutup, cuma jeda): tidak butuh langkah khusus, lanjut seperti biasa. Checkpoint otomatis akan tetap jalan kalau kamu pindah ke tahap besar berikutnya.
 
 **Skenario B — Buka chat/sesi baru** (baik untuk kerjaan baru maupun nerusin branch lama yang sudah dipilih): agent WAJIB menjalankan urutan ini di awal sesi, sebelum mengerjakan apa pun:
 
-1. **Deteksi kondisi branch** — apakah branch ini baru/kosong (baru bercabang dari `main`), atau branch lama yang sudah ada progres? Kalau branch lama, agent baca dulu apa yang sudah dikerjakan (file yang ada, commit terakhir) SEBELUM bertanya apa-apa.
-2. **Cek & laporkan PR yang menggantung** — otomatis, tanpa diminta, apapun jenis sesi berikutnya.
+1. **Deteksi kondisi branch** — apakah branch ini baru/kosong (baru bercabang dari `main`), atau branch lama yang sudah ada progres? Kalau branch lama, agent baca dulu apa yang sudah dikerjakan (file yang ada, commit terakhir) SEBELUM bertanya apa-apa. Verifikasi via `git branch --show-current` karena branch `arena/...` dibuat otomatis (fakta platform).
+2. **Cek & laporkan PR yang menggantung** — otomatis, tanpa diminta, apapun jenis sesi berikutnya. Juga cek apakah PR dari branch aktif sudah MERGED — jika ya, sesi ini **tidak bisa** push lagi (fakta platform #2), harus buka sesi baru dari `main`.
 3. **Tanya tujuan sesi ini** — mau mengerjakan apa (Discovery/Produksi/revisi/lainnya), di channel/model konten/konten yang mana.
 4. **Baca sendiri file yang relevan** berdasarkan jawaban di atas — Brand Core selalu, lalu Channel Brief/Bank Konsistensi Visual/Persona & Voice/Model Konten Brief sesuai yang relevan. Kamu TIDAK perlu tempel manual isi file apa pun — agent membaca langsung dari repo.
 5. **Deteksi jenis sesi** (Discovery vs Produksi) — supaya aturan merge yang berlaku sesuai (lihat Prinsip Approval Bertingkat).
 
-**Catatan penting soal platform:** lmarena Agent bisa diajak diskusi panjang (brainstorming, bolak-balik) TANPA harus baca-tulis file tiap kali merespons, kalau pengguna memintanya secara eksplisit. Ini berarti sesi Discovery yang butuh diskusi panjang **tidak perlu pindah ke platform chat lain** (Claude/GPT chat biasa) seperti versi sistem sebelumnya — cukup dilakukan di sesi agent yang sama, mulai dari mode diskusi, baru pindah ke mode eksekusi (menulis file, commit) begitu hasilnya sudah matang dan pengguna mengonfirmasi. *(Kalimat spesifik untuk memicu mode diskusi ada di `panduan/PANDUAN_PENGGUNA.md`, bukan di sini — dokumen ini murni instruksi kerja untuk agent.)*
+**Catatan penting soal platform:** lmarena Agent bisa diajak diskusi panjang TANPA harus baca-tulis file tiap kali merespons, kalau pengguna memintanya secara eksplisit. Ini berarti sesi Discovery yang butuh diskusi panjang tidak perlu pindah ke platform chat lain seperti versi sistem sebelumnya — cukup dilakukan di sesi agent yang sama, mulai dari mode diskusi, baru pindah ke mode eksekusi begitu hasilnya matang dan pengguna mengonfirmasi. **Tapi** karena fakta platform #3 (sesi bisa crash), maka jika diskusi sudah >5-7 giliran mendekati keputusan, agent harus buat checkpoint diskusi ringan `DISKUSI_MENTAH_*.md` dan commit — supaya tidak hilang kalau crash. *(Kalimat spesifik untuk memicu mode diskusi ada di `panduan/PANDUAN_PENGGUNA.md`, bukan di sini)*
 
 ---
 

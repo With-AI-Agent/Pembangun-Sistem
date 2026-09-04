@@ -14,6 +14,7 @@ required = [
     "_meta/SYSTEM_MANIFEST_TEMPLATE.md",
     "_meta/DEFINITION_OF_DONE.md",
     "_meta/PROTOKOL_CHECKPOINT_RECOVERY.md",
+    "_meta/PLATFORM_LMARENA.md",
     "_meta/QUALITY_ASSURANCE_AND_EVOLUTION.md",
     "_meta/ACCEPTANCE_TESTS.md",
     "_meta/SESSION_REPORT_TEMPLATE.md",
@@ -148,6 +149,38 @@ if "sistem-konten-kreator/" not in index:
     errors.append("index does not contain the content creator system")
 if "sistem-pilot-catatan-belajar/" in index:
     errors.append("pilot must not be listed as an active system")
+
+# --- Deterministic checkpoint field check (C-01) -------------------------
+# Field "Pekerjaan belum tersimpan" must be exact "Tidak ada" when safe,
+# otherwise list. This prevents fragile free-text variations.
+for status_path in ROOT.glob("sistem-pilot-catatan-belajar/unit-aktif/*/STATUS.md"):
+    text = status_path.read_text(encoding="utf-8")
+    if "Pekerjaan belum tersimpan:" not in text and "Pekerjaan yang belum tersimpan:" not in text:
+        errors.append(f"STATUS missing field Pekerjaan belum tersimpan: {status_path.relative_to(ROOT)}")
+        continue
+    for line in text.splitlines():
+        if "Pekerjaan belum tersimpan:" in line or "Pekerjaan yang belum tersimpan:" in line:
+            # split on last colon
+            if "Pekerjaan yang belum tersimpan:" in line:
+                val = line.split("Pekerjaan yang belum tersimpan:", 1)[1].strip()
+            else:
+                val = line.split("Pekerjaan belum tersimpan:", 1)[1].strip()
+            if not val:
+                errors.append(f"STATUS empty Pekerjaan belum tersimpan value: {status_path.relative_to(ROOT)}")
+            if "tidak ada" in val.lower() and "Tidak ada" not in val:
+                errors.append(f"STATUS must use exact 'Tidak ada' (case-sensitive): {status_path.relative_to(ROOT)}: {val}")
+            break
+
+for tmpl in [
+    ROOT / "sistem-pilot-catatan-belajar/STATUS_TEMPLATE.md",
+    ROOT / "sistem-konten-kreator/_sistem/STATUS_TEMPLATE.md",
+]:
+    if tmpl.is_file():
+        t = tmpl.read_text(encoding="utf-8")
+        if "Pekerjaan belum tersimpan:" not in t and "Pekerjaan yang belum tersimpan:" not in t:
+            errors.append(f"STATUS_TEMPLATE missing field: {tmpl.relative_to(ROOT)}")
+        if "Tidak ada" not in t:
+            errors.append(f"STATUS_TEMPLATE should mention exact 'Tidak ada': {tmpl.relative_to(ROOT)}")
 
 ref_docs, ref_checked, ref_warnings = scan_references()
 
