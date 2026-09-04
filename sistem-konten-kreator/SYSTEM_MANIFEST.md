@@ -51,7 +51,7 @@
 - [ ] Brand Core dan brief terkait sudah approved/merged — *belum: belum ada channel nyata yang diisi*
 - [x] Index arsip naskah dan index karakter tersedia bila relevan — *kontrak & format ditetapkan (K-01); instansiasi menyusul saat channel pertama dibuat*
 - [x] Workflow standar/custom sudah dinyatakan eksplisit — *termasuk jalur non-visual (M-04)*
-- [x] Prosedur checkpoint dan recovery diuji — *STATUS.md + protokol meta, diuji di pilot-002*
+- [ ] Prosedur checkpoint dan recovery diuji — *sebagian: mekanisme dasar terbukti di pilot-002 (FI-01 s/d FI-07), tapi itu menguji `STATUS.md` milik pilot. `_sistem/STATUS_TEMPLATE.md` sistem ini berubah 4 Sep 2026 (field approval per gerbang G1/G2/G3 + sumber eksternal) dan versi barunya belum pernah dijalankan pada recovery nyata — lihat AT-KK-05 di `ACCEPTANCE_TESTS.md`*
 - [x] Audit P0 sudah ditutup — *K-01 s/d K-05 + M-01, lihat Log Evolusi*
 - [ ] Pilot end-to-end berhasil — *belum: butuh 1 channel terisi penuh (L-04)*
 - [ ] Acceptance test sistem ini LULUS — *belum: skenario sudah ada di `ACCEPTANCE_TESTS.md`, tabel Rekaman Hasil masih kosong*
