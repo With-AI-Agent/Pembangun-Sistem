@@ -51,10 +51,10 @@
 - [ ] Brand Core dan brief terkait sudah approved/merged — *belum: belum ada channel nyata yang diisi*
 - [x] Index arsip naskah dan index karakter tersedia bila relevan — *kontrak & format ditetapkan (K-01); sudah diinstansiasi (masih kosong) di fixture `channel-fixture-narasi-sejarah/arsip-naskah/` 4 Sep 2026; instansiasi channel nyata tetap menyusul*
 - [x] Workflow standar/custom sudah dinyatakan eksplisit — *termasuk jalur non-visual (M-04)*
-- [ ] Prosedur checkpoint dan recovery diuji — *sebagian: mekanisme dasar terbukti di pilot-002 (FI-01 s/d FI-07), tapi itu menguji `STATUS.md` milik pilot. `_sistem/STATUS_TEMPLATE.md` sistem ini berubah 4 Sep 2026 (field approval per gerbang G1/G2/G3 + sumber eksternal). Versi barunya sudah dijalankan pada recovery nyata lewat **AT-KK-05 + AT-KK-05b dry run 4 Sep 2026** — perilaku agent benar (lanjut hanya dari tahap terbukti selesai, `G1 Tahap 3` tidak diperlakukan sebagai G2, state tidak konsisten dihentikan), tapi run itu **in-session dan terkontaminasi**, jadi belum memenuhi syarat "tanpa dipandu" di `ACCEPTANCE_TESTS.md` poin 4. Yang tersisa: jalankan ulang di sesi agent baru — prompt siap tempel di `ACCEPTANCE_TEST_LOG.md` bagian "Cara menjalankan ulang secara bersih". Aturan recovery-nya sendiri sudah dipertegas di 0.3.1 (tabel Konteks Wajib + 4 aturan mengikat di `00_CARA_PAKAI_SISTEM.md`), jadi run bersih itu menguji 0.3.1, bukan 0.3.0 yang dipakai dry run*
+- [ ] Prosedur checkpoint dan recovery diuji — *sebagian + 1 klausul LULUS: **AT-KK-05 LULUS** pada clean run sesi baru 4 Sep 2026 (versi `0.3.1-audit-remediation`) di `arena/01a06d25-pembangun-sistem` — agent lanjut hanya dari Tahap 4, `G1 Tahap 3` tidak diperlakukan sebagai G2, dan tidak membaca `ACCEPTANCE_TESTS.md`/handoff sebelum memutuskan; bukti di `ACCEPTANCE_TEST_LOG.md` Run 2. Tapi **AT-KK-05b (state tidak konsisten) belum diuji** (`belum diuji` di Rekaman Hasil), jadi gate ini **tetap tidak dicentang**. Mekanisme dasar FI-01 s/d FI-07 sudah terbukti di pilot-002; yang tersisa untuk menutup gate: jalankan AT-KK-05b (copy fixture ke /tmp, klaim Tahap 4 + `breakdown-output.md` ADA tanpa membuat file, agent harus berhenti dan melapor)*
 - [x] Audit P0 sudah ditutup — *K-01 s/d K-05 + M-01, lihat Log Evolusi*
 - [ ] Pilot end-to-end berhasil — *belum: butuh 1 channel terisi penuh (L-04). Fixture `channel-fixture-narasi-sejarah` TIDAK menutup gate ini — dia bahan uji, berhenti di Tahap 3*
-- [ ] Acceptance test sistem ini LULUS — *sebagian: AT-KK-05 + AT-KK-05b sudah dijalankan 4 Sep 2026 sebagai dry run in-session, hasilnya `belum LULUS` (terkontaminasi, tidak memenuhi syarat "tanpa dipandu"); 8 skenario lain belum diuji. Detail di `ACCEPTANCE_TEST_LOG.md`*
+- [ ] Acceptance test sistem ini LULUS — *sebagian: **AT-KK-05 LULUS** pada clean run sesi baru 4 Sep 2026 (versi `0.3.1-audit-remediation`); **AT-KK-05b belum diuji**; 8 skenario lain (AT-KK-01/02/03/03b/04/06/07/08) belum diuji. Detail di `ACCEPTANCE_TEST_LOG.md`*
 
 ## Temuan Audit yang Masih Terbuka
 
@@ -80,7 +80,7 @@ Dari `_meta/_internal/AUDIT_SISTEM_KONTEN_KREATOR_2026-09-03.md`:
 | L-02 klaim agent tahu semua konteks | P2 | **Ditutup** 4 Sep 2026 |
 | L-03 batas ukuran arsip & indexing | P2 | **Terbuka** |
 | L-04 contoh channel terisi penuh | P2 | **Terbuka** — gate pilot end-to-end |
-| L-05 acceptance test dapat diulang | P2 | **Sebagian** — 10 skenario ditulis di `ACCEPTANCE_TESTS.md` (AT-KK-01…08 + 2 varian); AT-KK-05 + AT-KK-05b sudah dijalankan 4 Sep 2026 sebagai dry run in-session (`belum LULUS`, terkontaminasi), 8 sisanya belum; fixture produksi pertama tersedia di `channel-fixture-narasi-sejarah/` + `_produksi-aktif/fixture-narasi-sejarah-tiga-benda-di-meja-nenek/` |
+| L-05 acceptance test dapat diulang | P2 | **Sebagian** — 10 skenario ditulis di `ACCEPTANCE_TESTS.md` (AT-KK-01…08 + 2 varian); **AT-KK-05 LULUS** pada clean run sesi baru 4 Sep 2026 (`0.3.1-audit-remediation`); **AT-KK-05b belum diuji**; 8 sisanya belum; fixture produksi pertama tersedia di `channel-fixture-narasi-sejarah/` + `_produksi-aktif/fixture-narasi-sejarah-tiga-benda-di-meja-nenek/` |
 
 ## Log Evolusi
 
