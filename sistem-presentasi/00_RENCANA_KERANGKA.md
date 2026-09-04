@@ -124,6 +124,33 @@ Ditambahkan 4 Sep 2026 atas permintaan pengguna. **Mode dipilih per deck di `BRI
 | **M3 — Gambar AI** | Ilustrasi konseptual hasil generate | Tidak ada isu lisensi, **tapi ada isu kejujuran** | Hanya untuk ilustrasi konsep. **Dilarang** untuk menggambarkan data, hasil penelitian, foto dokumentasi, atau apa pun yang bisa disangka bukti. **Wajib diberi label "ilustrasi AI"** di slide |
 | **M4 — Gambar asli dari internet** | Foto/ilustrasi nyata yang diambil dari internet | **Paling berisiko — wajib gerbang** | Hanya kalau M1–M3 tidak bisa memenuhi, dan lewat gerbang lisensi di bawah |
 
+### Aturan keras penempatan gambar (ditambahkan 4 Sep 2026 atas permintaan pengguna)
+
+Dua batasan ini **mengikat semua mode gambar**, bukan cuma M3. Alasannya sama: slide harus tetap bisa diedit, dan gambar tidak boleh mengambil alih ruang yang seharusnya berisi teks.
+
+#### Aturan G-1: Teks slide TIDAK BOLEH jadi bagian gambar
+
+Semua teks yang mungkin perlu diubah — judul assertion, isi, angka, label, nama, keterangan — **wajib** berada di *text frame* PowerPoint yang nyata, bukan tergoreng di dalam gambar.
+
+- **Kenapa:** kalau teks tergoreng jadi gambar, slide jadi kaku. Ganti satu kata berarti generate ulang seluruh gambar, dan hasilnya tidak dijamin sama. Ini persis yang dikeluhkan pengguna.
+- **Cara menjalankan:** setiap prompt generate gambar **wajib** memuat larangan eksplisit: *no text, no letters, no words, no numbers, no watermark*. Gambar hanya boleh berisi bentuk, ilustrasi, atau foto.
+- **Batas kejujuran yang harus dicatat:** lingkungan ini **tidak punya OCR** (`tesseract` tidak ada), jadi agent **tidak bisa memverifikasi secara otomatis** bahwa sebuah gambar benar-benar bebas teks. Karena itu pengecekannya mengandalkan dua lapis: (a) prompt yang melarang teks, dan (b) **pengguna melihat preview di G2** sebelum berkas final dibuat. Agent **dilarang** mengklaim "gambar ini sudah kupastikan tidak ada teksnya" — yang boleh diklaim hanya "prompt-nya melarang teks, dan sudah kutawarkan di preview untuk kamu cek".
+- **Pengecualian yang sah:** gambar yang memang berasal dari bahan pengguna (M1) boleh mengandung teks, karena itu dokumen aslinya — misalnya tangkapan tabel atau figur asli skripsi. Itu bukan hasil generate, jadi tidak kaku dengan cara yang sama.
+
+#### Aturan G-2: Gambar ditempatkan di AREA tertentu, bukan otomatis memenuhi slide
+
+Default-nya **bukan** gambar satu slide penuh. Setiap gambar wajib punya geometri eksplisit: area mana, ukuran berapa, dan teks tetap punya ruang sendiri.
+
+| Hal | Aturan |
+|---|---|
+| Penempatan | Ditentukan per slide di `RENCANA_VISUAL.md`: area (kiri/kanan/atas/bawah/pojok), lebar, tinggi |
+| Slide penuh | **Boleh, tapi harus diminta eksplisit** — untuk slide pembuka, penutup, atau kutipan. Bukan default |
+| Rasio gambar | **Wajib menyesuaikan rasio area tujuannya**, supaya tidak gepeng atau terpotong. Kalau rasio tidak cocok, yang disesuaikan adalah ukuran areanya, bukan gambarnya dipaksa |
+| Ruang teks | Setiap slide yang ada gambarnya **tetap harus punya ruang teks yang cukup** untuk judul assertion. Gambar tidak boleh mendesak judul sampai terpotong |
+| Verifikasi | Pemeriksaan struktural (jalur a di bagian verifikasi) **wajib** mengecek: gambar berada di dalam bidang slide, tidak menimpa *text frame*, dan teks tidak terdorong keluar |
+
+**Kenapa ini penting secara desain:** python-pptx menempatkan gambar lewat koordinat eksplisit (`add_picture(path, left, top, width, height)`), jadi penempatan presisi itu memang bisa dilakukan — tapi hanya kalau rencananya sudah menentukan geometrinya lebih dulu. Tanpa `RENCANA_VISUAL.md` yang memuat geometri per slide, agent akan cenderung menaruh gambar besar di tengah dan hasilnya monoton.
+
 ### Gerbang lisensi untuk M4 (ini temuan penting, bukan basa-basi)
 
 Yang sudah diverifikasi di lingkungan ini pada 4 Sep 2026:
@@ -299,6 +326,7 @@ Bukan asumsi — semua ini dijalankan dan dicek hasilnya pada 4 Sep 2026 di sesi
 | Bikin `.pptx` asli (judul, bullet berlevel, tabel, gambar) | **BISA** | deck uji 3 slide, 32.684 bytes, dibaca ulang: `slide: 3`, `punya tabel: True`, `punya gambar: True` |
 | `python-pptx` | tidak terpasang default, **bisa diinstall** | `pip install --target … python-pptx` exit 0 (Pillow 12.3.0 + lxml 6.1.3 ikut) |
 | Baca PDF berbasis teks | **BISA** | `pypdf` terinstall exit 0; PDF uji 2 halaman diekstrak benar per halaman ("BAB I PENDAHULUAN…", "BAB IV HASIL…") |
+| **Baca `.docx` (Word)** | **BISA, dua jalur** | (1) `python-docx` terinstall exit 0 → dokumen uji terbaca: 4 paragraf **beserta nama stylenya** (`Heading 1`, `Heading 2`, `Normal`) + 1 tabel lengkap isinya. (2) Tanpa library apa pun: `.docx` itu zip, `zipfile` bawaan Python membaca `word/document.xml` (2.817 karakter, memuat "Latar Belakang"). Nama style penting karena memberi struktur dokumen tanpa perlu menebak |
 | Baca PDF hasil **scan** | **TIDAK BISA** | `tesseract` tidak ada, tidak ada alat OCR |
 | **Ekstraksi gambar dari PDF pengguna** | **BISA** | PDF uji berisi 1 figur → `page.images` mendeteksi 1 gambar, `I1.png`, 12.654 bytes |
 | **Generate gambar AI** | **BISA** | gambar uji 29.777 bytes, header `ffd8ff` (JPEG valid) |
@@ -357,21 +385,37 @@ Pengguna minta sistem dibangun **lengkap sejak awal**, dengan alasan: *"ini buka
 
 ---
 
-## Hal yang Masih Terbuka (perlu keputusan pengguna)
+## Keputusan atas Butir Terbuka
 
-| # | Hal | Usulan agent |
-|---|---|---|
-| 1 | Ambang "bahan pendek vs panjang" untuk G1 | **> 15 halaman ATAU > 5.000 kata** → G1 wajib. Angka boleh diubah |
-| 2 | Format output selain `.pptx` | `.pptx` (default) + `.html` (sekalian jadi jalur preview). **PDF tidak dijanjikan** — tidak ada renderer di lingkungan ini |
-| 3 | Berkas bahan besar (misal PDF skripsi 100 halaman) masuk repo atau tidak | Masuk ke `deck-aktif/<nama>/bahan/`, tapi perlu aturan batas ukuran + catatan di `.gitignore` kalau terlalu besar |
-| 4 | Riset internet untuk **isi** ikut versi pertama? | **Ya** (sesuai permintaan pengguna "langsung lengkap"), tapi diverifikasi di urutan 5 — setelah aturan anti-ngarang terbukti kuat |
-| 5 | Nama deck: ditentukan pengguna atau diusulkan agent | Diusulkan agent di Tahap 1, dikonfirmasi pengguna di G2 |
-| 6 | Celah protokol meta Q-O2 & Q-O3 (lihat `_meta/_internal/arsip-pilot-002-2026-09-03/README.md`) | Ditangani sebagai **pekerjaan meta-sistem terpisah**, bukan di sistem ini. Tapi harus dicatat karena `STATUS.md` sistem ini akan memakainya |
-| 7 | Mode gambar default untuk deck pertama (kasus sidang skripsi) | **M1 + M2** — figur asli skripsi + grafik dari datanya. M3 hanya untuk slide konsep, M4 hanya kalau terpaksa |
-| 8 | Daftar putih sumber untuk M4 | **Wikimedia Commons + Openverse** dulu. Keduanya lisensinya terbaca mesin. Boleh ditambah asal lisensinya bisa diverifikasi, bukan ditebak |
-| 9 | Gambar hasil internet ikut ter-commit ke repo? | **Ya**, di `deck-aktif/<nama>/gambar/` + wajib ada barisnya di `DAFTAR_GAMBAR.md`. Perlu aturan batas ukuran per berkas supaya repo tidak bengkak |
-| 10 | Label "ilustrasi AI" terlihat di slide atau cukup di catatan? | **Terlihat di slide** (kecil, di pojok). Alasannya: yang tertipu oleh gambar AI adalah audiens, bukan pengguna — jadi audienslah yang perlu tahu |
-| 11 | Apakah gambar M4 boleh dipakai untuk keperluan komersial? | **Tidak secara default.** Uji nyata menemukan lisensi `NC` (NonCommercial) di sumber yang tampak bebas. Kalau deck untuk keperluan komersial, M4 dikunci kecuali lisensinya eksplisit mengizinkan |
+Pengguna menyerahkan keputusan ini ke agent pada 4 Sep 2026, dengan syarat: *"asalkan itu betul-betul hasil pemikiran mendalam dan bahkan hasil riset jika diperlukan."* Karena itu tiap keputusan di bawah disertai alasannya, bukan cuma hasilnya. Semua tercatat sebagai keputusan dan **boleh diubah nanti lewat Log Keputusan** — tapi agent tidak boleh mengubahnya diam-diam.
+
+| # | Butir | Keputusan | Alasan |
+|---|---|---|---|
+| 1 | Ambang "bahan pendek vs panjang" untuk G1 | G1 **wajib** kalau bahan **> 15 halaman ATAU > 5.000 kata ATAU punya ≥ 8 bagian berstruktur** (bab/subbab). Pengguna boleh **menaikkan** ambang ini; agent **tidak boleh menurunkannya** sendiri | Ketiga pemicu itu terukur, jadi tidak bisa ditawar lewat perasaan. Pemicu ketiga (≥ 8 bagian) kutambahkan karena panjang bukan satu-satunya sumber risiko: bahan 10 halaman dengan 12 subbab tetap gampang ada yang terlewat, dan justru struktur bertingkat itu yang bikin "lengkap" bisa dihitung. Selaras prinsip *segmenting* Mayer |
+| 2 | Format output | `.pptx` = default. `.html` = **selalu dibuat**, rangkap sebagai jalur preview verifikasi. **PDF tidak dijanjikan** | `.html` bukan fitur tambahan yang mahal — dia sudah dibutuhkan untuk verifikasi (jalur b), jadi membuatnya selalu ada hampir gratis. PDF tidak dijanjikan karena **terbukti tidak ada renderer** di lingkungan ini; menjanjikan yang tidak bisa dipenuhi lebih buruk daripada tidak menjanjikan |
+| 3 | Berkas bahan besar masuk repo? | **Ya**, di `deck-aktif/<nama>/bahan/`, dengan batas **≤ 25 MB per berkas**. Lebih besar → tidak di-commit; yang dicatat hash + nama berkasnya, dan **hasil ekstraksinya** (`PEMAHAMAN_BAHAN.md`) tetap di-commit | Bahan harus ikut repo supaya sesi baru bisa memulihkan kerja (fakta platform #3). Batas 25 MB karena platform membatasi artefak patchset (~128 MB / 10.000 berkas), dan PDF skripsi umumnya 1–10 MB. Yang penting bukan berkas aslinya, tapi **pemahaman yang sudah diekstrak** — itu yang wajib selamat |
+| 4 | Riset internet untuk isi ikut versi pertama? | **Ya**, tapi diverifikasi di urutan #7 — setelah aturan anti-ngarang terbukti kuat | Sesuai permintaan pengguna ("langsung lengkap"). Penundaan **verifikasi**, bukan penundaan **desain** — dua hal itu sengaja dibedakan |
+| 5 | Nama deck siapa yang menentukan | Agent mengusulkan di **awal Tahap 1** dengan paket rekomendasi, pengguna memilih **saat itu juga** (kategori Kecil) | **Koreksi atas usulan awalku.** Tadinya kutulis "dikonfirmasi di G2" — itu salah, karena folder `deck-aktif/<nama>/` harus dibuat di awal Tahap 1, sebelum G2 ada. Menunggu G2 berarti agent menebak nama folder dulu lalu mengganti namanya, dan itu merusak rujukan |
+| 7 | Mode gambar default untuk kasus sidang skripsi | **M1 + M2** (figur asli skripsi + grafik dari datanya). M3 hanya untuk slide konsep, M4 hanya kalau M1–M3 tidak sanggup | Keduanya **terbukti bisa** di lingkungan ini, **nol risiko hak cipta** (karya pengguna sendiri / buatan kode), dan paling relevan: figur asli skripsi justru yang dikenali penguji. Gambar AI kalah untuk kasus ini karena tidak boleh menggambarkan data |
+| 8 | Daftar putih sumber untuk M4 | **Bukan daftar situs, tapi kriteria:** sumber yang **blok lisensinya bisa dibaca dan diverifikasi**. Wikimedia Commons sudah **terbukti** bisa. Sumber lain boleh asal lolos kriteria yang sama | **Koreksi atas usulan awalku.** Tadinya kutulis "Wikimedia Commons + Openverse" — tapi Openverse **belum kuuji** di lingkungan ini, jadi mencantumkannya berarti mengklaim yang belum terbukti. Kriteria lebih kuat daripada daftar: dia tidak perlu diperbarui tiap ada situs baru, dan tidak memberi kesan aman pada sumber yang belum diverifikasi |
+| 9 | Gambar internet ikut ter-commit? | **Ya**, di `deck-aktif/<nama>/gambar/`, wajib ada barisnya di `DAFTAR_GAMBAR.md`, batas **≤ 5 MB per gambar** | Gambar harus ikut repo supaya berkas `.pptx` bisa dibangun ulang oleh sesi lain. Batas 5 MB karena gambar slide tidak butuh resolusi cetak — dan kalau perlu lebih besar, itu tanda gambarnya salah mode |
+| 10 | Label "ilustrasi AI" terlihat di slide? | **Ya, terlihat di slide** (kecil, di pojok), bukan cuma di catatan | Yang berisiko tertipu gambar AI adalah **audiens**, bukan pengguna. Menyembunyikan labelnya di `DAFTAR_GAMBAR.md` melindungi nobody. Biaya label kecil; biaya audiens salah menyangka ilustrasi sebagai bukti penelitian jauh lebih besar — apalagi di sidang skripsi |
+| 11 | M4 untuk keperluan komersial? | **Tidak secara default.** Dikunci kecuali lisensinya eksplisit mengizinkan, dan itu harus tercatat | Uji nyata menemukan lisensi **`NC` (NonCommercial)** pada berkas yang tampak bebas pakai (`File:Cat03.jpg` → CC BY-NC 3.0). Default aman + catatan eksplisit lebih baik daripada mengandalkan agent mengenali singkatan lisensi setiap kali |
+
+### Satu butir yang TIDAK boleh kuputuskan sendiri
+
+**Butir 6 — celah protokol meta Q-O2 dan Q-O3.** Ini menyentuh aturan inti `_meta/`, dan aturan repo ini sendiri melarang mengubah aturan inti tanpa proposal + approval + regression check + rollback plan (pola AT-05). Jadi kuperlakukan sebagai **proposal**, bukan keputusan.
+
+**Usulan Q-O2** (kriteria "alasan" yang sah untuk mengulang tahap `approved`/`merged`) — alasan dianggap sah **hanya** kalau salah satu dari ini, dan wajib dicatat di Log Keputusan:
+1. Output fisiknya **terbukti tidak ada atau rusak** (bukan "kayaknya kurang bagus").
+2. Ada **keputusan pengguna baru** yang membatalkan dasar keputusan sebelumnya.
+3. Ditemukan **konflik dengan sumber terkunci** yang tidak terlihat saat approval diberikan.
+4. Aturan yang jadi dasar approval **sudah berubah** setelah approval itu.
+
+**Usulan Q-O3** (field "Waktu pembaruan") — diisi **setiap kali satu tahap selesai**, format `YYYY-MM-DD — <nama tahap>`, memakai tanggal UTC sesi.
+
+**Kenapa ini perlu diputuskan sebelum dokumen sistem ditulis:** `_sistem/01_ALUR_PRESENTASI.md` dan `_template/T6_STATUS.md` akan merujuk protokol recovery meta. Kalau Q-O2/Q-O3 masih kosong, sistem ini terpaksa mengarang aturannya sendiri — dan itu persis drift yang meta-sistem ini ada untuk mencegahnya.
+
 
 ---
 
