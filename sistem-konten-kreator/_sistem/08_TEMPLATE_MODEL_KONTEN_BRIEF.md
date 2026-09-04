@@ -69,8 +69,8 @@
   - Tahap 1 (Ideation):
   - Tahap 2 (Konsep & Angle):
   - Tahap 3 (Naskah/Script):
-  - Tahap 4 (Breakdown Visual):
-  - Tahap 5 (Generate Asset):
+  - Tahap 4 (Breakdown Output):
+  - Tahap 5 (Generate/Acquire Assets):
   - Tahap 6 (Assembly & Publish Prep):
 
 ### Kalau Mode = Alur Kerja Kustom
@@ -85,7 +85,7 @@
 |---|---|---|---|---|
 | | | | | |
 
-- **Titik pertemuan dengan kerangka standar:** (di tahap keberapa alur kustom ini "bertemu kembali" dengan alur standar — biasanya begitu 1 ide/bahan konkret sudah didapat, dari situ lanjut mengikuti Tahap Naskah → Breakdown Visual → dst di `05_CONTENT_PRODUCTION_PIPELINE.md` seperti biasa)
+- **Titik pertemuan dengan kerangka standar:** (di tahap keberapa alur kustom ini "bertemu kembali" dengan alur standar — biasanya begitu 1 ide/bahan konkret sudah didapat, dari situ lanjut mengikuti Tahap Naskah → Breakdown Output → dst di `05_CONTENT_PRODUCTION_PIPELINE.md` seperti biasa)
 
 - **Catatan tools yang belum pasti** (kalau ada tahap yang tools/caranya belum ditentukan dan akan dieksplorasi saat eksekusi nyata — wajar untuk dicatat sebagai "belum ditentukan" daripada dipaksa diisi sekarang):
 

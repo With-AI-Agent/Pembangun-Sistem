@@ -120,7 +120,8 @@ nama-repo/
         ├── STATUS.md                 ← status persisten wajib (checkpoint & recovery)
         ├── SUMBER.md                 ← wajib begitu ada 1 sumber eksternal dipakai
         ├── naskah-draft.md
-        ├── breakdown-shot.md         ← bentuk detailnya (shot/section/panel/dll) ditentukan per Model Konten
+        ├── breakdown-output.md       ← unit output (shot/panel/section/segmen/bagian) per Model Konten
+        │                                (boleh dinamai breakdown-shot.md kalau unitnya memang shot)
         └── assets/
 ```
 
@@ -196,6 +197,25 @@ Tabel ini mengikat: begitu tujuan sesi diketahui (langkah 3), agent WAJIB membac
 - Kalau ada file wajib yang **tidak ditemukan**, agent berhenti dan melapor — bukan melanjutkan dengan asumsi. File wajib yang hilang biasanya berarti dependency belum dibuat atau belum di-merge ke `main`.
 - File kondisional yang **dilewati wajib disebutkan alasannya** di laporan awal sesi (misal: "Bank Konsistensi Visual dilewati — konten ini teks-only"). Ini supaya kelalaian membaca bisa dibedakan dari keputusan sadar.
 - Baris di atas adalah **minimum**, bukan batas atas. Kalau agent butuh file lain untuk mengerjakan tugasnya, silakan baca — tapi jangan kurang dari daftar wajib.
+
+### Aturan Kerja Bersamaan (Obsidian ↔ Agent ↔ PR)
+
+Repo ini disentuh dari beberapa arah sekaligus: kamu lewat Obsidian (dengan plugin git yang bisa push otomatis), agent lewat sesi lmarena, dan PR yang menunggu merge. Tanpa aturan, tiga arah ini bisa saling menimpa.
+
+**Aturan dasar:**
+
+1. **Satu tujuan per branch.** Jangan campur Discovery channel A dengan produksi konten channel B di branch yang sama — kalau salah satunya perlu direvisi sebelum merge, yang lain ikut tertahan.
+2. **Pull sebelum mulai.** Agent memverifikasi branch aktif dan commit terakhir di awal sesi (Entry Point langkah 1). Kamu di Obsidian: pull dulu sebelum mengedit, terutama kalau sesi agent baru saja berjalan.
+3. **Jangan edit file yang sedang dikerjakan agent.** Selama sesi agent aktif mengerjakan dokumen tertentu, jangan edit file itu dari Obsidian. Kalau perlu mengubahnya, katakan ke agent — biar agent yang menulis, atau minta agent berhenti dulu di file itu.
+4. **File yang sedang dikerjakan dicatat.** Untuk produksi, `STATUS.md` sudah mencatat output resmi dan tahap berjalan — itu penanda de facto file mana yang sedang "dipegang" agent.
+
+**Kalau konflik tetap terjadi:**
+
+- **Konflik teks di file yang sama** — jangan hapus salah satu versi supaya "cepat beres". Baca keduanya, tentukan mana yang lebih baru/benar berdasarkan Log Keputusan dan `STATUS.md`, gabungkan secara sadar, lalu catat di Log Keputusan bahwa terjadi konflik dan bagaimana diselesaikan.
+- **Dua branch mengubah Channel Brief yang sama** — merge yang lebih dulu selesai, lalu branch kedua WAJIB rebase/merge dari `main` dan **membaca ulang** brief hasil merge sebelum melanjutkan. Jangan lanjut di atas versi brief yang sudah usang.
+- **Push otomatis plugin git di tengah sesi agent** — kalau agent menemukan commit baru yang bukan buatannya di branch yang sama, agent berhenti dan melapor, bukan menimpa. 
+- **PR lama masih terbuka saat sesi baru dimulai** — dilaporkan di Entry Point langkah 2. Putuskan dulu: merge, tutup, atau lanjutkan di branch itu. Jangan mulai kerja baru yang menyentuh file sama sebelum itu diputuskan.
+- **Branch keliru** — kalau ternyata kerja dilakukan di branch yang salah, jangan hapus branch atau `main`. Buat PR dari branch itu apa adanya, atau cherry-pick commit yang relevan ke branch yang benar; keputusan dicatat.
 
 **Catatan penting soal platform:** lmarena Agent bisa diajak diskusi panjang TANPA harus baca-tulis file tiap kali merespons, kalau pengguna memintanya secara eksplisit. Ini berarti sesi Discovery yang butuh diskusi panjang tidak perlu pindah ke platform chat lain seperti versi sistem sebelumnya — cukup dilakukan di sesi agent yang sama, mulai dari mode diskusi, baru pindah ke mode eksekusi begitu hasilnya matang dan pengguna mengonfirmasi. **Tapi** karena fakta platform #3 (sesi bisa crash), maka jika diskusi sudah >5-7 giliran mendekati keputusan, agent harus buat checkpoint diskusi ringan `DISKUSI_MENTAH_*.md` dan commit — supaya tidak hilang kalau crash. *(Kalimat spesifik untuk memicu mode diskusi ada di `panduan/PANDUAN_PENGGUNA.md`, bukan di sini)*
 

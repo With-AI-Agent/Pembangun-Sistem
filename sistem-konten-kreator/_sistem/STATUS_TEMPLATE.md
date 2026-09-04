@@ -7,7 +7,7 @@
 - **Tahap berikutnya:**
 - **Output resmi:**
   - `naskah-draft.md`
-  - `breakdown-shot.md` atau nama unit yang sesuai
+  - `breakdown-output.md` (atau `breakdown-shot.md` / nama lain sesuai unit yang dipakai)
   - `assets/`
 - **Sumber konteks yang dibaca:**
 - **Sumber eksternal dipakai:** `Tidak ada` / ada — `SUMBER.md` dibuat, klaim belum terverifikasi: [daftar atau `tidak ada`]

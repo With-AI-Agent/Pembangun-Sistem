@@ -45,12 +45,12 @@ Setiap konten alur kerjanya bisa beda-beda (konten A butuh riset dulu sebelum na
 
 **Checkpoint tambahan (lihat juga 00_CARA_PAKAI_SISTEM.md):** setiap kali pindah ke tahap besar berikutnya, ringkas ulang dulu apa yang sudah disepakati dengan membaca ulang sumber resmi — bukan mengandalkan ingatan sesi ini saja.
 
-**Untuk Tahap Generate Asset (gambar):** mekanisme ini tetap berlaku untuk menentukan urutan generate yang disarankan, tapi outputnya berupa file gambar, bukan teks yang "melahirkan" instruksi lanjutan secara alami — cukup lanjut ke Tahap 6 setelah semua unit visual selesai digenerate.
+**Untuk Tahap Generate/Acquire Assets (gambar):** mekanisme ini tetap berlaku untuk menentukan urutan generate yang disarankan, tapi outputnya berupa file gambar, bukan teks yang "melahirkan" instruksi lanjutan secara alami — cukup lanjut ke Tahap 6 setelah semua unit visual selesai digenerate.
 
 **Kalau hasil suatu tahap ternyata jelek/tidak sesuai, dan mau ULANG tahap sebelumnya (bukan lanjut maju):**
 Jangan lanjut maju — sebagai gantinya, gunakan pola ini di sesi yang sama:
 ```
-Hasil tahap [SEBUTKAN TAHAP INI, misal "Breakdown Visual"] ini kurang
+Hasil tahap [SEBUTKAN TAHAP INI, misal "Breakdown Output"] ini kurang
 pas karena: "[JELASKAN APA YANG KURANG PAS]"
 
 Tolong ulang tahap [SEBUTKAN TAHAP SEBELUMNYA YANG PERLU DIREVISI, misal
@@ -92,7 +92,7 @@ Beda dari Karakter Utama Channel (Tipe A, permanen, ada di Bank Konsistensi Visu
 
    Kalau `indeks-karakter.md` belum ada di channel ini (channel baru, atau arsip dibuat sebelum aturan ini berlaku), **buat file itu dulu** dengan format minimum dari bagian 9 `03_TEMPLATE_CHANNEL_BRIEF.md`, lalu lanjutkan. Jangan melewati langkah pengecekan diam-diam dengan alasan filenya tidak ada, dan jangan menyatakan "tidak ada karakter serupa" kalau yang terjadi sebenarnya indeksnya belum pernah dibuat — laporkan kondisi itu apa adanya ke pengguna.
 
-2. Kalau memang karakter baru, begitu dia pertama kali muncul (biasanya saat Tahap Naskah atau Breakdown Visual), buat dulu deskripsinya secara ringkas tapi cukup detail untuk generate visual berulang — pakai format mini di bawah, JANGAN cuma disebut sekilas di narasi lalu dianggap "agent akan ingat sendiri":
+2. Kalau memang karakter baru, begitu dia pertama kali muncul (biasanya saat Tahap Naskah atau Breakdown Output), buat dulu deskripsinya secara ringkas tapi cukup detail untuk generate visual berulang — pakai format mini di bawah, JANGAN cuma disebut sekilas di narasi lalu dianggap "agent akan ingat sendiri":
 
 ```
 KARAKTER PER-KONTEN: [nama/sebutan]

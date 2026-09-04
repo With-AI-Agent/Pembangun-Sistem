@@ -30,11 +30,13 @@ Selain itu, tiap konten bisa butuh urutan yang sedikit berbeda: ada yang perlu r
 Tahap 1: Ideation        → dari topik luas jadi 1 ide konten spesifik
 Tahap 2: Konsep & Angle   → tentukan sudut pandang, hook, struktur besar
 Tahap 3: Naskah/Script    → tulis naskah lengkap (dialog/voice over/caption)
-Tahap 4: Breakdown Visual → pecah naskah jadi unit visual konkret yang perlu
-                            digenerate (bentuk detailnya — shot/section/
-                            panel/dll — mengikuti Model Konten Brief)
-Tahap 5: Generate Asset   → eksekusi generate gambar per unit visual,
-                            tersimpan sebagai file di _produksi-aktif/
+Tahap 4: Breakdown Output → pecah naskah jadi unit output konkret yang perlu
+                            diproduksi (bentuk unitnya — shot/panel/section/
+                            segmen audio/dll — mengikuti Model Konten Brief)
+Tahap 5: Generate/Acquire Assets → hasilkan atau kumpulkan asset per unit
+                            (generate gambar, rekam/siapkan audio, atau
+                            tidak ada asset sama sekali untuk konten
+                            teks-only), tersimpan di _produksi-aktif/
 Tahap 6: Assembly & Publish Prep → edit jadi final, siapkan caption/judul/
                             thumbnail, pindahkan naskah final ke arsip
 ```
@@ -52,8 +54,8 @@ Definisi G1/G2/G3 ada di `00_CARA_PAKAI_SISTEM.md` (Prinsip Approval Bertingkat)
 | 1. Ideation | **G1** | Ide terpilih sudah sesuai? Lanjut atau cari ide lain? | Belum ada yang dikunci; murah untuk diulang |
 | 2. Konsep & Angle | **G1** | Kerangka/angle ini dipakai? | Kalau angle mengubah sesuatu yang dikunci di Channel Brief → naik jadi **G2** |
 | 3. Naskah/Script | **G1 + G2** | G1: naskah cukup untuk lanjut? G2: naskah ini dikunci sebagai naskah final? | G2 wajib karena naskah final jadi dasar breakdown dan diarsipkan permanen |
-| 4. Breakdown Visual | **G1 + G2** | G1: breakdown sudah benar? G2: breakdown ini dikunci untuk generate asset? | G2 wajib karena generate asset memakai biaya/waktu nyata dan sulit dibatalkan setelah jalan |
-| 5. Generate Asset | **G1** | Asset hasil generate diterima, atau ada yang perlu regenerate? | Perubahan elemen Bank Konsistensi Visual di tengah jalan → **G2** terpisah |
+| 4. Breakdown Output | **G1 + G2** | G1: breakdown sudah benar? G2: breakdown ini dikunci untuk generate asset? | G2 wajib karena generate asset memakai biaya/waktu nyata dan sulit dibatalkan setelah jalan |
+| 5. Generate/Acquire Assets | **G1** | Asset hasil generate diterima, atau ada yang perlu regenerate? | Perubahan elemen Bank Konsistensi Visual di tengah jalan → **G2** terpisah |
 | 6. Assembly & Publish Prep | **G2 + G3** | G2: konten final + metadata disetujui? G3: merge PR ke `main`? | Konten produksi final = kategori Besar, review isi lengkap sebelum merge |
 
 **Aturan tambahan yang berlaku lintas tahap:**
@@ -86,7 +88,7 @@ Aturan pengisian:
 ### Gerbang fact-check dan rights-check
 
 - **Tahap 3 (Naskah), bagian dari G2:** naskah tidak boleh dikunci sebelum setiap klaim faktual di dalamnya punya baris di `SUMBER.md` dengan status verifikasi terisi. Kalau ada yang `Belum`/`Tidak bisa diverifikasi`, agent menyebutkannya saat meminta G2 — pengguna yang memutuskan: verifikasi dulu, turunkan bahasanya, atau hapus klaimnya.
-- **Tahap 5 (Generate Asset), bagian dari G1:** referensi visual dari web boleh dipakai sebagai **arahan gaya/komposisi**, tidak boleh direproduksi mendekati aslinya. Karya berhak cipta yang masih dilindungi (karakter milik pihak lain, logo, foto berlisensi, musik) tidak boleh dijadikan asset final tanpa hak yang jelas. Agent WAJIB menolak dan menawarkan alternatif kalau permintaan mengarah ke sana, bukan mengerjakannya lalu memberi peringatan kecil.
+- **Tahap 5 (Generate/Acquire Assets), bagian dari G1:** referensi visual dari web boleh dipakai sebagai **arahan gaya/komposisi**, tidak boleh direproduksi mendekati aslinya. Karya berhak cipta yang masih dilindungi (karakter milik pihak lain, logo, foto berlisensi, musik) tidak boleh dijadikan asset final tanpa hak yang jelas. Agent WAJIB menolak dan menawarkan alternatif kalau permintaan mengarah ke sana, bukan mengerjakannya lalu memberi peringatan kecil.
 - **Tahap 6 (Publish Prep), bagian dari G2:** atribusi yang ditandai wajib di `SUMBER.md` harus benar-benar sudah masuk ke caption/deskripsi/on-screen sesuai yang dicatat.
 
 ### Setelah konten selesai
@@ -186,7 +188,7 @@ Format naskah: [SEBUTKAN FORMAT YANG DIMAU, misal per-shot dengan timing,
 atau paragraf voice over biasa, dst — atau ikuti format yang sudah
 ditentukan di Model Konten Brief kalau ada]
 
-**Gerbang G1 + G2** — G1 untuk lanjut ke Tahap 4 (Breakdown Visual), dan G2 untuk mengunci naskah ini sebagai naskah final (dasar breakdown sekaligus yang nanti diarsipkan permanen). Tanyakan keduanya eksplisit; jangan anggap "lanjut" sudah berarti naskah dikunci.
+**Gerbang G1 + G2** — G1 untuk lanjut ke Tahap 4 (Breakdown Output), dan G2 untuk mengunci naskah ini sebagai naskah final (dasar breakdown sekaligus yang nanti diarsipkan permanen). Tanyakan keduanya eksplisit; jangan anggap "lanjut" sudah berarti naskah dikunci.
 
 **Sebelum meminta G2:** kalau naskah ini memuat klaim faktual atau bahan dari sumber eksternal, jalankan gerbang fact-check — tiap klaim harus punya baris di `SUMBER.md` dengan status verifikasi terisi (lihat bagian "Aturan Sumber Eksternal, Fakta, dan Hak Cipta"). Sebutkan klaim yang masih `Belum`/`Tidak bisa diverifikasi` saat meminta G2.
 ```
@@ -195,9 +197,21 @@ ditentukan di Model Konten Brief kalau ada]
 
 ---
 
-## Tahap 4: Breakdown Visual
+## Tahap 4: Breakdown Output
 
-**Tujuan:** naskah dipecah jadi unit visual konkret yang harus digenerate — bentuk unitnya (shot/section/panel/dll) mengikuti yang ditentukan di Model Konten Brief channel ini.
+**Tujuan:** naskah dipecah jadi unit output konkret yang harus diproduksi — bentuk unitnya mengikuti yang ditentukan di Model Konten Brief channel ini.
+
+**Bentuk unit menurut jenis konten** (semuanya kasus normal, bukan pengecualian):
+
+| Jenis konten | Unit | Asset yang dihasilkan Tahap 5 |
+|---|---|---|
+| Video | shot / scene | gambar per shot (atau footage dari tools eksternal) |
+| Komik/carousel | panel / slide | gambar per panel |
+| Infografis | section | gambar/grafik per section |
+| Audio-only (podcast, narasi) | segmen audio | tidak ada asset visual; unit = blok naskah + arahan penyampaian, plus cover art kalau perlu |
+| Teks-only (thread, artikel, caption panjang) | bagian/paragraf | **tidak ada asset sama sekali** — Tahap 5 hanya berisi verifikasi akhir, tidak ada yang digenerate |
+
+Kalau konten ini **tidak memerlukan asset visual**, Tahap 4 tetap dijalankan (naskah tetap perlu dipecah jadi unit supaya konsisten dan bisa diperiksa), tapi kolom prompt generate dan file referensi visual **dikosongkan dengan keterangan eksplisit** — bukan diisi asal supaya formatnya penuh. Tahap 5 lalu dilewati dengan catatan di `STATUS.md`: `Tahap 5 — tidak berlaku (konten teks-only)`. Ini keputusan sadar yang tercatat, bukan tahap yang terlupakan.
 
 **Prompt:**
 ```
@@ -207,11 +221,11 @@ Naskah (dari Tahap 3): "[NASKAH]"
 sertakan deskripsi itu di sini secara otomatis, sudah terbawa dari tahap
 sebelumnya]
 
-Pecah naskah ini jadi daftar unit visual, sesuai bentuk yang ditentukan di
-Model Konten Brief channel ini (shot untuk video, section untuk
-infografis, panel untuk komik, dll — kalau Model Konten Brief belum
-menentukan ini, gunakan "shot" sebagai default). Untuk tiap unit,
-tuliskan:
+Pecah naskah ini jadi daftar unit output, sesuai bentuk yang ditentukan di
+Model Konten Brief channel ini (shot untuk video, panel untuk komik,
+section untuk infografis, segmen untuk audio-only, bagian untuk teks-only
+— kalau Model Konten Brief belum menentukan ini, tanyakan dulu, jangan
+asumsikan "shot"). Untuk tiap unit, tuliskan:
 1. Nomor unit & bagian naskah yang terkait
 2. Deskripsi visual apa yang perlu ditampilkan
 3. Prompt generate yang siap pakai — gabungkan Prompt Master dari Bank
@@ -223,23 +237,30 @@ tuliskan:
 4. File referensi visual yang harus disertakan saat generate (acuan utama,
    reference sheet, dll dari folder konsistensi-visual/ elemen terkait)
 
-Simpan hasil ke _produksi-aktif/[channel]-[judul-konten]/breakdown-shot.md
-(atau nama file sesuai bentuk unit yang dipakai).
+Untuk konten tanpa asset visual (audio-only/teks-only): lewati poin 3 dan
+4, tulis "tidak berlaku — konten [audio-only/teks-only]", dan sebagai
+gantinya cantumkan arahan penyampaian per unit (tempo, penekanan, jeda)
+yang konsisten dengan Persona & Voice channel ini.
 
-**Gerbang G1 + G2** — G1 untuk lanjut ke Tahap 5 (Generate Asset), dan G2 untuk mengunci breakdown ini sebagai dasar generate. G2 wajib di sini karena generate asset memakai biaya/waktu nyata dan sulit dibatalkan setelah jalan.
+Simpan hasil ke _produksi-aktif/[channel]-[judul-konten]/breakdown-output.md
+(atau nama file sesuai bentuk unit yang dipakai, misal breakdown-shot.md).
+
+**Gerbang G1 + G2** — G1 untuk lanjut ke Tahap 5 (Generate/Acquire Assets), dan G2 untuk mengunci breakdown ini sebagai dasar generate. G2 wajib di sini karena generate asset memakai biaya/waktu nyata dan sulit dibatalkan setelah jalan.
 ```
 
 **Output:** daftar unit visual dengan prompt siap pakai per unit, tersimpan di `_produksi-aktif/`.
 
 ---
 
-## Tahap 5: Generate Asset
+## Tahap 5: Generate/Acquire Assets
 
-**Tujuan:** eksekusi generate gambar per unit visual dari breakdown Tahap 4, tersimpan sebagai file asli di repo.
+**Tujuan:** hasilkan atau kumpulkan asset per unit dari breakdown Tahap 4, tersimpan sebagai file asli di repo. "Acquire" karena tidak semua asset digenerate agent — ada yang direkam, diambil dari stok berlisensi, atau dibuat di tools eksternal.
+
+**Kalau konten ini tidak punya asset** (teks-only): tahap ini dilewati, catat `Tahap 5 — tidak berlaku (konten teks-only)` di `STATUS.md`, lalu langsung ke Tahap 6. **Kalau audio-only:** yang dikumpulkan adalah file audio (rekaman/TTS) dan cover art kalau ada — checklist visual di bawah tidak berlaku, tapi konsistensi Persona & Voice tetap diperiksa.
 
 Ini tahap paling banyak melibatkan kemampuan generate gambar agent — lihat `06_PROMPT_LIBRARY.md` untuk teknik-teknik generate yang lebih spesifik (konsistensi karakter antar unit, dst). Untuk video (agent belum bisa generate video langsung): breakdown & prompt dari Tahap 4 dipakai di tools eksternal (Veo/Dreamina/dst), hasilnya diupload kembali ke folder yang sama di `_produksi-aktif/`.
 
-**Checklist tiap generate:**
+**Checklist tiap generate (untuk konten yang punya asset visual):**
 - [ ] Sudah menyertakan file referensi (acuan utama, reference sheet) dari Bank Konsistensi Visual yang relevan?
 - [ ] Kalau ada karakter Tipe B di unit ini — sudah pakai deskripsi/gambar yang SAMA dengan unit lain yang melibatkan karakter itu di konten ini?
 - [ ] Sudah sesuai Gaya Visual yang dikunci di Channel Brief?

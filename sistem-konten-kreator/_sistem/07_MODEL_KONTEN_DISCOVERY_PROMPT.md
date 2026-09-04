@@ -66,7 +66,7 @@ diskusi (3-5 pertanyaan per giliran) sampai punya jawaban jelas untuk:
 4. GERBANG ALUR KERJA (PENTING — tanyakan ini secara eksplisit, jangan
    diasumsikan): apakah proses produksi untuk model konten ini mengikuti
    struktur kerangka 6 tahap standar (Ideation → Konsep → Naskah →
-   Breakdown Visual → Generate Asset → Publish Prep, cuma beda di DETAIL
+   Breakdown Output → Generate/Acquire Assets → Publish Prep, cuma beda di DETAIL
    teknis tiap tahap), ATAU strukturnya beda DARI AKAR — misal:
    - Ada tahap sebelum Ideation yang belum ada di alur standar (misal:
      mengekstrak/mengolah materi dari sumber eksternal seperti buku,
@@ -86,7 +86,7 @@ diskusi (3-5 pertanyaan per giliran) sampai punya jawaban jelas untuk:
      yang siap dieksekusi lebih lanjut?
    - Di titik mana proses ini "bertemu kembali" dengan kerangka standar
      (biasanya begitu 1 ide/bahan konkret sudah didapat, dari situ bisa
-     lanjut Naskah → Breakdown Visual → dst seperti biasa)?
+     lanjut Naskah → Breakdown Output → dst seperti biasa)?
    Gali ini selengkap Channel Discovery — jangan buru-buru, karena ini
    akan jadi pedoman kerja yang dipakai berulang-ulang.
 
@@ -103,7 +103,7 @@ diskusi (3-5 pertanyaan per giliran) sampai punya jawaban jelas untuk:
      sesuai format ini) — WAJIB dijawab eksplisit, karena ini yang dipakai
      agent tiap kali produksi konten dengan model konten ini
    - Tahap lain dari kerangka standar yang beda detail teknisnya untuk
-     format ini (paling sering Tahap 5 Generate Asset) — jelaskan tahap
+     format ini (paling sering Tahap 5 Generate/Acquire Assets) — jelaskan tahap
      mana dan apa bedanya
 
 6. CONTOH KONKRET: minta dibayangkan/diceritakan 1 contoh konten dari
@@ -133,5 +133,5 @@ direview sebelum merge ke main.
 
 1. Hasilnya tersimpan di `channel-[nama-channel]/model-konten/[nama-model]/brief.md`, sudah lewat PR dan merge ke `main`. Update juga tabel "Model Konten dalam Channel Ini" di `channel-brief.md` (bagian 8) supaya gampang dilacak.
 2. **Kalau model konten ini pakai kerangka standar dengan override ringan** — pastikan override itu tercatat jelas di bagian "Override Ringan" di Model Konten Brief ini, supaya saat produksi harian, agent cek dulu file ini sebelum mengikuti default `05_CONTENT_PRODUCTION_PIPELINE.md` mentah-mentah.
-3. **Kalau model konten ini punya Alur Kerja Kustom** — bagian "Alur Kerja Kustom" di Model Konten Brief ini yang jadi acuan utama saat produksi, BUKAN `05_CONTENT_PRODUCTION_PIPELINE.md`. Begitu alur kustom itu sampai di titik "sudah ada 1 ide/bahan konkret yang siap dieksekusi", baru dari situ boleh lanjut mengikuti tahap-tahap standar (Naskah → Breakdown Visual → dst) seperti biasa — ini akan tercatat jelas di bagian "titik pertemuan" pada Alur Kerja Kustom.
+3. **Kalau model konten ini punya Alur Kerja Kustom** — bagian "Alur Kerja Kustom" di Model Konten Brief ini yang jadi acuan utama saat produksi, BUKAN `05_CONTENT_PRODUCTION_PIPELINE.md`. Begitu alur kustom itu sampai di titik "sudah ada 1 ide/bahan konkret yang siap dieksekusi", baru dari situ boleh lanjut mengikuti tahap-tahap standar (Naskah → Breakdown Output → dst) seperti biasa — ini akan tercatat jelas di bagian "titik pertemuan" pada Alur Kerja Kustom.
 4. Setiap produksi konten untuk model konten ini: Entry Point Universal (`00_CARA_PAKAI_SISTEM.md`) akan otomatis membaca Channel Brief channel-nya DAN Model Konten Brief ini — dua-duanya jadi konteks wajib, tidak perlu ditempel manual.
