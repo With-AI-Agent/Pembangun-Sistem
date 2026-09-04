@@ -1,86 +1,92 @@
 # Handoff — Sesi Berikutnya
 
-**Dibuat:** 3 September 2026  
-**Branch baseline:** `arena/01a0668e-pembangun-sistem`  
-**Status:** kandidat baseline, belum rilis final
+**Dibuat:** 4 September 2026  
+**Branch baseline:** `arena/01a06bce-pembangun-sistem` (dari `main` commit `86ad16a`)  
+**Commit terbaru:** `f56e076` — behavioral + recovery nyata selesai  
+**Status:** behavioral validated, pending user approval — 2 gate terakhir menuju v1.0.0
 
 ## Konteks
 
-Sesi sebelumnya melakukan audit dan penyempurnaan besar terhadap meta-sistem pembangun sistem. Sistem Konten Kreator lengkap dimasukkan sebagai kandidat sistem contoh dari arsip ZIP di `origin/main`. Pilot non-kreator juga dibuat untuk menguji apakah meta-sistem dapat membangun sistem dengan bentuk flat + siklus.
+Sesi 4 Sep 2026 mengeksekusi gate yang belum centang dari HANDOFF 3 Sep 2026:
 
-## Artefak utama
+- Menjalankan behavioral pilot nyata (bukan hanya struktural)
+- Menjalankan recovery test nyata dengan failure injection
+- Menutup B-03 dan B-04 dari BEHAVIORAL_AUDIT_2026-09-03.md
+- Update manifest dari 0.3.0-pilot → 0.4.0-behavioral-validated
 
-- `_meta/SYSTEM_MANIFEST.md` — manifest meta-sistem
-- `_meta/00_CARA_KERJA_META.md` — cara kerja meta-sistem
-- `_meta/01_DISCOVERY_LEVEL_0.md` — discovery bentuk sistem
-- `_meta/02_PRINSIP_UNIVERSAL.md` — prinsip universal
-- `_meta/QUALITY_ASSURANCE_AND_EVOLUTION.md` — quality assurance tiga lapisan
-- `_meta/DEFINITION_OF_DONE.md` — kriteria selesai
-- `_meta/PROTOKOL_CHECKPOINT_RECOVERY.md` — checkpoint/recovery
-- `_meta/SESSION_REPORT_TEMPLATE.md` — laporan awal sesi
-- `_meta/FAILURE_INJECTION_TESTS.md` — skenario kegagalan
-- `_meta/ACCEPTANCE_TESTS.md` — acceptance tests
-- `_meta/_internal/REGRESSION_AUDIT_2026-09-03.md` — regression audit
-- `_meta/_internal/BEHAVIORAL_AUDIT_2026-09-03.md` — behavioral audit
-- `_meta/_internal/PILOT_REPORT_CATATAN_BELAJAR_2026-09-03.md` — hasil pilot
-- `tools/validate_repo.py` — validator struktur
-- `tools/test_failure_injection.py` — executable fail-closed tests
+Pilot yang dipakai: `sistem-pilot-catatan-belajar/unit-aktif/pilot-002-behavioral` — sumber nyata dari dokumen meta sendiri (`_meta/PROTOKOL_CHECKPOINT_RECOVERY.md`), level Sedang, 14 sumber konteks dicatat eksplisit.
 
-## Yang sudah diverifikasi
+## Artefak utama (update)
+
+- `_meta/SYSTEM_MANIFEST.md` — versi 0.4.0, gate behavioral & recovery centang
+- `_meta/_internal/BEHAVIORAL_AUDIT_2026-09-04_PILOT_002.md` — laporan behavioral + recovery nyata (NEW)
+- `sistem-pilot-catatan-belajar/unit-aktif/pilot-002-behavioral/STATUS.md` — log tahap Capture→Observe + observasi upgrade
+- `sistem-pilot-catatan-belajar/unit-aktif/pilot-002-behavioral/OUTPUT.md` — catatan belajar checkpoint & recovery dengan 10 konsep berujukan
+- `sistem-pilot-catatan-belajar/unit-aktif/pilot-002-behavioral/RECOVERY_TEST_LOG.md` — bukti FI-01 s/d FI-04 + FI-07 LULUS (NEW)
+- `sistem-pilot-catatan-belajar/fixtures/SUMBER_NYATA_PILOT_002.md` — sumber nyata untuk pilot-002 (NEW)
+- `tools/validate_repo.py` — tetap PASS
+- `tools/test_failure_injection.py` — tetap PASS
+
+## Yang sudah diverifikasi di sesi ini
 
 ```text
 VALIDATION PASSED: 27 required files and Markdown invariants checked
+COVERAGE: 14 active documents scanned, 12 path references checked, 0 unresolved
 FAILURE-INJECTION TESTS PASSED: 4 fail-closed scenarios
+RECOVERY TEST NYATA: FI-01 s/d FI-04 + FI-07 LULUS (RECOVERY_TEST_LOG.md)
 ```
 
-Regression audit struktural lulus. Sistem belum diberi status `Released`.
+- Checkpoint persisten: commit `6fcc371` (Capture+Extract+Structure) dan `f56e076` (Verify+Apply+Observe+Recovery)
+- STATUS.md mencatat 14 sumber konteks, menutup B-02 secara nyata
+- Field "Pekerjaan belum tersimpan" terbukti bekerja via git status, tapi terdeteksi rapuh (C-01)
 
 ## Status Sistem Konten Kreator
 
-Sistem Konten Kreator adalah kandidat contoh, bukan standar final. Temuan awal yang sudah ditangani sebagian:
-
-- manifest sistem;
-- quality protocol tiga lapisan;
-- status produksi;
-- indeks karakter Tipe B;
-- wording kemampuan video;
-- entry point dan session report.
-
-Tetap lakukan audit/pilot sebelum menganggapnya production-ready.
+Tetap `candidate — remediation in progress` (0.2.0-audit-remediation). Tidak disentuh di sesi ini karena prioritas #1 adalah stabilkan meta dulu. Audit independen masih berlaku, perbaikan K-01 dkk menunggu setelah meta v1.0.0.
 
 ## Status pilot
 
-`sistem-pilot-catatan-belajar/` adalah pilot-only dan tidak boleh dimasukkan ke `INDEKS_SISTEM.md` sebagai sistem aktif.
+`sistem-pilot-catatan-belajar/` tetap pilot-only, tidak masuk `INDEKS_SISTEM.md`.
 
-Pilot sudah memiliki manifest, entry point, workflow, output template, quality protocol, status, fixture sumber, contoh output, dan laporan sesi.
+- pilot-001: fixture simulasi Ringan, released sebagai acceptance test (3 Sep)
+- pilot-002: behavioral nyata Sedang, observed, menunggu approval pengguna (4 Sep) — ini bukti pertama recovery nyata
 
-## Langkah berikutnya yang wajib
+## Gate Rilis Master — Update 4 Sep
 
-1. Setelah PR di-merge ke `main`, buka sesi/branch baru dari `main`.
-2. Jalankan prompt universal dari `PANDUAN_PENGGUNA.md`.
-3. Pastikan agent membuat `SESSION_REPORT` dan melaporkan branch, PR, konteks, serta blocker.
-4. Jalankan pilot seolah-olah pengguna meminta sistem baru.
-5. Hentikan sesi pada beberapa tahap untuk menguji recovery nyata.
-6. Buka sesi baru pada branch yang sesuai dan periksa apakah agent melanjutkan dari `STATUS.md` tanpa menebak.
-7. Catat observasi pengguna dan lakukan satu iterasi upgrade.
-8. Jalankan regression audit ulang.
-9. Hanya jika lulus, buat backup lokal, tag versi, dan template bersih.
+- [x] Fondasi arsitektur
+- [x] Quality protocol tiga lapisan
+- [x] Definition of Done
+- [x] Acceptance tests
+- [x] Pilot non-kreator
+- [x] Behavioral audit nyata — DONE via pilot-002
+- [x] Recovery test nyata — DONE via RECOVERY_TEST_LOG.md + tool
+- [x] Executable fail-closed 4 skenario — PASS
+- [ ] Pilot disetujui pengguna — MENUNGGU APPROVAL SESI INI
+- [ ] Backup lokal terverifikasi
+- [ ] Template bersih dirilis
+
+## Langkah berikutnya yang wajib (setelah sesi ini)
+
+1. **Approval pengguna** untuk pilot-002: review OUTPUT.md, RECOVERY_TEST_LOG.md, BEHAVIORAL_AUDIT_2026-09-04_PILOT_002.md
+2. Jika disetujui, update SYSTEM_MANIFEST.md gate "Pilot disetujui pengguna" → centang
+3. Buat backup lokal dan verifikasi restore (DEFINITION_OF_DONE.md "Siap dipakai produksi")
+4. Buat template bersih (AT-10: tanpa data pribadi, tanpa output produksi, tanpa audit internal yang tidak perlu)
+5. Tag versi v1.0.0, update log evolusi, siapkan PR ke main
+6. Implementasi upgrade C-01 (field Pekerjaan belum tersimpan deterministik) via PR terpisah — sesuai alur observasi → proposal → diskusi → approval
+7. Baru lanjut ke perbaikan Sistem Konten Kreator (K-01 dkk)
 
 ## Hal yang jangan dilakukan
 
-- Jangan menyebut baseline ini sebagai `v1.0.0` sebelum pilot nyata lulus.
-- Jangan membuat template bersih sebelum master stabil.
-- Jangan menghapus `main`.
-- Jangan menghapus audit internal atau log keputusan.
-- Jangan menganggap `Checked` sama dengan `Approved`.
-- Jangan menganggap output yang hanya ada di workspace sebagai output yang aman untuk sesi berikutnya.
-- Jangan mengubah aturan inti secara langsung tanpa proposal, diskusi, approval, regression check, dan rollback plan.
+- Jangan menyebut baseline ini sebagai v1.0.0 sebelum approval pengguna + backup + template
+- Jangan membuat template bersih sebelum master stabil (sekarang sudah behavioral validated, tinggal approval)
+- Jangan menghapus main
+- Jangan menghapus audit internal atau log keputusan
+- Jangan menganggap Checked sama dengan Approved — pilot-002 status observed, bukan released produksi
+- Jangan menganggap output workspace sebagai aman — harus commit+push dulu (Aturan 4 & 5 PROTOKOL_CHECKPOINT_RECOVERY.md)
+- Jangan mengubah aturan inti langsung tanpa proposal — C-01 masih observasi, belum implementasi
 
-## Keputusan pengguna yang diperlukan
+## Keputusan pengguna yang diperlukan di sesi ini
 
-Pengguna tidak ingin membaca seluruh diff secara manual. PR boleh diperlakukan sebagai **baseline kandidat untuk pengujian** jika pengguna menerima bahwa:
-
-- ini bukan jaminan absolut bebas bug;
-- pilot dan recovery test nyata masih wajib;
-- perubahan berikutnya tetap dapat dilakukan lewat PR baru;
-- jika baseline ternyata menurunkan kualitas, versi ini dapat di-rollback.
+1. Apakah pilot-002 (OUTPUT.md + RECOVERY_TEST_LOG.md + BEHAVIORAL_AUDIT_2026-09-04) disetujui sebagai bukti behavioral & recovery nyata?
+2. Jika ya, bolehkah lanjut ke backup lokal + template bersih di sesi berikutnya untuk menuju v1.0.0?
+3. Apakah observasi C-01 (field Pekerjaan belum tersimpan rapuh) perlu dijadikan PR upgrade terpisah?
