@@ -5,11 +5,11 @@
 - **Status:** `in-progress`
 - **Channel:** `sistem-konten-kreator/channel-fixture-narasi-sejarah/` (v1, `Operational`)
 - **Model konten:** `sistem-konten-kreator/channel-fixture-narasi-sejarah/model-konten/narasi-60-detik/brief.md` (v1, `Operational`)
-- **Tahap terakhir selesai:** Tahap 3 — Naskah/Script. Draft naskah selesai (144 kata, target model 130-145) dan tersimpan sebagai file.
-- **Tahap berikutnya:** Tahap 4 — Breakdown Output. Bentuk unit: **segmen narasi** (ditetapkan di Model Konten Brief bagian 4), file target `breakdown-output.md`.
+- **Tahap terakhir selesai:** Tahap 4 — Breakdown Output (**draft**). Disusun sebagai draft sesuai keputusan pengguna untuk menyiapkan draft Tahap 4 lebih dulu; belum dikunci G2 naskah final maupun G2 breakdown, belum dipakai untuk generate asset.
+- **Tahap berikutnya:** G2 naskah final (Tahap 3) + G2 breakdown (Tahap 4) — harus disetujui dulu sebelum Tahap 5 (Generate/Acquire Assets) dijalankan.
 - **Output resmi:**
-  - `naskah-draft.md` — **ADA** di folder ini
-  - `breakdown-output.md` — **BELUM ADA** (Tahap 4 belum pernah dijalankan)
+  - `naskah-draft.md` — **ADA** di folder ini (draft Tahap 3, belum G2 final)
+  - `breakdown-output.md` — **ADA** di folder ini (**draft** Tahap 4, belum G2)
   - `assets/` — **BELUM ADA** (Tahap 5 belum pernah dijalankan)
 - **Sumber konteks yang dibaca:**
   - `_sistem/01_BRAND_CORE.md` — dibaca, tapi **masih template kosong**; repo ini belum punya Brand Core terisi
@@ -26,13 +26,14 @@
   - `G1 Tahap 1 (Ideation):` disetujui 2026-09-04
   - `G1 Tahap 2 (Konsep & Angle):` disetujui 2026-09-04
   - `G1 Tahap 3 (Naskah/Script):` disetujui 2026-09-04
-  - `G2 naskah final (Tahap 3):` **belum**
-  - `G2 breakdown (Tahap 4):` belum — tahapnya belum dijalankan
+  - `G2 naskah final (Tahap 3):` **belum** — diminta setelah draft breakdown tersedia
+  - `G1 Tahap 4 (Breakdown):` **belum** — draft breakdown sudah dibuat; menunggu review + G2 naskah final
+  - `G2 breakdown (Tahap 4):` **belum**
   - `G3 merge:` belum
-- **Commit terakhir:** `55cd86bfdb49b97895e486dcd071dab74fe6c932` — commit terakhir yang menyimpan **output produksi** (`naskah-draft.md`). Verifikasi: `git log -1 --format=%H -- sistem-konten-kreator/_produksi-aktif/fixture-narasi-sejarah-tiga-benda-di-meja-nenek/naskah-draft.md`. *(Field ini sengaja menunjuk commit output, bukan commit `STATUS.md` sendiri — `STATUS.md` berubah lebih sering, jadi angka di sini tidak perlu ikut berubah setiap status diperbarui.)*
+- **Commit terakhir:** perlu diisi setelah commit checkpoint sesi ini (lihat `git log` untuk output `breakdown-output.md`).
 - **PR terkait:** tidak ada
 - **Pekerjaan belum tersimpan:** `Tidak ada`
-- **Risiko atau blocker:** Naskah **belum** berstatus final. G1 Tahap 3 hanya izin melanjutkan, bukan penguncian isi (lihat definisi G1/G2 di `_sistem/00_CARA_PAKAI_SISTEM.md`). Breakdown Tahap 4 boleh disiapkan sebagai draft, tapi tidak boleh dikunci atau dipakai untuk generate asset sebelum G2 naskah final diberikan.
+- **Risiko atau blocker:** Naskah **belum** berstatus final. G1 Tahap 3 hanya izin melanjutkan, bukan penguncian isi (lihat definisi G1/G2 di `_sistem/00_CARA_PAKAI_SISTEM.md`). `breakdown-output.md` saat ini **draft** — tidak boleh dikunci atau dipakai untuk generate asset sebelum **G2 naskah final** dan **G2 breakdown** diberikan. Tahap 5 hanya mengumpulkan b-roll/foto berlisensi, bukan generate karakter.
 - **Waktu pembaruan:** 2026-09-04
 
 ## Aturan
