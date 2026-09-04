@@ -70,7 +70,11 @@
   - **Tidak bisa** unduh gambar via `curl` (`SSL_ERROR_SYSCALL`, HTTP 000) — gambar internet hanya lewat alat pencari
   - `/tmp` **tidak persisten** antar langkah → semua artefak wajib masuk repo
   - Alat pencari gambar menulis ke **root repo** secara default → wajib dipindahkan ke folder deck dan dibersihkan
-  - **Bahasa dokumen sumber belum tentu Latin.** Kasus nyata pertama (tesis yang diunggah 4 Sep 2026) berbahasa **Arab** (RTL) — kemampuan RTL/shaping python-pptx dan ekstraksi teks Arab dari PDF **belum diuji** di lingkungan ini; wajib diuji saat berkasnya benar-benar sampai (lihat Temuan Sesi)
+  - **Bahasa dokumen sumber belum tentu Latin.** Kasus nyata pertama (tesis yang diunggah 4 Sep 2026) berbahasa **Arab** (RTL). Status per komponen:
+    - **Menulis Arab ke `.pptx` (RTL): TERBUKA/TERVERIFIKASI** — python-pptx menyimpan teks Arab sebagai Unicode + atribut `rtl="1"` + font complex-script `a:ea` + rata-kanan `algn="r"` (semua dicek ada di XML slide). Pembentukan huruf (shaping) dilakukan oleh PowerPoint, bukan oleh agent
+    - **Ekstraksi teks Arab dari PDF: BELUM terverifikasi** — uji sintetis tidak konklusif karena font untuk *menulis* PDF ujiku tidak punya glyph Arab (hasilnya titik). Butuh berkas Arab asli (tesisnya) untuk membuktikan. Jalur cadangan yang selalu jalan: render PDF→gambar via PyMuPDF lalu baca dengan visi
+    - **Font Arab:** untuk `.pptx` cukup menyebut nama font Arab (mis. Amiri); PowerPoint yang mengganti kalau tidak ada. Untuk preview (PIL/HTML) butuh font Arab + `arabic_reshaper`, **belum diverifikasi**
+  - **Jalur unduh eksternal yang TERBUKA:** `api.github.com` bisa (HTTP 200) dan `git` ke GitHub bisa. Yang **diblokir:** `raw.githubusercontent.com` dan host umum via `curl` (`SSL_ERROR_SYSCALL`). Konsekuensi: berkas besar sebaiknya diambil lewat `git fetch` (commit ke branch), bukan lewat raw/API-contents (API contents hanya inline sampai ~1 MB)
 - **Prosedur recovery:** `_meta/PROTOKOL_CHECKPOINT_RECOVERY.md` + `STATUS.md` per deck. **Catatan:** protokol itu masih punya 2 celah terbuka (Q-O2 kriteria "alasan" mengulang tahap approved, Q-O3 interval "Waktu pembaruan") — lihat `_meta/_internal/arsip-pilot-002-2026-09-03/README.md`. Usulan penutupannya ada di `00_RENCANA_KERANGKA.md` bagian "Satu butir yang TIDAK boleh kuputuskan sendiri", **menunggu approval pengguna**
 
 ## Batasan Platform
