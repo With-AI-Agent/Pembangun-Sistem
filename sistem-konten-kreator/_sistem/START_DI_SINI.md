@@ -31,6 +31,9 @@
 **Mau cek apakah hasil kerja masih konsisten dengan yang sudah dikunci**
 → Panggil perintah "cek konsistensi" kapan saja — lihat `00_CARA_PAKAI_SISTEM.md`
 
+**Mau menguji apakah sistem ini sendiri masih berperilaku benar** (setelah aturannya diubah, atau sebelum menaikkan status sistem)
+→ Jalankan skenario di `ACCEPTANCE_TESTS.md` (di root sistem, bukan di `_sistem/`) dan isi tabel Rekaman Hasil
+
 ---
 
 ## Urutan wajar membangun sesuatu dari nol

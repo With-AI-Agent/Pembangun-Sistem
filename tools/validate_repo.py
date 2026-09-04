@@ -23,6 +23,7 @@ required = [
     "_cadangan-claude/RINGKASAN_sistem-konten-kreator.md",
     "sistem-konten-kreator/SYSTEM_MANIFEST.md",
     "sistem-konten-kreator/QUALITY_ASSURANCE_AND_EVOLUTION.md",
+    "sistem-konten-kreator/ACCEPTANCE_TESTS.md",
     "sistem-konten-kreator/_sistem/START_DI_SINI.md",
     "sistem-konten-kreator/_sistem/STATUS_TEMPLATE.md",
     "sistem-pilot-catatan-belajar/SESSION_REPORT.md",

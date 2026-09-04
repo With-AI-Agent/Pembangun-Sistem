@@ -10,6 +10,7 @@
 - **Instruksi utama:** `_sistem/00_CARA_PAKAI_SISTEM.md`
 - **Living documents:** Brand Core, Channel Brief, Bank Konsistensi Visual, Model Konten Brief, arsip naskah
 - **Audit acuan:** `_meta/_internal/AUDIT_SISTEM_KONTEN_KREATOR_2026-09-03.md` di master blueprint (audit independen yang sedang diremediasi)
+- **Acceptance test:** `ACCEPTANCE_TESTS.md` (AT-KK-01 s/d AT-KK-08) — wajib dijalankan ulang setiap aturan `00`/`05`/`06` berubah
 - **Referensi historis (bukan instruksi aktif):** `_sistem/09_AUDIT_MIGRASI_GITHUB_AGENT.md` — ditandai `agent_instruction: reference_only`, dikecualikan dari template bersih
 - **Backup/template:** belum dirilis
 
@@ -52,7 +53,8 @@
 - [x] Workflow standar/custom sudah dinyatakan eksplisit — *termasuk jalur non-visual (M-04)*
 - [x] Prosedur checkpoint dan recovery diuji — *STATUS.md + protokol meta, diuji di pilot-002*
 - [x] Audit P0 sudah ditutup — *K-01 s/d K-05 + M-01, lihat Log Evolusi*
-- [ ] Pilot end-to-end berhasil — *belum: butuh 1 channel terisi penuh (L-04) dan acceptance test yang dapat diulang (L-05)*
+- [ ] Pilot end-to-end berhasil — *belum: butuh 1 channel terisi penuh (L-04)*
+- [ ] Acceptance test sistem ini LULUS — *belum: skenario sudah ada di `ACCEPTANCE_TESTS.md`, tabel Rekaman Hasil masih kosong*
 
 ## Temuan Audit yang Masih Terbuka
 
@@ -78,7 +80,7 @@ Dari `_meta/_internal/AUDIT_SISTEM_KONTEN_KREATOR_2026-09-03.md`:
 | L-02 klaim agent tahu semua konteks | P2 | **Ditutup** 4 Sep 2026 |
 | L-03 batas ukuran arsip & indexing | P2 | **Terbuka** |
 | L-04 contoh channel terisi penuh | P2 | **Terbuka** — gate pilot end-to-end |
-| L-05 acceptance test dapat diulang | P2 | **Terbuka** |
+| L-05 acceptance test dapat diulang | P2 | **Sebagian** — 10 skenario ditulis di `ACCEPTANCE_TESTS.md` (AT-KK-01 s/d 08 + 2 varian); belum satupun dijalankan |
 
 ## Log Evolusi
 
@@ -86,3 +88,4 @@ Dari `_meta/_internal/AUDIT_SISTEM_KONTEN_KREATOR_2026-09-03.md`:
 |---|---|---|---|
 | 3 Sep 2026 | 0.2.0-audit-remediation | K-02, K-04, M-03 ditutup | Hasil audit independen 3 Sep |
 | 4 Sep 2026 | 0.3.0-audit-remediation | K-01, K-03, K-05, M-01, M-04 s/d M-09, L-02 ditutup | Menutup seluruh P0 dan P1 supaya sistem ini bisa dinilai layak jadi contoh resmi meta-sistem |
+| 4 Sep 2026 | 0.3.0-audit-remediation | `ACCEPTANCE_TESTS.md` ditambahkan (L-05 sebagian) | Aturan baru P0/P1 belum punya cara verifikasi yang dapat diulang; tanpa ini "sudah diperbaiki" tidak bisa dibuktikan |
