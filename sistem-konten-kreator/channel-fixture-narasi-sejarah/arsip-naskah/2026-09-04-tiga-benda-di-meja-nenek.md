@@ -1,12 +1,13 @@
-# Naskah Draft — Tiga Benda di Meja Nenek
+# Tiga Benda di Meja Nenek
 
 - **Channel:** `channel-fixture-narasi-sejarah/` (FIXTURE)
 - **Model konten:** Narasi 60 Detik (v1) — target 130-145 kata, tempo 130 kata/menit
-- **Tahap:** 3 — Naskah/Script (**final — dikunci G2 2026-09-04**)
-- **Sumber eksternal:** tidak ada — naskah ini tidak memuat klaim faktual, angka, tanggal, atau nama tokoh; seluruhnya observasi personal
-- **Karakter Tipe B:** tidak ada
+- **Tanggal arsip:** 2026-09-04
+- **Status naskah:** Final (G2 2026-09-04)
+- **Sumber eksternal:** tidak ada
+- **Karakter Tipe B:** tidak ada (indeks-karakter tidak perlu diubah)
 
-> **FIXTURE UJI** untuk AT-KK-05/05b. Naskah ini sengaja ditulis pendek dan tanpa klaim faktual supaya test recovery tidak bercampur dengan gerbang fact-check (itu diuji terpisah di AT-KK-07).
+> **FIXTURE UJI** untuk AT-KK-05/05b. Naskah sengaja ditulis pendek dan tanpa klaim faktual supaya test recovery tidak bercampur dengan gerbang fact-check (diuji terpisah di AT-KK-07).
 
 ---
 
@@ -28,7 +29,7 @@ Yang berubah bukan kebiasaannya. Yang berubah: kita tidak lagi tahu siapa yang d
 
 ---
 
-## Catatan untuk Tahap 4 (belum dijalankan)
+## Metadata & pemecahan unit
 
-- Bentuk unit sesuai Model Konten Brief: **segmen narasi**, disimpan sebagai `breakdown-output.md`.
-- Kolom prompt generate dan file referensi visual: diisi deskripsi b-roll netral (radio, meja kayu, dapur pagi), **bukan** prompt generate karakter — channel ini tidak mengunci elemen visual apa pun.
+- Metadata (judul/caption/hashtag/thumbnail): `2026-09-04-tiga-benda-di-meja-nenek-metadata.md`
+- Breakdown (9 segmen narasi): `_produksi-aktif/fixture-narasi-sejarah-tiga-benda-di-meja-nenek/breakdown-output.md` (folder produksi sementara)
