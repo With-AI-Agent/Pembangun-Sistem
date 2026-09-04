@@ -169,8 +169,29 @@ Di awal sesi lmarena Agent, kamu bisa memilih repo DAN branch yang mau dipakai �
 1. **Deteksi kondisi branch** — apakah branch ini baru/kosong (baru bercabang dari `main`), atau branch lama yang sudah ada progres? Kalau branch lama, agent baca dulu apa yang sudah dikerjakan (file yang ada, commit terakhir) SEBELUM bertanya apa-apa. Verifikasi via `git branch --show-current` karena branch `arena/...` dibuat otomatis (fakta platform).
 2. **Cek & laporkan PR yang menggantung** — otomatis, tanpa diminta, apapun jenis sesi berikutnya. Juga cek apakah PR dari branch aktif sudah MERGED — jika ya, sesi ini **tidak bisa** push lagi (fakta platform #2), harus buka sesi baru dari `main`.
 3. **Tanya tujuan sesi ini** — mau mengerjakan apa (Discovery/Produksi/revisi/lainnya), di channel/model konten/konten yang mana.
-4. **Baca sendiri file yang relevan** berdasarkan jawaban di atas — Brand Core selalu, lalu Channel Brief/Bank Konsistensi Visual/Persona & Voice/Model Konten Brief sesuai yang relevan. Kamu TIDAK perlu tempel manual isi file apa pun — agent membaca langsung dari repo.
+4. **Baca sendiri file konteks wajib** berdasarkan jawaban di atas — bukan "file yang relevan" menurut tafsiran agent, tapi daftar deterministik di tabel **Konteks Wajib per Jenis Sesi** di bawah. Kamu TIDAK perlu tempel manual isi file apa pun — agent membaca langsung dari repo.
 5. **Deteksi jenis sesi** (Discovery vs Produksi) — supaya aturan merge yang berlaku sesuai (lihat Prinsip Approval Bertingkat).
+
+### Konteks Wajib per Jenis Sesi
+
+Tabel ini mengikat: begitu tujuan sesi diketahui (langkah 3), agent WAJIB membaca semua **File wajib** di baris yang cocok sebelum menulis apa pun. Ini menggantikan penilaian bebas soal apa yang "relevan".
+
+| Tujuan sesi | File wajib (baca semua) | File kondisional | Output wajib |
+|---|---|---|---|
+| **Brand Core baru** | `_sistem/01_BRAND_CORE.md` | — | `_sistem/01_BRAND_CORE.md` terisi |
+| **Channel baru** | Brand Core, `_sistem/02_CHANNEL_DISCOVERY_PROMPT.md`, `_sistem/03_TEMPLATE_CHANNEL_BRIEF.md` | Channel Brief lain (kalau ada elemen dipakai bersama) | `channel-[nama]/channel-brief.md` |
+| **Elemen konsistensi visual baru** | Brand Core, Channel Brief channel itu, `_sistem/04_CHARACTER_BUILDER_KIT.md` | `konsistensi-lintas-channel/` kalau elemen dipakai >1 channel | `konsistensi-visual/[elemen]/` + acuan visual sesuai tipe elemen |
+| **Model konten baru** | Brand Core, Channel Brief, `_sistem/07_MODEL_KONTEN_DISCOVERY_PROMPT.md`, `_sistem/08_TEMPLATE_MODEL_KONTEN_BRIEF.md` | Bank Konsistensi Visual channel itu | `channel-[nama]/model-konten/[model]/brief.md` |
+| **Produksi konten** | Brand Core, Channel Brief, Model Konten Brief, `_sistem/05_CONTENT_PRODUCTION_PIPELINE.md`, `_sistem/06_PROMPT_LIBRARY.md` | Bank Konsistensi Visual (kalau konten ini visual), `arsip-naskah/indeks.md` (cek pengulangan topik), `arsip-naskah/indeks-karakter.md` (kalau ada karakter Tipe B) | `_produksi-aktif/[channel]-[judul]/STATUS.md` + output tiap tahap |
+| **Lanjut produksi yang terputus** | `STATUS.md` konten itu, lalu semua file wajib baris "Produksi konten" | Output tahap sebelumnya yang tercatat di `STATUS.md` | `STATUS.md` diperbarui |
+| **Revisi dokumen terkunci** | Dokumen yang direvisi + semua dokumen yang mewarisinya (turunannya) | Log Keputusan terkait | Dokumen revisi + baris Log Keputusan |
+| **Cek konsistensi** | Sumber resmi yang relevan dengan objek yang dicek (Channel Brief, Bank Konsistensi Visual, Persona & Voice) | Output kerja terakhir | Laporan temuan (tanpa mengubah file) |
+
+**Aturan pemakaian tabel:**
+
+- Kalau ada file wajib yang **tidak ditemukan**, agent berhenti dan melapor — bukan melanjutkan dengan asumsi. File wajib yang hilang biasanya berarti dependency belum dibuat atau belum di-merge ke `main`.
+- File kondisional yang **dilewati wajib disebutkan alasannya** di laporan awal sesi (misal: "Bank Konsistensi Visual dilewati — konten ini teks-only"). Ini supaya kelalaian membaca bisa dibedakan dari keputusan sadar.
+- Baris di atas adalah **minimum**, bukan batas atas. Kalau agent butuh file lain untuk mengerjakan tugasnya, silakan baca — tapi jangan kurang dari daftar wajib.
 
 **Catatan penting soal platform:** lmarena Agent bisa diajak diskusi panjang TANPA harus baca-tulis file tiap kali merespons, kalau pengguna memintanya secara eksplisit. Ini berarti sesi Discovery yang butuh diskusi panjang tidak perlu pindah ke platform chat lain seperti versi sistem sebelumnya — cukup dilakukan di sesi agent yang sama, mulai dari mode diskusi, baru pindah ke mode eksekusi begitu hasilnya matang dan pengguna mengonfirmasi. **Tapi** karena fakta platform #3 (sesi bisa crash), maka jika diskusi sudah >5-7 giliran mendekati keputusan, agent harus buat checkpoint diskusi ringan `DISKUSI_MENTAH_*.md` dan commit — supaya tidak hilang kalau crash. *(Kalimat spesifik untuk memicu mode diskusi ada di `panduan/PANDUAN_PENGGUNA.md`, bukan di sini)*
 
