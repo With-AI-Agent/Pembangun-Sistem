@@ -22,10 +22,16 @@ Setiap unit kerja atau tahap besar yang menghasilkan input untuk tahap berikutny
 - Approval yang sudah diberikan:
 - Commit terakhir:
 - PR terkait:
-- Pekerjaan yang belum tersimpan:
+- Pekerjaan yang belum tersimpan: `Tidak ada` atau daftar path yang belum tersimpan
 - Risiko atau blocker:
 - Waktu pembaruan:
 ```
+
+**Aturan format deterministik untuk `Pekerjaan belum tersimpan`:**
+- Nilai HARUS exact `Tidak ada` jika tidak ada pekerjaan belum tersimpan (case-sensitive, tanpa variasi seperti "tidak ada", "None", "n/a")
+- Jika ada pekerjaan belum tersimpan, nilai HARUS berupa daftar path atau deskripsi singkat yang dimulai dengan selain `Tidak ada` (misal: `- [path] belum commit`)
+- Validator `tools/validate_repo.py` dan `tools/test_failure_injection.py` mengecek literal `Tidak ada` untuk menentukan safe state
+- Alasan: field ini dipakai oleh fail-closed check otomatis (FI-03). Format bebas menyebabkan false negative.
 
 ## Aturan checkpoint
 
