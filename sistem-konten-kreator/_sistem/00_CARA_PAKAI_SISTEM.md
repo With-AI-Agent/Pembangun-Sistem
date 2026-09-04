@@ -112,6 +112,7 @@ nama-repo/
 │       ├── indeks-karakter.md        ← tabel karakter Tipe B: ciri ringkas + link arsip sumber
 │       │                                (sumber data pengecekan karakter berulang — bukan indeks.md)
 │       ├── [tanggal]-[judul].md      ← termasuk deskripsi karakter Tipe B yang dipakai, kalau ada
+│       ├── [tanggal]-[judul]-metadata.md ← arsip ringan: prompt final, versi brief, daftar asset
 │       └── [tanggal]-[judul]-sumber.md ← jejak sumber eksternal, kalau konten itu memakainya
 │
 └── _produksi-aktif/                  ← SEMENTARA — breakdown shot & asset visual produksi berjalan
@@ -123,7 +124,7 @@ nama-repo/
         └── assets/
 ```
 
-**Aturan penting soal folder `_produksi-aktif/`:** begitu 1 konten selesai dan sudah kamu download/pakai, folder ini DIHAPUS dari repo (breakdown shot dan asset visual itu berat, bikin repo bengkak kalau menumpuk). Naskah finalnya sendiri (bukan breakdown/asset) dipindah dulu ke `arsip-naskah/` channel terkait sebelum folder produksi dihapus — begitu juga `SUMBER.md` kalau konten itu memakai sumber eksternal — naskah itu ringan (teks) dan berguna permanen untuk mencegah pengulangan topik tanpa sadar dan menjaga konsistensi gaya bahasa dari waktu ke waktu.
+**Aturan penting soal folder `_produksi-aktif/`:** begitu 1 konten selesai dan sudah kamu download/pakai, folder ini DIHAPUS dari repo (breakdown shot dan asset visual itu berat, bikin repo bengkak kalau menumpuk). Naskah finalnya sendiri (bukan breakdown/asset) dipindah dulu ke `arsip-naskah/` channel terkait sebelum folder produksi dihapus — begitu juga arsip ringan `[tanggal]-[judul]-metadata.md` (prompt final, versi brief, daftar asset) dan `SUMBER.md` kalau konten itu memakai sumber eksternal — naskah itu ringan (teks) dan berguna permanen untuk mencegah pengulangan topik tanpa sadar dan menjaga konsistensi gaya bahasa dari waktu ke waktu.
 
 **Kenapa dipecah jadi beberapa file, bukan satu file besar?**
 Karena tiap channel dan tiap model konten kebutuhannya beda — channel faceless nggak akan pernah buka bagian karakter, channel dengan 1 model konten nggak akan buka Model Konten Discovery berkali-kali. Kalau semua digabung satu file, bagian yang "harus dilewati" jadi bikin bingung dan file jadi terlalu panjang untuk dibaca ulang tiap hari.

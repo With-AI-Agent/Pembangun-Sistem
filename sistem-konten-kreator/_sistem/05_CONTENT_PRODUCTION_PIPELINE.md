@@ -272,7 +272,23 @@ Buatkan:
 2a. **Kalau konten ini memakai sumber eksternal:** pindahkan `_produksi-aktif/[channel]-[judul-konten]/SUMBER.md` ke `arsip-naskah/[tanggal]-[judul]-sumber.md`, dan pastikan atribusi yang ditandai wajib sudah benar-benar masuk ke caption/deskripsi/on-screen.
 2b. **Kalau konten ini memakai karakter Tipe B:** update juga `arsip-naskah/indeks-karakter.md` — tambah baris baru untuk karakter yang belum pernah tercatat, atau tambahkan konten ini ke kolom **Konten lain** pada baris yang sudah ada. Ini WAJIB dan terpisah dari langkah 2: `indeks.md` tidak menyimpan ciri karakter, sehingga tanpa langkah ini pengecekan karakter berulang di produksi berikutnya (`06_PROMPT_LIBRARY.md` bagian A2 langkah 1) akan membaca indeks kosong. Lihat format minimumnya di bagian 9 `03_TEMPLATE_CHANNEL_BRIEF.md`.
 3. **Gerbang G2 lalu G3** — konten produksi final termasuk kategori Besar. Minta **G2** dulu (konten final + metadata disetujui isinya), baru siapkan PR dan minta **G3** (izin merge ke `main`) sebagai pertanyaan terpisah. Dua-duanya dicatat di `STATUS.md`; jangan merge hanya berbekal G2.
-4. Setelah kamu download hasil akhirnya, folder `_produksi-aktif/[channel]-[judul-konten]/` boleh dihapus dari repo (breakdown dan asset visual itu sementara, sudah tidak diperlukan lagi setelah naskah dipindah ke arsip dan hasil didownload) — **syaratnya langkah 1, 2, 2a, dan 2b sudah benar-benar dilakukan**, karena setelah folder dihapus jejaknya tidak bisa diambil lagi.
+4. **Buat arsip ringan reproducibility** — sebelum folder produksi dihapus, simpan `arsip-naskah/[tanggal]-[judul]-metadata.md` berisi jejak yang tidak ikut terbawa naskah:
+
+   ```
+   Model konten      : [nama model + versi brief yang dipakai]
+   Versi brief       : Channel Brief v[x], Model Konten Brief v[y]
+   Prompt final      : [prompt generate yang benar-benar dipakai per unit visual,
+                        termasuk file referensi yang disertakan]
+   Daftar asset      : [nama file + di mana disimpan di luar repo]
+   Elemen konsistensi: [elemen Bank Konsistensi Visual yang dirujuk]
+   Karakter Tipe B   : [kalau ada]
+   Sumber eksternal  : [rujuk [tanggal]-[judul]-sumber.md kalau ada]
+   Catatan produksi  : [hal yang perlu diketahui kalau konten ini dibuat ulang]
+   ```
+
+   Alasannya: naskah saja tidak cukup untuk membuat ulang atau melanjutkan konten ini nanti — prompt final dan versi brief yang dipakai justru bagian yang paling mudah hilang. Ini ringan (teks) sehingga asset berat tetap boleh disimpan di luar Git tanpa kehilangan jejak.
+
+5. Setelah kamu download hasil akhirnya, folder `_produksi-aktif/[channel]-[judul-konten]/` boleh dihapus dari repo (breakdown dan asset visual itu sementara, sudah tidak diperlukan lagi setelah naskah dipindah ke arsip dan hasil didownload) — **syaratnya langkah 1, 2, 2a, 2b, dan 4 sudah benar-benar dilakukan**, karena setelah folder dihapus jejaknya tidak bisa diambil lagi. Agent WAJIB memverifikasi file arsip itu benar-benar ada sebelum menghapus, bukan menganggapnya sudah dibuat.
 
 **Output:** konten siap publish + metadata lengkap + naskah final di arsip.
 

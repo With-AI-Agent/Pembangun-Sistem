@@ -9,7 +9,8 @@
 - **Entry point navigasi:** `_sistem/START_DI_SINI.md`
 - **Instruksi utama:** `_sistem/00_CARA_PAKAI_SISTEM.md`
 - **Living documents:** Brand Core, Channel Brief, Bank Konsistensi Visual, Model Konten Brief, arsip naskah
-- **Audit aktif:** `_sistem/09_AUDIT_MIGRASI_GITHUB_AGENT.md` (referensi historis) dan `_meta/_internal/AUDIT_SISTEM_KONTEN_KREATOR_2026-09-03.md` di master blueprint
+- **Audit acuan:** `_meta/_internal/AUDIT_SISTEM_KONTEN_KREATOR_2026-09-03.md` di master blueprint (audit independen yang sedang diremediasi)
+- **Referensi historis (bukan instruksi aktif):** `_sistem/09_AUDIT_MIGRASI_GITHUB_AGENT.md` — ditandai `agent_instruction: reference_only`, dikecualikan dari template bersih
 - **Backup/template:** belum dirilis
 
 ## Bentuk Sistem
