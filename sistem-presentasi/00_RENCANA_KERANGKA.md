@@ -1,6 +1,7 @@
 # Rencana Kerangka — Sistem Presentasi
 
-> **Status:** DRAFT untuk review pengguna. **Kategori Besar** menurut `_meta/02_PRINSIP_UNIVERSAL.md` — rencana kerangka menentukan seluruh struktur sistem baru, jadi **wajib direview isi lengkapnya** oleh pengguna sebelum merge, bukan cukup konfirmasi ringan.
+> **Status:** DISETUJUI pengguna 4 September 2026, **sengaja BELUM di-merge** atas permintaan pengguna — kerja dilanjutkan di sesi yang sama di branch `arena/01a06d7b-pembangun-sistem`. Alasan: setelah PR di-merge, platform mencabut akses push sesi ini (`_meta/PLATFORM_LMARENA.md` fakta #2), jadi merge sekarang akan mengunci sesi dan memaksa mulai dari nol. Merge dilakukan nanti lewat sesi tersendiri.
+> **Revisi:** 4 Sep 2026 — tambah **Mode Gambar** (M0–M4 + gerbang lisensi) dan **Perancangan Berbasis Rekomendasi**, keduanya atas permintaan pengguna.
 >
 > **Dibuat:** 4 September 2026 (UTC) — sesi `arena/01a06d7b-pembangun-sistem`, mengikuti alur `_meta/01_DISCOVERY_LEVEL_0.md`.
 > **Sumber diskusi:** `DISKUSI_MENTAH_DISCOVERY_LEVEL_0.md` (berisi kutipan ide mentah pengguna, hasil riset, dan bukti teknis).
@@ -105,6 +106,79 @@ Supaya sesi baru bisa memulihkan deck mana pun tanpa menebak: nama file di dalam
 
 Kalau sebuah `PAKET_KETENTUAN` dipasang ke deck, maka cek kepatuhan jadi **bagian wajib** Tahap 5, bukan opsional.
 
+### 6. Asal-usul dan lisensi setiap gambar (ditambahkan 4 Sep 2026 atas permintaan pengguna)
+
+Setiap gambar yang masuk slide **wajib** punya baris di `DAFTAR_GAMBAR.md`: dari mana asalnya (mode mana), siapa pemegang haknya, lisensinya apa, dan atribusi yang harus dicantumkan. Gambar tanpa baris lengkap **tidak boleh** masuk berkas final. Alasan: ini satu-satunya cara klaim "tidak melanggar hak cipta" bisa diperiksa, bukan cuma diyakini.
+
+---
+
+## Mode Gambar
+
+Ditambahkan 4 Sep 2026 atas permintaan pengguna. **Mode dipilih per deck di `BRIEF.md`, tapi tiap slide boleh override dengan alasan tercatat** — karena dalam satu deck, slide hasil penelitian butuh grafik data nyata sementara slide konsep boleh pakai ilustrasi.
+
+| Mode | Isi | Risiko hak cipta | Kapan paling tepat |
+|---|---|---|---|
+| **M0 — Tanpa gambar** | Teks + struktur saja | Tidak ada | Deck padat argumen, atau waktu mepet. **Bukan mode gagal** — Mayer justru mendukung slide tanpa hiasan |
+| **M1 — Bahan visual milik pengguna** | Gambar yang tertanam di dokumen pengguna (misal figur di skripsi) **plus** file gambar yang dia berikan sendiri | **Paling aman** — karya pengguna sendiri | Default untuk sidang skripsi: figur aslinya justru yang paling relevan |
+| **M2 — Diagram/grafik dari data nyata** | Grafik, bagan, diagram alir yang **digenerate kode** dari angka yang ada di sumber | Tidak ada (buatan sendiri) | Setiap slide yang memuat angka. **Angkanya wajib dari sumber, tidak boleh dikarang** |
+| **M3 — Gambar AI** | Ilustrasi konseptual hasil generate | Tidak ada isu lisensi, **tapi ada isu kejujuran** | Hanya untuk ilustrasi konsep. **Dilarang** untuk menggambarkan data, hasil penelitian, foto dokumentasi, atau apa pun yang bisa disangka bukti. **Wajib diberi label "ilustrasi AI"** di slide |
+| **M4 — Gambar asli dari internet** | Foto/ilustrasi nyata yang diambil dari internet | **Paling berisiko — wajib gerbang** | Hanya kalau M1–M3 tidak bisa memenuhi, dan lewat gerbang lisensi di bawah |
+
+### Gerbang lisensi untuk M4 (ini temuan penting, bukan basa-basi)
+
+Yang sudah diverifikasi di lingkungan ini pada 4 Sep 2026:
+
+- Alat pencari gambar **berfungsi** dan menyimpan berkasnya ke workspace, tapi **tidak mengembalikan metadata lisensi sama sekali** — hanya `title`, `source_url`, `thumbnail_url`.
+- **Tiga hasil teratas dari pencarian uji justru dari Getty Images dan Veranda (Hearst)** — keduanya agensi stok berhak cipta, bukan bebas pakai.
+- **Unduhan langsung lewat `curl` ke URL gambar diblokir** (`SSL_ERROR_SYSCALL` ke `upload.wikimedia.org:443`), jadi tidak ada jalan memverifikasi berkas lewat jalur itu.
+- **Tapi halaman deskripsi berkas bisa dibaca** dan blok lisensinya terbaca. Uji nyata: `File:Cat03.jpg` di Wikimedia Commons → **CC BY-NC 3.0 + GFDL 1.2**, penulis "Fir0002/Flagstaffotos", dan **bukan domain publik**. Catatan penting: `NC` = NonCommercial, jadi gambar itu **tidak boleh** dipakai untuk keperluan komersial — persis jenis jebakan yang harus ditangkap sistem.
+
+Karena itu aturan M4:
+
+1. **Daftar putih sumber** yang lisensinya bisa dibaca mesin: Wikimedia Commons, Openverse, dan sumber sejenis. Di luar itu → **tidak boleh otomatis**.
+2. **Wajib baca blok lisensinya**, bukan menebak dari nama situs. Hasilnya dicatat: lisensi, pemegang hak, atribusi wajib, dan **flag khusus** untuk `NC` (non-komersial) serta `SA`/copyleft (turunan harus berlisensi sama).
+3. **Kalau lisensi tidak terbaca → statusnya `TIDAK DIKETAHUI`, dan gambar TIDAK BOLEH dipakai.** Agent berhenti dan menawarkan mode lain. Tidak boleh "kemungkinan besar aman".
+4. **Pengguna wajib menyetujui tiap gambar M4 satu per satu** di G2, lengkap dengan lisensi dan atribusinya. Bukan persetujuan borongan.
+5. Atribusi dicantumkan di slide (catatan kaki kecil) **dan** di `DAFTAR_GAMBAR.md`.
+
+### Mode tambahan yang diusulkan agent (boleh ditolak)
+
+- **M2 diperluas jadi "diagram penjelasan"**, bukan cuma grafik angka: diagram alir metode penelitian, kerangka konsep, timeline. Dibuat kode, jadi tetap tanpa risiko lisensi dan tetap setia pada sumber.
+- **Aturan anti-gambar-dekoratif:** Mayer (coherence) menyatakan gambar yang tidak mendukung pesan justru menambah beban kognitif. Jadi "slide ini butuh gambar" harus dijawab "gambar apa yang mendukung judul assertion slide ini", bukan "biar tidak kosong".
+
+---
+
+## Perancangan Berbasis Rekomendasi (berlaku di SEMUA titik perancangan)
+
+Ditambahkan 4 Sep 2026 atas permintaan pengguna. Ini **prinsip, bukan fitur** — mengikat seluruh tahap perancangan: isi slide, alur dan urutan, jumlah slide, pilihan judul assertion, arah visual, mode gambar, format output, tingkat anti-ngarang, sampai struktur deck.
+
+### Aturan inti: Agent Mengusulkan, Pengguna Memutuskan
+
+**Dilarang** mengajukan pertanyaan perancangan kosong seperti *"mau seperti apa?"*. Itu memindahkan beban desain ke pengguna, padahal agent-lah yang memegang konteks bahan dan aturan. Setiap pertanyaan perancangan **wajib** datang sebagai paket lima bagian:
+
+| # | Bagian | Isi |
+|---|---|---|
+| 1 | **Rekomendasi** | 1 pilihan yang agent sarankan, **plus dasarnya apa** |
+| 2 | **Alternatif** | 2–3 pilihan lain, masing-masing dengan trade-off — bukan daftar kosong |
+| 3 | **Konsekuensi** | Apa yang terjadi kalau pilihan itu diambil (misal: "M0 untuk deck 12 slide ini membuat slide 7–9 padat teks") |
+| 4 | **Default kalau dijawab "terserah"** | Agent **wajib** sudah punya default yang dinyatakan di muka — dilarang bertanya ulang |
+| 5 | **Tercatat** | Pilihan + alasan + siapa yang memutuskan masuk `BRIEF.md` dan Log Keputusan |
+
+### Dasar rekomendasi harus jujur
+
+Setiap rekomendasi **wajib menyebut dasarnya**, dan hanya boleh salah satu dari tiga:
+
+- **Berbasis bukti** — merujuk aturan "lantai" di `_sistem/03_PRINSIP_DESIGN_BERBASIS_BUKTI.md` (misal: "judul assertion, karena Garner & Alley 2013").
+- **Berbasis bahan pengguna** — merujuk halaman/URL tertentu dari bahannya.
+- **Penilaian agent** — dan **wajib dilabeli** `[PENILAIAN AGENT]`.
+
+**Larangan:** menyajikan selera sebagai fakta. Kalau tidak ada dasar buktinya, agent harus bilang *"ini soal selera, tidak ada bukti yang mendukung satu pilihan"* — bukan mengarang pembenaran. Ini sejalan dengan aturan anti-ngarang yang sudah jadi inti sistem.
+
+### Kenapa ini penting secara struktural, bukan sekadar sopan santun
+
+Sistem ini dibangun karena pengguna menyatakan **"semuanya tergantung keadaan"**. Kalau agent hanya bertanya, maka "tergantung" akan berakhir jadi kekosongan, dan kekosongan diisi agent dengan tebakan yang tidak tercatat. Dengan mewajibkan paket rekomendasi, setiap "tergantung" **dipaksa jadi keputusan yang tercatat beserta alasannya** — sehingga bisa diaudit, bisa dibalik, dan bisa dilanjutkan sesi lain.
+
+
 ---
 
 ## Titik Penguncian/Approval
@@ -149,13 +223,17 @@ Tanda **[GENERATOR]** = perlu prompt Discovery detail tersendiri (digali lewat d
 | `_sistem/04_PEMAHAMAN_BAHAN_MENDALAM.md` | Mekanisme 5 langkah: kerangka dulu → kartu per bagian → tabel cakupan → spot-check → approval. Termasuk cara baca PDF & batasannya | **[ATURAN]** |
 | `_sistem/05_RENDER_DAN_VERIFIKASI.md` | Cara bikin `.pptx` dengan python-pptx, pakai template pengguna, dan 3 jalur verifikasi tampilan | **[ATURAN]** |
 | `_sistem/06_PROMPT_LIBRARY.md` | Prompt siap pakai per tahap | **[ATURAN]** |
+| `_sistem/07_MODE_GAMBAR_DAN_LISENSI.md` | Kelima mode gambar, cara ekstraksi dari PDF, cara bikin grafik dari data, gerbang lisensi M4, daftar putih sumber, aturan label "ilustrasi AI" | **[ATURAN]** — **baru, dari permintaan pengguna 4 Sep 2026** |
+| `_sistem/08_PERANCANGAN_BERBASIS_REKOMENDASI.md` | Aturan paket 5 bagian untuk SEMUA pertanyaan perancangan + 3 dasar rekomendasi yang sah + larangan menyajikan selera sebagai fakta | **[ATURAN]** — **baru, dari permintaan pengguna 4 Sep 2026** |
+
+**Catatan mengikat untuk semua dokumen `[GENERATOR]`:** setiap prompt Discovery **wajib** mematuhi `_sistem/08_PERANCANGAN_BERBASIS_REKOMENDASI.md`. Prompt yang isinya hanya daftar pertanyaan tanpa rekomendasi **tidak boleh dipakai** — itu persis pola yang dilarang pengguna.
 
 ### `_generator/` — prompt Discovery detail (belum ada, harus ditulis dari nol)
 
 | Dokumen | Fungsi | Status |
 |---|---|---|
 | `_generator/G1_DISCOVERY_BRIEF.md` | Menggali `BRIEF.md` bersama pengguna: tujuan, audiens, durasi, sumber, tingkat anti-ngarang, gaya, format output, ada ketentuan institusi atau tidak | **[GENERATOR]** — wajib ditulis sebelum deck pertama |
-| `_generator/G2_DISCOVERY_VISUAL.md` | Menggali arah visual: kalau pengguna belum punya gambaran, agent riset (boleh internet) lalu **menawarkan 2–3 pilihan**, pengguna memilih | **[GENERATOR]** — wajib ditulis sebelum deck pertama |
+| `_generator/G2_DISCOVERY_VISUAL.md` | Menggali arah visual: kalau pengguna belum punya gambaran, agent riset (boleh internet) lalu **menawarkan 2–3 pilihan lengkap dengan rekomendasi + alasan**, pengguna memilih. **Termasuk memilih mode gambar per deck dan per slide** | **[GENERATOR]** — wajib ditulis sebelum deck pertama |
 | `_generator/G3_DISCOVERY_KETENTUAN.md` | Menggali ketentuan institusi dari dokumen pedoman kampus/perusahaan jadi `PAKET_KETENTUAN` yang bisa dicek | **[GENERATOR]** — boleh menyusul, hanya perlu kalau pengguna punya ketentuan institusi |
 
 ### `_template/` — diisi langsung, tanpa diskusi panjang
@@ -170,6 +248,7 @@ Tanda **[GENERATOR]** = perlu prompt Discovery detail tersendiri (digali lewat d
 | `_template/T6_STATUS.md` | status persisten per deck (pola `PROTOKOL_CHECKPOINT_RECOVERY.md`) |
 | `_template/T7_ASET_GAYA.md` | `_aset-gaya/<nama>/` — pakai ulang antar deck |
 | `_template/T8_PAKET_KETENTUAN.md` | `_paket-ketentuan/<institusi>/` — pakai ulang antar deck |
+| `_template/T9_DAFTAR_GAMBAR.md` | `deck-aktif/<nama>/DAFTAR_GAMBAR.md` — per gambar: dipakai di slide mana, mode (M0–M4), sumber, pemegang hak, lisensi, atribusi wajib, flag NC/copyleft, status persetujuan |
 
 ### Folder kerja
 
@@ -183,8 +262,10 @@ sistem-presentasi/
     ├── CHECKLIST_CAKUPAN.md    ← hasil Tahap 2 (dikunci di G1)
     ├── OUTLINE.md              ← hasil Tahap 3 (dikunci di G2)
     ├── RENCANA_VISUAL.md       ← hasil Tahap 3 (dikunci di G2)
+    ├── DAFTAR_GAMBAR.md        ← provenance + lisensi tiap gambar (dikunci di G2)
     ├── STATUS.md               ← diperbarui tiap tahap, untuk recovery
     ├── bahan/                  ← TEMPAT INPUT (file sumber)
+    ├── gambar/                 ← aset gambar: ekstraksi PDF, grafik buatan, AI, internet
     └── keluaran/               ← TEMPAT OUTPUT (.pptx, preview.html)
 ```
 
@@ -219,9 +300,16 @@ Bukan asumsi — semua ini dijalankan dan dicek hasilnya pada 4 Sep 2026 di sesi
 | `python-pptx` | tidak terpasang default, **bisa diinstall** | `pip install --target … python-pptx` exit 0 (Pillow 12.3.0 + lxml 6.1.3 ikut) |
 | Baca PDF berbasis teks | **BISA** | `pypdf` terinstall exit 0; PDF uji 2 halaman diekstrak benar per halaman ("BAB I PENDAHULUAN…", "BAB IV HASIL…") |
 | Baca PDF hasil **scan** | **TIDAK BISA** | `tesseract` tidak ada, tidak ada alat OCR |
+| **Ekstraksi gambar dari PDF pengguna** | **BISA** | PDF uji berisi 1 figur → `page.images` mendeteksi 1 gambar, `I1.png`, 12.654 bytes |
+| **Generate gambar AI** | **BISA** | gambar uji 29.777 bytes, header `ffd8ff` (JPEG valid) |
+| **Bikin grafik/diagram dari data** | **BISA** | matplotlib terinstall exit 0; grafik uji 26.405 bytes PNG |
+| **Cari gambar di internet** | **BISA, tapi tanpa metadata lisensi** | 3 hasil tersimpan ke workspace (JPEG valid, 63.411 bytes); field yang dikembalikan hanya `title`, `source_url`, `thumbnail_url` — **tidak ada lisensi**. 3 hasil teratas uji = Getty Images & Veranda (stok berhak cipta) |
+| **Baca blok lisensi sebuah berkas** | **BISA** | `fetch_page` ke halaman Wikimedia Commons berhasil; `File:Cat03.jpg` → CC BY-NC 3.0 + GFDL 1.2, "not in the Public Domain", penulis tercatat |
+| **Unduh gambar langsung via `curl`** | **TIDAK BISA** | `SSL_ERROR_SYSCALL` ke `upload.wikimedia.org:443`, HTTP 000, 0 bytes |
 | Output HTML | **BISA** | tanpa dependensi tambahan |
 | Render `.pptx` → gambar/PDF | **TIDAK BISA** | `libreoffice`/`soffice`/`pandoc` tidak ada |
 | Install LibreOffice | **TIDAK BISA** | `sudo apt-get update` → `Connection failed` ke `deb.debian.org`; `apt-cache search libreoffice` kosong. PyPI **bisa** |
+| `/tmp` persisten antar langkah | **TIDAK** | `/tmp/pdftest` dan artefak uji hilang antar panggilan sementara `/tmp/plottest` sempat ada. **Konsekuensi:** semua hasil kerja wajib masuk folder deck di repo, bukan `/tmp` |
 
 **Konsekuensi desain yang mengikat:**
 
@@ -231,6 +319,9 @@ Bukan asumsi — semua ini dijalankan dan dicek hasilnya pada 4 Sep 2026 di sesi
    - **(b) Preview hampiran HTML** — dibuat paralel dari data slide yang sama, bisa dibuka pengguna di browser. **Jujur: ini hampiran, bukan render PowerPoint** — font dan jarak bisa beda.
    - **(c) Pengguna membuka sendiri berkas `.pptx`-nya** — ini putusan final.
 3. **Larangan klaim kosong:** agent tidak boleh menulis "sudah kucek tampilannya" tanpa menyebut (a), (b), atau (c).
+4. **Mode M4 tidak bisa dijamin aman secara otomatis.** Karena alat pencari gambar tidak mengembalikan lisensi dan hasil teratasnya justru agensi stok berhak cipta, klaim "tidak melanggar hak cipta" **hanya** boleh dibuat setelah blok lisensinya dibaca dan dicatat. Gerbang lisensi di bagian Mode Gambar bukan pelengkap — itu satu-satunya dasar klaim tersebut.
+5. **Semua artefak wajib masuk repo, bukan `/tmp`.** `/tmp` terbukti tidak persisten antar langkah, jadi gambar, grafik, dan berkas antara yang ditaruh di sana bisa hilang sebelum sempat dipakai.
+6. **Alat pencari gambar menulis ke root repo secara default** (terbukti: berkas uji mendarat di `image-search/` di root). Aturan wajib: hasil pencarian **langsung dipindahkan** ke `deck-aktif/<nama>/gambar/` dan folder sementaranya dibersihkan, supaya tidak ikut ter-commit diam-diam.
 
 ---
 
@@ -254,11 +345,15 @@ Pengguna minta sistem dibangun **lengkap sejak awal**, dengan alasan: *"ini buka
 | 1 | Anti-ngarang / jejak sumber | Paling fundamental; semua fitur lain bergantung padanya |
 | 2 | Mekanisme kelengkapan bahan panjang | Menjawab keluhan utama pengguna |
 | 3 | Gerbang G1/G2/G3 + recovery lewat `STATUS.md` | Syarat fisik karena sesi bisa crash |
-| 4 | Render `.pptx` + deteksi teks meluber | Risiko teknis yang sudah terbukti ada |
-| 5 | Riset internet untuk **isi** | Baru aman diuji setelah #1 kuat |
-| 6 | Riset visual + penawaran pilihan | Bergantung #5 untuk aturan sumber URL |
-| 7 | Paket Ketentuan + cek kepatuhan | Bergantung #4 |
-| 8 | Output HTML | Paling rendah risikonya |
+| 4 | **Perancangan berbasis rekomendasi** (paket 5 bagian, dasar rekomendasi jujur) | Mengikat semua tahap sesudahnya; kalau ini bocor, semua keputusan jadi tebakan tak tercatat |
+| 5 | Render `.pptx` + deteksi teks meluber | Risiko teknis yang sudah terbukti ada |
+| 6 | **Mode M1 + M2** (ekstraksi gambar dari bahan + grafik dari data nyata) | Paling aman dan paling relevan; M2 juga menguji apakah angka di grafik benar-benar dari sumber |
+| 7 | Riset internet untuk **isi** | Baru aman diuji setelah #1 kuat |
+| 8 | **Mode M3** (gambar AI) — termasuk apakah label "ilustrasi AI" benar-benar terpasang dan tidak dipakai menggambarkan data | Bergantung #1: risiko utamanya adalah gambar AI disangka bukti |
+| 9 | **Mode M4** (gambar internet) + gerbang lisensi | Paling berisiko hukum; diuji terakhir, setelah aturan provenance terbukti jalan di #6–#8 |
+| 10 | Riset visual + penawaran pilihan | Bergantung #7 untuk aturan sumber URL dan #9 untuk lisensi |
+| 11 | Paket Ketentuan + cek kepatuhan | Bergantung #5 |
+| 12 | Output HTML | Paling rendah risikonya |
 
 ---
 
@@ -272,6 +367,11 @@ Pengguna minta sistem dibangun **lengkap sejak awal**, dengan alasan: *"ini buka
 | 4 | Riset internet untuk **isi** ikut versi pertama? | **Ya** (sesuai permintaan pengguna "langsung lengkap"), tapi diverifikasi di urutan 5 — setelah aturan anti-ngarang terbukti kuat |
 | 5 | Nama deck: ditentukan pengguna atau diusulkan agent | Diusulkan agent di Tahap 1, dikonfirmasi pengguna di G2 |
 | 6 | Celah protokol meta Q-O2 & Q-O3 (lihat `_meta/_internal/arsip-pilot-002-2026-09-03/README.md`) | Ditangani sebagai **pekerjaan meta-sistem terpisah**, bukan di sistem ini. Tapi harus dicatat karena `STATUS.md` sistem ini akan memakainya |
+| 7 | Mode gambar default untuk deck pertama (kasus sidang skripsi) | **M1 + M2** — figur asli skripsi + grafik dari datanya. M3 hanya untuk slide konsep, M4 hanya kalau terpaksa |
+| 8 | Daftar putih sumber untuk M4 | **Wikimedia Commons + Openverse** dulu. Keduanya lisensinya terbaca mesin. Boleh ditambah asal lisensinya bisa diverifikasi, bukan ditebak |
+| 9 | Gambar hasil internet ikut ter-commit ke repo? | **Ya**, di `deck-aktif/<nama>/gambar/` + wajib ada barisnya di `DAFTAR_GAMBAR.md`. Perlu aturan batas ukuran per berkas supaya repo tidak bengkak |
+| 10 | Label "ilustrasi AI" terlihat di slide atau cukup di catatan? | **Terlihat di slide** (kecil, di pojok). Alasannya: yang tertipu oleh gambar AI adalah audiens, bukan pengguna — jadi audienslah yang perlu tahu |
+| 11 | Apakah gambar M4 boleh dipakai untuk keperluan komersial? | **Tidak secara default.** Uji nyata menemukan lisensi `NC` (NonCommercial) di sumber yang tampak bebas. Kalau deck untuk keperluan komersial, M4 dikunci kecuali lisensinya eksplisit mengizinkan |
 
 ---
 

@@ -16,6 +16,27 @@
 | Lingkup versi pertama | Pengguna minta **langsung lengkap sejak awal** ("ini bukan seperti aplikasi yang susah buatnya, semua dieksekusi agent AI"). Agent menyetujui **lingkup desain yang lengkap**, tapi mengajukan keberatan terhadap **verifikasi sekaligus di akhir** — alasan dan jalan tengahnya di `00_RENCANA_KERANGKA.md` bagian "Strategi Verifikasi Bertahap" |
 | Batasan platform | Dipakai via lmarena Agent Mode (terkonfirmasi dari pemakaian nyata sesi ini) → Prinsip Checkpoint & Recovery **wajib** |
 | Branch menggantung tanpa PR | Diserahkan ke agent → diputuskan **selamatkan 4 file** ke `_meta/_internal/arsip-pilot-002-2026-09-03/`; **branch tidak dihapus**. Detail: `_meta/_internal/CABANG_MENGGANTUNG_2026-09-04.md` |
+| **Merge?** | **JANGAN dulu** — pengguna sadar bahwa merge mencabut akses push sesi ini, dan minta lanjut di sesi ini. Merge lewat sesi tersendiri nanti |
+
+### Tambahan permintaan pengguna (4 September 2026, giliran berikutnya)
+
+| Permintaan | Ditangani di |
+|---|---|
+| **Mekanisme gambar untuk slide**, dengan beberapa mode: tanpa gambar, gambar AI, gambar asli dari internet (tanpa melanggar hak cipta). Agent boleh mengusulkan mode lain | `00_RENCANA_KERANGKA.md` bagian **Mode Gambar** — 5 mode (M0 tanpa gambar, M1 bahan visual milik pengguna, M2 diagram/grafik dari data nyata, M3 gambar AI, M4 gambar internet) + aturan kombinasi per slide. Usulan tambahan agent: M2 diperluas ke diagram penjelasan, dan aturan anti-gambar-dekoratif |
+| **Perancangan tidak boleh cuma bertanya** — agent wajib memberi opsi, saran, dan rekomendasi terbaik. Berlaku untuk **semua** yang butuh perancangan: visual, isi slide, alur, dll | `00_RENCANA_KERANGKA.md` bagian **Perancangan Berbasis Rekomendasi** — paket wajib 5 bagian (rekomendasi + dasar, alternatif + trade-off, konsekuensi, default kalau "terserah", tercatat) + 3 dasar rekomendasi yang sah + larangan menyajikan selera sebagai fakta |
+
+### Fakta teknis BARU yang diverifikasi untuk kedua permintaan itu (4 Sep 2026)
+
+| Kemampuan | Hasil |
+|---|---|
+| Generate gambar AI | **BISA** — 29.777 bytes, JPEG valid |
+| Grafik dari data (matplotlib) | **BISA** — terinstall exit 0, grafik uji 26.405 bytes |
+| Ekstraksi gambar dari PDF | **BISA** — `page.images` deteksi 1 gambar (`I1.png`, 12.654 bytes) |
+| Cari gambar di internet | **BISA tapi tanpa metadata lisensi** — 3 hasil teratas justru Getty Images & Veranda (stok berhak cipta) |
+| Baca blok lisensi berkas | **BISA** — Wikimedia `File:Cat03.jpg` → CC BY-NC 3.0 + GFDL 1.2, "not in the Public Domain" |
+| Unduh gambar via `curl` | **TIDAK BISA** — `SSL_ERROR_SYSCALL`, HTTP 000 |
+| `/tmp` persisten | **TIDAK** — artefak uji hilang antar panggilan |
+| Alat pencari gambar menulis ke | **root repo** (`image-search/`) — artefak uji sudah dihapus, tidak boleh ikut ter-commit |
 
 
 ---
