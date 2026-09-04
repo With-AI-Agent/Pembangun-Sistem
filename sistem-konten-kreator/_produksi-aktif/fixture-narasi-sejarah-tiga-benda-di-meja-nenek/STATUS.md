@@ -31,7 +31,7 @@
   - `G1 Tahap 4 (Breakdown):` disetujui 2026-09-04 — breakdown disepakati sebagai dasar Tahap 5
   - `G2 breakdown (Tahap 4):` **disetujui 2026-09-04** — `breakdown-output.md` (9 segmen) dikunci sebagai dasar generate/acquire asset
   - `G1 Tahap 5 (Asset):` — **dianggap tidak diperlukan** (Tahap 5 dilewati sadar pada fixture uji; tidak ada asset yang digenerate)
-  - `G2 konten final + metadata (Tahap 6):` **belum** — sedang diminta
+  - `G2 konten final + metadata (Tahap 6):` **belum** — ditanya 2026-09-04; pengguna memilih **tahan dulu** (belum dikunci, belum siap G3)
   - `G3 merge:` belum
 - **Commit terakhir:** `8d1fa3ff93b44119b476bf00aec65fb91425a687` — commit yang menyimpan **output produksi Tahap 6** (`channel-fixture-narasi-sejarah/arsip-naskah/2026-09-04-tiga-benda-di-meja-nenek.md`). Verifikasi: `git log -1 --format=%H -- sistem-konten-kreator/channel-fixture-narasi-sejarah/arsip-naskah/2026-09-04-tiga-benda-di-meja-nenek.md`. *(Field ini menunjuk commit output, bukan commit `STATUS.md` sendiri.)*
 - **PR terkait:** tidak ada (branch `arena/01a06d25-pembangun-sistem` sudah di-push; PR belum dibuat)
