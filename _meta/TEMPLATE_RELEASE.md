@@ -19,7 +19,7 @@ Template **wajib** membawa:
 - prinsip universal (`_meta/02_PRINSIP_UNIVERSAL.md`)
 - indeks sistem kosong (`_meta/INDEKS_SISTEM.md` dengan header saja)
 - manifest template (`_meta/SYSTEM_MANIFEST_TEMPLATE.md`)
-- definition of done, checkpoint recovery, QA & evolution, acceptance tests, session report, failure injection, next session prompt
+- definition of done, checkpoint recovery, **platform lmarena (fakta vs policy)**, QA & evolution, acceptance tests, session report, failure injection, next session prompt
 - manifest meta (`_meta/SYSTEM_MANIFEST.md`) sebagai referensi versi
 - `.gitignore`, `.gitattributes`
 - folder kosong `_pegangan-kamu/` dan `_cadangan-claude/` dengan `.gitkeep`
