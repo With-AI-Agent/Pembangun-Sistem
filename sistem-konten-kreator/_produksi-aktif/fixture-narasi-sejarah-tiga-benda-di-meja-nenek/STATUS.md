@@ -30,7 +30,7 @@
   - `G1 Tahap 4 (Breakdown):` **belum** — draft breakdown sudah dibuat; menunggu review + G2 naskah final
   - `G2 breakdown (Tahap 4):` **belum**
   - `G3 merge:` belum
-- **Commit terakhir:** perlu diisi setelah commit checkpoint sesi ini (lihat `git log` untuk output `breakdown-output.md`).
+- **Commit terakhir:** `e2d234d65f04802fbdcf4ba9d17dec55c83dd7cb` — commit yang menyimpan **output produksi** (`breakdown-output.md`) di sesi ini. Verifikasi: `git log -1 --format=%H -- sistem-konten-kreator/_produksi-aktif/fixture-narasi-sejarah-tiga-benda-di-meja-nenek/breakdown-output.md`. *(Field ini menunjuk commit output, bukan commit `STATUS.md` sendiri.)*
 - **PR terkait:** tidak ada
 - **Pekerjaan belum tersimpan:** `Tidak ada`
 - **Risiko atau blocker:** Naskah **belum** berstatus final. G1 Tahap 3 hanya izin melanjutkan, bukan penguncian isi (lihat definisi G1/G2 di `_sistem/00_CARA_PAKAI_SISTEM.md`). `breakdown-output.md` saat ini **draft** — tidak boleh dikunci atau dipakai untuk generate asset sebelum **G2 naskah final** dan **G2 breakdown** diberikan. Tahap 5 hanya mengumpulkan b-roll/foto berlisensi, bukan generate karakter.
