@@ -133,9 +133,23 @@ Yang dilaporkan ke pengguna, dengan dua opsi keputusan:
 
 **Aman untuk template rilis.** `tools/build_template.py` menyertakan `_meta/PROTOKOL_CHECKPOINT_RECOVERY.md` (baris 31 `INCLUDE`) dan mengecualikan seluruh `sistem-konten-kreator/`, jadi rujukan silang ini tidak membuat template kehilangan file — polanya sama dengan rujukan ke `_meta/PLATFORM_LMARENA.md` yang sudah ada.
 
+### Regression check 0.3.1
+
+`sistem-konten-kreator/QUALITY_ASSURANCE_AND_EVOLUTION.md` menetapkan *minimum regression check* tiap aturan berubah. Karena 0.3.1 mengubah `00_CARA_PAKAI_SISTEM.md`, ketujuh itemnya diperiksa:
+
+| # | Item | Hasil | Bukti |
+|---|---|---|---|
+| 1 | Entry point masih menunjuk ke file yang benar | **OK** | `PROMPT_ENTRI_UNIVERSAL.md` merujuk `_sistem/START_DI_SINI.md` dan `_sistem/00_CARA_PAKAI_SISTEM.md`; keduanya ada (dicek satu per satu) |
+| 2 | Hierarki Brand Core → Channel → Model Konten → Produksi konsisten | **OK** | Perubahan hanya menyentuh tabel Konteks Wajib; keempat level tetap terwakili sebagai folder nyata di fixture |
+| 3 | Pipeline standar dan workflow custom tidak bertentangan | **OK** | `git diff --name-only f51b163 HEAD` tidak memuat `05_CONTENT_PRODUCTION_PIPELINE.md` maupun `06_PROMPT_LIBRARY.md` — keduanya tidak disentuh di 0.3.1 |
+| 4 | Prosedur checkpoint/recovery masih dapat dijalankan | **OK** | Dry run AT-KK-05/05b di atas + fixture ter-commit dan terverifikasi lewat `git ls-tree` |
+| 5 | Arsip dan indeks masih punya data yang dibutuhkan | **OK** | `arsip-naskah/indeks-karakter.md` memuat 5 kolom sesuai format minimum di `03_TEMPLATE_CHANNEL_BRIEF.md` bagian 9 |
+| 6 | Klaim kemampuan tool masih sesuai toolset aktual | **OK** | Aturan baru menyebut `git ls-tree`/`git log`; keduanya benar-benar dijalankan di sesi ini dan menghasilkan output yang dikutip di bagian "Verifikasi state" |
+| 7 | Acceptance test diulang untuk skenario terdampak | **BELUM** | Skenario terdampak = AT-KK-05 + AT-KK-05b. Baru dry run pada 0.3.0; run bersih pada 0.3.1 belum. Item ini **sengaja tidak dicentang**, dan gate manifest tidak akan dicentang sebelum run bersih itu ada |
+
 ### Cara menjalankan ulang secara bersih (untuk verdict final)
 
-1. Pastikan fixture **dan aturan 0.3.1** sudah di `main` (merge PR dari branch ini dulu). Run bersih menguji `0.3.1-audit-remediation`, bukan `0.3.0` yang dipakai dry run di atas.
+1. Pastikan fixture **dan aturan 0.3.1** sudah di `main` (PR #5 di-merge dulu). Run bersih menguji `0.3.1-audit-remediation`, bukan `0.3.0` yang dipakai dry run di atas.
 2. Buka **sesi agent baru** dari `main`. Tempel prompt ini apa adanya, **tanpa** petunjuk lain:
 
    ```text

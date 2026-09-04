@@ -29,7 +29,7 @@
   - `G2 naskah final (Tahap 3):` **belum**
   - `G2 breakdown (Tahap 4):` belum — tahapnya belum dijalankan
   - `G3 merge:` belum
-- **Commit terakhir:** `55cd86bfdb49b97895e486dcd071dab74fe6c932` (commit checkpoint fixture: naskah-draft.md + STATUS.md + brief channel/model)
+- **Commit terakhir:** `55cd86bfdb49b97895e486dcd071dab74fe6c932` — commit terakhir yang menyimpan **output produksi** (`naskah-draft.md`). Verifikasi: `git log -1 --format=%H -- sistem-konten-kreator/_produksi-aktif/fixture-narasi-sejarah-tiga-benda-di-meja-nenek/naskah-draft.md`. *(Field ini sengaja menunjuk commit output, bukan commit `STATUS.md` sendiri — `STATUS.md` berubah lebih sering, jadi angka di sini tidak perlu ikut berubah setiap status diperbarui.)*
 - **PR terkait:** tidak ada
 - **Pekerjaan belum tersimpan:** `Tidak ada`
 - **Risiko atau blocker:** Naskah **belum** berstatus final. G1 Tahap 3 hanya izin melanjutkan, bukan penguncian isi (lihat definisi G1/G2 di `_sistem/00_CARA_PAKAI_SISTEM.md`). Breakdown Tahap 4 boleh disiapkan sebagai draft, tapi tidak boleh dikunci atau dipakai untuk generate asset sebelum G2 naskah final diberikan.

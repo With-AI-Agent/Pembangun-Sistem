@@ -1,9 +1,11 @@
 # Handoff — Sesi Berikutnya
 
 **Dibuat:** 4 September 2026 — Update pasca-PR #4 (menggantikan handoff "Update Final" yang dibuat sebelum PR #4)
-**Branch baseline:** `arena/01a06cee-pembangun-sistem` (dari `main` commit `f51b163`)
-**Commit terbaru di `main`:** `f51b163eb70ad5af748c2dd77b6f008663d301ce` — Merge PR #4
+**Branch asal handoff ini:** `arena/01a06cee-pembangun-sistem`, bercabang dari `main` `f51b163`
+**Isi branch ini:** PR #5 — handoff ini, fixture produksi, dry run AT-KK-05/05b, aturan recovery 0.3.1
 **Status:** meta-sistem `Released — v1.0.0`; Sistem Konten Kreator `candidate — audit P0+P1 closed` (0.3.1-audit-remediation), acceptance test-nya baru mulai dijalankan
+
+> **Catatan untuk sesi yang membaca ini dari `main`:** kalau PR #5 sudah di-merge, commit `main` akan lebih baru dari `f51b163` dan seluruh isi branch di atas sudah ada di `main` — itu kondisi yang diharapkan, bukan konflik. Yang harus diverifikasi tetap state aktual lewat `git log`/`git branch`, bukan angka di baris ini.
 
 > **Peringatan untuk sesi berikutnya.** Versi handoff sebelumnya (4 Sep 2026, "Update Final") ditulis **sebelum PR #4 di-merge** dan sekarang **usang**: di situ Sistem Konten Kreator masih tercatat `0.2.0-audit-remediation` dan K-01 disebut sebagai pekerjaan yang menunggu. Keduanya sudah tidak benar. Handoff lama itu **catatan sejarah, bukan daftar tugas**. Kalau handoff ini bertentangan dengan `sistem-konten-kreator/SYSTEM_MANIFEST.md` atau `_meta/INDEKS_SISTEM.md`, yang menang adalah dua file itu — handoff hanya ringkasan, bukan sumber kebenaran.
 
@@ -63,6 +65,19 @@ FAILURE-INJECTION TESTS PASSED: 4 fail-closed scenarios
 
 Keempat warning itu **diharapkan**: `_meta/_internal/backups/backup_essential.zip` dan `_meta/_internal/template_clean.zip` sengaja di-gitignore (lihat komentar di `.gitignore`), jadi rujukannya memang tidak resolve.
 
+Hasil tools **setelah** kerja sesi ini (PR #5):
+
+```text
+VALIDATION PASSED: 29 required files and Markdown invariants checked
+COVERAGE: 16 active documents scanned, 41 path references checked, 0 unresolved
+WARNINGS: 0 (warning tier, exit code unaffected)
+FAILURE-INJECTION TESTS PASSED: 4 fail-closed scenarios
+TEMPLATE VERIFY PASSED / TEMPLATE CLEAN BUILD PASSED
+BACKUP AND RESTORE TEST PASSED (19 files, restore OK)
+```
+
+Referensi bertambah 40 → 41 karena `INDEKS_SISTEM.md` kini merujuk `sistem-konten-kreator/ACCEPTANCE_TEST_LOG.md`, dan referensi itu resolve. Warning turun 4 → 0 **bukan** karena ada yang diperbaiki: dua artefak gitignore itu sekarang ada di workspace karena `build_template.py`/`backup_verify.py` dijalankan di sesi ini. Di clone baru yang belum menjalankan kedua tool itu, angkanya kembali 4 unresolved — dan itu tetap normal.
+
 Catatan `tools/validate_repo.py` (baris ~213): baris `VALIDATION PASSED: …` di file ini sengaja dijaga byte-identical karena dikutip oleh audit di branch lain. Angka historis pada saat handoff versi sebelumnya ditulis:
 
 ```text
@@ -98,7 +113,7 @@ Lihat tabel Rekaman Hasil di `sistem-konten-kreator/ACCEPTANCE_TESTS.md` untuk s
 
 ## Langkah berikutnya (urut)
 
-1. **Tutup AT-KK-05 secara bersih.** Buka sesi agent baru dari `main`, tempel prompt ini apa adanya:
+1. **Tutup AT-KK-05 secara bersih.** Buka sesi agent baru dari `main` (setelah PR #5 merge), tempel prompt ini apa adanya:
 
    ```text
    Kamu adalah lmarena Agent yang terhubung ke repo sistem konten kreator ini.
@@ -133,6 +148,6 @@ Lihat tabel Rekaman Hasil di `sistem-konten-kreator/ACCEPTANCE_TESTS.md` untuk s
 
 ## Keputusan pengguna yang diperlukan
 
-1. Apakah dry run in-session AT-KK-05/05b diterima sebagai bukti sementara, atau verdict final tetap wajib dari sesi baru? *(Rekomendasi agent: wajib sesi baru — itu satu-satunya cara memenuhi aturan "tanpa dipandu".)*
+1. ~~Apakah dry run in-session diterima sebagai bukti?~~ **Sudah diputuskan pengguna 4 Sep 2026: verdict final wajib dari sesi agent baru.** Dry run disimpan sebagai probe aturan, bukan bukti lulus.
 2. Apakah fixture `channel-fixture-narasi-sejarah` boleh tetap tinggal di repo sebagai fixture permanen untuk test berikutnya, atau dihapus setelah semua AT-KK selesai?
 3. L-04 (channel terisi penuh): pakai channel nyata milik pengguna, atau bangun satu channel contoh sampai publish?
