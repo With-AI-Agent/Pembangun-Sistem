@@ -7,4 +7,5 @@ __pycache__/
 # _meta/SYSTEM_MANIFEST.md dan _meta/TEMPLATE_RELEASE.md karena itu muncul sebagai
 # WARNING (bukan error) di tools/validate_repo.py — itu perilaku yang diharapkan.
 _meta/_internal/backups/
+_meta/_internal/template_clean/
 _meta/_internal/template_clean.zip
