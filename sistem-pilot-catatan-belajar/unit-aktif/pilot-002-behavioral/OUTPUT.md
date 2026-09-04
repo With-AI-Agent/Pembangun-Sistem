@@ -1,6 +1,6 @@
 # Catatan Belajar — Protokol Checkpoint & Recovery Meta-Sistem
 
-- **Status:** `draft`
+- **Status:** `observed` (checked → ready-for-review → observed, menunggu approval pengguna untuk released)
 - **Sumber:** `../../fixtures/SUMBER_NYATA_PILOT_002.md` (yang merujuk ke `_meta/PROTOKOL_CHECKPOINT_RECOVERY.md` dan `_meta/02_PRINSIP_UNIVERSAL.md`)
 - **URL/lokasi:** `sistem-pilot-catatan-belajar/fixtures/SUMBER_NYATA_PILOT_002.md` + `_meta/PROTOKOL_CHECKPOINT_RECOVERY.md`
 - **Tanggal akses:** 2026-09-04

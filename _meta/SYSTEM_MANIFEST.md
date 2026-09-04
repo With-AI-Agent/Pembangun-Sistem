@@ -1,7 +1,7 @@
 # System Manifest — Meta-Sistem Pembangun Sistem
 
-- **Status:** `master blueprint — under validation`
-- **Versi:** `0.3.0-pilot`
+- **Status:** `master blueprint — behavioral validated, pending user approval`
+- **Versi:** `0.4.0-behavioral-validated`
 - **Tujuan:** merancang, membangun, mengaudit, memperbaiki, dan memelihara sistem kerja untuk berbagai domain.
 - **Consumer:** pengguna dan agent yang bekerja pada repository.
 - **Pemilik keputusan:** pengguna
@@ -46,10 +46,10 @@
 - [x] Definition of Done tersedia
 - [x] Acceptance tests tersedia
 - [x] Pilot non-kreator tersedia
-- [ ] Behavioral audit dengan sesi agent nyata selesai
-- [ ] Recovery test nyata selesai
+- [x] Behavioral audit dengan sesi agent nyata selesai — pilot-002-behavioral 2026-09-04, level Sedang, 14 sumber konteks, RECOVERY_TEST_LOG.md
+- [x] Recovery test nyata selesai — FI-01 s/d FI-04 + FI-07 LULUS fail-closed, commit 6fcc371 sebagai checkpoint persisten, `tools/test_failure_injection.py` PASS
 - [x] Executable fail-closed check lulus (4 skenario)
-- [ ] Pilot disetujui pengguna
+- [ ] Pilot disetujui pengguna — menunggu approval pengguna untuk pilot-002 (OUTPUT.md + RECOVERY_TEST_LOG.md + BEHAVIORAL_AUDIT_2026-09-04_PILOT_002.md)
 - [ ] Backup lokal terverifikasi
 - [ ] Template bersih dirilis
 
@@ -66,3 +66,4 @@
 | Tanggal | Perubahan | Alasan | Bukti | Approval |
 |---|---|---|---|---|
 | 2026-09-03 | Menambahkan quality assurance tiga lapisan, pilot, dan acceptance tests | Menutup kebutuhan self-improvement dan verifikasi output | Audit dan pilot struktural | Pending review pengguna |
+| 2026-09-04 | Behavioral audit nyata + recovery test nyata via pilot-002-behavioral | Menutup B-03 dan B-04 dari BEHAVIORAL_AUDIT_2026-09-03, memenuhi gate rilis behavioral & recovery | `sistem-pilot-catatan-belajar/unit-aktif/pilot-002-behavioral/OUTPUT.md`, `RECOVERY_TEST_LOG.md`, `_meta/_internal/BEHAVIORAL_AUDIT_2026-09-04_PILOT_002.md`, `tools/validate_repo.py PASS`, `tools/test_failure_injection.py PASS`, commit 6fcc371 | Menunggu approval pengguna |
