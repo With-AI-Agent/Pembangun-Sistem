@@ -1,7 +1,7 @@
 # System Manifest — Meta-Sistem Pembangun Sistem
 
-- **Status:** `master blueprint — ready for v1.0.0 with platform awareness`
-- **Versi:** `1.0.0-rc2`
+- **Status:** `Released — v1.0.0`
+- **Versi:** `1.0.0`
 - **Tujuan:** merancang, membangun, mengaudit, memperbaiki, dan memelihara sistem kerja untuk berbagai domain.
 - **Consumer:** pengguna dan agent yang bekerja pada repository.
 - **Pemilik keputusan:** pengguna
@@ -40,7 +40,7 @@
 | Log keputusan | Ya | Untuk setiap dokumen hidup dan keputusan evolusioner |
 | Quality assurance & evolusi | Ya secara default | Kedalaman mengikuti risiko; override wajib dicatat |
 
-## Gate Rilis Master
+## Gate Rilis Master — FINAL v1.0.0
 
 - [x] Fondasi arsitektur tersedia
 - [x] Quality protocol tiga lapisan tersedia
@@ -53,6 +53,8 @@
 - [x] Pilot disetujui pengguna — disetujui 2026-09-04 (OUTPUT.md + RECOVERY_TEST_LOG.md + BEHAVIORAL_AUDIT_2026-09-04_PILOT_002.md)
 - [x] Backup lokal terverifikasi — `tools/backup_verify.py` PASS, backup di `_meta/_internal/backups/backup_essential.zip`
 - [x] Template bersih dirilis — `tools/build_template.py` PASS, template di `_meta/_internal/template_clean.zip`, AT-10 verified, docs di `_meta/TEMPLATE_RELEASE.md`
+- [x] Platform awareness — `_meta/PLATFORM_LMARENA.md` fakta vs policy, bahasa kausal tidak bisa vs harus, tanam ke template & sistem turunan
+- [x] PR #3 merged ke main via merge commit 5f9a162
 
 ## Risiko Utama
 
