@@ -43,6 +43,27 @@ Semua tahap ini bisa dikerjakan dalam 1 sesi lmarena Agent yang sama — tidak p
 
 ---
 
+## Gerbang Approval per Tahap
+
+Definisi G1/G2/G3 ada di `00_CARA_PAKAI_SISTEM.md` (Prinsip Approval Bertingkat). Tabel ini menetapkan gerbang mana yang berlaku di tiap tahap, supaya agent tidak berhenti terlalu sering, tidak jalan terus tanpa izin, dan tidak menganggap "lanjut" sebagai "boleh merge".
+
+| Tahap | Gerbang wajib | Apa yang ditanyakan | Catatan |
+|---|---|---|---|
+| 1. Ideation | **G1** | Ide terpilih sudah sesuai? Lanjut atau cari ide lain? | Belum ada yang dikunci; murah untuk diulang |
+| 2. Konsep & Angle | **G1** | Kerangka/angle ini dipakai? | Kalau angle mengubah sesuatu yang dikunci di Channel Brief → naik jadi **G2** |
+| 3. Naskah/Script | **G1 + G2** | G1: naskah cukup untuk lanjut? G2: naskah ini dikunci sebagai naskah final? | G2 wajib karena naskah final jadi dasar breakdown dan diarsipkan permanen |
+| 4. Breakdown Visual | **G1 + G2** | G1: breakdown sudah benar? G2: breakdown ini dikunci untuk generate asset? | G2 wajib karena generate asset memakai biaya/waktu nyata dan sulit dibatalkan setelah jalan |
+| 5. Generate Asset | **G1** | Asset hasil generate diterima, atau ada yang perlu regenerate? | Perubahan elemen Bank Konsistensi Visual di tengah jalan → **G2** terpisah |
+| 6. Assembly & Publish Prep | **G2 + G3** | G2: konten final + metadata disetujui? G3: merge PR ke `main`? | Konten produksi final = kategori Besar, review isi lengkap sebelum merge |
+
+**Aturan tambahan yang berlaku lintas tahap:**
+
+- Kalau di tengah tahap manapun muncul kebutuhan mengubah **Brand Core, Channel Brief, Model Konten Brief, atau Bank Konsistensi Visual**, itu selalu **G2 tersendiri** — tidak boleh menumpang pada G1 tahap yang sedang berjalan, karena dampaknya keluar dari konten ini.
+- Model Konten Brief boleh **menambah** gerbang (misal G2 tambahan untuk storyboard), tapi **tidak boleh menghapus** G2/G3 yang ada di tabel ini. Penambahan dicatat di brief model konten itu.
+- Setiap gerbang yang lolos dicatat di `STATUS.md` dengan kodenya (`G1 Tahap 3 — disetujui [tanggal]`), bukan sekadar "sudah dikonfirmasi".
+
+---
+
 ## Tahap 1: Ideation
 
 **Tujuan:** dari "aku mau bikin konten tentang X" jadi 1 ide konkret yang layak dikembangkan.
@@ -96,7 +117,7 @@ channel ini yang sudah dibaca sebelumnya:
 JANGAN keluar dari gaya bahasa dan hal yang harus dihindari yang sudah
 dikunci di Channel Brief.
 
-Lanjutkan ke Tahap 3 (Naskah/Script) setelah kerangka ini dikonfirmasi.
+**Gerbang G1** — lanjutkan ke Tahap 3 (Naskah/Script) setelah kerangka ini disetujui lanjut. Kalau angle yang dipilih ternyata mengubah sesuatu yang sudah dikunci di Channel Brief, hentikan dan ajukan **G2** terpisah dulu.
 ```
 
 **Output:** kerangka konten (bukan naskah penuh).
@@ -134,7 +155,7 @@ Format naskah: [SEBUTKAN FORMAT YANG DIMAU, misal per-shot dengan timing,
 atau paragraf voice over biasa, dst — atau ikuti format yang sudah
 ditentukan di Model Konten Brief kalau ada]
 
-Lanjutkan ke Tahap 4 (Breakdown Visual) setelah naskah ini dikonfirmasi.
+**Gerbang G1 + G2** — G1 untuk lanjut ke Tahap 4 (Breakdown Visual), dan G2 untuk mengunci naskah ini sebagai naskah final (dasar breakdown sekaligus yang nanti diarsipkan permanen). Tanyakan keduanya eksplisit; jangan anggap "lanjut" sudah berarti naskah dikunci.
 ```
 
 **Output:** naskah final (disimpan sementara di `_produksi-aktif/[channel]-[judul-konten]/naskah-draft.md`) + deskripsi karakter Tipe B kalau ada.
@@ -172,7 +193,7 @@ tuliskan:
 Simpan hasil ke _produksi-aktif/[channel]-[judul-konten]/breakdown-shot.md
 (atau nama file sesuai bentuk unit yang dipakai).
 
-Lanjutkan ke Tahap 5 (Generate Asset) setelah breakdown ini dikonfirmasi.
+**Gerbang G1 + G2** — G1 untuk lanjut ke Tahap 5 (Generate Asset), dan G2 untuk mengunci breakdown ini sebagai dasar generate. G2 wajib di sini karena generate asset memakai biaya/waktu nyata dan sulit dibatalkan setelah jalan.
 ```
 
 **Output:** daftar unit visual dengan prompt siap pakai per unit, tersimpan di `_produksi-aktif/`.
@@ -216,7 +237,7 @@ Buatkan:
 1. Pindahkan naskah final dari `_produksi-aktif/[channel]-[judul-konten]/naskah-draft.md` ke `channel-[nama-channel]/arsip-naskah/[tanggal]-[judul].md` — sertakan juga deskripsi karakter Tipe B kalau ada.
 2. Update `arsip-naskah/indeks.md` dengan entri baru (judul, tanggal, topik singkat).
 2b. **Kalau konten ini memakai karakter Tipe B:** update juga `arsip-naskah/indeks-karakter.md` — tambah baris baru untuk karakter yang belum pernah tercatat, atau tambahkan konten ini ke kolom **Konten lain** pada baris yang sudah ada. Ini WAJIB dan terpisah dari langkah 2: `indeks.md` tidak menyimpan ciri karakter, sehingga tanpa langkah ini pengecekan karakter berulang di produksi berikutnya (`06_PROMPT_LIBRARY.md` bagian A2 langkah 1) akan membaca indeks kosong. Lihat format minimumnya di bagian 9 `03_TEMPLATE_CHANNEL_BRIEF.md`.
-3. Konten produksi final termasuk kategori Besar — siapkan PR, direview isi lengkapnya dulu sebelum merge.
+3. **Gerbang G2 lalu G3** — konten produksi final termasuk kategori Besar. Minta **G2** dulu (konten final + metadata disetujui isinya), baru siapkan PR dan minta **G3** (izin merge ke `main`) sebagai pertanyaan terpisah. Dua-duanya dicatat di `STATUS.md`; jangan merge hanya berbekal G2.
 4. Setelah kamu download hasil akhirnya, folder `_produksi-aktif/[channel]-[judul-konten]/` boleh dihapus dari repo (breakdown dan asset visual itu sementara, sudah tidak diperlukan lagi setelah naskah dipindah ke arsip dan hasil didownload).
 
 **Output:** konten siap publish + metadata lengkap + naskah final di arsip.

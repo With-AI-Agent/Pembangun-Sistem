@@ -28,9 +28,25 @@ Ada 5 prinsip inti yang penting dipahami sejak awal:
 
 Kedua dokumen ini (Bank Konsistensi Visual dan Persona & Voice) TETAP terpisah secara fisik (beda cara pakai oleh agent), tapi WAJIB saling merujuk eksplisit di bagian yang terkait — misal bagian Karakter di Bank Konsistensi Visual mencantumkan rujukan ke gaya bicara karakter itu di Persona & Voice.
 
-**Prinsip Approval Bertingkat.** Tidak semua hasil kerja agent butuh level pengawasan yang sama. Dibagi 2 kategori:
+**Prinsip Approval Bertingkat.** Tidak semua hasil kerja agent butuh level pengawasan yang sama. Ada 2 sumbu yang WAJIB dibedakan dan sering tertukar: **kategori dampak** (seberapa besar akibat kalau salah) dan **jenis gerbang** (apa persisnya yang kamu izinkan saat itu).
+
+*Kategori dampak:*
 - **Besar** (Brand Core, Channel/Model Konten Brief, Bank Konsistensi Visual, konten produksi final) — kamu WAJIB review isi lengkapnya dulu sebelum di-merge ke `main`, karena kesalahan di sini bisa menyebar ke banyak konten ke depan atau susah dibalik.
 - **Kecil** (Log Keputusan, Bank Ide Awal, catatan administratif) — agent cukup tanya ringan "mau saya merge sekarang?" tanpa kamu perlu baca detail, karena dampaknya lokal dan gampang diperbaiki lagi nanti kalau salah.
+
+*Jenis gerbang (G1/G2/G3) — inilah yang menentukan agent boleh melakukan apa setelah kamu menjawab:*
+
+| Kode | Nama | Pertanyaan yang diajukan agent | Kalau kamu setuju, agent boleh | TIDAK memberi izin untuk |
+|---|---|---|---|---|
+| **G1** | Review output tahap | "Hasil tahap ini sudah sesuai? Lanjut atau ulang?" | Lanjut ke tahap berikutnya dalam pipeline yang sama | Menganggap isinya final, atau merge ke `main` |
+| **G2** | Approval keputusan besar | "Isi ini saya kunci sebagai keputusan resmi?" | Menetapkan isi sebagai sumber resmi yang diwarisi kerja berikutnya | Merge ke `main` |
+| **G3** | Approval merge | "Perubahan ini saya merge ke `main`?" | Merge PR ke `main` | Menambah keputusan baru yang belum lewat G2 |
+
+**Aturan yang mengikat agent:**
+- G1 **tidak pernah** naik otomatis jadi G2 atau G3. "Oke lanjut" pada satu tahap BUKAN persetujuan isi final dan BUKAN izin merge.
+- Agent WAJIB menyebutkan kode gerbang saat bertanya (misal: *"G1 — lanjut ke Tahap 4?"*), supaya jelas apa yang sedang kamu setujui.
+- Kalau kamu memberi jawaban ambigu ("bagus", "sip") pada G2/G3, agent WAJIB minta penegasan eksplisit, bukan menafsirkannya sebagai approval.
+- Semua approval yang sudah diberikan dicatat di `STATUS.md` beserta kode gerbangnya — supaya sesi berikutnya tahu persis sampai mana izin yang sudah ada (lihat `STATUS_TEMPLATE.md`).
 
 **Prinsip Checkpoint & Verifikasi Konsistensi.** Karena sesi kerja bisa sangat panjang, ada 2 lapis pertahanan terhadap risiko agent "melenceng" dari yang sudah disepakati:
 - **Checkpoint otomatis** — setiap kali sesi pindah dari 1 tahap besar ke tahap besar berikutnya, agent WAJIB berhenti sejenak dan meringkas ulang apa yang sudah disepakati, dengan cara membaca ulang sumber resmi (bukan mengandalkan ingatan sesi).

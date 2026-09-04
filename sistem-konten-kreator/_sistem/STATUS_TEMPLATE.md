@@ -11,7 +11,10 @@
   - `assets/`
 - **Sumber konteks yang dibaca:**
 - **Keputusan baru:**
-- **Approval yang sudah diberikan:**
+- **Approval yang sudah diberikan:** *(tulis per gerbang dengan kodenya — lihat Prinsip Approval Bertingkat di `_sistem/00_CARA_PAKAI_SISTEM.md` dan tabel gerbang per tahap di `_sistem/05_CONTENT_PRODUCTION_PIPELINE.md`. Contoh: `G1 Tahap 3 — disetujui 2026-09-04`, `G2 naskah final — disetujui 2026-09-04`, `G3 merge — belum`. Jangan tulis "sudah dikonfirmasi" tanpa kode gerbang: G1 tidak pernah berarti G2 atau G3.)*
+  - `G1 [tahap]:` belum / disetujui [tanggal]
+  - `G2 [objek yang dikunci]:` belum / disetujui [tanggal]
+  - `G3 merge:` belum / disetujui [tanggal]
 - **Commit terakhir:**
 - **PR terkait:**
 - **Pekerjaan belum tersimpan:** `Tidak ada` (wajib exact, atau daftar path jika ada yang belum tersimpan — lihat `_meta/PROTOKOL_CHECKPOINT_RECOVERY.md`)
