@@ -5,8 +5,8 @@
 - **Status:** `in-progress`
 - **Channel:** `sistem-konten-kreator/channel-fixture-narasi-sejarah/` (v1, `Operational`)
 - **Model konten:** `sistem-konten-kreator/channel-fixture-narasi-sejarah/model-konten/narasi-60-detik/brief.md` (v1, `Operational`)
-- **Tahap terakhir selesai:** Tahap 4 — Breakdown Output (**draft**). Disusun sebagai draft sesuai keputusan pengguna untuk menyiapkan draft Tahap 4 lebih dulu; belum dikunci G2 naskah final maupun G2 breakdown, belum dipakai untuk generate asset.
-- **Tahap berikutnya:** G2 naskah final (Tahap 3) + G2 breakdown (Tahap 4) — harus disetujui dulu sebelum Tahap 5 (Generate/Acquire Assets) dijalankan.
+- **Tahap terakhir selesai:** Tahap 4 — Breakdown Output (**dikunci G2**, 9 segmen). Disusun sebagai draft, lalu disetujui sebagai dasar Tahap 5.
+- **Tahap berikutnya:** Tahap 5 — Generate/Acquire Assets (kumpulkan b-roll/foto berlisensi per segmen; bukan generate karakter). Menunggu G1 Tahap 4 sebelum eksekusi nyata.
 - **Output resmi:**
   - `naskah-draft.md` — **ADA** di folder ini (draft Tahap 3, belum G2 final)
   - `breakdown-output.md` — **ADA** di folder ini (**draft** Tahap 4, belum G2)
@@ -26,9 +26,9 @@
   - `G1 Tahap 1 (Ideation):` disetujui 2026-09-04
   - `G1 Tahap 2 (Konsep & Angle):` disetujui 2026-09-04
   - `G1 Tahap 3 (Naskah/Script):` disetujui 2026-09-04
-  - `G2 naskah final (Tahap 3):` **belum** — diminta setelah draft breakdown tersedia
-  - `G1 Tahap 4 (Breakdown):` **belum** — draft breakdown sudah dibuat; menunggu review + G2 naskah final
-  - `G2 breakdown (Tahap 4):` **belum**
+  - `G2 naskah final (Tahap 3):` **disetujui 2026-09-04** — naskah `naskah-draft.md` dikunci sebagai naskah final
+  - `G1 Tahap 4 (Breakdown):` **belum** — G2 breakdown sudah disetujui; G1 lanjut ke Tahap 5 diminta sebelum eksekusi
+  - `G2 breakdown (Tahap 4):` **disetujui 2026-09-04** — `breakdown-output.md` (9 segmen) dikunci sebagai dasar generate/acquire asset
   - `G3 merge:` belum
 - **Commit terakhir:** `e2d234d65f04802fbdcf4ba9d17dec55c83dd7cb` — commit yang menyimpan **output produksi** (`breakdown-output.md`) di sesi ini. Verifikasi: `git log -1 --format=%H -- sistem-konten-kreator/_produksi-aktif/fixture-narasi-sejarah-tiga-benda-di-meja-nenek/breakdown-output.md`. *(Field ini menunjuk commit output, bukan commit `STATUS.md` sendiri.)*
 - **PR terkait:** tidak ada

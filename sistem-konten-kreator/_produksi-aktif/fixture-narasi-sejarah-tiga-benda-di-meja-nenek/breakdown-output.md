@@ -2,7 +2,7 @@
 
 - **Channel:** `channel-fixture-narasi-sejarah/` (FIXTURE)
 - **Model konten:** Narasi 60 Detik (v1)
-- **Tahap:** 4 — Breakdown Output (**draft**, belum dikunci G2 naskah final maupun G2 breakdown; belum dipakai untuk generate asset)
+- **Tahap:** 4 — Breakdown Output (**dikunci G2 2026-09-04**; naskah final juga sudah G2; belum dipakai untuk generate asset)
 - **Bentuk unit:** **segmen narasi** — naskah dipecah per potongan narasi yang cocok dengan satu potongan b-roll (sesuai Model Konten Brief bagian 4)
 - **File target:** `breakdown-output.md`
 

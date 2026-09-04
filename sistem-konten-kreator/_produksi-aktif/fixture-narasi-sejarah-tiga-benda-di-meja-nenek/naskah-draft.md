@@ -2,7 +2,7 @@
 
 - **Channel:** `channel-fixture-narasi-sejarah/` (FIXTURE)
 - **Model konten:** Narasi 60 Detik (v1) — target 130-145 kata, tempo 130 kata/menit
-- **Tahap:** 3 — Naskah/Script (**draft**, belum dikunci G2)
+- **Tahap:** 3 — Naskah/Script (**final — dikunci G2 2026-09-04**)
 - **Sumber eksternal:** tidak ada — naskah ini tidak memuat klaim faktual, angka, tanggal, atau nama tokoh; seluruhnya observasi personal
 - **Karakter Tipe B:** tidak ada
 
