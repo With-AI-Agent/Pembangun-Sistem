@@ -142,6 +142,26 @@ supaya tidak terasa generic, TANPA keluar dari positioning channel ini.
 
 **Cek pengulangan topik** (lihat juga Tahap 1 di `05_CONTENT_PRODUCTION_PIPELINE.md`): selalu cek ke `arsip-naskah/indeks.md` channel ini sebelum memfinalkan ide baru.
 
+**Kalau riset ini memakai sumber eksternal** (web, berita, data, kutipan, karya pihak ketiga): setiap bahan yang benar-benar dipakai WAJIB langsung dicatat di `_produksi-aktif/[channel]-[judul-konten]/SUMBER.md` — URL/judul, tanggal akses, jenis, status verifikasi, lisensi, dan apakah butuh atribusi. Catat saat itu juga, bukan direkonstruksi belakangan saat mau publish. Aturan lengkap dan gerbang fact-check/rights-check ada di bagian "Aturan Sumber Eksternal, Fakta, dan Hak Cipta" di `05_CONTENT_PRODUCTION_PIPELINE.md`.
+
+**Prompt riset yang menjaga jejak sumber:**
+```
+Riset singkat untuk konten ini: "[TOPIK/KLAIM YANG PERLU DICEK]"
+
+Untuk setiap temuan yang kamu pakai, sertakan:
+- klaimnya apa (satu kalimat)
+- sumbernya (URL + penerbit/judul)
+- tanggal akses
+- seberapa kuat: terverifikasi (>=2 sumber independen untuk klaim
+  berisiko), cukup untuk 1 sumber, atau tidak bisa diverifikasi
+
+Kalau sebuah klaim tidak bisa diverifikasi, katakan terus terang — jangan
+diisi dengan perkiraan yang terdengar meyakinkan. Untuk klaim berisiko
+(kesehatan, hukum, keuangan, keselamatan, tuduhan ke pihak tertentu,
+angka statistik spesifik, klaim sejarah), sebutkan eksplisit kalau
+sumbernya belum cukup.
+```
+
 ---
 
 ## D. Generate Gambar — Prompt Struktur Dasar (di luar konteks karakter)

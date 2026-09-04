@@ -1,3 +1,10 @@
 __pycache__/
 *.pyc
 .DS_Store
+
+# Artefak generated oleh tools/ — dibuat ulang lewat backup_verify.py / build_template.py,
+# sengaja TIDAK di-commit supaya repo tidak bengkak. Rujukan ke path ini di
+# _meta/SYSTEM_MANIFEST.md dan _meta/TEMPLATE_RELEASE.md karena itu muncul sebagai
+# WARNING (bukan error) di tools/validate_repo.py — itu perilaku yang diharapkan.
+_meta/_internal/backups/
+_meta/_internal/template_clean.zip

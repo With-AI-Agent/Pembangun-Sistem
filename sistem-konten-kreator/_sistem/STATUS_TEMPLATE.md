@@ -10,6 +10,7 @@
   - `breakdown-shot.md` atau nama unit yang sesuai
   - `assets/`
 - **Sumber konteks yang dibaca:**
+- **Sumber eksternal dipakai:** `Tidak ada` / ada — `SUMBER.md` dibuat, klaim belum terverifikasi: [daftar atau `tidak ada`]
 - **Keputusan baru:**
 - **Approval yang sudah diberikan:** *(tulis per gerbang dengan kodenya — lihat Prinsip Approval Bertingkat di `_sistem/00_CARA_PAKAI_SISTEM.md` dan tabel gerbang per tahap di `_sistem/05_CONTENT_PRODUCTION_PIPELINE.md`. Contoh: `G1 Tahap 3 — disetujui 2026-09-04`, `G2 naskah final — disetujui 2026-09-04`, `G3 merge — belum`. Jangan tulis "sudah dikonfirmasi" tanpa kode gerbang: G1 tidak pernah berarti G2 atau G3.)*
   - `G1 [tahap]:` belum / disetujui [tanggal]

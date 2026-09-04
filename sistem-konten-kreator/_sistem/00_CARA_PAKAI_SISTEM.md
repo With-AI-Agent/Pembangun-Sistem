@@ -111,16 +111,19 @@ nama-repo/
 │       ├── indeks.md                 ← tabel ringkas: judul, tanggal, topik singkat
 │       ├── indeks-karakter.md        ← tabel karakter Tipe B: ciri ringkas + link arsip sumber
 │       │                                (sumber data pengecekan karakter berulang — bukan indeks.md)
-│       └── [tanggal]-[judul].md      ← termasuk deskripsi karakter Tipe B yang dipakai, kalau ada
+│       ├── [tanggal]-[judul].md      ← termasuk deskripsi karakter Tipe B yang dipakai, kalau ada
+│       └── [tanggal]-[judul]-sumber.md ← jejak sumber eksternal, kalau konten itu memakainya
 │
 └── _produksi-aktif/                  ← SEMENTARA — breakdown shot & asset visual produksi berjalan
     └── [channel]-[judul-konten]/
+        ├── STATUS.md                 ← status persisten wajib (checkpoint & recovery)
+        ├── SUMBER.md                 ← wajib begitu ada 1 sumber eksternal dipakai
         ├── naskah-draft.md
         ├── breakdown-shot.md         ← bentuk detailnya (shot/section/panel/dll) ditentukan per Model Konten
         └── assets/
 ```
 
-**Aturan penting soal folder `_produksi-aktif/`:** begitu 1 konten selesai dan sudah kamu download/pakai, folder ini DIHAPUS dari repo (breakdown shot dan asset visual itu berat, bikin repo bengkak kalau menumpuk). Naskah finalnya sendiri (bukan breakdown/asset) dipindah dulu ke `arsip-naskah/` channel terkait sebelum folder produksi dihapus — naskah itu ringan (teks) dan berguna permanen untuk mencegah pengulangan topik tanpa sadar dan menjaga konsistensi gaya bahasa dari waktu ke waktu.
+**Aturan penting soal folder `_produksi-aktif/`:** begitu 1 konten selesai dan sudah kamu download/pakai, folder ini DIHAPUS dari repo (breakdown shot dan asset visual itu berat, bikin repo bengkak kalau menumpuk). Naskah finalnya sendiri (bukan breakdown/asset) dipindah dulu ke `arsip-naskah/` channel terkait sebelum folder produksi dihapus — begitu juga `SUMBER.md` kalau konten itu memakai sumber eksternal — naskah itu ringan (teks) dan berguna permanen untuk mencegah pengulangan topik tanpa sadar dan menjaga konsistensi gaya bahasa dari waktu ke waktu.
 
 **Kenapa dipecah jadi beberapa file, bukan satu file besar?**
 Karena tiap channel dan tiap model konten kebutuhannya beda — channel faceless nggak akan pernah buka bagian karakter, channel dengan 1 model konten nggak akan buka Model Konten Discovery berkali-kali. Kalau semua digabung satu file, bagian yang "harus dilewati" jadi bikin bingung dan file jadi terlalu panjang untuk dibaca ulang tiap hari.
