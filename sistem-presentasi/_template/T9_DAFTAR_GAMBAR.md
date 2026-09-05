@@ -3,3 +3,7 @@
 
 | # | Berkas | Slide | Mode | Sumber | Pemegang hak | Lisensi | Atribusi wajib | Flag NC/SA | Status approval |
 |---|---|---|---|---|---|---|---|---|---|
+
+## Log Keputusan
+| Tanggal | Keputusan | Dasar | Oleh |
+|---|---|---|---|

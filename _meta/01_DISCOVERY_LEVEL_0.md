@@ -72,7 +72,7 @@ jawaban jelas untuk 4 hal ini:
 
 5. BATASAN PLATFORM (BARU — wajib, karena mempengaruhi semua sistem yang dipakai via lmarena)
    - Apakah sistem ini akan dipakai via lmarena Agent Mode? Ya/Tidak
-   - Jika Ya: baca `_meta/PLATFORM_LMARENA.md` — pahami fakta platform: branch arena otomatis dibuat (tidak bisa asumsi kerja di main), tidak bisa push setelah PR merge/close (platform cabut akses), sesi bisa crash kapan saja. Bagaimana fakta ini mempengaruhi checkpoint & recovery di sistem ini? Apakah perlu checkpoint diskusi ringan jika diskusi >5 giliran mendekati keputusan?
+   - Jika Ya: baca `_meta/PLATFORM_LMARENA.md` — pahami fakta platform: branch arena otomatis dibuat (tidak bisa asumsi kerja di main), tidak bisa push setelah PR merge/close (platform cabut akses), sesi bisa crash kapan saja. Bagaimana fakta ini mempengaruhi checkpoint & recovery di sistem ini? Pastikan sistem menurunkan **log sesi berkelanjutan (`LOG_SESI`)** secara self-contained (aturan: `_meta/PROTOKOL_CHECKPOINT_RECOVERY.md` bagian "Log Sesi Berkelanjutan"; format: `_meta/TEMPLATE_LOG_SESI.md`) + langkah recovery log di prompt pembuka + langkah menutup log di prompt penutup pegangan.
    - Jika Tidak: tulis alasan override eksplisit (misal sistem manual 100% Obsidian) + approval. Jangan asumsi platform tidak relevan tanpa alasan.
 
 Setiap beberapa putaran, kasih ringkasan checkpoint: "Sejauh ini sistem
@@ -131,8 +131,9 @@ sistemnya.
 3. Untuk tiap dokumen yang direncanakan dengan status "perlu prompt Discovery detail" — tulis dulu prompt generatornya (pola sama seperti menulis `02_CHANNEL_DISCOVERY_PROMPT.md` dari nol, disesuaikan isi pertanyaannya dengan kebutuhan sistem ini), simpan di dalam folder `sistem-[nama-sistem]/` yang sama.
 4. Untuk dokumen dengan status "cukup template biasa" — bisa langsung dibuat template-nya (pola sama seperti `03_TEMPLATE_CHANNEL_BRIEF.md`), tidak perlu prompt diskusi panjang.
 5. Setelah semua dokumen generator/template siap, baru mulai jalankan satu-satu untuk mengisi konten sistem yang sebenarnya.
-6. Jalankan `DEFINITION_OF_DONE.md` secara bertahap; jangan tandai
+6. Buat **pegangan pengguna** sistem baru (`PANDUAN_PENGGUNA.md` + `PROMPT_ENTRI_UNIVERSAL.md` di dalam folder sistem) mengikuti `_meta/PANDUAN_PENGGUNA_TEMPLATE.md` — wajib sebelum sistem dianggap siap dipakai: prompt pembuka universal (satu prompt → agent langsung terorientasi penuh) + prompt penutup sesi.
+7. Jalankan `DEFINITION_OF_DONE.md` secara bertahap; jangan tandai
    sistem sebagai selesai sebelum checkpoint, dependency, dan recovery
    dapat diverifikasi.
-7. Update `INDEKS_SISTEM.md` dengan entri sistem baru ini begitu rencana kerangka sudah di-merge (statusnya masih "Kerangka dibuat, isi belum" — update lagi statusnya seiring progres).
-8. Buat ringkasan cadangan setelah struktur dan status sistem cukup stabil; ringkasan harus menyebutkan versi serta bagian yang belum selesai.
+8. Update `INDEKS_SISTEM.md` dengan entri sistem baru ini begitu rencana kerangka sudah di-merge (statusnya masih "Kerangka dibuat, isi belum" — update lagi statusnya seiring progres).
+9. Buat ringkasan cadangan setelah struktur dan status sistem cukup stabil; ringkasan harus menyebutkan versi serta bagian yang belum selesai.

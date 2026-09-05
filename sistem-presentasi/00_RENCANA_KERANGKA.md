@@ -231,6 +231,8 @@ Sistem ini dibangun karena pengguna menyatakan **"semuanya tergantung keadaan"**
 
 Tanda **[GENERATOR]** = perlu prompt Discovery detail tersendiri (digali lewat diskusi dengan pengguna). Tanda **[TEMPLATE]** = cukup template yang diisi langsung, tidak perlu diskusi panjang. Tanda **[ATURAN]** = dokumen aturan tetap, ditulis sekali, tidak digali per deck.
 
+> **Catatan renumbering (5 Sep 2026, audit independen):** tabel di bawah adalah **rencana per 4 Sep 2026**. Implementasi final **menomori ulang** dokumen `_sistem/` (8 → 10 dokumen): final `01`=Aturan Desain/Isi/Gambar, `02`=Knowledge Desain, `03`=Kebutuhan & Tujuan, `04`=QA Produksi, `05`=Sumber & Anti-Ngarang, `06`=Lantai Berbasis Bukti, `07`=Mode Gambar & Lisensi, `08`=Perancangan Berbasis Rekomendasi, `09`=Pemahaman Bahan, `10`=Render & Verifikasi. Rujukan bernomor di dokumen aktif memakai penomoran **final**; nama lama di tabel ini adalah sejarah, bukan path yang harus ada.
+
 ### Akar folder
 
 | Dokumen | Fungsi | Perlu prompt Discovery? |

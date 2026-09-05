@@ -18,8 +18,12 @@ Setelah itu:
    sistem manapun, tidak cuma yang mau aku kerjakan sekarang) — laporkan
    ke aku kalau ada, karena itu tandanya ada kerjaan lama yang belum
    selesai di-merge.
-2. Cek _meta/INDEKS_SISTEM.md untuk tahu sistem apa saja yang sudah ada
+3. Cek _meta/INDEKS_SISTEM.md untuk tahu sistem apa saja yang sudah ada
    dan statusnya masing-masing.
+4. Minta agent cari file `LOG_SESI_*.md` terbaru (root repo / folder sistem /
+   folder unit kerja); kalau keadaannya `OPEN`, BACA dulu dan laporkan apa yang
+   terjadi di sesi terakhir — jangan minta aku menjelaskan ulang konteks yang
+   sudah tercatat di sana.
 
 Berdasarkan itu, tanya aku: aku mau ngapain di sesi ini — bangun sistem
 baru, lanjut/audit sistem yang sudah ada, atau hal lain. Kalau aku mau
@@ -32,6 +36,31 @@ cukup baca yang relevan dengan apa yang aku mau kerjakan.
 **Kenapa checklist di atas (bukan cuma 1 langkah):** ini gabungan 2 hal yang PENTING dicek di level REPO ini (bukan cuma di dalam 1 sistem) — PR menggantung (bisa dari sistem manapun, karena 1 repo menampung banyak sistem sekaligus) dan status sistem-sistem yang ada. Tanpa cek PR ini, ada risiko kerjaan lama dari sistem lain terlupakan menggantung — persis kasus yang pernah terjadi sebelum prinsip ini dikunci di sistem konten kreator.
 
 **Berlaku untuk SEMUA situasi** — baik kamu baru pertama kali sentuh repo ini, mau bikin sistem baru yang benar-benar baru, atau mau lanjut sistem yang sudah kamu tinggal setahun. Agent akan menyesuaikan sendiri berdasarkan apa yang dia temukan di `INDEKS_SISTEM.md`.
+
+---
+
+## Prompt Penutup Sesi — Pakai di Akhir Tiap Sesi
+
+Sebelum menutup sesi (baik kerja sudah selesai mau di-merge, mau jeda dulu, atau sesi mau di-crash-kan karena panjang), tempel ini supaya sesi berikutnya bisa melanjutkan tanpa kehilangan apa pun:
+
+```
+Tutup sesi ini dengan benar:
+1. Update STATUS.md unit kerja yang disentuh (tahap selesai, tahap
+   berikutnya, waktu pembaruan).
+2. Tutup log sesi ini (LOG_SESI_YYYY-MM-DD.md): isi final "Keadaan Sesi"
+   (yang selesai, yang terbuka, langkah berikutnya) dan tandai CLOSED.
+3. Cek working tree: semua perubahan WAJIB ter-commit dan ter-push —
+   tanpa commit+push, sesi baru tidak bisa melanjutkan (fakta platform).
+4. Update "Terakhir Disentuh" + status tiap sistem yang disentuh di
+   _meta/INDEKS_SISTEM.md.
+5. Kalau kerja berlanjut lintas sesi, buat laporan sesi/handoff sesuai
+   template repo.
+6. Ringkaskan kondisi akhir: commit terakhir, status PR, dan langkah
+   aman berikutnya.
+7. Kalau aku mau merge PR: pastikan semua sudah push SEBELUM merge —
+   setelah merge/close, sesi ini TIDAK BISA push lagi (fakta platform);
+   kerja lanjutan harus dari sesi baru yang dibuka dari main.
+```
 
 ---
 

@@ -52,13 +52,15 @@ Policy ini dibuat **karena** fakta platform di atas, bukan aturan sembarang.
 
 **Alasan kausal:** Karena fakta #3 (sesi bisa crash) dan fakta #2 (file workspace belum aman), maka tanpa commit, sesi baru **tidak bisa** melanjutkan. Ini mencegah FI-03.
 
-### P2 — Checkpoint diskusi ringan
+### P2 — Log sesi berkelanjutan (`LOG_SESI`)
 
-**Policy:** Jika diskusi sudah >5-7 giliran dan mendekati keputusan, agent harus buat file draft `DISKUSI_MENTAH_YYYY-MM-DD_HHMM.md` di `unit-aktif/[id]/` atau `_meta/_internal/discussions/` berisi ringkasan diskusi, opsi yang dipertimbangkan, keputusan yang hampir diambil, pertanyaan terbuka. Status `in-progress`, commit dengan pesan `checkpoint diskusi: ...`
+**Policy:** Setiap sesi memelihara file `LOG_SESI_YYYY-MM-DD.md` di folder scope kerja (unit, sistem, atau root repo; format `TEMPLATE_LOG_SESI.md`). Agent append + update header "Keadaan Sesi" + commit + push **segera setelah tiap pertukaran yang menghasilkan informasi baru**. Yang dicatat: keputusan/koreksi/kendala/preferensi pengguna (near-verbatim), proposal penting + dasarnya, kesepakatan & penolakan + alasan, fakta terverifikasi, state kerja, pertanyaan terbuka. Yang TIDAK dicatat: konfirmasi, basa-basi, ulang isi `STATUS.md`/Log (tunjuk path), dump chat. Akhir sesi: header ditandai `CLOSED` (atau `OPEN` + "dilanjutkan di mana"). Entry point sesi baru: cari log terbaru; yang `OPEN` wajib dibaca dan keadaannya dilaporkan + dikonfirmasi ke pengguna.
 
-**Alasan kausal:** Karena fakta #3, diskusi panjang yang belum jadi file final bisa hilang. Checkpoint ringan ini menyelamatkan konteks tanpa harus log semua chat (efisien vs aman). Ini menutup rasa "sedih diskusi panjang hilang".
+**Alasan kausal:** Karena fakta #3 (sesi bisa crash, kadang tidak bisa dibuka lagi) dan karena agent sesi baru tidak punya akses ke chat sesi lama, maka konteks yang tidak segera jadi file **hilang permanen**. Mekanisme ini adalah pencatatan sebagai mode normal, bukan checkpoint darurat: aturan lama (checkpoint >5 giliran mendekati keputusan) diganti karena berbasis ambang+judgment — sebelum ambang tercapai, tidak ada yang tercatat, dan diskusi eksploratif tidak selalu "mendekati" keputusan.
 
-**Kapan tidak perlu:** Diskusi pendek <3 giliran atau masih eksplorasi awal — tidak perlu checkpoint, cukup lanjut chat.
+**Anti-overkill (bagian dari policy, bukan anjuran):** filter "yang dicatat / yang tidak dicatat" di atas WAJIB dipatuhi. Biaya over-recording = detik per pertukaran; biaya under-recording = jam konteks yang hilang. Floor-nya tetap aman: bahkan pencatatan minimum (keputusan + keadaan) sudah menyelamatkan 90% nilai.
+
+**Kapan file tidak perlu dibuat:** sesi tanpa informasi baru (mis. cek status lalu selesai).
 
 ### P3 — Verifikasi branch dan PR di awal sesi
 

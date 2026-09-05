@@ -17,6 +17,8 @@ Setelah 1 sistem berhasil dibangun dan teruji (Sistem Konten Kreator — lihat `
 > - Rujukan ke `_meta/` boleh ada sebagai *provenance* (asal prinsip), tapi aturan yang benar-benar dipakai harus **disalin/diturunkan ke dalam folder sistem**, supaya hasil ekstraksi tetap berfungsi penuh.
 > - Ini TIDAK bertentangan dengan prinsip di atas: isi tetap spesifik-maksimal; self-containment hanyalah memastikan hasil yang spesifik itu bisa dibawa keluar tanpa rusak.
 
+> **Setiap sistem wajib menyertakan PEGANGAN PENGGUNA (buku pedoman) di dalam foldernya.** (Prinsip tambahan, dinyatakan pengguna 5 Sep 2026.) Standar mudahnya: **sama dengan meta-sistem ini sendiri** — pengguna cukup membuka sesi dengan **SATU prompt pembuka universal** yang sudah disiapkan, lalu agent otomatis terorientasi penuh (apa sistemnya, cara kerja, ketentuan, kondisi repo, PR menggantung) tanpa perlu ditempel manual. Bentuknya dua file di dalam folder sistem: `PROMPT_ENTRI_UNIVERSAL.md` (satu blok prompt pembuka siap tempel) + `PANDUAN_PENGGUNA.md` (pedoman lengkap: prompt pembuka + **prompt penutup sesi**, istilah awam, kalimat per situasi, cara review & merge, kebiasaan). Ikuti struktur `_meta/PANDUAN_PENGGUNA_TEMPLATE.md`. Preceden: meta-sistem sendiri (`PANDUAN_PENGGUNA.md` di root repo) dan `sistem-konten-kreator/` (`PANDUAN_PENGGUNA.md` + `PROMPT_ENTRI_UNIVERSAL.md`).
+
 ---
 
 ## Struktur Repo
@@ -30,6 +32,7 @@ repo-utama/
 │   ├── 02_PRINSIP_UNIVERSAL.md       ← prinsip default untuk semua sistem
 │   ├── INDEKS_SISTEM.md              ← daftar semua sistem + status
 │   ├── SYSTEM_MANIFEST_TEMPLATE.md   ← kontrak identitas tiap sistem
+│   ├── PANDUAN_PENGGUNA_TEMPLATE.md  ← template pegangan pengguna tiap sistem
 │   ├── DEFINITION_OF_DONE.md         ← kriteria selesai dan rilis
 │   ├── PROTOKOL_CHECKPOINT_RECOVERY.md ← status persisten dan pemulihan
 │   ├── PLATFORM_LMARENA.md           ← fakta platform vs policy (baru, wajib baca)
@@ -69,7 +72,7 @@ Ringkasnya:
 
 3. **Sesi bisa crash di tengah jalan:** Chat tidak bisa lanjut, error halaman keluar sendiri. Arena sendiri mengakui dan sediakan workaround download. Karena itu diskusi panjang yang belum jadi file + commit bisa hilang.
 
-**Implikasi untuk sistem:** Karena fakta #2 dan #3, maka policy "commit tiap tahap besar selesai" dan "checkpoint diskusi ringan jika diskusi >5 giliran" bukan birokrasi, tapi syarat fisik supaya sesi baru **bisa** melanjutkan (mencegah FI-03). Lihat `PLATFORM_LMARENA.md` bagian Policy untuk alasan kausal lengkap.
+**Implikasi untuk sistem:** Karena fakta #2 dan #3, maka policy "commit tiap tahap besar selesai" dan **log sesi berkelanjutan (`LOG_SESI`)** bukan birokrasi, tapi syarat fisik supaya sesi baru **bisa** melanjutkan (mencegah FI-03). Lihat `PLATFORM_LMARENA.md` bagian Policy (P2) dan `PROTOKOL_CHECKPOINT_RECOVERY.md` bagian "Log Sesi Berkelanjutan" untuk alasan kausal lengkap.
 
 ---
 
@@ -138,6 +141,11 @@ Baru setelah itu, arahkan sesuai tujuan. Jika state tidak konsisten, gunakan `FA
 6. UPDATE `INDEKS_SISTEM.md` — tambah entri sistem baru ini, tanggal dibuat
 
 7. BUAT RINGKASAN_sistem-[nama-baru].md di _cadangan-claude/
+
+8. BUAT PEGANGAN PENGGUNA: `PANDUAN_PENGGUNA.md` + `PROMPT_ENTRI_UNIVERSAL.md` di dalam
+   folder sistem (ikuti `_meta/PANDUAN_PENGGUNA_TEMPLATE.md`) — WAJIB: prompt pembuka
+   universal (satu prompt → agent langsung terorientasi) + prompt penutup sesi.
+   Tanpa pegangan, sistem belum dianggap siap dipakai (lihat DEFINITION_OF_DONE.md).
 ```
 
 **Catatan penting soal Langkah 3:** ini beda dari sistem konten kreator, di mana `01_BRAND_CORE.md` dkk sudah tersedia siap pakai sejak awal (karena domainnya sudah diketahui dari awal). Untuk sistem baru dengan meta-sistem ini, prompt generatornya belum ada — jadi ada 1 langkah tambahan yang tidak boleh dilewati atau diasumsikan otomatis ada.
@@ -205,5 +213,5 @@ Lihat `02_PRINSIP_UNIVERSAL.md` untuk daftar lengkap + penjelasan. Ringkasnya: H
 
 - **Branch & merge**: tiap sesi kerja dapat branch sendiri (`arena/...` dibuat otomatis oleh platform, bukan manual), tidak pernah auto-merge, review sesuai Approval Bertingkat sebelum merge ke `main`. **Alasan kausal:** Setelah PR di-merge/close, sesi tersebut **tidak bisa** push lagi (platform cabut akses — lihat `PLATFORM_LMARENA.md`). Karena itu pastikan semua sudah push sebelum merge, dan buka sesi baru dari `main` untuk kerja lanjutan. Jangan lanjut kerja di sesi yang PR-nya sudah merge — file baru akan terjebak.
 - **Entry Point**: di awal sesi baru, cek dulu status kerja yang menggantung, tanya tujuan sesi ini, baca file relevan sendiri — tidak perlu ditempel manual. Verifikasi branch aktif via `git branch --show-current` karena branch `arena/...` dibuat otomatis (fakta platform).
-- **Checkpoint diskusi ringan**: Jika diskusi sudah >5-7 giliran dan mendekati keputusan, buat file `DISKUSI_MENTAH_*.md` di unit-aktif dan commit. **Alasan kausal:** Sesi bisa crash kapan saja (fakta platform #3), diskusi panjang yang belum jadi file bisa hilang. Checkpoint ringan ini efisien vs aman.
+- **Log sesi berkelanjutan (`LOG_SESI`)**: Setiap sesi memelihara `LOG_SESI_YYYY-MM-DD.md` di folder scope kerja (unit/sistem/root repo) — append + commit + push segera setelah tiap pertukaran yang menghasilkan informasi baru. Header "Keadaan Sesi" (di mana kita, apa yang disepakati, apa yang terbuka) selalu segar. **Yang dicatat:** keputusan/koreksi/kendala/preferensi pengguna (near-verbatim), proposal penting + dasarnya, kesepakatan & penolakan + alasan, fakta terverifikasi, state kerja, pertanyaan terbuka. **Yang TIDAK dicatat:** konfirmasi, basa-basi, ulang isi STATUS.md/Log, dump chat. **Alasan kausal:** Sesi bisa crash kapan saja (fakta platform #3) dan agent sesi baru tidak punya akses ke chat lama — ingatan yang bertahan hanya file. Mekanisme lama "checkpoint kalau >5 giliran" diganti karena berbasis ambang+judgment: sebelum ambang, tidak ada yang tercatat. Detail: `PROTOKOL_CHECKPOINT_RECOVERY.md` + format `TEMPLATE_LOG_SESI.md`.
 - **1 dokumen direvisi/dibangun penuh dulu, baru lanjut ke dokumen berikutnya** — bukan banyak sekaligus, supaya kesalahan kecil tidak menyebar sebelum ketahuan

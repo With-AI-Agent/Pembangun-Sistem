@@ -161,7 +161,16 @@ Sistem ini dipakai via lmarena Agent Mode. Platform memiliki perilaku otomatis y
 
 3. **Sesi bisa crash:** Chat tidak bisa lanjut, error halaman. Karena itu diskusi panjang yang belum jadi file + commit bisa hilang.
 
-**Implikasi:** Karena fakta #2 dan #3, maka commit tiap tahap besar selesai dan checkpoint diskusi ringan (>5 giliran mendekati keputusan → buat `DISKUSI_MENTAH_*.md` dan commit) bukan birokrasi, tapi syarat fisik supaya sesi baru bisa melanjutkan.
+**Implikasi:** Karena fakta #2 dan #3, maka commit tiap tahap besar selesai dan **log sesi berkelanjutan** (aturan ringkas di bawah; aturan lengkap meta: `_meta/PROTOKOL_CHECKPOINT_RECOVERY.md` bagian "Log Sesi Berkelanjutan") bukan birokrasi, tapi syarat fisik supaya sesi baru bisa melanjutkan.
+
+### Aturan Log Sesi (`LOG_SESI`) — self-contained
+
+1. **Satu file per sesi:** `LOG_SESI_YYYY-MM-DD.md` di folder scope kerja (unit kerja, akar sistem, atau root repo bila lintas sistem).
+2. **Update + commit + push segera** setelah tiap pertukaran yang menghasilkan informasi baru — bukan mekanis tiap giliran.
+3. **Header "Keadaan Sesi" selalu segar** (agent baru membaca ini dulu): di mana kita sekarang, apa yang sudah disepakati, apa yang masih terbuka, langkah berikutnya.
+4. **Yang dicatat:** keputusan/koreksi/kendala/preferensi pengguna (near-verbatim), proposal penting agent + dasarnya, kesepakatan & penolakan + alasan, fakta/hasil verifikasi sesi ini, perubahan state kerja, pertanyaan terbuka.
+5. **Yang TIDAK dicatat:** konfirmasi ("oke"), basa-basi, pengulangan isi yang sudah ada di `STATUS.md`/Log Keputusan (tunjuk path-nya), dump chat. — Filter ini WAJIB; inilah yang membuat aturan ini efisien, bukan overkill (biaya over-recording = detik; under-recording = jam konteks hilang).
+6. **Akhir sesi:** header diisi final → `CLOSED` (atau `OPEN` + "dilanjutkan di mana"). **Awal sesi baru:** cari `LOG_SESI_*.md` terbaru; yang `OPEN` → baca, laporkan keadaan, konfirmasi ke pengguna sebelum lanjut.
 
 ## Entry Point Universal — Cara Mulai atau Lanjut Sesi
 
@@ -222,7 +231,7 @@ Repo ini disentuh dari beberapa arah sekaligus: kamu lewat Obsidian (dengan plug
 - **PR lama masih terbuka saat sesi baru dimulai** — dilaporkan di Entry Point langkah 2. Putuskan dulu: merge, tutup, atau lanjutkan di branch itu. Jangan mulai kerja baru yang menyentuh file sama sebelum itu diputuskan.
 - **Branch keliru** — kalau ternyata kerja dilakukan di branch yang salah, jangan hapus branch atau `main`. Buat PR dari branch itu apa adanya, atau cherry-pick commit yang relevan ke branch yang benar; keputusan dicatat.
 
-**Catatan penting soal platform:** lmarena Agent bisa diajak diskusi panjang TANPA harus baca-tulis file tiap kali merespons, kalau pengguna memintanya secara eksplisit. Ini berarti sesi Discovery yang butuh diskusi panjang tidak perlu pindah ke platform chat lain seperti versi sistem sebelumnya — cukup dilakukan di sesi agent yang sama, mulai dari mode diskusi, baru pindah ke mode eksekusi begitu hasilnya matang dan pengguna mengonfirmasi. **Tapi** karena fakta platform #3 (sesi bisa crash), maka jika diskusi sudah >5-7 giliran mendekati keputusan, agent harus buat checkpoint diskusi ringan `DISKUSI_MENTAH_*.md` dan commit — supaya tidak hilang kalau crash. *(Kalimat spesifik untuk memicu mode diskusi ada di `panduan/PANDUAN_PENGGUNA.md`, bukan di sini)*
+**Catatan penting soal platform:** lmarena Agent bisa diajak diskusi panjang TANPA harus baca-tulis file tiap kali merespons, kalau pengguna memintanya secara eksplisit. Ini berarti sesi Discovery yang butuh diskusi panjang tidak perlu pindah ke platform chat lain seperti versi sistem sebelumnya — cukup dilakukan di sesi agent yang sama, mulai dari mode diskusi, baru pindah ke mode eksekusi begitu hasilnya matang dan pengguna mengonfirmasi. **Tapi** karena fakta platform #3 (sesi bisa crash), maka selama mode diskusi agent tetap memelihara **log sesi** (`LOG_SESI_YYYY-MM-DD.md` — aturan di bagian "Aturan Log Sesi" di atas) dan commit+push setelah tiap pertukaran yang menghasilkan informasi baru — supaya tidak hilang kalau crash. *(Kalimat spesifik untuk memicu mode diskusi ada di `panduan/PANDUAN_PENGGUNA.md`, bukan di sini)*
 
 ---
 

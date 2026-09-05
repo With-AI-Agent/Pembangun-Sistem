@@ -10,6 +10,8 @@ Sistem untuk mengubah **bahan** (dokumen pengguna / topik riset) menjadi **berka
 sistem-presentasi/
 ├── START_DI_SINI.md            ← file ini
 ├── SYSTEM_MANIFEST.md          ← identitas & kontrak
+├── PANDUAN_PENGGUNA.md         ← pegangan KAMU (bukan instruksi agent): prompt pembuka & penutup sesi, istilah, review & merge
+├── PROMPT_ENTRI_UNIVERSAL.md   ← SATU prompt siap tempel untuk membuka sesi apa pun
 ├── 00_RENCANA_KERANGKA.md      ← rencana dokumen (sejarah/perancangan)
 ├── PELAJARAN_DECK_01.md        ← catatan kegagalan+pelajaran deck #1 (**BUKAN sample**)
 ├── _sistem/
@@ -23,6 +25,7 @@ sistem-presentasi/
 │   ├── 08_PERANCANGAN_BERBASIS_REKOMENDASI.md ← paket 5 bagian, dasar sah
 │   ├── 09_PEMAHAMAN_BAHAN_MENDALAM.md  ← 5 langkah, Arab=visi, fail-closed
 │   ├── 10_RENDER_DAN_VERIFIKASI.md     ← build + 3 jalur verifikasi
+│   ├── 11_LOG_SESI.md                  ← log sesi berkelanjutan (ingatan persisten, anti crash)
 │   ├── qa_deck.py                      ← cek otomatis per-produksi
 │   └── validate_system.py              ← cek kelengkapan struktur sistem+deck
 ├── _generator/  G1_BRIEF · G2_VISUAL · G3_KETENTUAN   ← prompt Discovery (berbasis rekomendasi)
@@ -31,7 +34,8 @@ sistem-presentasi/
 └── deck-aktif/<nama-deck>/
     ├── bahan/                  ← sumber (PDF/dok)
     ├── BRIEF.md, PEMAHAMAN_BAHAN.md, CHECKLIST_CAKUPAN.md, OUTLINE.md,
-    │   RENCANA_VISUAL.md, DAFTAR_GAMBAR.md, STATUS.md
+    │   RENCANA_VISUAL.md, DAFTAR_GAMBAR.md, STATUS.md,
+    │   PERKATAAN_PEMILIK_VERBATIM.md   (file baku: verbatim perkataan pemilik, 03.A.1)
     ├── gambar/                 ← aset gambar (M1/M3/M4)
     ├── build_deck_v*.py        ← skrip build (reproducible)
     ├── export_html.py          ← preview dari baca-balik .pptx
@@ -49,16 +53,19 @@ sistem-presentasi/
 - `_sistem/01` — kedalaman isi, desain, gambar multi-mode (M0–M4) + 2 batasan (teks tidak dibakar ke gambar; gambar boleh parsial), portabilitas.
 - `_sistem/02` — prinsip desain (hasil riset, terakumulasi), aspect-ratio, bidi, **kompetensi bahasa**, library layout kaya, **mandat riset visual yang didokumentasikan**.
 
+> **Catatan penamaan (AP-08, audit 5 Sep 2026):** file `G1_DISCOVERY_BRIEF.md`, `G2_DISCOVERY_VISUAL.md`, `G3_DISCOVERY_KETENTUAN.md` di folder `_generator/` adalah **prompt penggalian dokumen** (G1=Brief Tahap 1, G2=Visual Tahap 3, G3=ketentuan institusi — opsional), **BUKAN** gerbang approval G1/G2/G3. Gerbang approval: **G1** = Peta Pemahaman (pasca Tahap 2), **G2** = Outline+Rencana Visual, **G3** = Berkas Final. Jangan campuradukan rujukan "G3".
+
 ## Menjalankan build (reproducible)
 ```
-bash _sistem/install_deps.sh        # pasang+verifikasi semua dependency (target default /tmp/pptxlib)
+bash _sistem/install_deps.sh        # dari folder sistem; pasang+verifikasi semua dependency (target default /tmp/pptxlib)
+cd deck-aktif/<nama-deck>/
 PYTHONPATH=/tmp/pptxlib python3 build_deck_v*.py
 PYTHONPATH=/tmp/pptxlib python3 export_html.py
 ```
-(Hasil ke `keluaran/`. `/tmp` tidak persisten → install tiap sesi.)
+(Hasil ke `keluaran/`. `/tmp` tidak persisten → install tiap sesi. Kedua skrip CWD-independen — jalan dari mana saja (perbaikan AP-01, 5 Sep 2026).)
 
 ## Unduh / distribusi
 Di lingkungan lmarena, viewer/preview TIDAK bisa unduh biner dan link web dipagari token; jalur unduh yang didukung = **GitHub** (halaman file → Download raw). Setelah dijadikan repo sendiri, gunakan mekanisme repo itu.
 
 ## Status
-**Struktur lengkap sesuai rencana kerangka** (diverifikasi `validate_system.py` exit 0, 5 Sep 2026): `_sistem/01–10`, `_generator/G1–G3`, `_template/T1–T9`, acceptance tests, validator, QA per-produksi. **Deck nyata #1 HANYA unit kerja & sumber pelajaran anti-pola — BUKAN sample/contoh** (prosesnya cacat: sesi perancangan isi & visual dilewati; lihat `PELAJARAN_DECK_01.md`). Yang inherently butuh manusia: tinjauan bahasa asli & approval gerbang (by design).
+**Struktur lengkap sesuai rencana kerangka** (diverifikasi `validate_system.py` exit 0, 5 Sep 2026): `_sistem/01–10`, `_generator/G1–G3`, `_template/T1–T9`, acceptance tests, validator, QA per-produksi, **pegangan pengguna** (`PANDUAN_PENGGUNA.md` + `PROMPT_ENTRI_UNIVERSAL.md`). **Audit independen Sedang selesai 5 Sep 2026** (laporan: `_meta/_internal/AUDIT_SISTEM_PRESENTASI_2026-09-05.md`; temuan P1–P3 diperbaiki di versi `0.3.0`). **Deck nyata #1 HANYA unit kerja & sumber pelajaran anti-pola — BUKAN sample/contoh** (prosesnya cacat: sesi perancangan isi & visual dilewati; lihat `PELAJARAN_DECK_01.md`). Yang inherently butuh manusia: tinjauan bahasa asli & approval gerbang (by design).

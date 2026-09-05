@@ -12,6 +12,9 @@ Sebelum melakukan perubahan apa pun, lakukan bootstrap secara berurutan:
    percakapan sebelumnya. Ingat fakta platform: branch arena/... dibuat otomatis oleh lmarena (bukan manual), dan setelah PR merge/close sesi tersebut tidak bisa push lagi — lihat _meta/PLATFORM_LMARENA.md.
 2. Cek semua PR terbuka melalui tool GitHub dan laporkan nomor, judul, status,
    branch, tujuan, serta apakah ada konflik atau pekerjaan yang menggantung. Jika PR dari branch aktif sudah MERGED, maka sesi ini tidak bisa push lagi (fakta platform #2) — harus buka sesi baru dari main.
+   Cari juga `LOG_SESI_*.md` terbaru (root repo / folder sistem / folder unit);
+   kalau keadaannya `OPEN`, BACA dan laporkan keadaan sesi sebelumnya —
+   itu konteks yang tidak boleh ditanya ulang.
 3. Baca `_meta/SYSTEM_MANIFEST.md`.
 4. Baca `_meta/00_CARA_KERJA_META.md`.
 5. Baca `_meta/PLATFORM_LMARENA.md` — fakta platform vs policy, wajib paham.
@@ -32,7 +35,7 @@ Konteks kerja yang diketahui dari file, bukan dari asumsi chat:
 - regression audit struktural lulus, fail-closed 4 skenario lulus, recovery nyata FI-01 s/d FI-07 lulus, backup verify lulus, template clean AT-10 lulus;
 - pilot-002 behavioral adalah bukti pertama recovery nyata;
 - platform lmarena: branch arena otomatis, tidak bisa push setelah merge/close, sesi bisa crash — lihat PLATFORM_LMARENA.md;
-- checkpoint diskusi ringan (>5 giliran mendekati keputusan) wajib untuk mitigasi crash platform.
+- log sesi berkelanjutan (`LOG_SESI_YYYY-MM-DD.md`) wajib untuk mitigasi crash platform: append + commit + push setelah tiap pertukaran yang menghasilkan informasi baru; header "Keadaan Sesi" selalu segar; `CLOSED` di akhir sesi. Filter anti-bising WAJIB — lihat `PROTOKOL_CHECKPOINT_RECOVERY.md` bagian "Log Sesi Berkelanjutan".
 
 Aturan keselamatan:
 - Jangan mengklaim tahu konteks yang tidak dibaca atau diverifikasi.

@@ -35,7 +35,7 @@
 
 - **Dipakai via lmarena?** Ya — rujuk `_meta/PLATFORM_LMARENA.md` di repo meta
 - **Fakta:** branch arena otomatis dibuat, tidak bisa push setelah PR merge/close (platform cabut akses), sesi bisa crash
-- **Implikasi:** checkpoint tiap tahap + checkpoint diskusi ringan jika diskusi >5 giliran mendekati keputusan, karena tanpa commit sesi baru tidak bisa melanjutkan (FI-03) dan diskusi bisa hilang
+- **Implikasi:** checkpoint tiap tahap + **log sesi berkelanjutan** (`LOG_SESI_YYYY-MM-DD.md` — aturan ringkas self-contained di `_sistem/00_CARA_PAKAI_SISTEM.md`), karena tanpa commit sesi baru tidak bisa melanjutkan (FI-03) dan konteks sesi (keputusan, koreksi, fakta penting) hilang permanen saat crash (agent sesi baru tidak punya akses ke chat sesi lama)
 
 ## Risiko Utama
 

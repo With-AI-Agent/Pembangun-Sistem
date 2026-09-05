@@ -3,7 +3,7 @@
 > Bug deck#1: hasil "ga sesuai yang diinginkan/dibutuhkan pengguna" & "ga cocok dengan tujuan PPT". Akar: kebutuhan/tujuan tidak ditangkap eksplisit & tidak diverifikasi cocok. Dokumen ini mewajibkan penangkapan & verifikasi itu **setiap** produksi.
 
 ## A. Perkataan pemilik = spesifikasi utama
-1. Simpan **verbatim** perkataan/permintaan pemilik (di `BRIEF.md` bagian "Perkataan pemilik (verbatim)"). Jangan parafrase dulu.
+1. Simpan **verbatim** perkataan/permintaan pemilik di `PERKATAAN_PEMILIK_VERBATIM.md` — file baku deck (dirujuk dari `BRIEF.md`; update 5 Sep 2026, AP-09 audit: sebelumnya ditahan di BRIEF atau file tak baku). Jangan parafrase dulu.
 2. Turunkan dari sana **daftar butir permintaan** (mis. "ringkasan h.6, tujuan h.20, …") → jadi `CHECKLIST_CAKUPAN.md`.
 3. **Traceability:** tiap butir permintaan ↔ slide yang memuatnya (catat di `OUTLINE.md`). Tiap slide harus bisa ditunjuk menjawab butir mana; slide tanpa butir = pertanyaan; butir tanpa slide = cacat.
 

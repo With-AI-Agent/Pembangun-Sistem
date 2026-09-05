@@ -35,6 +35,16 @@ required = [
     "sistem-pilot-catatan-belajar/STATUS_TEMPLATE.md",
     "sistem-pilot-catatan-belajar/unit-aktif/pilot-001/STATUS.md",
     "sistem-pilot-catatan-belajar/unit-aktif/pilot-001/OUTPUT.md",
+    # Sistem Presentasi (AP-11, audit 5 Sep 2026: cakupan validator diperluas)
+    "sistem-presentasi/START_DI_SINI.md",
+    "sistem-presentasi/SYSTEM_MANIFEST.md",
+    "sistem-presentasi/00_RENCANA_KERANGKA.md",
+    "sistem-presentasi/ACCEPTANCE_TESTS.md",
+    "sistem-presentasi/PANDUAN_PENGGUNA.md",
+    "sistem-presentasi/PROMPT_ENTRI_UNIVERSAL.md",
+    "sistem-presentasi/_sistem/qa_deck.py",
+    "sistem-presentasi/_sistem/validate_system.py",
+    "sistem-presentasi/_sistem/install_deps.sh",
 ]
 
 # --- Warning-tier path reference check (A-B3a) ---------------------------
@@ -46,7 +56,12 @@ required = [
 # The scope is deliberately narrow and deterministic:
 #
 #   * Only ACTIVE documents are scanned: `_meta/*.md` plus
-#     `PANDUAN_PENGGUNA.md`.
+#     `PANDUAN_PENGGUNA.md`, plus the active documents of
+#     `sistem-presentasi/` (root, `_sistem/`, `_generator/`, `_template/`)
+#     -- extended 5 Sep 2026 (finding AP-11, independent audit). Deck
+#     living documents (`deck-aktif/`) are deliberately out of scope: they
+#     are per-unit work state, validated by the system's own
+#     `validate_system.py`.
 #   * `_meta/_internal/` is EXCLUDED on purpose. Those files are historical
 #     audit references, not active instructions (see `00_CARA_KERJA_META.md`,
 #     section "Lapisan Kendali dan Definition of Done"). They legitimately
@@ -64,9 +79,15 @@ required = [
 #     checked, 0 false positives.
 #
 # Warnings NEVER change the exit code. This tier reports; it does not gate.
-ACTIVE_DOC_GLOBS = ["_meta/*.md"]
+ACTIVE_DOC_GLOBS = [
+    "_meta/*.md",
+    "sistem-presentasi/*.md",
+    "sistem-presentasi/_sistem/*.md",
+    "sistem-presentasi/_generator/*.md",
+    "sistem-presentasi/_template/*.md",
+]
 ACTIVE_DOC_EXTRA = ["PANDUAN_PENGGUNA.md"]
-ACTIVE_DOC_EXCLUDE_PARTS = ("_internal",)
+ACTIVE_DOC_EXCLUDE_PARTS = ("_internal", "deck-aktif")
 REF_RE = re.compile(r"`([^`\n]+)`")
 PATH_EXTENSIONS = (".md", ".py", ".zip", ".json")
 RESOLVE_ROOTS = [
@@ -76,6 +97,11 @@ RESOLVE_ROOTS = [
     "sistem-konten-kreator",
     "sistem-konten-kreator/_sistem",
     "sistem-pilot-catatan-belajar",
+    "sistem-presentasi",
+    "sistem-presentasi/_sistem",
+    "sistem-presentasi/_generator",
+    "sistem-presentasi/_template",
+    "sistem-presentasi/deck-aktif/presentasi-tesis-fikih-hiasan-wanita",
 ]
 
 
@@ -97,9 +123,12 @@ def active_documents():
 
 
 def is_path_like(ref):
+    # "[" and "<" are placeholder markers (e.g. `deck-aktif/<nama>/BRIEF.md`,
+    # `_template/T[n]_*`) -- not real paths, so never judged.
     return (
         "/" in ref
         and "[" not in ref
+        and "<" not in ref
         and ref.lower().endswith(PATH_EXTENSIONS)
     )
 
