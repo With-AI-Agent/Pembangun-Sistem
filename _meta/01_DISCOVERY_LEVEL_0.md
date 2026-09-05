@@ -72,7 +72,7 @@ jawaban jelas untuk 4 hal ini:
 
 5. BATASAN PLATFORM (BARU — wajib, karena mempengaruhi semua sistem yang dipakai via lmarena)
    - Apakah sistem ini akan dipakai via lmarena Agent Mode? Ya/Tidak
-   - Jika Ya: baca `_meta/PLATFORM_LMARENA.md` — pahami fakta platform: branch arena otomatis dibuat (tidak bisa asumsi kerja di main), tidak bisa push setelah PR merge/close (platform cabut akses), sesi bisa crash kapan saja. Bagaimana fakta ini mempengaruhi checkpoint & recovery di sistem ini? Apakah perlu checkpoint diskusi ringan jika diskusi >5 giliran mendekati keputusan?
+   - Jika Ya: baca `_meta/PLATFORM_LMARENA.md` — pahami fakta platform: branch arena otomatis dibuat (tidak bisa asumsi kerja di main), tidak bisa push setelah PR merge/close (platform cabut akses), sesi bisa crash kapan saja. Bagaimana fakta ini mempengaruhi checkpoint & recovery di sistem ini? Pastikan sistem menurunkan **log sesi berkelanjutan (`LOG_SESI`)** secara self-contained (aturan: `_meta/PROTOKOL_CHECKPOINT_RECOVERY.md` bagian "Log Sesi Berkelanjutan"; format: `_meta/TEMPLATE_LOG_SESI.md`) + langkah recovery log di prompt pembuka + langkah menutup log di prompt penutup pegangan.
    - Jika Tidak: tulis alasan override eksplisit (misal sistem manual 100% Obsidian) + approval. Jangan asumsi platform tidak relevan tanpa alasan.
 
 Setiap beberapa putaran, kasih ringkasan checkpoint: "Sejauh ini sistem

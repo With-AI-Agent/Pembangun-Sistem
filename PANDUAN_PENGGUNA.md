@@ -18,8 +18,12 @@ Setelah itu:
    sistem manapun, tidak cuma yang mau aku kerjakan sekarang) — laporkan
    ke aku kalau ada, karena itu tandanya ada kerjaan lama yang belum
    selesai di-merge.
-2. Cek _meta/INDEKS_SISTEM.md untuk tahu sistem apa saja yang sudah ada
+3. Cek _meta/INDEKS_SISTEM.md untuk tahu sistem apa saja yang sudah ada
    dan statusnya masing-masing.
+4. Minta agent cari file `LOG_SESI_*.md` terbaru (root repo / folder sistem /
+   folder unit kerja); kalau keadaannya `OPEN`, BACA dulu dan laporkan apa yang
+   terjadi di sesi terakhir — jangan minta aku menjelaskan ulang konteks yang
+   sudah tercatat di sana.
 
 Berdasarkan itu, tanya aku: aku mau ngapain di sesi ini — bangun sistem
 baru, lanjut/audit sistem yang sudah ada, atau hal lain. Kalau aku mau
@@ -43,15 +47,17 @@ Sebelum menutup sesi (baik kerja sudah selesai mau di-merge, mau jeda dulu, atau
 Tutup sesi ini dengan benar:
 1. Update STATUS.md unit kerja yang disentuh (tahap selesai, tahap
    berikutnya, waktu pembaruan).
-2. Cek working tree: semua perubahan WAJIB ter-commit dan ter-push —
+2. Tutup log sesi ini (LOG_SESI_YYYY-MM-DD.md): isi final "Keadaan Sesi"
+   (yang selesai, yang terbuka, langkah berikutnya) dan tandai CLOSED.
+3. Cek working tree: semua perubahan WAJIB ter-commit dan ter-push —
    tanpa commit+push, sesi baru tidak bisa melanjutkan (fakta platform).
-3. Update "Terakhir Disentuh" + status tiap sistem yang disentuh di
+4. Update "Terakhir Disentuh" + status tiap sistem yang disentuh di
    _meta/INDEKS_SISTEM.md.
-4. Kalau kerja berlanjut lintas sesi, buat laporan sesi/handoff sesuai
+5. Kalau kerja berlanjut lintas sesi, buat laporan sesi/handoff sesuai
    template repo.
-5. Ringkaskan kondisi akhir: commit terakhir, status PR, dan langkah
+6. Ringkaskan kondisi akhir: commit terakhir, status PR, dan langkah
    aman berikutnya.
-6. Kalau aku mau merge PR: pastikan semua sudah push SEBELUM merge —
+7. Kalau aku mau merge PR: pastikan semua sudah push SEBELUM merge —
    setelah merge/close, sesi ini TIDAK BISA push lagi (fakta platform);
    kerja lanjutan harus dari sesi baru yang dibuka dari main.
 ```

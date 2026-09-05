@@ -21,6 +21,7 @@ Dokumen atau sistem **tidak boleh disebut selesai hanya karena file sudah dituli
 - [ ] Manifest tersedia dan lengkap
 - [ ] Entry point tersedia
 - [ ] Pegangan pengguna tersedia di dalam folder sistem (`PANDUAN_PENGGUNA.md` + `PROMPT_ENTRI_UNIVERSAL.md` — prompt pembuka + penutup; sesuai `_meta/PANDUAN_PENGGUNA_TEMPLATE.md`)
+- [ ] Mekanisme log sesi (`LOG_SESI`) diturunkan ke dalam folder sistem + prompt pembuka memuat langkah recovery log + prompt penutup memuat langkah menutup log
 - [ ] Semua generator/template wajib tersedia
 - [ ] Semua living document memiliki status dan log keputusan
 - [ ] Jalur normal dan jalur recovery diuji

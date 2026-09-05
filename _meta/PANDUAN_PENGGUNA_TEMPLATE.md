@@ -22,17 +22,19 @@ Blok prompt siap salin. Wajib memuat instruksi ke agent:
 2. Verifikasi kondisi branch/working tree (branch aktif `arena/...` dibuat otomatis platform; jangan asumsi `main`).
 3. **Cek dan laporkan semua PR yang masih terbuka** (level repo — dari sistem/apapun, kalau multi-sistem).
 4. Cek status sistem (manifest/index) dan laporkan ringkas.
-5. Tanya tujuan sesi; berdasarkan jawaban, baca sendiri file yang relevan — tanpa perlu ditempel manual.
-6. Jangan menulis/eksekusi apa pun sebelum tujuan sesi dikonfirmasi.
+5. **Cari `LOG_SESI_*.md` terbaru** (root repo / folder sistem / folder unit); kalau keadaannya `OPEN` → baca dan **laporkan keadaan sesi sebelumnya** — konteks itu tidak boleh ditanya ulang ke pengguna.
+6. Tanya tujuan sesi; berdasarkan jawaban, baca sendiri file yang relevan — tanpa perlu ditempel manual.
+7. Jangan menulis/eksekusi apa pun sebelum tujuan sesi dikonfirmasi.
 
 ### 3. Prompt Penutup Sesi (wajib ada)
 Blok prompt siap salin untuk akhir sesi. Wajib memuat instruksi ke agent:
 1. Update `STATUS.md` unit kerja (tahap selesai, tahap berikutnya, waktu pembaruan).
-2. Cek working tree — semua perubahan ter-commit dan ter-push (tanpa commit+push, sesi baru tidak bisa melanjutkan — fakta platform).
-3. Update indeks sistem (kolom "terakhir disentuh" + status) kalau bekerja di suatu sistem.
-4. Kalau kerja berlanjut lintas sesi: tulis laporan sesi/handoff sesuai template repo.
-5. Ringkaskan kondisi akhir (commit terakhir, PR, langkah aman berikutnya).
-6. Kalau PR akan di-merge: pastikan semua sudah push **sebelum** merge — setelah merge/close, sesi ini **tidak bisa push lagi** (fakta platform); kerja lanjutan harus dari sesi baru yang dibuka dari `main`.
+2. **Tutup log sesi** `LOG_SESI_YYYY-MM-DD.md` sesi ini: isi final header "Keadaan Sesi" (yang selesai, yang terbuka, langkah berikutnya) dan tandai `CLOSED` (atau `OPEN` + "dilanjutkan di mana").
+3. Cek working tree — semua perubahan ter-commit dan ter-push (tanpa commit+push, sesi baru tidak bisa melanjutkan — fakta platform).
+4. Update indeks sistem (kolom "terakhir disentuh" + status) kalau bekerja di suatu sistem.
+5. Kalau kerja berlanjut lintas sesi: tulis laporan sesi/handoff sesuai template repo.
+6. Ringkaskan kondisi akhir (commit terakhir, PR, langkah aman berikutnya).
+7. Kalau PR akan di-merge: pastikan semua sudah push **sebelum** merge — setelah merge/close, sesi ini **tidak bisa push lagi** (fakta platform); kerja lanjutan harus dari sesi baru yang dibuka dari `main`.
 
 ### 4. Istilah (versi awam)
 Repo, branch, `main`, commit, push, PR, merge — masing-masing 1–2 kalimat + analogi sederhana.
@@ -44,7 +46,7 @@ Minimal 3 situasi spesifik sistem ini (misal: mulai unit kerja baru, lanjut unit
 Bagaimana pengguna meninjau hasil (PR), kapan merge, dan apa konsekuensinya (sesi tak bisa push pasca-merge).
 
 ### 7. Kebiasaan yang perlu dijaga
-Checkpoint tiap tahap + commit & push; checkpoint diskusi ringan (diskusi >5 giliran mendekati keputusan); jangan lanjut kerja di sesi yang PR-nya sudah merge; workaround sesi crash (download workspace) + lanjut dari `STATUS.md`.
+Checkpoint tiap tahap + commit & push; **log sesi berkelanjutan** (`LOG_SESI_YYYY-MM-DD.md` — di-update setelah tiap pertukaran penting, header keadaan selalu segar, `CLOSED` di akhir sesi); jangan lanjut kerja di sesi yang PR-nya sudah merge; kalau sesi crash, sesi baru akan otomatis membaca log sesi yang belum tertutup — kalau tidak ada, backstop = download workspace (`/download-workspace`) + lanjut dari `STATUS.md`.
 
 ---
 

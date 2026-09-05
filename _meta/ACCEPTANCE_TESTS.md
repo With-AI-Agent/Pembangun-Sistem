@@ -73,3 +73,9 @@ Tes ini memvalidasi perilaku sistem, bukan hanya keberadaan file. Setiap test me
 **Given:** tidak ada bukti masalah dan tidak ada perubahan besar.  
 **When:** sistem beroperasi normal.  
 **Then:** tidak ada audit mendalam tanpa trigger; pemeriksaan ringan tetap berjalan sesuai kontrak output.
+
+## AT-13 — Recovery konteks dari log sesi pasca crash
+
+**Given:** sebuah sesi memelihara `LOG_SESI_YYYY-MM-DD.md` (header "Keadaan Sesi" + kronologi) yang berkeadaan `OPEN`, lalu sesi itu crash tanpa penutupan yang benar; tidak ada commit baru setelah update log terakhir.  
+**When:** pengguna membuka sesi baru dan menjalankan prompt pembuka universal.  
+**Then:** agent menemukan log terbaru, membacanya, dan **melaporkan keadaan sesi sebelumnya** (apa yang disepakati, apa yang terbuka, langkah berikutnya) sebelum bertanya tujuan sesi — tanpa meminta pengguna menjelaskan ulang konteks yang sudah tercatat; jika ada keputusan yang belum tercatat di log, agent menyebutkannya sebagai celah, bukan menebaknya.

@@ -62,7 +62,7 @@
 ## Batasan Platform
 
 - **Dipakai via lmarena?** Ya / Tidak
-- **Jika Ya:** rujuk ke `_meta/PLATFORM_LMARENA.md` untuk fakta platform (branch arena otomatis dibuat, tidak bisa push setelah merge/close, sesi bisa crash). Terapkan checkpoint tiap tahap + checkpoint diskusi ringan jika diskusi >5 giliran mendekati keputusan. Alasan kausal: tanpa commit+push, sesi baru tidak bisa melanjutkan (FI-03); tanpa checkpoint diskusi, diskusi panjang bisa hilang saat crash.
+- **Jika Ya:** rujuk ke `_meta/PLATFORM_LMARENA.md` untuk fakta platform (branch arena otomatis dibuat, tidak bisa push setelah merge/close, sesi bisa crash). Terapkan checkpoint tiap tahap + **log sesi berkelanjutan (`LOG_SESI`)** — turunkan aturannya ke dalam folder sistem (self-contained). Alasan kausal: tanpa commit+push, sesi baru tidak bisa melanjutkan (FI-03); tanpa log sesi, konteks sesi (keputusan, koreksi, fakta penting) hilang permanen saat crash karena agent sesi baru tidak punya akses ke chat lama.
 - **Jika Tidak:** tulis alasan override eksplisit (misal: sistem ini manual 100% Obsidian, tidak via agent) + approval
 
 ## Acceptance

@@ -42,15 +42,21 @@ Setiap unit kerja atau tahap besar yang menghasilkan input untuk tahap berikutny
 5. Agent tidak menyatakan pekerjaan “aman dilanjutkan” jika output hanya berada di workspace tetapi belum tersedia di branch/remote. **Alasan kausal:** Remote belum punya file-nya, jadi sesi baru tidak bisa baca — bukan policy, tapi constraint fisik git.
 6. Setelah checkpoint, agent menjelaskan apakah pengguna perlu review, approve, atau hanya mengetahui status.
 
-## Checkpoint Diskusi Ringan (baru — untuk mitigasi crash platform)
+## Log Sesi Berkelanjutan (LOG_SESI — pengganti "checkpoint diskusi ringan")
 
-**Fakta platform:** Sesi lmarena bisa menjadi unusable di tengah jalan (chat tidak bisa lanjut, error halaman). Arena sendiri sediakan workaround `/download-workspace`.
+**Fakta platform:** Sesi lmarena bisa menjadi unusable di tengah jalan (chat tidak bisa lanjut, error halaman, kadang tidak bisa dibuka lagi). Agent sesi baru **tidak punya akses ke chat sesi lama** — ingatan yang bertahan hanya file di repo. Workaround resmi (tambah `/download-workspace` di URL) tetap ada, tapi bergantung pada tindakan pengguna *setelah* crash — bukan mekanisme utama.
 
-**Policy karena fakta tersebut:**
-- Jika diskusi sudah >5-7 giliran dan mendekati keputusan, agent **harus** buat file `DISKUSI_MENTAH_YYYY-MM-DD_HHMM.md` di `unit-aktif/[id]/` atau `_meta/_internal/discussions/` berisi ringkasan diskusi, opsi yang dipertimbangkan, keputusan yang hampir diambil, pertanyaan terbuka.
-- Status `in-progress`, commit dengan pesan `checkpoint diskusi: ...`
-- **Kapan tidak perlu:** Diskusi pendek <3 giliran atau masih eksplorasi awal — tidak perlu, cukup lanjut chat (efisien vs aman).
-- **Alasan kausal:** Menyelamatkan konteks dari crash platform tanpa harus log semua chat. Ini balance antara "sedih diskusi panjang hilang" vs "sistem jadi tidak efisien kalau semua harus dicatat".
+**Kenapa "checkpoint kalau >5 giliran" diganti:** aturan lama berbasis ambang + judgment ("mendekati keputusan") — sebelum ambang tercapai tidak ada yang tercatat, dan diskusi eksploratif tidak selalu "mendekati" keputusan. Akibatnya konteks bisa hilang dalam jumlah besar. Masalahnya bukan "checkpoint terlalu jarang", tapi checkpoint diposisikan sebagai mekanisme darurat padahal seharusnya pencatatan adalah **mode normal**.
+
+**Policy baru — catat berkelanjutan, bukan checkpoint periodik:**
+- Setiap sesi yang menghasilkan informasi penting memelihara satu file **`LOG_SESI_YYYY-MM-DD.md`** (format: `TEMPLATE_LOG_SESI.md`), di folder scope kerja (unit/deck, sistem, atau root repo).
+- Agent **append + update header "Keadaan Sesi" + commit + push segera setelah tiap pertukaran yang menghasilkan informasi baru** — bukan mekanis tiap giliran.
+- **Yang dicatat:** keputusan/koreksi/kendala/preferensi pengguna (near-verbatim), proposal/klaim penting agent + dasarnya, kesepakatan & penolakan + alasan, fakta/hasil verifikasi sesi ini, perubahan state kerja, pertanyaan terbuka.
+- **Yang TIDAK dicatat:** konfirmasi, basa-basi, pengulangan isi yang sudah ada di `STATUS.md`/Log Keputusan (tunjuk path-nya), dump chat. (Filter ini WAJIB — inilah yang membuat mekanisme ini efisien, bukan overkill.)
+- **Akhir sesi:** header "Keadaan Sesi" diisi final dan ditandai `CLOSED` (atau `OPEN` + "dilanjutkan di mana" kalau memang lanjut sesi lain).
+- **Alasan kausal:** biaya over-recording = beberapa detik per pertukaran; biaya under-recording = hilangnya jam konteks (pengguna menjelaskan ulang, keputusan di-litigate ulang). Asimetri biaya ini yang menentukan desain: catat yang penting, segera, dan biarkan floor-nya tetap aman.
+
+**Kapan file tidak perlu dibuat:** sesi yang benar-benar tanpa informasi baru (mis. cuma cek status lalu selesai) — cukup commit terakhir + keadaan `CLOSED` tidak diperlukan sama sekali.
 
 ## Recovery saat sesi baru
 
@@ -60,7 +66,7 @@ Setiap unit kerja atau tahap besar yang menghasilkan input untuk tahap berikutny
 4. Verifikasi branch dan PR terkait. **Alasan kausal:** Branch `arena/...` dibuat otomatis oleh platform (fakta #1 di `PLATFORM_LMARENA.md`), jadi harus verifikasi `git branch --show-current`. Juga cek `gh pr list` — jika PR sudah MERGED/CLOSED, maka sesi ini **tidak bisa** push lagi (fakta #2), harus buka sesi baru dari `main`.
 5. Jangan mengulang tahap yang sudah berstatus `approved` atau `merged` tanpa alasan.
 6. Jika status ambigu, berhenti dan tanyakan pengguna; jangan menebak.
-7. Jika ada file `DISKUSI_MENTAH_*.md` yang lebih baru dari STATUS.md, baca itu juga sebagai konteks diskusi yang belum jadi file final — ini hasil dari checkpoint diskusi ringan.
+7. Cari `LOG_SESI_*.md` **terbaru** (root repo, folder sistem, folder unit yang disentuh). Kalau keadaannya `OPEN` → **baca, laporkan keadaan sesinya, dan konfirmasi ke pengguna** sebelum lanjut — itu konteks sesi sebelumnya yang tidak boleh ditanya ulang. File `DISKUSI_MENTAH_*.md` lama (pra-v1.2.0) diperlakukan sama sebagai arsip diskusi.
 
 ## Recovery saat konflik
 
@@ -76,6 +82,7 @@ Setiap unit kerja atau tahap besar yang menghasilkan input untuk tahap berikutny
 - **Gejala:** `git push` gagal, atau file baru tidak muncul di GitHub.
 - **Mitigasi:** Buka sesi baru dari `main`, jangan pakai sesi lama. Jika sudah terlanjur ada file terjebak, gunakan workaround resmi Arena: tambah `/download-workspace` di akhir URL sesi untuk download zip workspace, lalu pindahkan manual ke sesi baru.
 
-**Skenario B — Sesi crash di tengah diskusi panjang:**
-- **Fakta:** Sesi menjadi unusable (chat tidak bisa lanjut, error halaman).
-- **Mitigasi:** Buka sesi baru, baca STATUS.md terakhir + `DISKUSI_MENTAH_*.md` jika ada. Lanjutkan dari tahap terakhir yang terbukti aman (commit terakhir). Jangan menebak keputusan yang belum di-commit.
+**Skenario B — Sesi crash di tengah diskusi/kerja (tanpa penutupan yang benar):**
+- **Fakta:** Sesi menjadi unusable (chat tidak bisa lanjut, error halaman); kadang tidak bisa dibuka lagi.
+- **Mitigasi:** Buka sesi baru; entry point otomatis mencari `LOG_SESI_*.md` terbaru — yang `OPEN` berisi keadaan terakhir (apa yang disepakati, apa yang terbuka, langkah berikutnya). Baca header "Keadaan Sesi" dulu, kronologi hanya kalau perlu, lalu lanjut dari commit terakhir yang terbukti aman. Jangan menebak keputusan yang belum tercatat di log.
+- **Backstop:** kalau log tidak ada/kosong (sesi lama pra-mekanisme ini, atau agent lalai), gunakan `/download-workspace` (tambah di akhir URL sesi) jika masih bisa diakses, dan laporkan ke pengguna apa yang *tidak* bisa dipulihkan — jangan mengarang konteks.
