@@ -51,7 +51,7 @@ sistem-presentasi/
 
 ## Menjalankan build (reproducible)
 ```
-python3 -m pip install --target /tmp/pptxlib python-pptx
+bash _sistem/install_deps.sh        # pasang+verifikasi semua dependency (target default /tmp/pptxlib)
 PYTHONPATH=/tmp/pptxlib python3 build_deck_v*.py
 PYTHONPATH=/tmp/pptxlib python3 export_html.py
 ```

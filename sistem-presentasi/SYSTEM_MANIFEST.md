@@ -8,10 +8,10 @@
 - **Tujuan utama:** Mengubah bahan (dokumen pengguna, atau topik yang perlu diriset) menjadi berkas presentasi yang setia pada sumbernya, strukturnya berbasis bukti, tampilannya konsisten, dan prosesnya bisa dilanjutkan sesi lain
 - **Pengguna/consumer:** Pemakai = pengguna repo ini. Consumer hasil akhir = audiens presentasi (misal dosen penguji sidang skripsi)
 - **Pemilik keputusan:** Pengguna repo ini
-- **Versi:** `0.1.0-kerangka`
-- **Status:** `Proposed` — `00_RENCANA_KERANGKA.md` disetujui pengguna 4 Sep 2026 tapi **sengaja belum di-merge**; dokumen instruksi aktif belum ada
+- **Versi:** `0.2.0`
+- **Status:** `Built & terverifikasi` — kerangka disetujui 4 Sep 2026; dokumen instruksi aktif lengkap; **merge ke main diminta pengguna 5 Sep 2026** setelah koreksi "deck#1 bukan sample"
 - **Tanggal dibuat:** 4 September 2026 (UTC)
-- **Audit terakhir:** belum ada
+- **Audit terakhir:** 5 Sep 2026 — audit otomatis: `validate_system.py` exit 0, `qa_deck.py` 14 slide exit 0, `install_deps.sh` exit 0. Audit independen manusia: belum.
 - **Quality protocol:** `_meta/QUALITY_ASSURANCE_AND_EVOLUTION.md` (default aktif)
 
 ## Bentuk Sistem
@@ -88,8 +88,8 @@
 ## Acceptance
 
 - [x] Semua dokumen wajib tersedia — **YA**: `_sistem/01–10`, `_generator/G1–G3`, `_template/T1–T9`, `START_DI_SINI.md`, `ACCEPTANCE_TESTS.md`, `validate_system.py`, `qa_deck.py` (diverifikasi `validate_system.py` exit 0, 5 Sep 2026)
-- [ ] Semua dependency valid — **sebagian**: keempat library terbukti bisa diinstall, tapi belum ada skrip yang memasang dan memverifikasinya sebagai bagian sistem
-- [ ] Status dan versi sudah diperbarui — ya, `0.1.0-kerangka` / `Proposed`
-- [ ] Approval yang diperlukan sudah ada — **sebagian**: `00_RENCANA_KERANGKA.md` disetujui; proposal Q-O2/Q-O3 **belum**
-- [ ] Audit terakhir tercatat — **belum ada audit**
-- [ ] Ringkasan cadangan sinkron — **belum dibuat**
+- [x] Semua dependency valid — `_sistem/install_deps.sh` memasang & memverifikasi python-pptx, Pillow, pypdf, python-docx, matplotlib (exit 0, 5 Sep 2026)
+- [x] Status dan versi sudah diperbarui — `0.2.0` / `Built & terverifikasi` (5 Sep 2026)
+- [x] Approval yang diperlukan sudah ada — kerangka disetujui 4 Sep 2026; **approval sistem = pengguna meminta merge ke main 5 Sep 2026**. Q-O2/Q-O3 tetap terbuka di level `_meta` (tidak memblokir sistem standalone ini)
+- [x] Audit terakhir tercatat — 5 Sep 2026 (otomatis: validate_system + qa_deck + install_deps, semua exit 0). Audit independen: belum
+- [x] Ringkasan cadangan sinkron — `_meta/_cadangan-claude/RINGKASAN_sistem-presentasi.md` dibuat 5 Sep 2026
