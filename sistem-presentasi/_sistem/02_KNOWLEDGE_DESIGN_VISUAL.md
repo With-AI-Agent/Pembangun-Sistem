@@ -40,11 +40,12 @@ Sebelum G3, agent wajib memeriksa ia telah memakai: **keilmuan/akademik** (isi a
 - Agent sesi berikutnya **wajib baca dokumen ini dulu** dan hanya meriset yang BELUM tercakup; hasil baru ditambahkan di sini.
 - Penyaring: tandai & putuskan bila ada kontradiksi antar-sumber; buang yang terbukti salah (catat alasan di Log).
 
-## G. Bahasa & harakat (bug deck#1: harokat/kata)
-- Untuk deck berbahasa sumber (mis. Arab): **utamakan frasa verbatim dari bahan** (via visi) daripada mengarang kalimat sendiri.
-- **Hilangkan tashkeel/harakat** dari teks yang kita susun — slide profesional umumnya tanpa harakat; harakat yang salah lebih buruk daripada tanpa. `build_deck_v*.py` menerapkan sanitizer tashkeel otomatis.
-- Jaga komposisi sederhana & idiomatik; hindari konstruksi kaku.
-- Deck berisiko tinggi (sidang, publik): ajukan **tinjauan penutur asli** sebagai approval kecil sebelum G3.
+## G. Kompetensi bahasa (bug deck#1: BUKAN soal harakat, tapi tata bahasa/idiom)
+Inti masalah: agent **mengarang prosa** dalam bahasa sumber (Arab) dan membuat kesalahan gramatikal nyata (mis. `سُئل الله القبول` seharusnya `نسأل الله القبول`; `تُرتَّب أحكامها` seharusnya `تترتب على … أحكام`). Maka:
+- **Minimalkan karangan bebas.** Prioritas: (1) kutip verbatim dari bahan (via visi); (2) bila terpaksa menyusun, pakai hanya konstruksi pendek yang lazim/attested; jangan prosa panjang.
+- Harakat opsional; bila dipakai **harus benar**. Sanitizer tashkeel tetap ada sebagai pengaman, tapi itu bukan solusi inti.
+- **Agent tidak boleh mensertifikasi bahasanya sendiri sempurna.** Untuk deck berbahasa non-default (Arab dll), **tinjauan penutur/kompeten asli adalah GERBANG WAJIB sebelum G3**, bukan opsional.
+- Catat tiap koreksi bahasa ke Log agar pola kesalahan tidak terulang.
 
 ## H. Library layout kaya (menjawab "slide dashboard / banyak objek")
 pptx BISA kaya seperti HTML bila polanya diencode. Gunakan `MSO_SHAPE.ROUNDED_RECTANGLE` utk kartu bersudut tumpul; kontras warna sebagai pengganti shadow (python-pptx tak andal utk shadow).
