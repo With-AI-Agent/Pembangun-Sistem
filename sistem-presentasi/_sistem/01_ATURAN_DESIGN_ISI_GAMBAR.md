@@ -38,6 +38,9 @@ Setiap gambar (M1/M3/M4) wajib tercatat di `DAFTAR_GAMBAR.md`: mode, sumber/lise
 2. `build_deck*.py` + `export_html.py` harus reproducible: install lib ke target lokal, jalankan, hasil ke `keluaran/`.
 3. Setelah deck jadi, folder deck (bahan+doc+keluaran+skrip) harus bermakna penuh bila dipindahkan sendirian.
 
+## E2. Rujukan lanjutan (WAJIB dibaca bersama dokumen ini)
+- **`02_KNOWLEDGE_DESIGN_VISUAL.md`** memuat: prinsip desain inti hasil riset, aturan **aspect-ratio** (jangan stretch gambar), aturan **bidi/tanda baca Arab**, **mode bullet vs paragraf**, **checklist multi-skill**, dan **mandat riset visual**. Semua itu mengikat sama seperti dokumen ini.
+
 ## E. Verifikasi sebelum diajukan
 1. Baca-balik `.pptx` (struktur, rtl, font, tabel, notes).
 2. Render preview HTML hampiran.
