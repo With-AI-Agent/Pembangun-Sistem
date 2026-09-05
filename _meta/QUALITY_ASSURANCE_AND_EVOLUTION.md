@@ -145,6 +145,20 @@ Draft → Checked → Approved → Released → Observed
 
 Agent harus menjelaskan level yang dipakai. Pengguna dapat meminta audit lebih dalam kapan saja.
 
+### Lensa audit (dikodifikasi 5 Sep 2026 — temuan M-08; sebelumnya "multi-lensa" disebut tapi tidak pernah didefinisikan)
+
+Audit level **Mendalam** wajib melewati semua lensa di bawah dan menuliskannya di laporan; level Sedang memakai minimal lensa 1–3:
+
+1. **Konsistensi rujukan silang** — setiap path/kontrak yang dirujuk dokumen aktif benar-benar ada dan menunjuk hal yang sama.
+2. **Kontradiksi antar-dokumen aktif** — satu aturan tidak boleh menuntut dua hal berbeda di dua tempat (contoh nyata: `--state open` vs kebutuhan melihat PR merged, M-04).
+3. **Klaim vs bukti eksekusi** — jangan baca PASS-nya saja; jalankan alat TERHADAP DATA NYATA, dan jalankan data nyata terhadap fungsi alatnya. (Contoh nyata: fail-closed lulus terhadap fixture-nya sendiri tapi `False` untuk semua unit nyata di repo — M-02; ini yang tidak tertangkap 3 audit sebelumnya.)
+4. **Jalur gagal** — FI/DoD benar-benar menegakkan (field absen = tidak aman, bukan aman).
+5. **Kemudahan pakai (kacamata pengguna awam)** — cukup satu prompt? Apakah dokumen yang ditempel pengguna adalah versi terbaru? (Contoh nyata: prompt pembuka PANDUAN vs entry point 00 berbeda langkah — M-05/M-15.)
+6. **Propagasi ke sistem masa depan** — aturan baru harus sampai ke SEMUA titik turunannya: template distribusi, daftar tool, manifest template, DoD, Discovery, validator. Yang hanya ada di narasi = belum ditanam.
+7. **Kesehatan repo** — branch/PR menggantung, artefak terjebak, file yang tidak seharusnya ter-track, artefak basi (ringkasan cadangan — M-09).
+
+**Klasifikasi temuan WAJIB** di laporan audit (langkah 2 siklus): setiap temuan diberi jenis `B` (bug) / `A` (ambiguitas) / `G` (gap proses) / `N` (kebutuhan baru) / `P` (preferensi/housekeeping) + prioritas P1–P3 + dasar bukti (path/commit/output tool). Temuan tanpa bukti terverifikasi dicatat sebagai "dugaan" dan tidak boleh langsung jadi perbaikan.
+
 ---
 
 ## Regression check wajib

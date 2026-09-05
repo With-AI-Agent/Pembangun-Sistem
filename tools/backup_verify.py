@@ -14,29 +14,48 @@ ROOT = Path(__file__).resolve().parents[1]
 BACKUP_DIR = ROOT / "_meta" / "_internal" / "backups"
 BACKUP_DIR.mkdir(parents=True, exist_ok=True)
 
-ESSENTIAL = [
-    "_meta/SYSTEM_MANIFEST.md",
-    "_meta/00_CARA_KERJA_META.md",
-    "_meta/01_DISCOVERY_LEVEL_0.md",
-    "_meta/02_PRINSIP_UNIVERSAL.md",
-    "_meta/INDEKS_SISTEM.md",
-    "_meta/SYSTEM_MANIFEST_TEMPLATE.md",
-    "_meta/DEFINITION_OF_DONE.md",
-    "_meta/PROTOKOL_CHECKPOINT_RECOVERY.md",
-    "_meta/PLATFORM_LMARENA.md",
-    "_meta/QUALITY_ASSURANCE_AND_EVOLUTION.md",
-    "_meta/ACCEPTANCE_TESTS.md",
-    "_meta/SESSION_REPORT_TEMPLATE.md",
-    "_meta/FAILURE_INJECTION_TESTS.md",
-    "_meta/NEXT_SESSION_PROMPT.md",
-    "_meta/TEMPLATE_RELEASE.md",
-    "PANDUAN_PENGGUNA.md",
-    "sistem-konten-kreator/SYSTEM_MANIFEST.md",
-    "tools/validate_repo.py",
-    "tools/test_failure_injection.py",
-]
+# M-01 (audit 5 Sep 2026): ESSENTIAL was a static list frozen at v1.0.0 and
+# silently missed every _meta file added later (PANDUAN_PENGGUNA_TEMPLATE.md,
+# TEMPLATE_LOG_SESI.md). It is now the STATIC CORE inventory (obligation,
+# checkpoint_core) UNION the derived repository glob: a new active file ships
+# automatically, and a deleted core file makes the backup FAIL instead of
+# silently shrinking the list (review finding F1). Restore verification
+# (existence + byte match of every file, not just the manifest) closes the
+# drift risk.
+import checkpoint_core as core
+
+
+def essential_list():
+    items = sorted(
+        set(core.CORE_META_FILES)
+        | {f"_meta/{p.name}" for p in (ROOT / "_meta").glob("*.md")}
+    )
+    items += [
+        "PANDUAN_PENGGUNA.md",
+        "PROMPT_ENTRI_UNIVERSAL.md",
+        "_meta/INDEKS_SISTEM.md",
+        ".gitignore",
+        ".gitattributes",
+    ]
+    items += sorted(
+        set(core.CORE_TOOL_FILES)
+        | {f"tools/{p.name}" for p in (ROOT / "tools").glob("*.py")}
+    )
+    items += sorted(
+        f"{p.parent.name}/SYSTEM_MANIFEST.md"
+        for p in ROOT.glob("sistem-*/SYSTEM_MANIFEST.md")
+    )
+    return sorted(set(items))
+
+
+ESSENTIAL = essential_list()
+
 
 def create_backup():
+    missing_src = [rel for rel in ESSENTIAL if not (ROOT / rel).is_file()]
+    if missing_src:
+        print(f"BACKUP FAILED: essential source missing: {missing_src}")
+        raise SystemExit(1)
     backup_path = BACKUP_DIR / "backup_essential.zip"
     with zipfile.ZipFile(backup_path, "w", zipfile.ZIP_DEFLATED) as z:
         for rel in ESSENTIAL:
@@ -60,13 +79,17 @@ def verify_restore(backup_path):
         if missing:
             print(f"BACKUP VERIFY FAILED: missing after restore: {missing}")
             return False
-        # Verify content matches (at least for manifest)
-        orig_manifest = (ROOT / "_meta/SYSTEM_MANIFEST.md").read_text(encoding="utf-8")
-        restored_manifest = (tmp_path / "_meta/SYSTEM_MANIFEST.md").read_text(encoding="utf-8")
-        if orig_manifest != restored_manifest:
-            print("BACKUP VERIFY FAILED: manifest content mismatch")
+        # M-01: content-verify EVERY essential file byte-for-byte (was: manifest only),
+        # so a restored backup that silently truncated a file cannot pass.
+        mismatch = []
+        for rel in ESSENTIAL:
+            orig = ROOT / rel
+            if orig.is_file() and (tmp_path / rel).read_bytes() != orig.read_bytes():
+                mismatch.append(rel)
+        if mismatch:
+            print(f"BACKUP VERIFY FAILED: content mismatch after restore: {mismatch}")
             return False
-        print(f"BACKUP VERIFIED: {backup_path} contains {len(ESSENTIAL)} files, restore OK")
+        print(f"BACKUP VERIFIED: {backup_path} contains {len(ESSENTIAL)} files, restore OK (all bytes verified)")
         return True
 
 if __name__ == "__main__":

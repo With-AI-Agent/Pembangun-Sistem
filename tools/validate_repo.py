@@ -1,166 +1,53 @@
 #!/usr/bin/env python3
-"""Small dependency-free structural regression check for the master blueprint."""
+"""Small dependency-free structural regression check for the master blueprint.
+
+Reworked during the 5 Sep 2026 full meta audit, hardened 5 Sep 2026 after the
+independent review of PR #11 (findings F1–F16):
+- M-01 + review F1: required files = STATIC CORE inventory (obligation,
+  checkpoint_core.CORE_REQUIRED) UNION derived glob lists. A deleted core
+  file now fails loudly (before it silently shrank the requirement set); a
+  new active file is still auto-required.
+- M-02/M-03 + review F4: checkpoint field and unit status parsing live in
+  the SHARED fail-closed parser (checkpoint_core): line-anchored (quoted
+  examples don't count), code-fence contents ignored, duplicate/ambiguous
+  field = NOT safe, protocol formats recognized.
+- Review F2: STRICT 'Daftar Sistem' parsing — a row is valid only with an
+  exact backticked `sistem-<nama>/` folder cell; an unregistered `sistem-*/`
+  folder is an error (the old `"pilot" in name` substring exception even
+  matched `sistem-autopilot-data`).
+- Review F3: registered systems are EXPECTED to have at least one unit
+  STATUS.md (any layout); zero discovered no longer passes — it fails
+  (warning only when the manifest declares `Tahap: kerangka`).
+- Review F8: STATUS templates must parse to the exact safe value with the
+  same shared parser (guidance text inside the field value = defect).
+- Review F9: Warisan enforcement — all nine items W-01..W-09 present in the
+  system manifest; an 'override' row exempts the mechanical check of that
+  item only with the full approval trail (alasan/dampak/tanggal/approval).
+- Review F13/F14: path-reference resolution is scoped per document (a doc
+  inside a system resolves within its own system + _meta + root; master-level
+  docs stay cross-system by design), and URIs are not repository paths.
+- The validator is designed to run in THREE repos with the same source file:
+  master blueprint, clean-template extract (no systems registered -> system
+  loops must pass trivially), and a usage repo. Keep it path-relative.
+"""
 from pathlib import Path
 import re
 import sys
 
+import checkpoint_core as core
+
 ROOT = Path(__file__).resolve().parents[1]
-required = [
-    "_meta/SYSTEM_MANIFEST.md",
-    "_meta/00_CARA_KERJA_META.md",
-    "_meta/01_DISCOVERY_LEVEL_0.md",
-    "_meta/02_PRINSIP_UNIVERSAL.md",
-    "_meta/INDEKS_SISTEM.md",
-    "_meta/SYSTEM_MANIFEST_TEMPLATE.md",
-    "_meta/DEFINITION_OF_DONE.md",
-    "_meta/PROTOKOL_CHECKPOINT_RECOVERY.md",
-    "_meta/PLATFORM_LMARENA.md",
-    "_meta/QUALITY_ASSURANCE_AND_EVOLUTION.md",
-    "_meta/ACCEPTANCE_TESTS.md",
-    "_meta/SESSION_REPORT_TEMPLATE.md",
-    "_meta/FAILURE_INJECTION_TESTS.md",
-    "PANDUAN_PENGGUNA.md",
-    "_cadangan-claude/RINGKASAN_sistem-konten-kreator.md",
-    "sistem-konten-kreator/SYSTEM_MANIFEST.md",
-    "sistem-konten-kreator/QUALITY_ASSURANCE_AND_EVOLUTION.md",
-    "sistem-konten-kreator/ACCEPTANCE_TESTS.md",
-    "sistem-konten-kreator/_sistem/START_DI_SINI.md",
-    "sistem-konten-kreator/_sistem/STATUS_TEMPLATE.md",
-    "sistem-pilot-catatan-belajar/SESSION_REPORT.md",
-    "sistem-pilot-catatan-belajar/SYSTEM_MANIFEST.md",
-    "sistem-pilot-catatan-belajar/START_DI_SINI.md",
-    "sistem-pilot-catatan-belajar/WORKFLOW.md",
-    "sistem-pilot-catatan-belajar/OUTPUT_TEMPLATE.md",
-    "sistem-pilot-catatan-belajar/QUALITY.md",
-    "sistem-pilot-catatan-belajar/STATUS_TEMPLATE.md",
-    "sistem-pilot-catatan-belajar/unit-aktif/pilot-001/STATUS.md",
-    "sistem-pilot-catatan-belajar/unit-aktif/pilot-001/OUTPUT.md",
-    # Sistem Presentasi (AP-11, audit 5 Sep 2026: cakupan validator diperluas)
-    "sistem-presentasi/START_DI_SINI.md",
-    "sistem-presentasi/SYSTEM_MANIFEST.md",
-    "sistem-presentasi/00_RENCANA_KERANGKA.md",
-    "sistem-presentasi/ACCEPTANCE_TESTS.md",
-    "sistem-presentasi/PANDUAN_PENGGUNA.md",
-    "sistem-presentasi/PROMPT_ENTRI_UNIVERSAL.md",
-    "sistem-presentasi/_sistem/qa_deck.py",
-    "sistem-presentasi/_sistem/validate_system.py",
-    "sistem-presentasi/_sistem/install_deps.sh",
-]
 
-# --- Warning-tier path reference check (A-B3a) ---------------------------
-#
-# Purpose: DEFINITION_OF_DONE requires "Dependency dirujuk dengan path yang
-# valid", but nothing enforced it, so a broken reference survived in the main
-# agent entry point (finding A-B1). This tier reports such references.
-#
-# The scope is deliberately narrow and deterministic:
-#
-#   * Only ACTIVE documents are scanned: `_meta/*.md` plus
-#     `PANDUAN_PENGGUNA.md`, plus the active documents of
-#     `sistem-presentasi/` (root, `_sistem/`, `_generator/`, `_template/`)
-#     -- extended 5 Sep 2026 (finding AP-11, independent audit). Deck
-#     living documents (`deck-aktif/`) are deliberately out of scope: they
-#     are per-unit work state, validated by the system's own
-#     `validate_system.py`.
-#   * `_meta/_internal/` is EXCLUDED on purpose. Those files are historical
-#     audit references, not active instructions (see `00_CARA_KERJA_META.md`,
-#     section "Lapisan Kendali dan Definition of Done"). They legitimately
-#     cite paths belonging to the pre-migration system that never existed in
-#     this repository -- verified: `arsip-naskah/indeks.md` and
-#     `arsip-naskah/indeks-karakter.md` in
-#     `AUDIT_SISTEM_KONTEN_KREATOR_2026-09-03.md` (finding A-B11). Scanning
-#     them would add warnings unrelated to any active defect.
-#   * Only "path-like" references are judged: a backticked span that contains
-#     "/", ends with a known extension, and holds no "[" placeholder. Bare
-#     filenames in prose (e.g. `START_DI_SINI.md`) are intentionally NOT
-#     judged: resolving them needs a writing convention this repository has
-#     not adopted, and no such rule is added to any active document here.
-#     Measured effect of this rule on the 14 active documents: 8 references
-#     checked, 0 false positives.
-#
-# Warnings NEVER change the exit code. This tier reports; it does not gate.
-ACTIVE_DOC_GLOBS = [
-    "_meta/*.md",
-    "sistem-presentasi/*.md",
-    "sistem-presentasi/_sistem/*.md",
-    "sistem-presentasi/_generator/*.md",
-    "sistem-presentasi/_template/*.md",
-]
-ACTIVE_DOC_EXTRA = ["PANDUAN_PENGGUNA.md"]
-ACTIVE_DOC_EXCLUDE_PARTS = ("_internal", "deck-aktif")
-REF_RE = re.compile(r"`([^`\n]+)`")
-PATH_EXTENSIONS = (".md", ".py", ".zip", ".json")
-RESOLVE_ROOTS = [
-    "",
-    "_meta",
-    "_meta/_internal",
-    "sistem-konten-kreator",
-    "sistem-konten-kreator/_sistem",
-    "sistem-pilot-catatan-belajar",
-    "sistem-presentasi",
-    "sistem-presentasi/_sistem",
-    "sistem-presentasi/_generator",
-    "sistem-presentasi/_template",
-    "sistem-presentasi/deck-aktif/presentasi-tesis-fikih-hiasan-wanita",
-]
-
-
-def active_documents():
-    """Active documents in scope, sorted for deterministic output."""
-    docs = []
-    for pattern in ACTIVE_DOC_GLOBS:
-        docs.extend(p for p in ROOT.glob(pattern) if p.is_file())
-    for rel in ACTIVE_DOC_EXTRA:
-        candidate = ROOT / rel
-        if candidate.is_file():
-            docs.append(candidate)
-    kept = [
-        p
-        for p in docs
-        if not any(part in ACTIVE_DOC_EXCLUDE_PARTS for part in p.relative_to(ROOT).parts)
-    ]
-    return sorted(set(kept))
-
-
-def is_path_like(ref):
-    # "[" and "<" are placeholder markers (e.g. `deck-aktif/<nama>/BRIEF.md`,
-    # `_template/T[n]_*`) -- not real paths, so never judged.
-    return (
-        "/" in ref
-        and "[" not in ref
-        and "<" not in ref
-        and ref.lower().endswith(PATH_EXTENSIONS)
-    )
-
-
-def resolves(ref):
-    return any((ROOT / base / ref).is_file() for base in RESOLVE_ROOTS)
-
-
-def scan_references():
-    """Return (docs, checked_count, warnings). Warnings are non-gating."""
-    docs = active_documents()
-    checked = 0
-    warnings = []
-    for path in docs:
-        rel = path.relative_to(ROOT).as_posix()
-        for lineno, line in enumerate(
-            path.read_text(encoding="utf-8").splitlines(), start=1
-        ):
-            for match in REF_RE.finditer(line):
-                ref = match.group(1)
-                if not is_path_like(ref):
-                    continue
-                checked += 1
-                if not resolves(ref):
-                    warnings.append(
-                        f"WARNING reference: {rel}:{lineno}: "
-                        f"unresolved path reference `{ref}`"
-                    )
-    return docs, checked, warnings
-
+# --- Required files ---------------------------------------------------------
+required = sorted(
+    set(core.CORE_REQUIRED)
+    | {f"_meta/{p.name}" for p in (ROOT / "_meta").glob("*.md")}
+    | set(core.CORE_ROOT_FILES)
+    | {f"tools/{p.name}" for p in (ROOT / "tools").glob("*.py")}
+)
 
 errors = []
+stage_warnings = []  # kerangka-stage relaxations (F9) — warning tier
 for rel in required:
     if not (ROOT / rel).is_file():
         errors.append(f"missing required file: {rel}")
@@ -174,63 +61,232 @@ for p in ROOT.rglob("*.md"):
     if text.count("```") % 2:
         errors.append(f"unpaired code fence: {p.relative_to(ROOT)}")
 
-index = (ROOT / "_meta/INDEKS_SISTEM.md").read_text(encoding="utf-8")
-if "sistem-konten-kreator/" not in index:
-    errors.append("index does not contain the content creator system")
+# --- Index-driven system coverage (inheritance contract) -------------------
+INDEX_PATH = ROOT / "_meta/INDEKS_SISTEM.md"
+index_text = INDEX_PATH.read_text(encoding="utf-8") if INDEX_PATH.is_file() else ""
+if not INDEX_PATH.is_file():
+    errors.append("missing _meta/INDEKS_SISTEM.md")
+elif "## Daftar Sistem" not in index_text:
+    errors.append("INDEKS_SISTEM has no 'Daftar Sistem' section")
 
-# The pilot must not be an ACTIVE SYSTEM ROW in the "Daftar Sistem" table.
-# Prose that explains why it is deliberately excluded is allowed and wanted:
-# a blanket substring ban would forbid documenting the exclusion at all, which
-# is how the same "finding" gets re-raised every session.
-def _system_table_rows(text):
-    rows, in_table = [], False
-    for line in text.splitlines():
-        stripped = line.strip()
-        if stripped.startswith("## "):
-            in_table = stripped.lower().startswith("## daftar sistem")
-            continue
-        if in_table and stripped.startswith("|"):
-            rows.append(stripped)
-    return rows
+index_folders, index_errors = core.parse_index(index_text)
+errors += [f"INDEKS_SISTEM: {e}" for e in index_errors]
 
-for row in _system_table_rows(index):
-    if "sistem-pilot-catatan-belajar" in row:
-        errors.append("pilot must not be listed as an active system")
-        break
+if core.EXACT_PILOT in index_folders:
+    errors.append("pilot must not be listed as an active system")
 
-# --- Deterministic checkpoint field check (C-01) -------------------------
-# Field "Pekerjaan belum tersimpan" must be exact "Tidak ada" when safe,
-# otherwise list. This prevents fragile free-text variations.
-for status_path in ROOT.glob("sistem-pilot-catatan-belajar/unit-aktif/*/STATUS.md"):
-    text = status_path.read_text(encoding="utf-8")
-    if "Pekerjaan belum tersimpan:" not in text and "Pekerjaan yang belum tersimpan:" not in text:
-        errors.append(f"STATUS missing field Pekerjaan belum tersimpan: {status_path.relative_to(ROOT)}")
+# Every sistem-* folder on disk (except the pilot fixture, by exact name)
+# must be registered — exact match, no substring exceptions (review F2).
+for sys_dir in sorted(ROOT.glob("sistem-*/")):
+    if sys_dir.name == core.EXACT_PILOT:
         continue
-    for line in text.splitlines():
-        if "Pekerjaan belum tersimpan:" in line or "Pekerjaan yang belum tersimpan:" in line:
-            # split on last colon
-            if "Pekerjaan yang belum tersimpan:" in line:
-                val = line.split("Pekerjaan yang belum tersimpan:", 1)[1].strip()
-            else:
-                val = line.split("Pekerjaan belum tersimpan:", 1)[1].strip()
-            if not val:
-                errors.append(f"STATUS empty Pekerjaan belum tersimpan value: {status_path.relative_to(ROOT)}")
-            if "tidak ada" in val.lower() and "Tidak ada" not in val:
-                errors.append(f"STATUS must use exact 'Tidak ada' (case-sensitive): {status_path.relative_to(ROOT)}: {val}")
-            break
+    if sys_dir.name not in index_folders:
+        errors.append(
+            f"system folder {sys_dir.name}/ not registered in INDEKS_SISTEM 'Daftar Sistem'"
+        )
 
-for tmpl in [
-    ROOT / "sistem-pilot-catatan-belajar/STATUS_TEMPLATE.md",
-    ROOT / "sistem-konten-kreator/_sistem/STATUS_TEMPLATE.md",
-]:
-    if tmpl.is_file():
-        t = tmpl.read_text(encoding="utf-8")
-        if "Pekerjaan belum tersimpan:" not in t and "Pekerjaan yang belum tersimpan:" not in t:
-            errors.append(f"STATUS_TEMPLATE missing field: {tmpl.relative_to(ROOT)}")
-        if "Tidak ada" not in t:
-            errors.append(f"STATUS_TEMPLATE should mention exact 'Tidak ada': {tmpl.relative_to(ROOT)}")
+# Inheritance-contract checks for each REGISTERED system (03_KONTRAK_WARISAN).
+for name in index_folders:
+    sys_dir = ROOT / name
+    if not sys_dir.is_dir():
+        errors.append(f"INDEKS lists {name}/ but the folder does not exist")
+        continue
+    manifest = sys_dir / "SYSTEM_MANIFEST.md"
+    if not manifest.is_file():
+        errors.append(f"{name}: missing SYSTEM_MANIFEST.md (W-04)")
+        continue
+    mtext = manifest.read_text(encoding="utf-8")
+    ovr = core.overridden_items(mtext)
+    relax = core.manifest_tahap(mtext) == "kerangka"
+
+    def relaxed(msg):
+        (stage_warnings if relax else errors).append(msg)
+
+    errors += core.warisan_errors(name, mtext)
+    if "W-07" not in ovr and "Dipakai via lmarena" not in mtext:
+        errors.append(f"{name}: SYSTEM_MANIFEST.md lacks 'Batasan Platform' (Dipakai via lmarena?) — W-07")
+    if "W-01" not in ovr:
+        if not (sys_dir / "PROMPT_ENTRI_UNIVERSAL.md").is_file():
+            relaxed(f"{name}: missing PROMPT_ENTRI_UNIVERSAL.md (pegangan, W-01)")
+        if not ((sys_dir / "PANDUAN_PENGGUNA.md").is_file() or (sys_dir / "panduan" / "PANDUAN_PENGGUNA.md").is_file()):
+            relaxed(f"{name}: missing PANDUAN_PENGGUNA.md (root or panduan/) — pegangan wajib (W-01)")
+    if "W-02" not in ovr:
+        descent = any(
+            "LOG_SESI" in f.read_text(encoding="utf-8")
+            for pat in (f"{name}/*.md", f"{name}/_sistem/*.md", f"{name}/panduan/*.md")
+            for f in ROOT.glob(pat)
+        )
+        if not descent:
+            relaxed(f"{name}: LOG_SESI mechanism not descended into the system folder (W-02, self-contained requirement)")
+    if "W-03" not in ovr:
+        if not core.unit_status_files(sys_dir):
+            relaxed(f"{name}: no unit STATUS.md found — registered system must have at least one unit (W-03)")
+
+# --- Deterministic checkpoint field check (C-01, generalized per M-03) -----
+# Every unit STATUS.md under any sistem-*/ dir (any layout — enumeration,
+# not a fixed pattern list) must carry the field exactly once, outside
+# quotes/fences. Template STATUS files must parse to the exact safe value.
+for sys_dir in sorted(ROOT.glob("sistem-*/")):
+    for status_path in core.unit_status_files(sys_dir):
+        rel = status_path.relative_to(ROOT).as_posix()
+        kind, value = core.parse_unsaved_field(status_path.read_text(encoding="utf-8"))
+        if kind == "absent":
+            errors.append(f"STATUS missing field Pekerjaan belum tersimpan: {rel}")
+        elif kind == "ambiguous":
+            errors.append(
+                f"STATUS field Pekerjaan belum tersimpan muncul lebih dari sekali (bukti ganda = tidak deterministik): {rel}"
+            )
+        else:
+            if not value:
+                errors.append(f"STATUS empty Pekerjaan belum tersimpan value: {rel}")
+            elif value != core.SAFE_VALUE and "tidak ada" in value.lower():
+                # Free text that is NOT an exact "none" claim must not
+                # pretend to be one; honest pending-work lists (no
+                # "tidak ada" wording) are judged by the gate (FI), here.
+                errors.append(f"STATUS must use exact 'Tidak ada' (case-sensitive): {rel}: {value}")
+    for tmpl in sorted(
+        set(sys_dir.glob("STATUS_TEMPLATE.md"))
+        | set(sys_dir.glob("_sistem/STATUS_TEMPLATE.md"))
+        | set(sys_dir.glob("_template/T*_STATUS.md"))
+    ):
+        rel = tmpl.relative_to(ROOT).as_posix()
+        kind, value = core.parse_unsaved_field(tmpl.read_text(encoding="utf-8"))
+        if kind == "absent":
+            errors.append(f"STATUS template missing field: {rel}")
+        elif kind == "ambiguous":
+            errors.append(f"STATUS template field Pekerjaan belum tersimpan ambigu (duplikat/kutipan): {rel}")
+        elif value != core.SAFE_VALUE:
+            errors.append(
+                f"STATUS template nilai field harus exact '{core.SAFE_VALUE}' "
+                f"(petunjuk pengisian bukan bagian dari nilai — review F8): {rel} (ditemui: {value!r})"
+            )
+
+# --- Warning-tier path reference check (A-B3a, extended by M-01/M-03) -----
+# Scope: _meta/*.md + root pegangan + each REGISTERED system's active docs
+# (root, _sistem, panduan, _generator, _template). Deliberate exclusions:
+#   * `_internal/` — historical audit references, not active instructions
+#     (and never shipped in the clean template, so references to it can
+#     never be an operational dependency);
+#   * unit living dirs (deck-aktif, unit-aktif, _produksi-aktif) — per-unit
+#     work state, checked by the C-01 rules and the systems' own tools;
+#   * `00_RENCANA_KERANGKA.md` — plan document kept as history; the final
+#     numbering is documented in-file ("Catatan renumbering 5 Sep");
+#   * `ACCEPTANCE_TEST_LOG.md` — test-run records citing /tmp paths.
+# SCOPED resolution (review F13): a document inside a system folder resolves
+# paths against its OWN system (+ _meta + root) — it can no longer borrow a
+# file from another system to mask a missing local dependency. Master-level
+# docs (root, _meta) stay cross-system: pointing between systems is their
+# job. URIs are not repository paths (review F14).
+ARTIFACT_PREFIXES = ("_meta/_internal/",)
+SCAN_DOC_GLOBS = [
+    "_meta/*.md",
+    "PANDUAN_PENGGUNA.md",
+    "PROMPT_ENTRI_UNIVERSAL.md",
+]
+for _name in index_folders:
+    SCAN_DOC_GLOBS += [
+        f"{_name}/*.md",
+        f"{_name}/_sistem/*.md",
+        f"{_name}/panduan/*.md",
+        f"{_name}/_generator/*.md",
+        f"{_name}/_template/*.md",
+    ]
+SCAN_DOC_EXCLUDE_NAMES = ("00_RENCANA_KERANGKA.md", "ACCEPTANCE_TEST_LOG.md", "DISKUSI_MENTAH")
+REF_RE = re.compile(r"`([^`\n]+)`")
+PATH_EXTENSIONS = (".md", ".py", ".zip", ".json")
+
+
+def system_roots(name):
+    roots = [
+        name, f"{name}/_sistem", f"{name}/panduan",
+        f"{name}/_generator", f"{name}/_template", f"{name}/_produksi-aktif",
+    ]
+    for unit in sorted((ROOT / name / "deck-aktif").glob("*")):
+        if unit.is_dir():
+            roots.append(f"{name}/{unit.parent.name}/{unit.name}")
+    # Sistem konten kreator menyimpan arsip per channel; dokumen aktifnya
+    # menulis `arsip-naskah/indeks.md` RELATIF terhadap folder channel.
+    # Fixture channel menyediakan basis resolusi yang deterministik.
+    if (ROOT / name / "channel-fixture-narasi-sejarah").is_dir():
+        roots.append(f"{name}/channel-fixture-narasi-sejarah")
+    return roots
+
+
+ALL_ROOTS = ["", "_meta", "_meta/_internal", core.EXACT_PILOT]
+for _name in index_folders:
+    ALL_ROOTS += system_roots(_name)
+
+
+def doc_roots(doc_rel):
+    first = doc_rel.split("/")[0]
+    if first.startswith("sistem-") and first in index_folders:
+        return system_roots(first) + ["_meta", "_meta/_internal", ""]
+    return ALL_ROOTS
+
+
+def active_documents():
+    """Active documents in scope, sorted for deterministic output."""
+    docs = []
+    for pattern in SCAN_DOC_GLOBS:
+        docs.extend(p for p in ROOT.glob(pattern) if p.is_file())
+    kept = []
+    for p in docs:
+        rel = p.relative_to(ROOT).as_posix()
+        if any(part in ("_internal", "deck-aktif", "unit-aktif", "_produksi-aktif") for part in p.relative_to(ROOT).parts):
+            continue
+        if any(x in p.name for x in SCAN_DOC_EXCLUDE_NAMES):
+            continue
+        kept.append(p)
+    return sorted(set(kept))
+
+
+def is_path_like(ref):
+    # URIs (http://, https://, mailto:, ...) are external, not repository
+    # paths (review F14). "[", "<", "*" are placeholders/glob patterns;
+    # spaces mean a command line (e.g. `python3 tools/validate_repo.py`);
+    # absolute paths ("/tmp/...") are external evidence. Bare filenames in
+    # prose are not judged: resolving them needs a writing convention this
+    # repository has not adopted.
+    if "://" in ref or re.match(r"^[a-z][a-z0-9+.-]*:", ref, re.IGNORECASE):
+        return False
+    return (
+        "/" in ref
+        and not any(c in ref for c in ("[", "<", "*", " "))
+        and not ref.startswith("/")
+        and ref.lower().endswith(PATH_EXTENSIONS)
+    )
+
+
+def resolves(ref, doc_rel):
+    if any(ref.startswith(p) for p in ARTIFACT_PREFIXES):
+        return True  # _internal: historical area, never an operational dependency
+    return any((ROOT / base / ref).is_file() for base in doc_roots(doc_rel))
+
+
+def scan_references():
+    docs = active_documents()
+    checked = 0
+    warnings = []
+    for path in docs:
+        rel = path.relative_to(ROOT).as_posix()
+        for lineno, line in enumerate(
+            path.read_text(encoding="utf-8").splitlines(), start=1
+        ):
+            for match in REF_RE.finditer(line):
+                ref = match.group(1)
+                if not is_path_like(ref):
+                    continue
+                checked += 1
+                if not resolves(ref, rel):
+                    warnings.append(
+                        f"WARNING reference: {rel}:{lineno}: "
+                        f"unresolved path reference `{ref}`"
+                    )
+    return docs, checked, warnings
+
 
 ref_docs, ref_checked, ref_warnings = scan_references()
+ref_warnings += stage_warnings
 
 if errors:
     print("VALIDATION FAILED")
@@ -240,13 +296,14 @@ if errors:
     sys.exit(1)
 
 # The line below is quoted verbatim by _meta/_internal/HANDOFF_NEXT_SESSION.md
-# and by audit records on other branches. Keep it byte-identical; report the
-# new coverage on additional lines instead of rewriting this one.
+# and by audit records on other branches. Keep the FORMAT byte-identical;
+# the count is live data and moves with the required set.
 print(f"VALIDATION PASSED: {len(required)} required files and Markdown invariants checked")
 print(
     f"COVERAGE: {len(ref_docs)} active documents scanned, "
     f"{ref_checked} path references checked, {len(ref_warnings)} unresolved"
 )
+print(f"SYSTEMS CHECKED (inheritance contract): {len(index_folders)} registered + pilot excluded by design")
 for w in ref_warnings:
     print(w)
 print(f"WARNINGS: {len(ref_warnings)} (warning tier, exit code unaffected)")

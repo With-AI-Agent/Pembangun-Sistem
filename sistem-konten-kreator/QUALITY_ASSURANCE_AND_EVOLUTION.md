@@ -4,7 +4,7 @@
 
 - **Status:** aktif sebagai mekanisme default; sistem masih dalam remediation
 - **Pemilik keputusan:** pengguna
-- **Protokol induk:** `_meta/QUALITY_ASSURANCE_AND_EVOLUTION.md` pada master blueprint
+- **Protokol induk (provenance — dokumen ini tetap berfungsi tanpanya):** `_meta/QUALITY_ASSURANCE_AND_EVOLUTION.md` pada master blueprint
 - **Override:** tidak ada
 
 ## Lapisan 1 — Memeriksa sistem ini sendiri

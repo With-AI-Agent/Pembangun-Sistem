@@ -9,3 +9,7 @@ __pycache__/
 _meta/_internal/backups/
 _meta/_internal/template_clean/
 _meta/_internal/template_clean.zip
+
+# M-12 (audit meta 5 Sep 2026): state UI lokal Obsidian berubah tiap buka vault —
+# noise diff & sumber konflik sync. Pengaturan vault lainnya tetap ikut repo.
+.obsidian/workspace.json

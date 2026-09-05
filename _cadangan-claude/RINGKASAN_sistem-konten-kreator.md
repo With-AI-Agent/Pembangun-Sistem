@@ -7,29 +7,30 @@ Sistem kerja untuk konten kreator berbasis AI — dari nentuin channel mau ngomo
 ## Bentuk dasar
 **Gabungan Bertingkat + Siklus.** Bertingkat di level struktural: Brand Core (lintas semua channel) → Channel Brief (1 niche/positioning) → Model Konten Brief (1 cara produksi/format dalam channel itu). Siklus di level produksi harian: Pipeline 6 Tahap (Ideation → Konsep → Naskah → Breakdown Visual → Generate Asset → Assembly) yang diulang tiap kali bikin 1 konten baru.
 
-## Struktur folder saat ini
+## Struktur folder saat ini (disinkronkan 5 Sep 2026 — sebelumnya menunjuk lokasi lama, temuan M-09)
 ```
 sistem-konten-kreator/
-├── _sistem/
-│   ├── START_DI_SINI.md
-│   ├── 00_CARA_PAKAI_SISTEM.md
-├── 01_BRAND_CORE.md
-├── 02_CHANNEL_DISCOVERY_PROMPT.md
-├── 03_TEMPLATE_CHANNEL_BRIEF.md
-├── 04_CHARACTER_BUILDER_KIT.md
-├── 05_CONTENT_PRODUCTION_PIPELINE.md
-├── 06_PROMPT_LIBRARY.md
-├── 07_MODEL_KONTEN_DISCOVERY_PROMPT.md
-├── 08_TEMPLATE_MODEL_KONTEN_BRIEF.md
-└── PANDUAN_PENGGUNA.md  (untuk pengguna, bukan diupload ke repo GitHub asli sistem konten kreator itu sendiri — tapi tetap disimpan di sini sebagai arsip)
+├── PROMPT_ENTRI_UNIVERSAL.md      ← prompt pembuka siap tempel (blok identik dgn panduan)
+├── SYSTEM_MANIFEST.md             ← identitas + gate + Log Evolusi + tabel Warisan
+├── QUALITY_ASSURANCE_AND_EVOLUTION.md   (turunan self-contained; induk _meta = provenance)
+├── ACCEPTANCE_TESTS.md / ACCEPTANCE_TEST_LOG.md
+├── panduan/PANDUAN_PENGGUNA.md    ← pegangan pengguna (subfolder panduan/)
+├── _sistem/  (12 dokumen: START_DI_SINI, 00_CARA_PAKAI_SISTEM [LOG_SESI + fakta
+│            platform inline + 4 aturan recovery self-contained], 01_BRAND_CORE,
+│            02_CHANNEL_DISCOVERY_PROMPT, 03_TEMPLATE_CHANNEL_BRIEF, 04_CHARACTER_BUILDER_KIT,
+│            05_CONTENT_PRODUCTION_PIPELINE, 06_PROMPT_LIBRARY, 07_MODEL_KONTEN_DISCOVERY_PROMPT,
+│            08_TEMPLATE_MODEL_KONTEN_BRIEF, 09_AUDIT_MIGRASI_GITHUB_AGENT [reference_only],
+│            STATUS_TEMPLATE [field checkpoint deterministik])
+├── channel-fixture-narasi-sejarah/          ← fixture uji (BUKAN channel produksi)
+└── _produksi-aktif/fixture-…/               ← unit uji recovery (STATUS + naskah-draft)
 ```
-Ini 10 dokumen SISTEM (instruksi kerja untuk agent) + 1 dokumen panduan pengguna. Setelah dijalankan, sistem ini akan menghasilkan folder tambahan di repo produksi yang sebenarnya: `channel-[nama]/`, `konsistensi-lintas-channel/`, `_produksi-aktif/` — skeleton lengkapnya ada di `00_CARA_PAKAI_SISTEM.md` bagian "Struktur Repo".
+11 dokumen `_sistem/` + pegangan 2-file + manifest + QA turunan + acceptance suite. Setelah dijalankan, sistem ini menghasilkan folder tambahan di repo produksi sebenarnya: `channel-[nama]/`, `konsistensi-lintas-channel/`, `_produksi-aktif/` — skeleton lengkap di `00_CARA_PAKAI_SISTEM.md` bagian "Struktur Repo".
 
 ## Prinsip yang berlaku
 Mengikuti semua 5 Prinsip Universal dari `_meta/02_PRINSIP_UNIVERSAL.md` TANPA override — sistem ini justru yang jadi SUMBER dari prinsip-prinsip itu (dipilah dari sini ke level universal setelah terbukti works). Tambahan spesifik-domain: Pemisahan Konsistensi Visual vs Non-Visual (khusus konten kreator, tidak universal).
 
 ## Status sekarang
-**Kandidat sistem contoh — sedang diperbaiki.** Audit independen 3 September 2026 menemukan beberapa celah operasional yang harus ditutup sebelum sistem ini ditetapkan sebagai contoh resmi meta-sistem atau dipakai produksi nyata.
+**`0.3.2-warisan-sync` — kandidat sistem contoh; audit P0+P1 tertutup; recovery teruji nyata.** AT-KK-05 & AT-KK-05b LULUS clean run di sesi agent baru (4–5 Sep 2026); gate checkpoint/recovery DITUTUP 5 Sep. Sisa gate: Brand Core channel nyata belum ada; pilot end-to-end (L-04) butuh 1 channel terisi penuh; acceptance AT-KK-01/02/03/03b/04/06/07/08 belum diuji; L-03 terbuka. Kontrak warisan meta v1.3.0: tabel Warisan W-01…W-09 tercatat di `SYSTEM_MANIFEST.md`, tanpa override.
 
 ## PENTING — hasil kerja sesi ini akan dibawa ke mana
-Hasil dari sesi Claude ini akan di-paste manual oleh pengguna ke lokasi yang sesuai di Obsidian (sync otomatis ke GitHub via plugin git). Pastikan format/struktur yang dihasilkan KOMPATIBEL dengan 11 dokumen yang sudah ada — cek dulu dokumen terkait yang diupload bersama ringkasan ini sebelum menulis apa pun. Karena sistem ini sudah final dan teraudit, perubahan apapun ke sistem ini sebaiknya dianggap REVISI terhadap sesuatu yang sudah teruji — pertimbangkan matang-matang sebelum mengubah struktur besar yang sudah ada, kecuali memang ada kebutuhan nyata yang jelas.
+Hasil dari sesi Claude ini akan di-paste manual oleh pengguna ke lokasi yang sesuai di Obsidian (sync otomatis ke GitHub via plugin git). Pastikan format/struktur yang dihasilkan KOMPATIBEL dengan 11 dokumen yang sudah ada — cek dulu dokumen terkait yang diupload bersama ringkasan ini sebelum menulis apa pun. Karena sistem ini mendekati status contoh resmi (gate pemakaian nyata masih terbuka), perubahan apapun ke sistem ini sebaiknya dianggap REVISI terhadap sesuatu yang sudah teruji — pertimbangkan matang-matang sebelum mengubah struktur besar yang sudah ada, kecuali memang ada kebutuhan nyata yang jelas.

@@ -6,6 +6,8 @@
 
 ## 1 Prompt Universal — Pakai Ini SETIAP KALI Mulai Sesi Baru
 
+> Blok yang sama tersedia sebagai file siap-salin di `PROMPT_ENTRI_UNIVERSAL.md` (root repo). Kalau mengubah salah satu, ubah keduanya — keduanya wajib identik.
+
 Tidak peduli ini pertama kali kamu pakai sistem ini, atau sudah bertahun-tahun dipakai — cukup buka sesi lmarena Agent (pilih repo yang sesuai), lalu ketik persis ini:
 
 ```
@@ -115,4 +117,6 @@ Kamu tidak perlu menghafal kapan pakai prompt yang mana — **prompt universal d
 - **`_cadangan-claude/`** — ringkasan tiap sistem, dipakai kalau perlu bantuan Claude chat biasa
 - **`_pegangan-kamu/`** — file milikmu sendiri, bebas diisi apa saja
 
-Untuk istilah teknis lain (branch, PR, merge, commit) — lihat `PANDUAN_PENGGUNA.md` di dalam `sistem-konten-kreator/`, penjelasannya sama berlaku di sini.
+Untuk istilah teknis lain (branch, PR, merge, commit) — lihat `sistem-konten-kreator/panduan/PANDUAN_PENGGUNA.md`, penjelasannya sama berlaku di sini.
+
+Alur "apa yang terjadi saat aku membangun sistem baru" diringkas di `_meta/03_KONTRAK_WARISAN.md` — daftar hal yang otomatis ikut tertanam di setiap sistem (pegangan, log sesi, checkpoint, dll) tanpa perlu kamu minta satu-satu.

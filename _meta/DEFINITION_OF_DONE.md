@@ -17,6 +17,8 @@ Dokumen atau sistem **tidak boleh disebut selesai hanya karena file sudah dituli
 ## Sistem domain
 
 - [ ] Discovery Level-0 selesai
+- [ ] Semua butir `03_KONTRAK_WARISAN.md` (W-01…W-09) diterapkan dan tercatat di bagian "Warisan" rencana kerangka + manifest — atau override-nya tercatat dengan alasan + approval eksplisit pengguna
+- [ ] `tools/validate_repo.py` PASS dengan 0 warning terhadap sistem ini (penegakan mekanis butir W-01…W-04)
 - [ ] Bentuk sistem dan batasannya terdokumentasi
 - [ ] Manifest tersedia dan lengkap
 - [ ] Entry point tersedia

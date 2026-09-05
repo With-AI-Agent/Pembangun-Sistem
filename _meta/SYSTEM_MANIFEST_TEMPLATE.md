@@ -9,10 +9,11 @@
 - **Pengguna/consumer:**
 - **Pemilik keputusan:**
 - **Versi:** `0.1.0`
+- **Tahap:** kerangka — ubah ke `siap-pakai` saat sistem siap dipakai (cek W-01/W-02/W-03 kembali ketat; lihat `03_KONTRAK_WARISAN.md` bagian "Tahap pembangunan")
 - **Status:** `Proposed`
 - **Tanggal dibuat:**
 - **Audit terakhir:**
-- **Quality protocol:** `QUALITY_ASSURANCE_AND_EVOLUTION.md` (default aktif)
+- **Quality protocol:** dokumen QA turunan DI DALAM folder sistem ini (butir W-06 — wajib self-contained). Rujukan ke `_meta/QUALITY_ASSURANCE_AND_EVOLUTION.md` hanyalah provenance (asal aturan), BUKAN aturan aktif (sistem harus tetap berfungsi penuh saat foldernya diunduh jadi repo sendiri — lihat `03_KONTRAK_WARISAN.md`)
 
 ## Bentuk Sistem
 
@@ -41,6 +42,25 @@
 | Approval bertingkat | | | |
 | Checkpoint & verifikasi | | | |
 | Log keputusan | | | |
+| Quality assurance & evolusi (prinsip 6) | | | |
+
+## Warisan (Kontrak)
+
+Status butir `03_KONTRAK_WARISAN.md` untuk sistem ini — salin dari bagian "Warisan" di `00_RENCANA_KERANGKA.md`; default SEMUA diterapkan, yang di-override wajib menyebut approval pengguna:
+
+| Butir | Status (diterapkan / override) | Letak di folder sistem | Override? |
+|---|---|---|---|
+| W-01 pegangan | | | |
+| W-02 LOG_SESI | | | |
+| W-03 field checkpoint STATUS | | | |
+| W-04 manifest | | | |
+| W-05 log keputusan | | | |
+| W-06 QA 3-lapis | | | |
+| W-07 fakta platform | | | |
+| W-08 approval bertingkat | | | |
+| W-09 ringkasan cadangan | | | |
+
+Baris `override`: isi kolom Override dengan `alasan: ...; dampak: ...; tanggal: YYYY-MM-DD; approval: <kutipan keputusan pengguna>` — override tanpa keempatnya = error validator (lihat `03_KONTRAK_WARISAN.md`).
 
 ## Quality & Evolution
 

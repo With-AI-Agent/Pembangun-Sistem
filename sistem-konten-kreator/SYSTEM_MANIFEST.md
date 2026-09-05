@@ -3,14 +3,15 @@
 - **Tujuan:** membangun dan memproduksi konten kreator berbantuan AI dari fondasi brand sampai konten siap publish.
 - **Consumer:** operator/kreator solo dan agent kerja yang terhubung ke repository.
 - **Status:** `candidate — audit P0+P1 closed, belum divalidasi pemakaian nyata`
-- **Versi:** `0.3.1-audit-remediation`
+- **Versi:** `0.3.2-warisan-sync`
+- **Tahap:** siap-pakai
 - **Pemilik keputusan:** pengguna
 - **Entry point agent:** `PROMPT_ENTRI_UNIVERSAL.md` (atau bagian Prompt Pembuka Universal di `panduan/PANDUAN_PENGGUNA.md`)
 - **Entry point navigasi:** `_sistem/START_DI_SINI.md`
 - **Instruksi utama:** `_sistem/00_CARA_PAKAI_SISTEM.md`
 - **Living documents:** Brand Core, Channel Brief, Bank Konsistensi Visual, Model Konten Brief, arsip naskah
-- **Audit acuan:** `_meta/_internal/AUDIT_SISTEM_KONTEN_KREATOR_2026-09-03.md` di master blueprint (audit independen yang sedang diremediasi)
-- **Acceptance test:** `ACCEPTANCE_TESTS.md` (AT-KK-01 s/d AT-KK-08) — wajib dijalankan ulang setiap aturan `00`/`05`/`06` berubah; log eksekusi + bukti per run di `ACCEPTANCE_TEST_LOG.md`
+- **Audit acuan (provenance):** `_meta/_internal/AUDIT_SISTEM_KONTEN_KREATOR_2026-09-03.md` di master blueprint — P0+P1 ditutup 4 Sep, P2 sebagian (lihat tabel temuan di bawah)
+- **Acceptance test:** `ACCEPTANCE_TESTS.md` (AT-KK-01 s/d AT-KK-08) — wajib dijalankan ulang setiap aturan `00`/`05`/`06` berubah; log eksekusi + bukti per run di `ACCEPTANCE_TEST_LOG.md` — **TERPICU oleh perubahan aturan `00` di v0.3.2 (baris File wajib "Lanjut produksi yang terputus") — belum dijalankan; dijadwalkan first task sesi berikutnya (review PR #11, F7 — pengecualian tercatat, bukan klaim "tidak terpicu")**
 - **Referensi historis (bukan instruksi aktif):** `_sistem/09_AUDIT_MIGRASI_GITHUB_AGENT.md` — ditandai `agent_instruction: reference_only`, dikecualikan dari template bersih
 - **Backup/template:** belum dirilis
 
@@ -30,6 +31,10 @@
 | Approval bertingkat | Berlaku | Keputusan yang menyebar/sulit dibalik wajib review isi |
 | Checkpoint & recovery | Berlaku | Setiap tahap yang menjadi dependency berikutnya memiliki status persisten |
 | Log keputusan | Berlaku | Living document mencatat tanggal, perubahan, dan alasan |
+
+## Warisan (Kontrak) — meta v1.3.0
+
+W-01 pegangan ✔ (`panduan/PANDUAN_PENGGUNA.md` + `PROMPT_ENTRI_UNIVERSAL.md`); W-02 LOG_SESI ✔ (section di `_sistem/00_CARA_PAKAI_SISTEM.md` + prompt); W-03 field checkpoint ✔ (`_sistem/STATUS_TEMPLATE.md` + fixture); W-04 manifest ✔; W-05 log keputusan ✔ (Log Evolusi + per dokumen); W-06 QA ✔ (`QUALITY_ASSURANCE_AND_EVOLUTION.md` di folder ini); W-07 fakta platform ✔ (bagian Batasan Platform inline); W-08 approval ✔ (G1/G2/G3); W-09 ringkasan cadangan ✔ (disinkronkan 5 Sep). Tidak ada override.
 
 ## Batasan Platform
 
@@ -85,7 +90,7 @@ Dari `_meta/_internal/AUDIT_SISTEM_KONTEN_KREATOR_2026-09-03.md`:
 | L-02 klaim agent tahu semua konteks | P2 | **Ditutup** 4 Sep 2026 |
 | L-03 batas ukuran arsip & indexing | P2 | **Terbuka** |
 | L-04 contoh channel terisi penuh | P2 | **Terbuka** — gate pilot end-to-end |
-| L-05 acceptance test dapat diulang | P2 | **Sebagian** — 10 skenario ditulis di `ACCEPTANCE_TESTS.md` (AT-KK-01…08 + 2 varian); **AT-KK-05 LULUS** pada clean run sesi baru 4 Sep 2026 (`0.3.1-audit-remediation`); **AT-KK-05b belum diuji**; 8 sisanya belum; fixture produksi pertama tersedia di `channel-fixture-narasi-sejarah/` + `_produksi-aktif/fixture-narasi-sejarah-tiga-benda-di-meja-nenek/` |
+| L-05 acceptance test dapat diulang | P2 | **Sebagian** — 10 skenario ditulis di `ACCEPTANCE_TESTS.md` (AT-KK-01…08 + 2 varian); **AT-KK-05 LULUS** clean run 4 Sep dan **AT-KK-05b LULUS** clean run 5 Sep 2026 (keduanya `0.3.1-audit-remediation`; baris ini disinkronkan 5 Sep — sebelumnya masih menyebut 05b "belum diuji", temuan M-19 audit meta); 8 sisanya belum diuji; fixture tersedia di `channel-fixture-narasi-sejarah/` + `_produksi-aktif/fixture-narasi-sejarah-tiga-benda-di-meja-nenek/` |
 
 ## Log Evolusi
 
@@ -96,4 +101,5 @@ Dari `_meta/_internal/AUDIT_SISTEM_KONTEN_KREATOR_2026-09-03.md`:
 | 4 Sep 2026 | 0.3.0-audit-remediation | `ACCEPTANCE_TESTS.md` ditambahkan (L-05 sebagian) | Aturan baru P0/P1 belum punya cara verifikasi yang dapat diulang; tanpa ini "sudah diperbaiki" tidak bisa dibuktikan |
 | 4 Sep 2026 | 0.3.0-audit-remediation | AT-KK-05 + AT-KK-05b dijalankan sebagai dry run; fixture produksi pertama dibuat; `ACCEPTANCE_TEST_LOG.md` ditambahkan | Gate "Prosedur checkpoint dan recovery diuji" dibuka kembali di commit `e463809` karena `STATUS_TEMPLATE.md` versi baru belum teruji. Run ini membuktikan template baru bisa dipakai recovery, tapi **tidak** diklaim LULUS karena dijalankan di sesi yang sama dengan yang membaca expected result (melanggar syarat "tanpa dipandu"). Verdict final menunggu sesi agent baru. Versi tidak dinaikkan: tidak ada dokumen aturan (`00`/`05`/`06`) yang berubah |
 | 4 Sep 2026 | 0.3.1-audit-remediation | Aturan recovery dipertegas di `00_CARA_PAKAI_SISTEM.md`: baris "Lanjut produksi yang terputus" kini mewajibkan `_meta/PROTOKOL_CHECKPOINT_RECOVERY.md` bagian "Recovery saat sesi baru", output tahap diverifikasi **di branch**, plus 4 aturan mengikat (verifikasi bukan percaya klaim / lanjut hanya dari tahap terbukti selesai / approval per kode gerbang / berhenti kalau output diklaim ada tapi hilang) | Temuan dry run AT-KK-05: prosedur recovery cuma disebut satu kalimat di `05` dan tidak dirujuk tabel Konteks Wajib, jadi agen yang patuh tabel bisa melewati verifikasi branch (FI-02/FI-03). Diterapkan **sebelum** run bersih pertama — belum ada test berstatus LULUS, jadi tidak ada baseline yang dibatalkan. Konsekuensi: run bersih AT-KK-05 wajib dijalankan pada 0.3.1, dan dry run sebelumnya tercatat sebagai uji 0.3.0 |
+| 5 Sep 2026 | 0.3.2-warisan-sync | Sinkronisasi kontrak warisan meta v1.3.0: tabel Warisan ditambahkan; wording provenance ("Audit acuan", rujukan recovery di `00_CARA_PAKAI_SISTEM.md` baris Lanjutan terputus → aturan inline menang, `_meta` opsional); fix M-19 (baris L-05 basi menyebut AT-KK-05b "belum diuji" padahal LULUS 5 Sep); ringkasan cadangan disinkronkan | Permintaan pengguna: butir wajib harus tertanam & TERUKUR untuk semua sistem. **KOREKSI 5 Sep (review PR #11, F7):** klaim awal "perubahan wording/pencatatan saja, regresi TIDAK terpicu" SALAH — baris tabel File wajib di `00_CARA_PAKAI_SISTEM.md` (baris "Lanjut produksi yang terputus") memang BERUBAH: protokol recovery meta dari "wajib dibaca" menjadi provenance/opsional, digantikan 4 aturan inline mengikat. Itu perubahan aturan `00` → klausul regresi acceptance test TERPICU dan belum dijalankan → **pengecualian tercatat: clean-run acceptance dijadwalkan first task sesi berikutnya** (sesi pembuat tidak memenuhi syarat uji buta karena sudah membaca expected result — alasan sama yang dipakai reviewer independen) |
 | 5 Sep 2026 | 0.3.1-audit-remediation | **AT-KK-05b LULUS** pada clean run sesi baru (`ACCEPTANCE_TEST_LOG.md` Run 3); gate "Prosedur checkpoint dan recovery diuji" **ditutup/dicentang** | AT-KK-05 (jalur normal) sudah LULUS 4 Sep pada versi yang sama; yang tersisa untuk menutup gate hanyalah varian state tidak konsisten. Run 3 membuktikan agent **berhenti dan melapor** saat `STATUS.md` mengklaim `breakdown-output.md` ADA padahal tidak ada — tidak membuat ulang diam-diam, tidak mengoreksi STATUS sendiri (FI-02/FI-03 terpenuhi). Versi tidak dinaikkan: tidak ada dokumen aturan (`00`/`05`/`06`) yang berubah, hanya pencatatan hasil. Gate "Acceptance test sistem ini LULUS" tetap terbuka — 8 skenario lain belum diuji |

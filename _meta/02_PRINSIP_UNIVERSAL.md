@@ -8,6 +8,8 @@
 
 Dibaca sekali saat Discovery Level-0 sistem baru dimulai (lihat `01_DISCOVERY_LEVEL_0.md`), untuk memutuskan prinsip mana yang dipakai apa adanya, mana yang perlu disesuaikan, mana yang tidak relevan sama sekali untuk sistem itu. Setelah keputusan itu diambil, dicatat di bagian "Prinsip yang Dipakai / Di-override" pada rencana kerangka sistem tersebut — bukan diasumsikan otomatis semua berlaku tanpa dipikirkan.
 
+**Batas dokumen:** prinsip di bawah mengatur *cara berperilaku* (bisa disesuaikan per sistem dengan alasan tercatat). Kewajiban *deliverable* yang tidak boleh hilang saat sistem baru dibangun — pegangan, LOG_SESI, field checkpoint deterministik, manifest, log keputusan, QA 3-lapis, fakta platform, approval, ringkasan cadangan — diatur terpisah di `03_KONTRAK_WARISAN.md` sebagai **default aktif** (override hanya via konfirmasi pengguna + tercatat). Kalau keduanya bertentangan, **kontrak warisan menang untuk SELURUH W-01…W-09 — termasuk butir yang hanya diverifikasi lewat proses/review manusia (mis. W-08 approval bertingkat)**, bukan hanya yang bisa dicek validator; prinsip tetap menjadi panduan perilaku untuk hal di luar daftar W. Bedakan dua hal: **penyesuaian cara penerapan** (bentuk artefak mengikuti domain, alasan tercatat di rencana kerangka) tidak perlu approval; **penonaktifan** butir tetap hanya via prosedur override kontrak (konfirmasi pengguna eksplisit + tercatat di manifest) — review PR #11 (F10).
+
 ---
 
 ## 1. Prinsip Hierarki

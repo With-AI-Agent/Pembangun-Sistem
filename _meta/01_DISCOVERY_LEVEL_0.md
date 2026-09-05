@@ -23,7 +23,12 @@ belajar", "fondasi aplikasi", dll].
 Sebelum mulai: baca 02_PRINSIP_UNIVERSAL.md dari repo ini untuk
 paham prinsip-prinsip yang berlaku default, supaya kerangka yang
 dirancang nanti bisa memanfaatkan prinsip yang sudah terbukti works
-(atau sengaja override kalau memang tidak cocok).
+(atau sengaja override kalau memang tidak cocok). Lalu baca
+03_KONTRAK_WARISAN.md — daftar deliverable yang WAJIB tertanam di
+semua sistem (default aktif, tanpa ditanyakan satu-satu); bagian
+"Warisan" pada rencana kerangka mengisi status tiap butir. Satu-
+satunya alasan butir tidak diterapkan: tidak cocok untuk domain ini
+ATAU pengguna meminta — dua-duanya lewat diskusi + approval, tercatat.
 
 Ide/kebutuhan sistem baru ini (boleh sangat mentah, boleh sudah cukup
 jelas):
@@ -31,7 +36,7 @@ jelas):
 
 Tugasmu BUKAN langsung menyimpulkan atau menulis dokumen. Gali lewat
 diskusi (3-5 pertanyaan per giliran, jangan overwhelm) sampai punya
-jawaban jelas untuk 4 hal ini:
+jawaban jelas untuk 5 hal ini:
 
 1. UNTUK SIAPA/APA SISTEM INI
    - Siapa/apa yang akan "memakai" hasil sistem ini — pengguna sendiri,
@@ -78,7 +83,7 @@ jawaban jelas untuk 4 hal ini:
 Setiap beberapa putaran, kasih ringkasan checkpoint: "Sejauh ini sistem
 ini kelihatannya: ..." supaya kita selalu align.
 
-Setelah keempat hal ini terjawab jelas, rangkum jadi rencana kerangka
+Setelah kelima hal ini terjawab jelas, rangkum jadi rencana kerangka
 dengan struktur:
 
 # Rencana Kerangka — Sistem [Nama Sistem]
@@ -107,6 +112,12 @@ perlu digali lewat diskusi panjang, cukup diisi langsung)]
 [dari 02_PRINSIP_UNIVERSAL.md, mana yang dipakai apa adanya, mana yang
 di-override dengan alasan]
 
+## Warisan (Kontrak)
+[status tiap butir 03_KONTRAK_WARISAN.md (W-01…W-09) untuk sistem ini:
+diterapkan bagaimana / di-override + alasan + approval pengguna.
+DEFAULT: semua diterapkan. Butir yang TIDAK diterapkan hanya boleh lewat
+diskusi + konfirmasi eksplisit pengguna — jangan diam-diam.]
+
 Setelah draft rencana ini dikonfirmasi final, buat folder
 sistem-[nama-sistem]/ (kalau belum ada), tulis rencana ini sebagai
 00_RENCANA_KERANGKA.md di dalam folder itu, commit, push, siapkan PR
@@ -125,9 +136,8 @@ sistemnya.
 
 ## Setelah selesai
 
-1. Salin `SYSTEM_MANIFEST_TEMPLATE.md` ke folder sistem baru dan isi
-   identitas awalnya.
-2. Hasilnya tersimpan di `sistem-[nama-sistem]/00_RENCANA_KERANGKA.md`, sudah lewat PR dan merge ke `main`.
+1. Dalam PR yang sama dengan rencana kerangka (bukan setelah merge — M-14): salin `SYSTEM_MANIFEST_TEMPLATE.md` ke folder sistem baru sebagai `SYSTEM_MANIFEST.md`, isi identitas awalnya, dan buat skeleton folder sesuai rencana. Hasilkan `sistem-[nama-sistem]/00_RENCANA_KERANGKA.md` yang sudah memuat bagian "Warisan".
+2. Setelah PR direview pengguna dan di-merge ke `main`, rencana kerangka resmi menjadi dasar pembangunan isi.
 3. Untuk tiap dokumen yang direncanakan dengan status "perlu prompt Discovery detail" — tulis dulu prompt generatornya (pola sama seperti menulis `02_CHANNEL_DISCOVERY_PROMPT.md` dari nol, disesuaikan isi pertanyaannya dengan kebutuhan sistem ini), simpan di dalam folder `sistem-[nama-sistem]/` yang sama.
 4. Untuk dokumen dengan status "cukup template biasa" — bisa langsung dibuat template-nya (pola sama seperti `03_TEMPLATE_CHANNEL_BRIEF.md`), tidak perlu prompt diskusi panjang.
 5. Setelah semua dokumen generator/template siap, baru mulai jalankan satu-satu untuk mengisi konten sistem yang sebenarnya.
