@@ -1,10 +1,12 @@
 # Draft Breakdown Output — Tiga Benda di Meja Nenek
 
-> **FIXTURE UJI — DRAFT, BELUM DIKUNCI.** Output Tahap 4 ini dibuat dari naskah yang sudah tersimpan, hanya dengan izin lanjut **G1 Tahap 3**. **G2 naskah final belum diberikan; G1 dan G2 breakdown belum diberikan.** Dokumen ini bukan izin memulai Tahap 5 atau mengarsipkan konten final.
+> **DRAFT LAMA r1 — TIDAK SINKRON DENGAN NASKAH r2 (6 Sep 2026 WIB).** Pengguna telah mengizinkan revisi naskah menjadi 130 kata tanpa mengubah brief. Isi 7 segmen dan timing 144 kata di bawah **sengaja dipertahankan sebagai draft r1**, bukan breakdown revisi yang disetujui. Jangan dipakai untuk acquire/assembly; penyesuaian menunggu review naskah r2. Penandaan ini bukan penguncian atau pengulangan Tahap 4.
 
-- **Tanggal:** 2026-09-05 (UTC)
+> **FIXTURE UJI — DRAFT, BELUM DIKUNCI.** Output Tahap 4 awal dibuat dari naskah r1 yang sudah tersimpan, hanya dengan izin lanjut **G1 Tahap 3 r1**. **G2 naskah final belum diberikan; G1 dan G2 breakdown belum diberikan.** Dokumen ini bukan izin memulai Tahap 5 atau mengarsipkan konten final.
+
+- **Tanggal penyusunan r1:** 2026-09-05 (UTC); status tidak sinkron ditandai 2026-09-06 WIB
 - **Unit output:** **segmen narasi**, bukan shot/panel; satu segmen dipasangkan dengan satu potongan b-roll netral sesuai Model Konten.
-- **Sumber naskah:** [naskah-draft.md](naskah-draft.md), commit `706060d391753e97954a49ccd6275ec8d061ff22`. Seluruh 144 kata dipertahankan verbatim dan berurutan; naskah sumber tidak diubah.
+- **Sumber naskah breakdown ini:** naskah **r1 pada commit `706060d391753e97954a49ccd6275ec8d061ff22`**, bukan [naskah-draft.md revisi r2 saat ini](naskah-draft.md). Seluruh 144 kata r1 masih dipertahankan verbatim dan berurutan di bawah. Saat recovery awal naskah r1 tidak diubah; r2 baru dibuat sesudah izin revisi eksplisit pengguna.
 - **Konteks:** [Channel Brief v1](../../channel-fixture-narasi-sejarah/channel-brief.md), bagian 3–6; [Model Konten Brief v1](../../channel-fixture-narasi-sejarah/model-konten/narasi-60-detik/brief.md), bagian 2–4. Keduanya dibaca ulang sebelum checkpoint tahap ini.
 - **Aturan kerja:** [pipeline](../../_sistem/05_CONTENT_PRODUCTION_PIPELINE.md), gerbang Tahap 3–5, dan [prompt library](../../_sistem/06_PROMPT_LIBRARY.md), bagian 0/B/D. Format acquire menggantikan prompt generate sesuai override model.
 - **Gap fondasi:** Brand Core masih template kosong. Tidak mengarang nilai lintas-channel atau menganggap fixture sebagai produksi nyata yang sudah lengkap.
@@ -105,7 +107,9 @@
 - **Referensi visual / file acuan:** deskripsi sudut meja kosong dan cahaya pagi; **belum ada file**, tidak memerlukan acuan visual terkunci.
 - **Penyampaian:** turunkan intonasi secara alami, tidak menggurui. Tidak ada CTA atau tambahan kata; waktu tahan gambar akhir belum dimasukkan ke estimasi dan harus ditentukan setelah durasi VO benar-benar diukur.
 
-## Keputusan yang masih diperlukan — urut, jangan digabung
+## Catatan review r1 — historis, bukan status keputusan terkini
+
+**Pembaruan 6 Sep WIB:** opsi revisi pada butir 1 di bawah sudah dipilih pengguna dan menghasilkan naskah r2. Catatan/timing r1 tetap disimpan; keputusan terkini dan gerbang r2 ada di `STATUS.md` serta `naskah-draft.md`. Belum ada G2 naskah atau approval breakdown.
 
 1. **G2 naskah final (Tahap 3): belum.** Pengguna perlu membaca naskah utuh di atas/sumbernya dan memutuskan penanganan temuan durasi sebelum penguncian. Saran berdampak paling kecil: izinkan revisi draft menuju 130–134 kata tanpa mengubah angle/voice, kemudian review ulang dan ukur pembacaannya; rentang ini belum menjamin durasi final. Jika ingin mempertahankan teks dan melonggarkan durasi, perubahan Model Konten perlu **G2 tersendiri**, bukan dianggap disetujui bersama naskah.
 2. **G1 breakdown (Tahap 4): belum.** Setelah dasar naskah diselesaikan, review pemenggalan, pasangan b-roll, dan arahan VO. Revisi naskah membatalkan kecocokan verbatim/timing draft breakdown ini sehingga harus diselaraskan dulu.
