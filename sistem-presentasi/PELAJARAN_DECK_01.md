@@ -1,7 +1,22 @@
 # PELAJARAN DARI DECK NYATA #1 (tesis fikih hiasan wanita)
 
+> ## ⚠️ STATUS: BUKAN SAMPLE — WAJIB DIBACA DULU
+> **Deck ini (.pptx tesis fikih hiasan wanita) dan PROSES PEMBUATANNYA BUKAN sample/contoh/templat.**
+> Pernyataan pengguna (5 Sep 2026): percobaan ini banyak cacatnya — termasuk prosesnya yang tidak sesuai keinginan pengguna: **sesi perancangan visual, perancangan isi, dan sebagainya dilewati begitu saja**. Maka:
+> - **JANGAN** menyalin deck ini atau jalannya proses ini sebagai contoh produksi.
+> - **JANGAN** menganggap urutan/keputusan di repo deck ini sebagai pola ideal.
+> - Ambil **hanya** pelajaran anti-pola di bawah (yaitu "jangan lakukan X"); lalu produksi berikutnya wajib mengikuti alur penuh `_sistem/01–10` + gerbang **G1/G2/G3**, dengan **sesi perancangan isi dan perancangan visual yang benar-benar dilakukan bersama pengguna dan disetujui eksplisit SEBELUM build**.
+> Dokumen ini berstatus *catatan kegagalan + pelajaran*, bukan *contoh keberhasilan*.
+
 > Ditulis 5 Sep 2026 setelah pengguna melihat v1 di PowerPoint dan memberi umpan balik jujur.
 > Tujuan: agar deck berikutnya langsung bagus, tidak mengulang kelemahan v1.
+
+## Cacat proses pembuatan (alasan deck ini BUKAN sample)
+1. **Sesi perancangan isi & perancangan visual dilewati/diremehkan** — tidak benar-benar dirancang bersama pengguna sebelum build; akibatnya revisi bolak-balik (v1–v7).
+2. Kedalaman isi baru dipenuhi setelah beberapa kali keluhan ("isi terlalu ringkas", lalu "isi lebih panjang sesuai tesis") — seharusnya ditangkap di sesi perancangan isi.
+3. Ada keputusan yang seharusnya gerbang approval eksplisit tetapi berjalan terlalu cepat tanpa diskusi desain yang memadai.
+4. Sebagian konten (heading السؤال الثاني) masih rekonstruksi berlabel, bukan verbatim — produksi diajukan sebelum bahan tuntas.
+→ Deck berikutnya: lakukan Tahap 1–3 (Brief → Pahami bahan → **Outline+Rencana Visual dengan sesi perancangan isi & visual bersama pengguna**) secara penuh, baru build.
 
 ## Umpan balik pengguna (verbatim inti)
 - "Keliatannya ga bagus."

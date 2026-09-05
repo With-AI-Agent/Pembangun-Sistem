@@ -1,7 +1,7 @@
 # 01 — Aturan Desain, Kedalaman Isi, dan Gambar (Sistem Presentasi)
 
 > **Dokumen instruksi AKTIF & SELF-CONTAINED.** Ini aturan yang benar-benar dipakai saat memproduksi deck. Ia sengaja berada **di dalam folder sistem** (bukan di `_meta/`) karena setiap sistem akan diunduh dan dipakai sebagai repo standalone. Rujukan `_meta/` di sini hanya *provenance*.
-> Pelajaran nyata dari deck #1 (tesis fikih hiasan wanita, 5 Sep 2026) sudah dimasukkan ke sini.
+> Pelajaran nyata dari deck #1 (tesis fikih hiasan wanita, 5 Sep 2026) sudah dimasukkan ke sini sebagai ATURAN. **Deck #1 dan prosesnya BUKAN sample/contoh** — lihat `PELAJARAN_DECK_01.md` (catatan kegagalan). Yang dipakai hanya aturan di dokumen ini, bukan menyalin deck #1.
 
 ## A. Kedalaman Isi (menjawab "isi terlalu ringkas")
 1. **Mulai dari temuan/kesimpulan, bukan metode.** Audiens sidang ingin hasil dulu; metode cukup 1–2 slide.
@@ -40,6 +40,11 @@ Setiap gambar (M1/M3/M4) wajib tercatat di `DAFTAR_GAMBAR.md`: mode, sumber/lise
 
 ## E2. Rujukan lanjutan (WAJIB dibaca bersama dokumen ini)
 - **`02_KNOWLEDGE_DESIGN_VISUAL.md`** memuat: prinsip desain inti hasil riset, aturan **aspect-ratio** (jangan stretch gambar), aturan **bidi/tanda baca Arab**, **mode bullet vs paragraf**, **checklist multi-skill**, dan **mandat riset visual**. Semua itu mengikat sama seperti dokumen ini.
+
+## F. Sesi perancangan isi & visual (WAJIB — anti-pola deck#1)
+1. **Sebelum build**, wajib ada sesi perancangan ISI (kedalaman, urutan, porsi temuan vs metode) dan sesi perancangan VISUAL (palet, tipografi, layout, mode gambar) yang **dilakukan bersama pengguna dan disetujui eksplisit** (gerbang G2). Melewati/mengeremehkan sesi ini = cacat proses (deck#1 melakukannya; jangan ulangi).
+2. Revisi isi berulang (v1–v7 pada deck#1) adalah gejala perancangan isi yang dilewati — cegah di hulu, bukan dengan revisi hilir.
+3. Bahan yang belum tuntas (mis. kutipan belum verbatim) wajib **berlabel jujur** dan tidak diajukan sebagai final tanpa persetujuan pengguna.
 
 ## E. Verifikasi sebelum diajukan
 1. Baca-balik `.pptx` (struktur, rtl, font, tabel, notes).

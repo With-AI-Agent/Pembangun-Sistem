@@ -11,7 +11,7 @@ sistem-presentasi/
 ├── START_DI_SINI.md            ← file ini
 ├── SYSTEM_MANIFEST.md          ← identitas & kontrak
 ├── 00_RENCANA_KERANGKA.md      ← rencana dokumen (sejarah/perancangan)
-├── PELAJARAN_DECK_01.md        ← pelajaran dari deck nyata #1
+├── PELAJARAN_DECK_01.md        ← catatan kegagalan+pelajaran deck #1 (**BUKAN sample**)
 ├── _sistem/
 │   ├── 01_ATURAN_DESIGN_ISI_GAMBAR.md  ← aturan AKTIF (isi, desain, gambar, portabilitas)
 │   ├── 02_KNOWLEDGE_DESIGN_VISUAL.md   ← basis pengetahuan desain + akumulasi riset + bahasa + layout
@@ -61,4 +61,4 @@ PYTHONPATH=/tmp/pptxlib python3 export_html.py
 Di lingkungan lmarena, viewer/preview TIDAK bisa unduh biner dan link web dipagari token; jalur unduh yang didukung = **GitHub** (halaman file → Download raw). Setelah dijadikan repo sendiri, gunakan mekanisme repo itu.
 
 ## Status
-**Struktur lengkap sesuai rencana kerangka** (diverifikasi `validate_system.py` exit 0, 5 Sep 2026): `_sistem/01–10`, `_generator/G1–G3`, `_template/T1–T9`, acceptance tests, validator, QA per-produksi. Alur inti terbukti pada deck nyata #1. Yang inherently butuh manusia: tinjauan bahasa asli & approval gerbang (by design).
+**Struktur lengkap sesuai rencana kerangka** (diverifikasi `validate_system.py` exit 0, 5 Sep 2026): `_sistem/01–10`, `_generator/G1–G3`, `_template/T1–T9`, acceptance tests, validator, QA per-produksi. **Deck nyata #1 HANYA unit kerja & sumber pelajaran anti-pola — BUKAN sample/contoh** (prosesnya cacat: sesi perancangan isi & visual dilewati; lihat `PELAJARAN_DECK_01.md`). Yang inherently butuh manusia: tinjauan bahasa asli & approval gerbang (by design).
