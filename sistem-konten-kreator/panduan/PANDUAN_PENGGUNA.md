@@ -22,12 +22,10 @@ Sebelum melakukan apa pun:
 1. Baca `_sistem/START_DI_SINI.md` dan `_sistem/00_CARA_PAKAI_SISTEM.md`
 2. Deteksi kondisi branch saat ini (baru/kosong vs lama/ada progres?)
 3. Cek dan laporkan status semua PR yang masih terbuka
-4. Tanyakan: "Apa tujuan sesi ini?" (misal: mulai dari nol, buat channel baru,
-   produksi konten, revisi, diskusi, cek konsistensi, atau lainnya)
-5. Berdasarkan jawaban, baca sendiri file sistem yang relevan — TANPA
-   perlu aku tempel manual isinya
-6. Jangan mulai eksekusi/menulis file apa pun sebelum aku konfirmasi tujuan
-   sesi ini sudah jelas
+4. Cari file `LOG_SESI_*.md` terbaru (root repo / folder sistem / folder unit kerja). Kalau keadaannya `OPEN`, BACA dan laporkan keadaan sesi sebelumnya SEBELUM bertanya tujuan sesi — jangan tanya ulang konteks yang sudah tercatat di sana
+5. Tanyakan: "Apa tujuan sesi ini?" (misal: mulai dari nol, buat channel baru, produksi konten, revisi, diskusi, cek konsistensi, atau lainnya)
+6. Berdasarkan jawaban, baca sendiri file konteks wajib untuk jenis sesi itu — pakai tabel "Konteks Wajib per Jenis Sesi" di `_sistem/00_CARA_PAKAI_SISTEM.md`, bukan tafsiran bebas soal apa yang relevan. Sebutkan file kondisional yang kamu lewati beserta alasannya. TANPA perlu aku tempel manual isinya
+7. Jangan mulai eksekusi/menulis file apa pun sebelum aku konfirmasi tujuan sesi ini sudah jelas
 
 Setelah itu, bawa aku langsung ke langkah yang tepat sesuai tujuan.
 ```
@@ -44,11 +42,13 @@ Sebelum menutup sesi — mau merge, mau jeda, atau sesi sudah panjang — tempel
 Tutup sesi ini dengan benar:
 1. Update STATUS.md unit kerja yang disentuh (tahap selesai, tahap
    berikutnya, waktu pembaruan).
-2. Cek working tree: semua perubahan WAJIB ter-commit dan ter-push —
+2. Tutup log sesi ini (LOG_SESI_YYYY-MM-DD.md): isi final "Keadaan Sesi"
+   (yang selesai, yang terbuka, langkah berikutnya) dan tandai CLOSED.
+3. Cek working tree: semua perubahan WAJIB ter-commit dan ter-push —
    tanpa itu sesi baru tidak bisa melanjutkan.
-3. Ringkaskan kondisi akhir: commit terakhir, status PR, dan langkah
+4. Ringkaskan kondisi akhir: commit terakhir, status PR, dan langkah
    aman berikutnya.
-4. Kalau aku mau merge PR: pastikan semua sudah push SEBELUM merge —
+5. Kalau aku mau merge PR: pastikan semua sudah push SEBELUM merge —
    setelah merge/close, sesi ini TIDAK BISA push lagi (batasan
    platform); kerja lanjutan harus dari sesi baru yang dibuka dari main.
 ```
