@@ -28,6 +28,8 @@ for idx,s in enumerate(prs.slides,1):
                 bullets+=lines
     try: note=s.notes_slide.notes_text_frame.text
     except Exception: note=""
+    if idx==1 and not title and bullets:
+        title=bullets.pop(0)
     h=f'<section class="slide"><div class="band"></div>'
     h+=f'<h2>{esc(title)}</h2><div class="rule"></div>'
     if bullets:
@@ -37,14 +39,14 @@ for idx,s in enumerate(prs.slides,1):
         for r in range(len(table.rows)):
             h+='<tr>'+''.join(f'<th>{esc(table.cell(r,0).text)}</th><td>{esc(table.cell(r,1).text)}</td>' if r else f'<th>{esc(table.cell(r,0).text)}</th><th>{esc(table.cell(r,1).text)}</th>')+'</tr>'
         h+='</table>'
-    if foot: h+=f'<span class="foot">{esc(foot)}</span>'
     if note: h+=f'<p class="note">🗒 {esc(note)}</p>'
-    h+=f'<span class="no">{idx}</span></section>'
+    h+=f'<div class="fbar"><span class="fnum">{idx}</span><span class="fsrc">{esc(foot)}</span></div></section>'
     parts.append(h)
 
 css=f"""body{{margin:0;background:#2b2b2b;font-family:'Amiri','Traditional Arabic',serif}}
-.slide{{position:relative;background:{CREAM};max-width:960px;margin:24px auto;padding:48px 64px 64px;direction:rtl;text-align:right;box-shadow:0 6px 24px rgba(0,0,0,.5);min-height:480px}}
-.band{{position:absolute;top:0;left:0;width:14px;height:100%;background:{GREEN}}}
+.slide{{position:relative;background:{CREAM};max-width:960px;margin:24px auto;padding:48px 64px 70px;direction:rtl;text-align:right;box-shadow:0 6px 24px rgba(0,0,0,.5);min-height:500px}}
+.band{{position:absolute;top:0;right:0;width:14px;height:100%;background:{GREEN};box-shadow:-5px 0 0 {GOLD}}}
+.fbar{{position:absolute;bottom:0;left:0;right:0;height:34px;background:{GREEN};display:flex;align-items:center;justify-content:space-between;padding:0 20px;color:{GOLD};font-size:13px}}
 h2{{color:{GREEN};font-size:26px;margin:0 0 4px}}
 .rule{{width:55%;height:4px;background:{GOLD};margin:0 0 20px}}
 ul{{list-style:none;padding:0;margin:0}}

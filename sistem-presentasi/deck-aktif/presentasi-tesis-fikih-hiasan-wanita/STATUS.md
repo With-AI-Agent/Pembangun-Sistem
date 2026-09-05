@@ -2,8 +2,8 @@
 
 - **Status:** `completed` — G1, G2, G3 **semua disetujui** (5 Sep 2026)
 - **Level pemeriksaan:** `Sedang`
-- **Tahap terakhir selesai:** Tahap 4 — `keluaran/presentasi-...-hiasan-wanita.pptx` (13 slide RTL) + `keluaran/preview.html`; diverifikasi baca-balik (13 slide, rtl=1, font Amiri+ea, tabel 6×2, notes)
-- **Tahap berikutnya:** setelah G3 disetujui → selesai / iterasi revisi
+- **Tahap terakhir selesai:** Tahap 4 — v1 disetujui G3, lalu **v2** dibangun menanggapi umpan balik (desain+rebalance isi); `build_deck_v2.py` + `preview.html` diperbarui; pelajaran dicatat di `sistem-presentasi/PELAJARAN_DECK_01.md`
+- **Tahap berikutnya:** pengguna mengunduh v2 via GitHub & menilai; iterasi bila perlu
 - **Output resmi:** belum ada berkas `.pptx`/`.html`
 - **Sumber konteks yang dibaca:** `bahan/tesis.pdf` hal 6,21,23,66,88,89,90,151,152 via visi; pesan pemilik; `00_RENCANA_KERANGKA.md`; `SYSTEM_MANIFEST.md`
 - **Gerbang:**

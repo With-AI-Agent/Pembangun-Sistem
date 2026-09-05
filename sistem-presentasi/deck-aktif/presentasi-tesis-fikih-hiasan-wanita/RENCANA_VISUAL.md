@@ -18,7 +18,7 @@
 
 ## Tipografi `[REKOMENDASI, dasar: PENILAIAN AGENT]`
 - Font Arab: **Amiri** (judul) + **Scheherazade/New Roman Arab** (isi) bila tersedia; fallback: font Arab bawaan PowerPoint (Traditional Arabic). Karena `.pptx` hanya menyimpan nama font, PowerPoint yang mengganti bila tak ada.
-- Ukuran: judul ≥ 28pt, isi ≥ 20pt (aturan lantai "font minimum terbaca").
+- Ukuran (dinaikkan di v2): judul 34–40pt, isi 24–26pt (v1 terlalu kecil → terkesan belum jadi).
 
 ## Tata letak / geometri `[DIPUTUSKAN dari aturan G-2]`
 - **RTL:** semua paragraf `rtl=1`, rata-kanan; judul di kanan-atas.
@@ -33,3 +33,4 @@
 | Tanggal | Keputusan | Dasar | Oleh |
 |---|---|---|---|
 | 2026-09-05 | M0 default; S8 tabel; palet A default; font Amiri | PENILAIAN AGENT + Mayer | agent (menunggu approval G2) |
+| 2026-09-05 | v2: font isi 24–26, anchor MIDDLE, footer bar+nomor+ sumber, spine emas, rebalance isi ke temuan | Umpan balik pengguna (deck#1) | agent |
