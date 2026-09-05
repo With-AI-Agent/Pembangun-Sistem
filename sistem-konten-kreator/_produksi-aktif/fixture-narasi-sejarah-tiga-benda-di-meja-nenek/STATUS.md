@@ -1,6 +1,6 @@
 # Status Produksi — Narasi Sejarah (fixture) — Tiga Benda di Meja Nenek
 
-> **FIXTURE UJI** untuk AT-KK-05/05b (`sistem-konten-kreator/ACCEPTANCE_TESTS.md`). Mengikuti `_sistem/STATUS_TEMPLATE.md` versi 2026-09-04 (approval per kode gerbang + field sumber eksternal).
+> **FIXTURE UJI** untuk AT-KK-05/05b (`sistem-konten-kreator/ACCEPTANCE_TESTS.md`). Mengikuti `_sistem/STATUS_TEMPLATE.md` versi 2026-09-05 (approval per kode gerbang + field sumber eksternal + field checkpoint). State Tahap 3 ini **disiapkan ulang 2026-09-05** (gulung-ulang dari hasil Run 2/3; lihat `UJI_F7_CLEAN_RUN_2026-09-05.md`).
 
 - **Status:** `in-progress`
 - **Channel:** `sistem-konten-kreator/channel-fixture-narasi-sejarah/` (v1, `Operational`)
@@ -29,11 +29,11 @@
   - `G2 naskah final (Tahap 3):` **belum**
   - `G2 breakdown (Tahap 4):` belum — tahapnya belum dijalankan
   - `G3 merge:` belum
-- **Commit terakhir:** `55cd86bfdb49b97895e486dcd071dab74fe6c932` — commit terakhir yang menyimpan **output produksi** (`naskah-draft.md`). Verifikasi: `git log -1 --format=%H -- sistem-konten-kreator/_produksi-aktif/fixture-narasi-sejarah-tiga-benda-di-meja-nenek/naskah-draft.md`. *(Field ini sengaja menunjuk commit output, bukan commit `STATUS.md` sendiri — `STATUS.md` berubah lebih sering, jadi angka di sini tidak perlu ikut berubah setiap status diperbarui.)*
+- **Commit terakhir:** `706060d391753e97954a49ccd6275ec8d061ff22` — commit terakhir yang menyimpan **output produksi** (`naskah-draft.md`). Verifikasi: `git log -1 --format=%H -- sistem-konten-kreator/_produksi-aktif/fixture-narasi-sejarah-tiga-benda-di-meja-nenek/naskah-draft.md`. *(Field ini sengaja menunjuk commit output, bukan commit `STATUS.md` sendiri — `STATUS.md` berubah lebih sering, jadi angka di sini tidak perlu ikut berubah setiap status diperbarui.)*
 - **PR terkait:** tidak ada
 - **Pekerjaan belum tersimpan:** `Tidak ada`
 - **Risiko atau blocker:** Naskah **belum** berstatus final. G1 Tahap 3 hanya izin melanjutkan, bukan penguncian isi (lihat definisi G1/G2 di `_sistem/00_CARA_PAKAI_SISTEM.md`). Breakdown Tahap 4 boleh disiapkan sebagai draft, tapi tidak boleh dikunci atau dipakai untuk generate asset sebelum G2 naskah final diberikan.
-- **Waktu pembaruan:** 2026-09-04
+- **Waktu pembaruan:** 2026-09-05
 
 ## Aturan
 
