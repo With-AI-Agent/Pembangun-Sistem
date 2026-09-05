@@ -14,7 +14,10 @@ sistem-presentasi/
 ├── PELAJARAN_DECK_01.md        ← pelajaran dari deck nyata #1
 ├── _sistem/
 │   ├── 01_ATURAN_DESIGN_ISI_GAMBAR.md  ← aturan AKTIF (isi, desain, gambar, portabilitas)
-│   └── 02_KNOWLEDGE_DESIGN_VISUAL.md   ← basis pengetahuan desain + akumulasi riset + bahasa + layout
+│   ├── 02_KNOWLEDGE_DESIGN_VISUAL.md   ← basis pengetahuan desain + akumulasi riset + bahasa + layout
+│   ├── 03_MEMAHAMI_KBUTUHAN_DAN_TUJUAN.md ← wajib: tangkap verbatim kebutuhan/tujuan + purpose-fit
+│   ├── 04_QA_PRODUKSI.md               ← QA SETIAP produksi (otomatis + gerbang manusia)
+│   └── qa_deck.py                      ← cek otomatis per-produksi (exit≠0 bila gagal)
 └── deck-aktif/<nama-deck>/
     ├── bahan/                  ← sumber (PDF/dok)
     ├── BRIEF.md, PEMAHAMAN_BAHAN.md, CHECKLIST_CAKUPAN.md, OUTLINE.md,

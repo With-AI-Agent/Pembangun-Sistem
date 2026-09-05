@@ -87,7 +87,7 @@
 
 ## Acceptance
 
-- [ ] Semua dokumen wajib tersedia — **sebagian**: `_sistem/01`+`02`+`START_DI_SINI.md` sudah (5 Sep 2026); `_sistem/03`–`08`, `_generator/G1`–`G3`, `_template/T1`–`T9` masih direncanakan
+- [ ] Semua dokumen wajib tersedia — **sebagian**: `_sistem/01`–`04` + `START_DI_SINI.md` + `qa_deck.py` sudah (5 Sep 2026); `_sistem/05`+, `_generator/G1`–`G3`, `_template/T1`–`T9` masih direncanakan
 - [ ] Semua dependency valid — **sebagian**: keempat library terbukti bisa diinstall, tapi belum ada skrip yang memasang dan memverifikasinya sebagai bagian sistem
 - [ ] Status dan versi sudah diperbarui — ya, `0.1.0-kerangka` / `Proposed`
 - [ ] Approval yang diperlukan sudah ada — **sebagian**: `00_RENCANA_KERANGKA.md` disetujui; proposal Q-O2/Q-O3 **belum**
