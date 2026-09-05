@@ -49,6 +49,12 @@ Lokasi **draft proposal** belum dikontrakkan di repo: pada run 3 Sep, proposal K
 
 Keempat hal di atas **bukan sampah sejarah**: celah Q-O2 dan Q-O3 ada di protokol yang akan dipakai juga oleh sistem baru (`sistem-presentasi/`), karena sistem itu akan memakai checkpoint berbasis `STATUS.md`. Menutup Q-O2/Q-O3 adalah pekerjaan meta-sistem, bukan pekerjaan sistem domain — jadi dicatat di sini supaya tidak hilang lagi.
 
+## Tambahan 5 Sep 2026 (sesi `arena/01a0727c-pembangun-sistem`)
+
+- **`run-awal-01a0679e/` ditambahkan.** Verifikasi ulang dengan `git ls-tree -r` + SHA-256 menemukan bahwa arsip di atas hanya byte-identik dengan branch `01a067e8` (run lanjut, 311 baris); run awal `01a0679e` punya 3 file berbeda versi (OUTPUT 87 baris, STATUS 36, SUMBER 62 — `SESSION_REPORT` identik). Ketiga file versi awal itu kini diselamatkan byte-per-byte (via `git show tmp/01a0679e:<path>`, tanpa diedit) supaya penghapusan kedua branch yatim (temuan M-18 audit meta 5 Sep, didelegasikan pengguna 5 Sep) bisa **nol kehilangan**.
+- **Status 4 celah yang dicatat di atas:** Q-O2 dan Q-O3 **DITUTUP 5 Sep 2026** di `main` (PR #11, temuan F16 + penutupan Q-O2/Q-O3). K-P4 dan K-P5 belum ada keputusan — tetap terbuka, catatan ini tetap berlaku.
+- **Nasib kedua branch:** dihapus dari remote **setelah** commit penyelamatan ini ter-merge ke `main` (urutan disepakati: aman dulu, baru hapus).
+
 ## Yang sengaja TIDAK dilakukan
 
 - **Branch `arena/01a0679e` dan `arena/01a067e8` tidak dihapus.** Menghapus branch remote tidak bisa dibatalkan, dan tidak perlu buru-buru: setelah arsip ini masuk, branch itu redundan, jadi menghapusnya kapan pun nanti tidak menghilangkan apa pun. Keputusan dipegang pengguna.
