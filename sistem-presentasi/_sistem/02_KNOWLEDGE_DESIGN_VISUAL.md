@@ -34,6 +34,31 @@ Sebelum G3, agent wajib memeriksa ia telah memakai: **keilmuan/akademik** (isi a
 - Agent **wajib** melakukan riset internet tentang desain/komunikasi visual bila ragu atau saat menaikkan kualitas (web_search/fetch). Hasil riset yang terpakai dicatat ke dokumen ini (dengan sumber) agar menumpuk jadi pengetahuan sistem.
 - Sumber seed: [1] deckary.com (5 prinsip PPT), [2] chroniclehq.com, [3] study.com, [4] slideshare CRAP, [5] mauriziolacava.com (Gestalt).
 
+## F2. Akumulasi pengetahuan (riset tidak ulang dari nol) — dinyatakan pengguna 5 Sep 2026, diterima dgn penyaring
+- Setiap hasil riset visual **wajib didokumentasikan ke dokumen ini**, bukan hanya dipakai di sesi itu.
+- Cara menambah: **distil** jadi 1–2 kalimat prinsip + sumber + tanggal → tempel di bagian terkait + satu baris di Log. Jangan dump mentah.
+- Agent sesi berikutnya **wajib baca dokumen ini dulu** dan hanya meriset yang BELUM tercakup; hasil baru ditambahkan di sini.
+- Penyaring: tandai & putuskan bila ada kontradiksi antar-sumber; buang yang terbukti salah (catat alasan di Log).
+
+## G. Bahasa & harakat (bug deck#1: harokat/kata)
+- Untuk deck berbahasa sumber (mis. Arab): **utamakan frasa verbatim dari bahan** (via visi) daripada mengarang kalimat sendiri.
+- **Hilangkan tashkeel/harakat** dari teks yang kita susun — slide profesional umumnya tanpa harakat; harakat yang salah lebih buruk daripada tanpa. `build_deck_v*.py` menerapkan sanitizer tashkeel otomatis.
+- Jaga komposisi sederhana & idiomatik; hindari konstruksi kaku.
+- Deck berisiko tinggi (sidang, publik): ajukan **tinjauan penutur asli** sebagai approval kecil sebelum G3.
+
+## H. Library layout kaya (menjawab "slide dashboard / banyak objek")
+pptx BISA kaya seperti HTML bila polanya diencode. Gunakan `MSO_SHAPE.ROUNDED_RECTANGLE` utk kartu bersudut tumpul; kontras warna sebagai pengganti shadow (python-pptx tak andal utk shadow).
+| Pola | Kapan | Primitive |
+|---|---|---|
+| Kartu/KPI dashboard | beberapa metrik/konsep sejajar | grid ROUNDED_RECTANGLE, tiap kartu: judul+desk |
+| Multi-kolom | membandingkan 2–3 hal | 2–3 text-box sejajar |
+| Gambar+teks | ilustrasi mendampingi narasi | gambar parsial satu sisi + teks sisi lain |
+| Tabel perbandingan | data kategorikal | add_table |
+| Alur/proses | urutan langkah | kartu berurutan + panah (connector/chevron) |
+| Kutipan/assertion besar | satu pesan kuat | satu text-box besar di tengah |
+- Sudut tumpul: ROUNDED_RECTANGLE (set adjustment bila perlu). Jangan semua kotak tajam.
+- Rapikan dengan grid & alignment (A.1); jaga whitespace (A.3).
+
 ## Log
 | Tanggal | Keputusan | Oleh |
 |---|---|---|
