@@ -68,4 +68,4 @@
 3. Kepada majelis/lembaga fikih: mengikuti setiap hal baru terkait hiasan wanita dan menjelaskan hukumnya.
 
 ---
-**Catatan integritas:** kartu 7 (العلة) dibaca penuh dari hal 66; hal 67 berisi rincian lanjutan yang belum dibaca — bila slide butuh detail mazhab tambahan, baca hal 67 dulu. Semua kartu lain dibaca penuh dari halaman yang disebut.
+**Catatan integritas:** semua kartu dibaca penuh dari halaman yang disebut, **termasuk kartu 7 (العلة) hal 66–67**. Catatan lama "hal 67 belum dibaca" **tidak benar** — halaman 67 sudah dibaca via visi dan isinya cocok dengan kartu 7 (rincian per mazhab + kesimpulan penulis + hadits wanita); diverifikasi ulang saat audit independen 5 Sep 2026 (`_meta/_internal/AUDIT_SISTEM_PRESENTASI_2026-09-05.md`, AP-03).

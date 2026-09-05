@@ -1,6 +1,6 @@
 # BRIEF — Presentasi Tesis Fikih Hiasan Wanita
 
-> **Status:** draft Tahap 1 — menunggu konfirmasi pengguna di **G2**. Field bertanda `[REKOMENDASI]` adalah pilihan yang agent sarankan (dengan dasar); field `[DIPUTUSKAN]` sudah pasti dari pemilik tesis/pengguna. Boleh diubah; perubahan dicatat di Log Keputusan.
+> **Status:** final — G1/G2/G3 **disetujui** (5 September 2026); deck `completed` (v7). Field bertanda `[REKOMENDASI]` adalah pilihan yang agent sarankan (dengan dasar); field `[DIPUTUSKAN]` sudah pasti dari pemilik tesis/pengguna. Boleh diubah; perubahan dicatat di Log Keputusan.
 >
 > **Sumber brief:** pesan pemilik tesis (bahasa Arab) yang sampai di chat 4 Sep 2026 + `00_RENCANA_KERANGKA.md`.
 > **Bahan:** `bahan/tesis.pdf` (161 halaman, Arab). Jejak: commit GitHub `486246e`.
@@ -9,6 +9,7 @@
 
 - **Nama deck (slug):** `presentasi-tesis-fikih-hiasan-wanita` `[REKOMENDASI, dasar: PENILAIAN AGENT]` — dipakai kata "hiasan", **bukan** "zina", karena `زينة` = hiasan/adornment; "zina" dalam bahasa Indonesia berarti hal lain (false friend). Boleh diganti.
 - **Topik:** أحكام النوازل الفقهية المعاصرة المتعلقة بزينة المرأة — hukum kontemporer fikih terkait hiasan wanita, dalam empat mazhab.
+- **Perkataan pemilik (verbatim) (\*):** `PERKATAAN_PEMILIK_VERBATIM.md` (kiriman 2, 5 Sep 2026) — file baku deck sesuai `_sistem/03` A.1.
 - **Pemilik keputusan:** pengguna (dan pemilik tesis untuk isi).
 
 ## Tujuan & audiens `[DIPUTUSKAN dari pesan pemilik]`
@@ -58,4 +59,5 @@ Urutan slide mengikuti daftar pemilik (nomor = halaman cetak tesis):
 | Tanggal | Keputusan | Dasar | Oleh |
 |---|---|---|---|
 | 4 Sep 2026 | Brief dibuat dari pesan pemilik; struktur 13 slide | pesan pemilik | agent |
+| 5 Sep 2026 | Header status disinkronkan (G1/G2/G3 disetujui; AP-05); rujukan verbatim ke `PERKATAAN_PEMILIK_VERBATIM.md` dirapikan (AP-09) | audit independen `AUDIT_SISTEM_PRESENTASI_2026-09-05.md` | agent (audit) |
 | 4 Sep 2026 | Slug pakai "hiasan" bukan "zina"; sumber tunggal tesis; M0+M1 | PENILAIAN AGENT | agent (menunggu konfirmasi pengguna) |
