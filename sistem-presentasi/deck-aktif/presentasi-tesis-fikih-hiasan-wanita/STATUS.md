@@ -2,8 +2,8 @@
 
 - **Status:** `completed` — G1, G2, G3 **semua disetujui** (5 Sep 2026)
 - **Level pemeriksaan:** `Sedang`
-- **Tahap terakhir selesai:** Tahap 4 — iterasi v1→v2→**v3**. v3 menanggapi umpan balik "isi & desain ringkas, tanpa gambar": 14 slide, isi diperdalam (sub-poin, temuan di depan), gambar M3 dipasang parsial (pita kanan, tanpa teks) + `DAFTAR_GAMBAR.md`. Sistem dimaksimalkan: prinsip self-contained ditanam di `_meta` + manifest; dokumen instruksi pertama `_sistem/01_ATURAN_DESIGN_ISI_GAMBAR.md` dibuat.
-- **Tahap berikutnya:** pengguna mengunduh v3 via GitHub & menilai; sisa maksimasi: `_sistem/02..`, `_template/`, `_generator/`, START_DI_SINI.md
+- **Tahap terakhir selesai:** SIMULASI AT-SP-15 (perkataan pemilik kiriman 2) → deck **v6**: struktur pemilik persis (satu bagian=satu slide), Q1–Q3 digabung satu slide tanpa jawaban (Q1/Q3 verbatim via visi; Q2 rekonstruksi berlabel). QA exit 0.
+- **Tahap berikutnya:** G3 menunggu approval pemilik; pemilik akan menambah butir kemudian; Q2 & nama pembimbing menunggu tinjauan.
 - **Output resmi:** belum ada berkas `.pptx`/`.html`
 - **Sumber konteks yang dibaca:** `bahan/tesis.pdf` hal 6,21,23,66,88,89,90,151,152 via visi; pesan pemilik; `00_RENCANA_KERANGKA.md`; `SYSTEM_MANIFEST.md`
 - **Gerbang:**

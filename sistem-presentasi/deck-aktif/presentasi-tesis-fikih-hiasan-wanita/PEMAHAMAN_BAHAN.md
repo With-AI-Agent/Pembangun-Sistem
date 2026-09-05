@@ -33,9 +33,11 @@
 ## 5. Metode (منهج البحث) — hal 23  `[visi]`
 - Deskriptif-komparatif (menelusuri pendapat fuqaha 4 mazhab dari kitab mu'tamad + karya kontemporer); induktif (استقرائي); deduktif (استنباطي). Kadang disebut mazhab Zhahiri.
 
-## 6. Pertanyaan penelitian (أسئلة البحث) — diajukan di Bab 1, dijawab di Bab 4 (mulai hal 90)  `[visi hal 90]`
-- **السؤال الأول** (hal 90): "ما حكم استعمال أدوات التجميل المعاصرة للمرأة في المذاهب الأربعة؟"
-- Struktur: Bab 4 = "الإجابات عن الأسئلة المطروحة في الباب الأول". Pertanyaan bersesuaian 1:1 dengan 4 **tujuan** (hal 21) — jadi daftar pertanyaan dapat direkonstruksi dari tujuan, dan jawabannya ada di Bab 4. *Enumerasi heading "السؤال" via ekstraksi teks gagal (teracak); rekonstruksi dari tujuan adalah jalur yang dapat dipertanggungjawabkan.*
+## 6. Pertanyaan penelitian (أسئلة البحث) — Bab 4; pemilik minta HANYA soal (Q1–Q3), tanpa jawaban, satu slide
+- **السؤال الأول** (hal 90, verbatim): "ما حكم استعمال أدوات التجميل المعاصرة للمرأة في المذاهب الأربعة؟"
+- **السؤال الثالث** (hal 146, verbatim): "ما حكم التعامل مع المرأة في زينتها بيعا وتجميلا وطبا في المذاهب الأربعة؟"
+- **السؤال الثاني** (hal ~142, **direkonstruksi dari tujuan**, heading belum terbaca verbatim): "ما حكم عمليات التجميل للمرأة في المذاهب الأربعة؟" — **tunggu tinjauan pemilik** sebelum dikunci.
+- Catatan: heading "السؤال" tak terdeteksi via ekstraksi (teracak); diperoleh via visi. Jawaban Q1 sangat panjang (90–14x), jadi Q2/Q3 berada di akhir Bab 4.
 
 ## 7. Alasan pengharaman menyambung rambut (العلة في تحريم وصل الشعر) — hal 66–67  `[visi hal 66+67]`
 - Mazhab **sepakat** bolehnya menyambung dengan **bukan** rambut manusia (bila bersih/tidak najis).
