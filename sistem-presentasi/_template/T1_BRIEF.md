@@ -2,7 +2,7 @@
 > Fail-closed: produksi terlarang selama field wajib (*) kosong. Log Keputusan di bawah.
 
 - **Nama deck/slug (*):**
-- **Perkataan pemilik (verbatim) (*):**
+- **Perkataan pemilik (verbatim) (*):** `PERKATAAN_PEMILIK_VERBATIM.md` (file baku deck — isi verbatim di sana, bukan di sini; 03.A.1)
 - **Tujuan pakai (*):**
 - **Audiens (*):**
 - **Durasi & jumlah slide (*):**

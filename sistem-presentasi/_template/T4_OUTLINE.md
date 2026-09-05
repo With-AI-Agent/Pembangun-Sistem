@@ -9,3 +9,7 @@
 - **Catatan pembicara (→notes):**
 
 *(ulang per slide)*
+
+## Log Keputusan
+| Tanggal | Keputusan | Dasar | Oleh |
+|---|---|---|---|
