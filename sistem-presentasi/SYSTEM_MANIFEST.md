@@ -8,10 +8,10 @@
 - **Tujuan utama:** Mengubah bahan (dokumen pengguna, atau topik yang perlu diriset) menjadi berkas presentasi yang setia pada sumbernya, strukturnya berbasis bukti, tampilannya konsisten, dan prosesnya bisa dilanjutkan sesi lain
 - **Pengguna/consumer:** Pemakai = pengguna repo ini. Consumer hasil akhir = audiens presentasi (misal dosen penguji sidang skripsi)
 - **Pemilik keputusan:** Pengguna repo ini
-- **Versi:** `0.2.0`
-- **Status:** `Built & terverifikasi` — kerangka disetujui 4 Sep 2026; dokumen instruksi aktif lengkap; **merge ke main diminta pengguna 5 Sep 2026** setelah koreksi "deck#1 bukan sample"
+- **Versi:** `0.3.0`
+- **Status:** `Built & terverifikasi; teraudit 1x` — kerangka disetujui 4 Sep 2026; dokumen instruksi aktif lengkap; **merge ke main diminta pengguna 5 Sep 2026** (PR #9); **audit independen Sedang selesai 5 Sep 2026** (sesi agent baru) — 11 temuan (2×P1 skrip, 3×P2 state deck, 6×P3) **semua diperbaiki di v0.3.0**; pegangan pengguna ditambahkan
 - **Tanggal dibuat:** 4 September 2026 (UTC)
-- **Audit terakhir:** 5 Sep 2026 — audit otomatis: `validate_system.py` exit 0, `qa_deck.py` 14 slide exit 0, `install_deps.sh` exit 0. Audit independen manusia: belum.
+- **Audit terakhir:** 5 Sep 2026 — (a) audit otomatis: `validate_system.py` exit 0, `qa_deck.py` 14 slide exit 0, `install_deps.sh` exit 0; (b) **audit independen Sedang** oleh sesi agent baru (`arena/01a0706d`): laporan `_meta/_internal/AUDIT_SISTEM_PRESENTASI_2026-09-05.md` — verifikasi: rebuild reproducible (konten identik), G-1 gambar bebas teks via visi, spot-check visi hal 6/66–67/151, commit jejak valid; temuan AP-01…AP-11 diperbaiki di v0.3.0.
 - **Quality protocol:** `_meta/QUALITY_ASSURANCE_AND_EVOLUTION.md` (default aktif)
 
 ## Bentuk Sistem
@@ -27,11 +27,12 @@
 ## Dokumen Navigasi
 
 - **Entry point:** `START_DI_SINI.md` — **sudah dibuat** (5 Sep 2026), self-contained agar sistem bisa diekstrak jadi repo tersendiri
+- **Pegangan pengguna:** `PANDUAN_PENGGUNA.md` + `PROMPT_ENTRI_UNIVERSAL.md` — **sudah dibuat** (5 Sep 2026, v0.3.0) sesuai `_meta/PANDUAN_PENGGUNA_TEMPLATE.md`: prompt pembuka universal (satu prompt → agent terorientasi penuh) + prompt penutup sesi
 - **Dokumen instruksi aktif:** `_sistem/01`–`10` **sudah ada** (5 Sep 2026): aturan desain/isi/gambar, knowledge desain+riset+bahasa+layout, paham kebutuhan/tujuan, QA per-produksi, anti-ngarang, desain berbasis bukti, mode gambar+lisensi, perancangan rekomendasi, pemahaman bahan, render+verifikasi. `_generator/G1–G3`, `_template/T1–T9`, `ACCEPTANCE_TESTS.md`, `validate_system.py` sudah ada.
-- **Living documents:** per deck: `BRIEF.md`, `OUTLINE.md`, `RENCANA_VISUAL.md`, `DAFTAR_GAMBAR.md`, `STATUS.md`. Lintas deck: tiap `PAKET_KETENTUAN` dan `ASET_GAYA`
+- **Living documents:** per deck: `BRIEF.md`, `OUTLINE.md`, `RENCANA_VISUAL.md`, `DAFTAR_GAMBAR.md`, `PERKATAAN_PEMILIK_VERBATIM.md`, `STATUS.md`. Lintas deck: tiap `PAKET_KETENTUAN` dan `ASET_GAYA`
 - **Log keputusan:** wajib ada di tiap living document di atas
-- **Ringkasan cadangan:** `_cadangan-claude/RINGKASAN_sistem-presentasi.md` — **belum dibuat** (dibuat setelah struktur stabil)
-- **Laporan audit:** belum ada. Diskusi awal tercatat di `DISKUSI_MENTAH_DISCOVERY_LEVEL_0.md`
+- **Ringkasan cadangan:** `_cadangan-claude/RINGKASAN_sistem-presentasi.md` — dibuat 5 Sep 2026 (dipindah ke lokasi root 5 Sep 2026, AP-10)
+- **Laporan audit:** `_meta/_internal/AUDIT_SISTEM_PRESENTASI_2026-09-05.md` (independen, Sedang, 5 Sep 2026). Diskusi awal tercatat di `DISKUSI_MENTAH_DISCOVERY_LEVEL_0.md`
 
 ## Prinsip
 
@@ -48,7 +49,7 @@
 
 ## Quality & Evolution
 
-- **Lapisan self-audit sistem:** baca ulang seluruh dokumen sistem, cross-check rujukan, jalankan `tools/validate_repo.py` **setelah cakupan validator diperluas** ke `sistem-presentasi/` (saat ini validator hanya memindai `_meta/*.md` + `PANDUAN_PENGGUNA.md` — jadi "VALIDATION PASSED" **belum** berarti dokumen sistem ini terperiksa)
+- **Lapisan self-audit sistem:** baca ulang seluruh dokumen sistem, cross-check rujukan, jalankan `tools/validate_repo.py` — **cakupan sudah diperluas** ke dokumen aktif `sistem-presentasi/` (root + `_sistem/` + `_generator/` + `_template/`, 5 Sep 2026, AP-11) + file root sistem masuk daftar `required` validator. Deck living documents tetap diperiksa oleh `validate_system.py` sistem ini (out of scope validator meta, sengaja).
 - **Lapisan verifikasi output:** 3 jalur, dan laporan **wajib menyebut jalur mana yang dipakai** — (a) struktural lewat kode: baca ulang `.pptx`, ukur teks vs placeholder, deteksi kemungkinan meluber, cek gambar tidak menimpa *text frame*; (b) preview HTML hampiran yang dibuka pengguna; (c) pengguna membuka sendiri berkas `.pptx`-nya. Jalur (b) dan (c) **bukan** render PowerPoint
 - **Trigger audit:** perubahan aturan di `_sistem/`; kegagalan acceptance test; keluhan pengguna atas hasil deck; sebelum status naik ke `Operational`
 - **Level audit default:** Sedang
@@ -91,5 +92,6 @@
 - [x] Semua dependency valid — `_sistem/install_deps.sh` memasang & memverifikasi python-pptx, Pillow, pypdf, python-docx, matplotlib (exit 0, 5 Sep 2026)
 - [x] Status dan versi sudah diperbarui — `0.2.0` / `Built & terverifikasi` (5 Sep 2026)
 - [x] Approval yang diperlukan sudah ada — kerangka disetujui 4 Sep 2026; **approval sistem = pengguna meminta merge ke main 5 Sep 2026**. Q-O2/Q-O3 tetap terbuka di level `_meta` (tidak memblokir sistem standalone ini)
-- [x] Audit terakhir tercatat — 5 Sep 2026 (otomatis: validate_system + qa_deck + install_deps, semua exit 0). Audit independen: belum
-- [x] Ringkasan cadangan sinkron — `_meta/_cadangan-claude/RINGKASAN_sistem-presentasi.md` dibuat 5 Sep 2026
+- [x] Audit terakhir tercatat — 5 Sep 2026 (otomatis: validate_system + qa_deck + install_deps, semua exit 0; **independen Sedang: 11 temuan diperbaiki di v0.3.0**)
+- [x] Ringkasan cadangan sinkron — `_cadangan-claude/RINGKASAN_sistem-presentasi.md` (root; dipindah dari `_meta/` 5 Sep 2026, AP-10)
+- [x] Pegangan pengguna tersedia di dalam folder sistem — `PANDUAN_PENGGUNA.md` + `PROMPT_ENTRI_UNIVERSAL.md` (prompt pembuka + penutup, 5 Sep 2026)
