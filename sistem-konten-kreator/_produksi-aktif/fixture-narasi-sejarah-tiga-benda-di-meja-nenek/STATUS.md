@@ -41,7 +41,7 @@
   - `G1 Tahap 5 (Assets):` belum — tahap belum dimulai
   - `G2 konten final + metadata (Tahap 6):` belum — tahap belum dimulai
   - `G3 merge:` **belum** — tidak auto-merge; gerbang akhir produksi belum dicapai
-- **Commit terakhir:** `aca4b0294f19bce000507efc2eab9b29a94ac66f` — checkpoint output sebelum revisi (draft breakdown r1). SHA output r2 akan dicatat sesudah commit+push revisi. Naskah r1 tetap dapat diperiksa pada `706060d391753e97954a49ccd6275ec8d061ff22`; field akhir menunjuk commit output, bukan commit STATUS sendiri.
+- **Commit terakhir:** `06ea8239f88b42b8fbb946961326715c418a4a3e` — output revisi `naskah-draft.md` r2 dan penandaan breakdown r1 tidak sinkron, **sudah di-push**. Verifikasi `git log -1 --format=%H -- [path output]`; field ini menunjuk commit output, bukan commit STATUS sendiri. Naskah r1 tetap pada `706060d391753e97954a49ccd6275ec8d061ff22`, draft breakdown awal pada `aca4b0294f19bce000507efc2eab9b29a94ac66f`.
 - **PR terkait:** [PR #13](https://github.com/With-AI-Agent/Pembangun-Sistem/pull/13) — **OPEN / DRAFT**, head `arena/01a073cf-pembangun-sistem` → base `main`; checkpoint review, **bukan izin merge**. Auto-merge tidak aktif.
 - **Pekerjaan belum tersimpan:** Tidak ada
 - **Risiko atau blocker:**
@@ -50,7 +50,7 @@
   - **Breakdown r1 tidak sinkron dengan r2:** jangan dianggap cocok atau dipakai ke Tahap 5; penyesuaian menunggu dasar naskah selesai direview.
   - Judul kerja menyebut tiga benda, naskah berfokus pada radio; metadata publish perlu review tersendiri agar tidak menjanjikan isi yang tidak ada.
   - Brand Core masih kosong; fixture bukan bukti kesiapan produksi nyata. **Run 4 GAGAL integritas metode**, F7 tetap terbuka; belum ada perbaikan aturan/kenaikan versi/retest pengganti yang disetujui atau dijalankan.
-- **Waktu pembaruan:** 2026-09-06 — draft revisi r2 disimpan atas izin pengguna; menunggu G1/G2 naskah, breakdown r1 ditandai tidak sinkron (WIB; 5 Sep UTC)
+- **Waktu pembaruan:** 2026-09-06 — checkpoint revisi r2/commit output diverifikasi di remote, jeda review G1/G2 naskah pada PR #13 (WIB; 5 Sep UTC)
 
 ## Aturan
 

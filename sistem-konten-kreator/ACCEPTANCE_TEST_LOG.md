@@ -453,6 +453,8 @@ Catatan tambahan yang tidak disamarkan sebagai kelulusan: gap Brand Core dilapor
 | `34d550ae02705c33493c017c628cf6afd6a3463f` | Laporan awal, penutupan retrospektif log, verifikasi dan keputusan recovery pertama; menyebut pembacaan manifest |
 | `aca4b0294f19bce000507efc2eab9b29a94ac66f` | Draft Tahap 4, 7 segmen; naskah r1 belum diubah, tidak ada asset/arsip baru |
 | `4f543ce541a47e281057a318ba22b00d67a2ae88` | Checkpoint PR #13 dan jeda keputusan G2; head segmen subjek awal |
+| `c4faf9e78fad372dae16d79d79bc1c0fa6cb8d14` | Fase pencatat dibuka pengguna; verdict Run 4 GAGAL metode, Rekaman Hasil/manifest/INDEKS disinkronkan tanpa mengubah gate atau versi |
+| `06ea8239f88b42b8fbb946961326715c418a4a3e` | Revisi naskah r2 atas izin pengguna: 130 kata, 63 detik estimasi, belum G2; breakdown r1 hanya ditandai tidak sinkron |
 
 **Instruksi lanjutan pengguna, 2026-09-06 WIB:** “ambil Opsi 1 — revisi draft naskah supaya muat durasi 55–65 detik, dengan tetap berada di rentang kata brief model (130–145 kata). Brief Model Konten tidak diubah”; “Izin ini hanya untuk revisi, bukan penguncian”. Ini izin baru yang eksplisit, **bukan** pembenaran retroaktif untuk pengulangan tahap dan **bukan** G2/G3. Pemulihan awal dan revisi produksi sesudahnya harus dibedakan.
 
@@ -465,3 +467,11 @@ Pada saat verdict dicatat: G2 naskah belum diberikan; revisi baru diizinkan, G1/
 - **Remediasi yang diperlukan (proposal, belum disetujui/dikerjakan):** pisahkan ringkasan jawaban/expected result dari konteks yang wajib dibaca subjek, dan perjelas batas pembacaan subjek/pencatat di aturan entry point/uji. Jangan menyelesaikannya dengan mengabaikan kewajiban membaca STATUS/log/manifest atau menyembunyikan bukti paparan pada run ini. Desain harus tetap mempertahankan konteks recovery pengguna biasa.
 - Sesuai `QUALITY_ASSURANCE_AND_EVOLUTION.md`, temuan/proposal dicatat dahulu; perubahan aturan yang berdampak luas memerlukan review/approval tersendiri. **Implementasi perbaikan aturan dan kenaikan versi masih tertunda**, bukan diklaim selesai oleh revisi naskah. Setelah remediasi disetujui, ubah aturan yang relevan (`00`/`05`/`06` bila terdampak), naikkan versi, jalankan regresi, dan merge lewat gerbang yang benar.
 - **Jadwal berbasis prasyarat:** setelah perbaikan aturan masuk main, gunakan sesi subjek BARU untuk retest AT-KK-05; uji AT-KK-05b juga harus LULUS pada versi perbaikan yang sama sebelum F7 dapat ditutup. Sesi ini sudah menjadi pencatat dan tidak dapat menjadi subjek buta pengganti. Nomor run baru dicatat saat benar-benar dieksekusi; Run 4 tetap GAGAL, tidak ditimpa menjadi LULUS.
+
+### Kelanjutan produksi — revisi r2 (6 Sep 2026 WIB)
+
+- **Output nyata:** `06ea8239f88b42b8fbb946961326715c418a4a3e` sudah di-push; `naskah-draft.md` r2 **130 kata**, estimasi **60 + 6 × 0,5 = 63 detik**, bukan hasil rekaman. Rentang 130–145 kata/55–65 detik tetap diwarisi dari brief v1 yang tidak diubah. Temuan r1 144 kata/69,46 detik tetap dicatat.
+- **Dependency:** `breakdown-output.md` masih berisi VO/timing r1 verbatim, diberi label **TIDAK SINKRON** dengan r2. Tidak dianggap breakdown revisi yang disetujui; tidak dipakai membuat asset.
+- **Approval saat checkpoint ini:** izin revisi saja. G1 review r2 dan G2 naskah final r2 diminta; G1/G2 breakdown, G1 asset, G2 Tahap 6 dan G3 belum. PR #13 tetap DRAFT; **gerbang G3 belum dicapai**, bukan dicatat seolah pengguna baru menahannya setelah Tahap 6 selesai.
+- **QA:** hitungan 130 kata/63 detik estimasi, paragraf 4/6/7 tidak berubah, breakdown r1 tetap verbatim, brief/aturan/arsip tidak berubah, definisi test dan riwayat Run 1–3 utuh, checkbox gate manifest identik. Validator repo **PASS 0 warning** (25 file wajib, 68 dokumen aktif, 205 rujukan), FI **PASS 29 skenario**, whitespace **PASS**.
+- **Verdict Run 4 tetap GAGAL metode.** Revisi sah setelah izin pengguna bukan pengulangan diam-diam pada segmen recovery awal, dan hasil otomatis/produksi yang membaik tidak menghapus paparan expected result. Kelanjutan berikutnya tetap dicatat per keputusan/commit nyata.
