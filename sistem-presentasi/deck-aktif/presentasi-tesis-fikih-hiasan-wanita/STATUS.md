@@ -1,9 +1,9 @@
 # Status Unit — presentasi-tesis-fikih-hiasan-wanita
 
-- **Status:** `ready-for-review` (menunggu approval **G1**)
+- **Status:** `ready-for-review` (G1 **disetujui pengguna** 5 Sep 2026; **G2 draft** menunggu approval)
 - **Level pemeriksaan:** `Sedang`
-- **Tahap terakhir selesai:** Tahap 2 — `PEMAHAMAN_BAHAN.md` 13/13 bagian + `CHECKLIST_CAKUPAN.md` 0 `belum`
-- **Tahap berikutnya:** setelah G1 disetujui → Tahap 3 (`OUTLINE.md` + `RENCANA_VISUAL.md`) → G2
+- **Tahap terakhir selesai:** Tahap 3 — `OUTLINE.md` (13 slide, judul assertion + jejak hal) + `RENCANA_VISUAL.md`; hal 67 dibaca penuh sehingga kartu 7 lengkap
+- **Tahap berikutnya:** setelah G2 disetujui → Tahap 4 (produksi `.pptx` + `.html`) → G3
 - **Output resmi:** belum ada berkas `.pptx`/`.html`
 - **Sumber konteks yang dibaca:** `bahan/tesis.pdf` hal 6,21,23,66,88,89,90,151,152 via visi; pesan pemilik; `00_RENCANA_KERANGKA.md`; `SYSTEM_MANIFEST.md`
 - **Gerbang:**

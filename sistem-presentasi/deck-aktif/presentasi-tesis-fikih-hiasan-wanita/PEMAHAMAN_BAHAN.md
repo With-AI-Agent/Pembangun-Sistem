@@ -37,11 +37,13 @@
 - **السؤال الأول** (hal 90): "ما حكم استعمال أدوات التجميل المعاصرة للمرأة في المذاهب الأربعة؟"
 - Struktur: Bab 4 = "الإجابات عن الأسئلة المطروحة في الباب الأول". Pertanyaan bersesuaian 1:1 dengan 4 **tujuan** (hal 21) — jadi daftar pertanyaan dapat direkonstruksi dari tujuan, dan jawabannya ada di Bab 4. *Enumerasi heading "السؤال" via ekstraksi teks gagal (teracak); rekonstruksi dari tujuan adalah jalur yang dapat dipertanggungjawabkan.*
 
-## 7. Alasan pengharaman menyambung rambut (العلة في تحريم وصل الشعر) — hal 66–67  `[visi hal 66]`
+## 7. Alasan pengharaman menyambung rambut (العلة في تحريم وصل الشعر) — hal 66–67  `[visi hal 66+67]`
 - Mazhab **sepakat** bolehnya menyambung dengan **bukan** rambut manusia (bila bersih/tidak najis).
-- **Hanafi:** علة-nya = **kemuliaan manusia** (كرامة الإنسان) dan larangan menghinakan dengan memakai bagian tubuh manusia (termasuk rambut); boleh dari rambut hewan.
-- **Hanbali (Ibn Qudamah):** pengharaman karena **penipuan/tadlis** (menampakkan bukan miliknya); menyambung rambut manusia = تدليس → haram.
-- Lanjutan hal 67 = rincian tambahan per mazhab (belum dibaca penuh; kartu ini dari hal 66).
+- **Hanafi (66):** علة = **kemuliaan manusia** (كرامة الإنسان) & larangan menghinakan dengan memakai bagian tubuh manusia; boleh dari rambut hewan.
+- **Maliki (67):** عله **majemuk**: mengubah ciptaan Allah + penipuan (الغر والتدليس); pengharaman tidak mutlak (Ad-Dawani).
+- **Syafi'i (67):** علة **majemuk**: kemuliaan manusia + keharaman memakai najis; menyambung rambut najis = haram.
+- **Hanbali (67):** علة = **penipuan & kecurangan** (التدليس والغش).
+- **Kesimpulan penulis (67):** yang rajih = علة mencakup **kebohongan/penipuan (الزور/التدليس)**, dikuatkan hadits wanita yang menambah rambut untuk suaminya yang sakit lalu Nabi menyebutnya "الزور".
 
 ## 8. Jenis & macam penelitian (جنس البحث ونوعه) — hal 88, Bab 3 Far' 1  `[visi]`
 - Deskriptif-komparatif + induktif + deduktif; dipilih karena cocok untuk menelusuri fuqaha 4 mazhab + kitab hadits/tafsir/bahasa + studi kontemporer.
