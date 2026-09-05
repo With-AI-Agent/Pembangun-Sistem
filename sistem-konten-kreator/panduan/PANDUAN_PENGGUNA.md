@@ -36,6 +36,25 @@ Setelah itu, bawa aku langsung ke langkah yang tepat sesuai tujuan.
 
 ---
 
+## Prompt Penutup Sesi (Gunakan di Akhir Sesi)
+
+Sebelum menutup sesi — mau merge, mau jeda, atau sesi sudah panjang — tempel ini supaya sesi berikutnya bisa melanjutkan tanpa kehilangan apa pun (ditambahkan 5 Sep 2026; aturan meta-sistem mewajibkan pegangan pengguna memuat prompt pembuka **dan** penutup):
+
+```
+Tutup sesi ini dengan benar:
+1. Update STATUS.md unit kerja yang disentuh (tahap selesai, tahap
+   berikutnya, waktu pembaruan).
+2. Cek working tree: semua perubahan WAJIB ter-commit dan ter-push —
+   tanpa itu sesi baru tidak bisa melanjutkan.
+3. Ringkaskan kondisi akhir: commit terakhir, status PR, dan langkah
+   aman berikutnya.
+4. Kalau aku mau merge PR: pastikan semua sudah push SEBELUM merge —
+   setelah merge/close, sesi ini TIDAK BISA push lagi (batasan
+   platform); kerja lanjutan harus dari sesi baru yang dibuka dari main.
+```
+
+---
+
 ## Istilah yang perlu kamu tahu (versi awam)
 
 - **Repo** — folder besar di GitHub tempat semua dokumen sistem dan hasil kerja kamu tersimpan. Ibaratnya "markas" tempat semua file hidup.
