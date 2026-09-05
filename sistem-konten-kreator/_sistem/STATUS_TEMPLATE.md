@@ -18,7 +18,7 @@
   - `G3 merge:` belum / disetujui [tanggal]
 - **Commit terakhir:**
 - **PR terkait:**
-- **Pekerjaan belum tersimpan:** `Tidak ada` (wajib exact, atau daftar path jika ada yang belum tersimpan — lihat `_meta/PROTOKOL_CHECKPOINT_RECOVERY.md`)
+- **Pekerjaan belum tersimpan:** Tidak ada
 - **Risiko atau blocker:**
 - **Waktu pembaruan:**
 
@@ -27,3 +27,4 @@
 - Perbarui file ini setelah setiap tahap yang menghasilkan dependency baru.
 - Jangan menyatakan tahap tersedia untuk sesi berikutnya sebelum output sudah tersimpan di branch.
 - Jika status atau output tidak dapat diverifikasi setelah sesi terputus, berhenti dan minta klarifikasi.
+- Field `Pekerjaan belum tersimpan`: nilai WAJIB EXACT `Tidak ada` (case-sensitive, tanpa backtick); jika ada yang belum tersimpan, isi daftar path-nya. Provenance: `_meta/PROTOKOL_CHECKPOINT_RECOVERY.md` — aturan sudah turun ke template ini; file induk tidak diperlukan.

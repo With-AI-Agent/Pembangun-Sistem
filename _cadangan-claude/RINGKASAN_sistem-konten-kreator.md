@@ -15,7 +15,7 @@ sistem-konten-kreator/
 ├── QUALITY_ASSURANCE_AND_EVOLUTION.md   (turunan self-contained; induk _meta = provenance)
 ├── ACCEPTANCE_TESTS.md / ACCEPTANCE_TEST_LOG.md
 ├── panduan/PANDUAN_PENGGUNA.md    ← pegangan pengguna (subfolder panduan/)
-├── _sistem/  (11 dokumen: START_DI_SINI, 00_CARA_PAKAI_SISTEM [LOG_SESI + fakta
+├── _sistem/  (12 dokumen: START_DI_SINI, 00_CARA_PAKAI_SISTEM [LOG_SESI + fakta
 │            platform inline + 4 aturan recovery self-contained], 01_BRAND_CORE,
 │            02_CHANNEL_DISCOVERY_PROMPT, 03_TEMPLATE_CHANNEL_BRIEF, 04_CHARACTER_BUILDER_KIT,
 │            05_CONTENT_PRODUCTION_PIPELINE, 06_PROMPT_LIBRARY, 07_MODEL_KONTEN_DISCOVERY_PROMPT,

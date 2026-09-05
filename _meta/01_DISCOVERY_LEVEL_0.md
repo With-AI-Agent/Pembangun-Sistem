@@ -83,7 +83,7 @@ jawaban jelas untuk 5 hal ini:
 Setiap beberapa putaran, kasih ringkasan checkpoint: "Sejauh ini sistem
 ini kelihatannya: ..." supaya kita selalu align.
 
-Setelah keempat hal ini terjawab jelas, rangkum jadi rencana kerangka
+Setelah kelima hal ini terjawab jelas, rangkum jadi rencana kerangka
 dengan struktur:
 
 # Rencana Kerangka — Sistem [Nama Sistem]

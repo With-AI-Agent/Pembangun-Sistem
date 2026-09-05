@@ -9,6 +9,6 @@
 - **Keputusan baru:**
 - **Approval:**
 - **Commit/PR:**
-- **Pekerjaan belum tersimpan:** `Tidak ada` (wajib exact, atau daftar path jika ada yang belum tersimpan — lihat `_meta/PROTOKOL_CHECKPOINT_RECOVERY.md`)
+- **Pekerjaan belum tersimpan:** Tidak ada
 - **Blocker/risiko:**
 - **Waktu pembaruan:**

@@ -9,6 +9,7 @@
 - **Pengguna/consumer:** Pemakai = pengguna repo ini. Consumer hasil akhir = audiens presentasi (misal dosen penguji sidang skripsi)
 - **Pemilik keputusan:** Pengguna repo ini
 - **Versi:** `0.4.1`
+- **Tahap:** siap-pakai
 - **Status:** `Built & terverifikasi; teraudit 1x` — kerangka disetujui 4 Sep 2026; dokumen instruksi aktif lengkap; **merge ke main diminta pengguna 5 Sep 2026** (PR #9); **audit independen Sedang selesai 5 Sep 2026** (sesi agent baru) — 11 temuan (2×P1 skrip, 3×P2 state deck, 6×P3) **semua diperbaiki di v0.3.0**; pegangan pengguna ditambahkan (v0.3.0); **mekanisme log sesi (`LOG_SESI`) diturunkan self-contained ke `_sistem/11_LOG_SESI.md` + prompt pembuka/penutup diperbarui (v0.4.0, 5 Sep 2026)**
 - **Tanggal dibuat:** 4 September 2026 (UTC)
 - **Audit terakhir:** 5 Sep 2026 — (a) audit otomatis: `validate_system.py` exit 0, `qa_deck.py` 14 slide exit 0, `install_deps.sh` exit 0; (b) **audit independen Sedang** oleh sesi agent baru (`arena/01a0706d`): laporan `_meta/_internal/AUDIT_SISTEM_PRESENTASI_2026-09-05.md` — verifikasi: rebuild reproducible (konten identik), G-1 gambar bebas teks via visi, spot-check visi hal 6/66–67/151, commit jejak valid; temuan AP-01…AP-11 diperbaiki di v0.3.0.
@@ -49,7 +50,7 @@
 
 ## Quality & Evolution
 
-- **Lapisan self-audit sistem:** baca ulang seluruh dokumen sistem, cross-check rujukan, jalankan `tools/validate_repo.py` — **cakupan sudah diperluas** ke dokumen aktif `sistem-presentasi/` (root + `_sistem/` + `_generator/` + `_template/`, 5 Sep 2026, AP-11) + file root sistem masuk daftar `required` validator. Deck living documents tetap diperiksa oleh `validate_system.py` sistem ini (out of scope validator meta, sengaja).
+- **Lapisan self-audit sistem:** baca ulang seluruh dokumen sistem, cross-check rujukan, jalankan `_sistem/validate_system.py` — **ini alat self-audit yang benar-benar lokal** (ikut folder, jalan di repo standalone). Bila folder ini berada DI DALAM repo master, tambahkan `tools/validate_repo.py` (cakupan dokumen aktif `sistem-presentasi/` diperluas 5 Sep 2026, AP-11; validator master = provenance/konteks, BUKAN dependensi operasional — koreksi klaim self-contained, review PR #11 F6). Deck living documents tetap diperiksa oleh `validate_system.py` sistem ini (out of scope validator meta, sengaja).
 - **Lapisan verifikasi output:** 3 jalur, dan laporan **wajib menyebut jalur mana yang dipakai** — (a) struktural lewat kode: baca ulang `.pptx`, ukur teks vs placeholder, deteksi kemungkinan meluber, cek gambar tidak menimpa *text frame*; (b) preview HTML hampiran yang dibuka pengguna; (c) pengguna membuka sendiri berkas `.pptx`-nya. Jalur (b) dan (c) **bukan** render PowerPoint
 - **Trigger audit:** perubahan aturan di `_sistem/`; kegagalan acceptance test; keluhan pengguna atas hasil deck; sebelum status naik ke `Operational`
 - **Level audit default:** Sedang
@@ -107,7 +108,7 @@ Status butir `03_KONTRAK_WARISAN.md` meta v1.3.0 untuk sistem ini (disinkronkan 
 - [x] Semua dokumen wajib tersedia — **YA**: `_sistem/01–10`, `_generator/G1–G3`, `_template/T1–T9`, `START_DI_SINI.md`, `ACCEPTANCE_TESTS.md`, `validate_system.py`, `qa_deck.py` (diverifikasi `validate_system.py` exit 0, 5 Sep 2026)
 - [x] Semua dependency valid — `_sistem/install_deps.sh` memasang & memverifikasi python-pptx, Pillow, pypdf, python-docx, matplotlib (exit 0, 5 Sep 2026)
 - [x] Status dan versi sudah diperbarui — `0.4.0` / `Built & terverifikasi` (5 Sep 2026)
-- [x] Approval yang diperlukan sudah ada — kerangka disetujui 4 Sep 2026; **approval sistem = pengguna meminta merge ke main 5 Sep 2026**. Q-O2/Q-O3 tetap terbuka di level `_meta` (tidak memblokir sistem standalone ini)
+- [x] Approval yang diperlukan sudah ada — kerangka disetujui 4 Sep 2026; **approval sistem = pengguna meminta merge ke main 5 Sep 2026**. Q-O2/Q-O3 **DITUTUP 5 Sep 2026 di meta v1.3.0** — selaras baris "Prosedur recovery" di atas (penyelarasan pasca review PR #11; sebelumnya baris ini masih menyebut "tetap terbuka")
 - [x] Audit terakhir tercatat — 5 Sep 2026 (otomatis: validate_system + qa_deck + install_deps, semua exit 0; **independen Sedang: 11 temuan diperbaiki di v0.3.0**)
 - [x] Ringkasan cadangan sinkron — `_cadangan-claude/RINGKASAN_sistem-presentasi.md` (root; dipindah dari `_meta/` 5 Sep 2026, AP-10)
 - [x] Pegangan pengguna tersedia di dalam folder sistem — `PANDUAN_PENGGUNA.md` + `PROMPT_ENTRI_UNIVERSAL.md` (prompt pembuka + penutup, 5 Sep 2026)

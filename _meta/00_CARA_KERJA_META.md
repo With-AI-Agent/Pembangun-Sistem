@@ -120,7 +120,7 @@ Berlaku sama seperti yang sudah terbukti penting di Sistem Konten Kreator: GitHu
 3. Cek `INDEKS_SISTEM.md` untuk tahu sistem apa saja yang ada dan statusnya.
 4. Cari `LOG_SESI_*.md` **terbaru** (root repo / folder sistem / folder unit kerja). Kalau yang terbaru berkeadaan `OPEN` → baca, laporkan keadaannya, dan konfirmasi ke pengguna sebelum lanjut — itu konteks yang tidak boleh ditanya ulang. (Langkah ini dulu hanya ada di dokumen lain; diselaraskan ke sini 5 Sep 2026, temuan M-05.)
 
-Regresi struktural tersedia sebagai alat — jalankan saat menyentuh `_meta/`/`tools/` atau menyelesaikan audit: `python3 tools/validate_repo.py` (harus PASS 0 warning), `tools/test_failure_injection.py`, `tools/backup_verify.py`, `tools/build_template.py` (temuan M-07: blok struktur dulu tidak menyebut `tools/`).
+Regresi struktural tersedia sebagai alat — jalankan saat menyentuh `_meta/`/`tools/` atau menyelesaikan audit: `python3 tools/validate_repo.py` (harus PASS 0 warning), `tools/test_failure_injection.py`, `tools/backup_verify.py`, `tools/build_template.py`; `tools/checkpoint_core.py` adalah parser bersama yang diimpor validator & FI (tidak dijalankan langsung) (temuan M-07: blok struktur dulu tidak menyebut `tools/`).
 
 Baru setelah itu, arahkan sesuai tujuan. Jika state tidak konsisten, gunakan `FAILURE_INJECTION_TESTS.md` sebagai aturan berhenti dan recovery:
 

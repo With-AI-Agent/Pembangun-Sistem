@@ -9,6 +9,7 @@
 - **Pengguna/consumer:**
 - **Pemilik keputusan:**
 - **Versi:** `0.1.0`
+- **Tahap:** kerangka — ubah ke `siap-pakai` saat sistem siap dipakai (cek W-01/W-02/W-03 kembali ketat; lihat `03_KONTRAK_WARISAN.md` bagian "Tahap pembangunan")
 - **Status:** `Proposed`
 - **Tanggal dibuat:**
 - **Audit terakhir:**
@@ -58,6 +59,8 @@ Status butir `03_KONTRAK_WARISAN.md` untuk sistem ini — salin dari bagian "War
 | W-07 fakta platform | | | |
 | W-08 approval bertingkat | | | |
 | W-09 ringkasan cadangan | | | |
+
+Baris `override`: isi kolom Override dengan `alasan: ...; dampak: ...; tanggal: YYYY-MM-DD; approval: <kutipan keputusan pengguna>` — override tanpa keempatnya = error validator (lihat `03_KONTRAK_WARISAN.md`).
 
 ## Quality & Evolution
 
