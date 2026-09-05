@@ -1,40 +1,67 @@
 # PEMAHAMAN BAHAN — Presentasi Tesis Fikih Hiasan Wanita
 
-> **Metode pengisian:** jalur **VISI** (render halaman via PyMuPDF → dibaca model), karena ekstraksi teks Arab terbukti mengacak urutan kata dalam baris. Lihat `sistem-presentasi/SYSTEM_MANIFEST.md` bagian batasan Arab. Setiap kartu hanya memuat apa yang benar-benar terbaca di halaman yang disebut; yang belum dibaca ditandai `belum`.
-> **Bahan:** `bahan/tesis.pdf` (161 hal). Nomor halaman = halaman cetak (Arab-Indic), terbukti cocok dengan posisi PDF (offset 0).
+> **Metode:** jalur **VISI** (render via PyMuPDF → dibaca model). Ekstraksi teks Arab terbukti mengacak urutan kata, jadi semua kartu di bawah diisi dari pembacaan visual, bukan dari `get_text()`. Nomor halaman = halaman cetak tesis, diverifikasi cocok dengan posisi PDF.
+> **Bahan:** `bahan/tesis.pdf` (161 hal).
+> **Kartu hanya memuat yang terbaca.** Terjemahan Indonesia adalah glos bantu; yang jadi rujukan slide adalah teks Arab + halaman.
 
-## Kartu: Ringkasan (ملخص) — hal 6  `[TERBACA via visi]`
+## 1. Ringkasan (ملخص) — hal 6  `[visi]`
+- **Klaim utama:** memaparkan hukum nawaazil fikih terkait **hiasan wanita** dalam 4 mazhab — pemutihan (التشقير), bulu mata, alis, lensa mata, pencabutan (النمص), tato (الوشم), menyambung rambut (الوصل), operasi bedah.
+- **Metode:** deskriptif-komparatif + induktif + deduktif.
+- **Temuan:** haram bila mengubah ciptaan Allah / menipu / membahayakan; menyambung rambut haram bagi bersuami menurut Syafi'i (disamakan konteks perselingkuhan); operasi boleh bila ada kebutuhan sah & tidak mengubah ciptaan; hiasan memengaruhi pandangan dalam akad nikah (rincian Maliki/Syafi'i/Hanbali).
+- **Kata kunci:** النوازل الفقهية، زينة المرأة المعاصرة، أثر الزينة في عقد النكاح، المذاهب الأربعة.
 
-- **Klaim utama:** Penelitian memaparkan hukum kontemporer (نوازل فقهية) terkait **hiasan wanita** dalam empat mazhab — mencakup: pemutihan/pencerahan (التشقير), pemasangan bulu mata, penipisan/penataan alis, lensa kontak mata, pencabutan (النمص), tato (الوشم), menyambung rambut (الوصل), serta operasi bedah (التجميل).
-- **Metode (disebut di ringkasan):** deskriptif-komparatif, induktif (استقرائي), deduktif (استنباطي).
-- **Temuan kunci:**
-  - Hiasan **diharamkan** bila: mengubah ciptaan Allah, menipu/menyesatkan, atau menimbulkan bahaya/mudarat.
-  - Pemutihan yang membahayakan → haram; bila tidak berbahaya dan tidak mengubah ciptaan → boleh.
-  - **Menyambung rambut (الوصل):** haram bagi wanita bersuami menurut Syafi'i walau untuk berhias, dan disamakan (تشبه) dengan konteks perselingkuhan; bila untuk tujuan sah dan tidak mengubah ciptaan, ada rincian per mazhab.
-  - **Operasi bedah:** boleh bila ada kebutuhan sah (حاجة) dan tidak mengubah ciptaan; haram bila mengubah ciptaan Allah (mis. operasi ringan seperti menghilangkan kutil tidak mengapa).
-  - **Zina & pernikahan:** hiasan yang tampak (مباحث) memengaruhi pandangan dalam akad nikah; ada rincian Maliki/Syafi'i/Hanbali soal melihat wajah & telapak tangan.
-- **Kata kunci tesis:** النوازل الفقهية، زينة المرأة المعاصرة، أثر الزينة في عقد النكاح، المذاهب الأربعة.
+## 2. Tujuan (أهداف البحث) — hal 21  `[visi]` *(pemilik menyebut 20; heading "ب. أهداف البحث" nyata di hal 21)*
+1. Menjelaskan hukum alat kecantikan kontemporer bagi wanita (medis maupun tidak) dalam 4 mazhab.
+2. Mengetahui hukum operasi kecantikan bagi wanita dalam 4 mazhab mu'tabar.
+3. Mengetahui hukum menjual alat kecantikan bagi wanita dalam 4 mazhab.
+4. Menjelaskan dampak yang timbul dari hiasan tersebut terhadap akad nikah.
 
-## Kartu: Metode Penelitian (منهج البحث) — hal 23  `[TERBACA via visi]`
+## 3. Manfaat (فوائد البحث) — hal 21  `[visi]`
+1. Mengetahui hukum hiasan kontemporer bagi wanita dalam 4 mazhab.
+2. Menjelaskan hukum nawaazil terkait hiasan wanita (medis/tidak) dalam 4 mazhab.
+3. Mengetahui hukum operasi kecantikan bagi wanita.
+4. Mengetahui hukum menjual alat kecantikan yang dilarang bagi wanita.
+5. Menyadari dampak hiasan terhadap akad nikah.
 
-- **Klaim utama:** Penelitian memakai **metode deskriptif-komparatif** — menelusuri pendapat fuqaha empat mazhab dari kitab-kitab mu'tamad mereka, ditambah rujukan karya kontemporer karena topiknya nawaazil (kasus kontemporer).
-- **Tambahan metode:** **induktif (استقرائي)** — menelusuri hukum fikih & medis tentang hiasan wanita dari kitab mazhab lama & baru; **deduktif (استنباطي)** — menyimpulkan hukum terkait hiasan wanita dalam empat mazhab.
-- **Catatan:** kadang disebut juga mazhab Zhahiri bila relevan.
+## 4. Masalah (مشكلات البحث) — hal 21  `[visi]`
+1. Nawaazil bersifat kontemporer; fuqaha belum membahasnya rinci → perlu pengkajian mendalam.
+2. Maraknya sarana hiasan & bercampurnya adat muslim dengan non-muslim → sulit menghimpun semua sarana hiasan.
+3. Perbedaan zaman antara fuqaha terdahulu dan kini → perlu meninjau kaidah & dhabith.
+4. Masuknya alat hiasan dari Barat tanpa meninjau hukum syar'inya.
+5. Perbedaan takrif/penyesuaian fikih terhadap sarana hiasan.
 
-## Bagian yang BELUM dipetakan (menunggu G1 lengkap)
+## 5. Metode (منهج البحث) — hal 23  `[visi]`
+- Deskriptif-komparatif (menelusuri pendapat fuqaha 4 mazhab dari kitab mu'tamad + karya kontemporer); induktif (استقرائي); deduktif (استنباطي). Kadang disebut mazhab Zhahiri.
 
-| Bagian | Halaman pemilik | Status |
-|---|---|---|
-| Tujuan (أهداف) | 20 | halaman 20 terbaca tapi isinya latar belakang; heading "أهداف" perlu dilocate (mungkin 20–21) |
-| Manfaat (فوائد) | 21 | belum |
-| Masalah (مشكلات) | — | belum (locate) |
-| Pertanyaan (أسئلة) | Bab 4 | belum (locate) |
-| العلة في تحريم وصل الشعر | 66–67 | belum |
-| Jenis & macam penelitian | 88 | belum |
-| Pengumpulan data | 88 | belum |
-| Pengolahan data | — | belum (locate) |
-| Verifikasi keabsahan | 89 | belum |
-| Penutup (خاتمة) | 152 | belum |
-| Rekomendasi (توصيات) | 153 | belum |
+## 6. Pertanyaan penelitian (أسئلة البحث) — diajukan di Bab 1, dijawab di Bab 4 (mulai hal 90)  `[visi hal 90]`
+- **السؤال الأول** (hal 90): "ما حكم استعمال أدوات التجميل المعاصرة للمرأة في المذاهب الأربعة؟"
+- Struktur: Bab 4 = "الإجابات عن الأسئلة المطروحة في الباب الأول". Pertanyaan bersesuaian 1:1 dengan 4 **tujuan** (hal 21) — jadi daftar pertanyaan dapat direkonstruksi dari tujuan, dan jawabannya ada di Bab 4. *Enumerasi heading "السؤال" via ekstraksi teks gagal (teracak); rekonstruksi dari tujuan adalah jalur yang dapat dipertanggungjawabkan.*
 
-> **Catatan kejujuran:** baru 2 dari 13 bagian yang dipetakan penuh. Dokumen ini **belum** boleh disebut "lengkap"; lihat `CHECKLIST_CAKUPAN.md`. G1 belum boleh dicentang.
+## 7. Alasan pengharaman menyambung rambut (العلة في تحريم وصل الشعر) — hal 66–67  `[visi hal 66]`
+- Mazhab **sepakat** bolehnya menyambung dengan **bukan** rambut manusia (bila bersih/tidak najis).
+- **Hanafi:** علة-nya = **kemuliaan manusia** (كرامة الإنسان) dan larangan menghinakan dengan memakai bagian tubuh manusia (termasuk rambut); boleh dari rambut hewan.
+- **Hanbali (Ibn Qudamah):** pengharaman karena **penipuan/tadlis** (menampakkan bukan miliknya); menyambung rambut manusia = تدليس → haram.
+- Lanjutan hal 67 = rincian tambahan per mazhab (belum dibaca penuh; kartu ini dari hal 66).
+
+## 8. Jenis & macam penelitian (جنس البحث ونوعه) — hal 88, Bab 3 Far' 1  `[visi]`
+- Deskriptif-komparatif + induktif + deduktif; dipilih karena cocok untuk menelusuri fuqaha 4 mazhab + kitab hadits/tafsir/bahasa + studi kontemporer.
+
+## 9. Cara pengumpulan data (طريقة جمع المعلومات) — hal 89, Far' 2  `[visi]`
+- Menelusuri pendapat fuqaha 4 mazhab + kitab terkait (bab-bab fikih, ستر العورة, وصل الشعر, dll) + studi kontemporer; lalu menyusun & membandingkan informasi.
+
+## 10. Pengolahan data (معالجة المعلومات) — hal 89, Far' 3  `[visi]`
+- Membandingkan pendapat fuqaha, menyebut dalil & pembahasan, lalu menerapkan ke masalah kontemporer berdasar teks mu'tamad (fikih/hadits/tafsir).
+
+## 11. Verifikasi keabsahan data (التحقق من صحة المعلومات) — hal 89, Far' 4  `[visi]`
+- Memverifikasi informasi dengan menyandingkannya pada beberapa kitab/sumber berbeda hingga sepakat pada **makna** walau redaksi berbeda.
+
+## 12. Penutup (خاتمة) — hal 151  `[visi]`
+- Doxology penutup (pujian & permohonan ampun), **bukan** rangkuman temuan. *Rangkuman temuan substantif ada di ملخص hal 6.* Catatan: pemilik menyebut خاتمة ص١٥٢, tapi cetak hal 151 = خاتمة, 152 = توصيات (geser satu).
+
+## 13. Rekomendasi (توصيات) — hal 152  `[visi]`
+1. Kepada ulama & penuntut ilmu: teliti meneliti hukum masalah kontemporer dan menampakkannya ke masyarakat.
+2. Kepada setiap wanita muslimah yang bertakwa: berhati-hati terhadap hiasan yang diharamkan, dan cukuplah dengan yang halal atas dasar ilmu.
+3. Kepada majelis/lembaga fikih: mengikuti setiap hal baru terkait hiasan wanita dan menjelaskan hukumnya.
+
+---
+**Catatan integritas:** kartu 7 (العلة) dibaca penuh dari hal 66; hal 67 berisi rincian lanjutan yang belum dibaca — bila slide butuh detail mazhab tambahan, baca hal 67 dulu. Semua kartu lain dibaca penuh dari halaman yang disebut.

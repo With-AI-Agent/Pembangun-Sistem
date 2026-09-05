@@ -1,31 +1,25 @@
 # Status Unit — presentasi-tesis-fikih-hiasan-wanita
 
-- **Status:** `in-progress`
+- **Status:** `ready-for-review` (menunggu approval **G1**)
 - **Level pemeriksaan:** `Sedang`
-- **Tahap terakhir selesai:** Tahap 1 (BRIEF draft) + Tahap 2 **sebagian** (2 dari 13 bagian dipetakan via visi)
-- **Tahap berikutnya:** lengkapi G1 (11 bagian sisa), lalu minta approval G1; lanjut G2 (outline+visual)
-- **Output resmi:** belum ada (OUTLINE/RENCANA_VISUAL/berkas belum dibuat)
-- **Sumber konteks yang dibaca:**
-  - `bahan/tesis.pdf` hal 6 & 23 (via visi; render PyMuPDF)
-  - pesan pemilik tesis (daftar 13 butir + halaman)
-  - `sistem-presentasi/00_RENCANA_KERANGKA.md`, `SYSTEM_MANIFEST.md`
+- **Tahap terakhir selesai:** Tahap 2 — `PEMAHAMAN_BAHAN.md` 13/13 bagian + `CHECKLIST_CAKUPAN.md` 0 `belum`
+- **Tahap berikutnya:** setelah G1 disetujui → Tahap 3 (`OUTLINE.md` + `RENCANA_VISUAL.md`) → G2
+- **Output resmi:** belum ada berkas `.pptx`/`.html`
+- **Sumber konteks yang dibaca:** `bahan/tesis.pdf` hal 6,21,23,66,88,89,90,151,152 via visi; pesan pemilik; `00_RENCANA_KERANGKA.md`; `SYSTEM_MANIFEST.md`
 - **Gerbang:**
-  - G1 Peta Pemahaman: **BELUM** (2/13 bagian)
+  - G1 Peta Pemahaman: **terisi 13/13 — MENUNGGU approval pengguna**
   - G2 Outline+Visual: belum
   - G3 Berkas Final: belum
-- **Blocker/risiko:**
-  - Beberapa bagian tanpa nomor halaman (masalah, pengolahan data) → perlu locate via struktur.
-  - Halaman 20 (tujuan) terbaca sebagai latar belakang → heading "أهداف" perlu dilocate (mungkin 20–21).
-  - Bahan Arab: kutipan verbatim hanya lewat visi, bukan ekstraksi teks.
-- **Waktu pembaruan:** 2026-09-05 — Tahap 2 sebagian
+- **Sisa yang dicatat jujur:** kartu 7 (العلة) hal 67 lanjutan belum dibaca; wajib dibaca bila slide itu butuh detail mazhab tambahan.
+- **Waktu pembaruan:** 2026-09-05 — Tahap 2 selesai
 
 ## Log Keputusan
 | Tanggal | Keputusan | Oleh |
 |---|---|---|
-| 2026-09-05 | Deck dibuat; bahan dipindah (git mv) ke `bahan/tesis.pdf` tanpa duplikasi | agent |
-| 2026-09-05 | G1 diisi bertahap via visi; 2/13 bagian | agent |
+| 2026-09-05 | Deck dibuat; bahan git mv ke `bahan/tesis.pdf` | agent |
+| 2026-09-05 | G1 diisi via visi; 13/13 bagian; halaman pemilik yang bergeser dicatat terbuka | agent |
 
 ## Petunjuk pemulihan
-1. Baca `BRIEF.md` lalu file ini. Jangan menebak dari chat.
-2. Lanjutkan dari bagian `belum` di `CHECKLIST_CAKUPAN.md`; jangan ulangi kartu hal 6 & 23.
-3. Jangan centang G1 selama ada baris `belum`.
+1. Baca `BRIEF.md` lalu file ini.
+2. Kalau G1 sudah disetujui, lanjut Tahap 3; jangan mengulang pembacaan hal yang sudah jadi kartu.
+3. Untuk slide العلة yang butuh detail, baca hal 67 dulu (belum dibaca).
