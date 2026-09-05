@@ -26,7 +26,7 @@
 
 ## Dokumen Navigasi
 
-- **Entry point:** `START_DI_SINI.md` — **belum dibuat**
+- **Entry point:** `START_DI_SINI.md` — **sudah dibuat** (5 Sep 2026), self-contained agar sistem bisa diekstrak jadi repo tersendiri
 - **Dokumen instruksi aktif:** direncanakan di `_sistem/01`…`_sistem/08` — **belum ada satu pun**. Rencana lengkapnya di `00_RENCANA_KERANGKA.md` bagian Rencana Dokumen
 - **Living documents:** per deck: `BRIEF.md`, `OUTLINE.md`, `RENCANA_VISUAL.md`, `DAFTAR_GAMBAR.md`, `STATUS.md`. Lintas deck: tiap `PAKET_KETENTUAN` dan `ASET_GAYA`
 - **Log keputusan:** wajib ada di tiap living document di atas
@@ -87,7 +87,7 @@
 
 ## Acceptance
 
-- [ ] Semua dokumen wajib tersedia — **belum**: `_sistem/01`…`08`, `_generator/G1`–`G3`, `_template/T1`–`T9`, `START_DI_SINI.md` semuanya belum ada
+- [ ] Semua dokumen wajib tersedia — **sebagian**: `_sistem/01`+`02`+`START_DI_SINI.md` sudah (5 Sep 2026); `_sistem/03`–`08`, `_generator/G1`–`G3`, `_template/T1`–`T9` masih direncanakan
 - [ ] Semua dependency valid — **sebagian**: keempat library terbukti bisa diinstall, tapi belum ada skrip yang memasang dan memverifikasinya sebagai bagian sistem
 - [ ] Status dan versi sudah diperbarui — ya, `0.1.0-kerangka` / `Proposed`
 - [ ] Approval yang diperlukan sudah ada — **sebagian**: `00_RENCANA_KERANGKA.md` disetujui; proposal Q-O2/Q-O3 **belum**
