@@ -2,8 +2,8 @@
 
 - **Status:** `completed` — G1, G2, G3 **semua disetujui** (5 Sep 2026)
 - **Level pemeriksaan:** `Sedang`
-- **Tahap terakhir selesai:** SIMULASI AT-SP-15 (perkataan pemilik kiriman 2) → deck **v6**: struktur pemilik persis (satu bagian=satu slide), Q1–Q3 digabung satu slide tanpa jawaban (Q1/Q3 verbatim via visi; Q2 rekonstruksi berlabel). QA exit 0.
-- **Tahap berikutnya:** G3 menunggu approval pemilik; pemilik akan menambah butir kemudian; Q2 & nama pembimbing menunggu tinjauan.
+- **Tahap terakhir selesai:** deck **v7 (isi diperpanjang)**: koreksi pemilik "isi lebih panjang sesuai tesis" → slide ملخص/منهج/جنس/جمع/معالجة/تحقق diperkaya dengan poin fuller via visi hal 6/23/88/89; struktur pemilik tetap (satu bagian=satu slide), Q1–Q3 satu slide tanpa jawaban. QA 14 slide exit 0. Commit `9b017ee`.
+- **Tahap berikutnya:** pemilik akan menambah butir kemudian; Q2 & nama pembimbing menunggu tinjauan.
 - **Output resmi:** belum ada berkas `.pptx`/`.html`
 - **Sumber konteks yang dibaca:** `bahan/tesis.pdf` hal 6,21,23,66,88,89,90,151,152 via visi; pesan pemilik; `00_RENCANA_KERANGKA.md`; `SYSTEM_MANIFEST.md`
 - **Gerbang:**
@@ -21,6 +21,7 @@
 | 2026-09-05 | G2: 13 slide assertion; S8 tabel; palet A; font Amiri; M0 default | agent |
 | 2026-09-05 | G3: .pptx 13 slide RTL + preview.html; diverifikasi baca-balik | agent |
 | 2026-09-05 | G3 disetujui pengguna -> status completed; INDEKS_SISTEM.md diperbarui | agent+pengguna |
+| 2026-09-05 | v7: isi slide diperpanjang sesuai tesis (koreksi pemilik); tetap tanpa mengarang (visi hal 6/23/88/89) | agent |
 
 ## Petunjuk pemulihan
 1. Baca `BRIEF.md` lalu file ini.
