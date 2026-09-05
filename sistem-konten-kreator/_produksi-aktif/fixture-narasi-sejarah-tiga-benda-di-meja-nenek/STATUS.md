@@ -39,15 +39,15 @@
   - `G1 Tahap 5 (Assets):` belum — tahap belum dimulai
   - `G2 konten final + metadata (Tahap 6):` belum — tahap belum dimulai
   - `G3 merge:` **belum** — pengguna melarang auto-merge
-- **Commit terakhir:** `706060d391753e97954a49ccd6275ec8d061ff22` — commit naskah sumber yang sudah diverifikasi sebelum recovery. SHA commit draft breakdown akan dicatat pada checkpoint setelah output baru di-commit; verifikasi masing-masing dengan `git log -1 --format=%H -- [path output]`, bukan memakai commit STATUS sendiri.
-- **PR terkait:** belum ada pada checkpoint penyusunan draft; akan dibuka sebagai PR draft untuk review, bukan approval merge
+- **Commit terakhir:** `aca4b0294f19bce000507efc2eab9b29a94ac66f` — commit output produksi terbaru (`breakdown-output.md`), sudah di-push ke branch sesi. Naskah sumber tetap pada commit `706060d391753e97954a49ccd6275ec8d061ff22`. Verifikasi masing-masing dengan `git log -1 --format=%H -- [path output]`; field ini menunjuk commit output, bukan commit STATUS sendiri.
+- **PR terkait:** [PR #13](https://github.com/With-AI-Agent/Pembangun-Sistem/pull/13) — **OPEN / DRAFT**, head `arena/01a073cf-pembangun-sistem` → base `main`; checkpoint review, **bukan izin merge**. Auto-merge tidak aktif; G3 belum diberikan.
 - **Pekerjaan belum tersimpan:** Tidak ada
 - **Risiko atau blocker:**
   - **G2 naskah final belum diberikan**; tidak boleh mengunci breakdown, membuat/mengambil aset, mengarsipkan naskah final, atau menganggap konten siap publish. G1/G2 breakdown juga belum diberikan; G3 terpisah.
-  - **Durasi belum sesuai brief:** hitungan VO 144 kata pada 130 kata/menit ≈66,46 detik tanpa jeda, atau ≈69,46 detik dengan enam jeda antarseggmen 0,5 detik. Batas model 55–65 detik; waktu ini estimasi, bukan hasil audio terukur. Rekomendasi untuk diputuskan: revisi draft naskah dahulu (tanpa mengubah voice/angle), lalu review ulang. Melonggarkan durasi atau mengubah tempo/brief memerlukan G2 tersendiri; belum diusulkan sebagai keputusan terkunci.
+  - **Durasi belum sesuai brief:** hitungan VO 144 kata pada 130 kata/menit ≈66,46 detik tanpa jeda, atau ≈69,46 detik dengan enam jeda antarsegmen 0,5 detik. Batas model 55–65 detik; waktu ini estimasi, bukan hasil audio terukur. Rekomendasi untuk diputuskan: revisi draft naskah dahulu (tanpa mengubah voice/angle), lalu review ulang. Melonggarkan durasi atau mengubah tempo/brief memerlukan G2 tersendiri; belum diusulkan sebagai keputusan terkunci.
   - Judul kerja menyebut tiga benda, tetapi naskah berfokus pada radio. Jangan menetapkannya sebagai judul publish yang menjanjikan tiga pembahasan tanpa review metadata.
   - Brand Core belum terisi; channel ini fixture, bukan bukti kesiapan produksi nyata. Belum ada asset atau hak/lisensi yang diverifikasi.
-- **Waktu pembaruan:** 2026-09-05 — recovery terverifikasi; draft Tahap 4 disimpan, menunggu keputusan G2 naskah final
+- **Waktu pembaruan:** 2026-09-05 — checkpoint output/PR #13 diverifikasi; berhenti untuk keputusan G2 naskah final, tanpa asset atau merge
 
 ## Aturan
 
