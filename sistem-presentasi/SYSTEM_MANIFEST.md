@@ -8,11 +8,11 @@
 - **Tujuan utama:** Mengubah bahan (dokumen pengguna, atau topik yang perlu diriset) menjadi berkas presentasi yang setia pada sumbernya, strukturnya berbasis bukti, tampilannya konsisten, dan prosesnya bisa dilanjutkan sesi lain
 - **Pengguna/consumer:** Pemakai = pengguna repo ini. Consumer hasil akhir = audiens presentasi (misal dosen penguji sidang skripsi)
 - **Pemilik keputusan:** Pengguna repo ini
-- **Versi:** `0.4.0`
+- **Versi:** `0.4.1`
 - **Status:** `Built & terverifikasi; teraudit 1x` — kerangka disetujui 4 Sep 2026; dokumen instruksi aktif lengkap; **merge ke main diminta pengguna 5 Sep 2026** (PR #9); **audit independen Sedang selesai 5 Sep 2026** (sesi agent baru) — 11 temuan (2×P1 skrip, 3×P2 state deck, 6×P3) **semua diperbaiki di v0.3.0**; pegangan pengguna ditambahkan (v0.3.0); **mekanisme log sesi (`LOG_SESI`) diturunkan self-contained ke `_sistem/11_LOG_SESI.md` + prompt pembuka/penutup diperbarui (v0.4.0, 5 Sep 2026)**
 - **Tanggal dibuat:** 4 September 2026 (UTC)
 - **Audit terakhir:** 5 Sep 2026 — (a) audit otomatis: `validate_system.py` exit 0, `qa_deck.py` 14 slide exit 0, `install_deps.sh` exit 0; (b) **audit independen Sedang** oleh sesi agent baru (`arena/01a0706d`): laporan `_meta/_internal/AUDIT_SISTEM_PRESENTASI_2026-09-05.md` — verifikasi: rebuild reproducible (konten identik), G-1 gambar bebas teks via visi, spot-check visi hal 6/66–67/151, commit jejak valid; temuan AP-01…AP-11 diperbaiki di v0.3.0.
-- **Quality protocol:** `_meta/QUALITY_ASSURANCE_AND_EVOLUTION.md` (default aktif)
+- **Quality protocol (versi sistem ini — self-contained):** trigger audit + level default + prosedur rollback dirinci di bagian "Quality & Evolution" manifest ini; verifikasi output oleh `_sistem/04_QA_PRODUKSI.md` + `qa_deck.py`. Induk: `_meta/QUALITY_ASSURANCE_AND_EVOLUTION.md` = **provenance saja** (sistem harus tetap berfungsi penuh bila folder diunduh standalone)
 
 ## Bentuk Sistem
 
@@ -78,7 +78,23 @@
     - **Jalur VISI adalah jalur baca utama untuk Arab: TERVERIFIKASI BENAR** — halaman 23 dirender via PyMuPDF lalu dibaca dengan visi; hasilnya urutan benar dan huruf terbentuk proper (paragraf "منهج البحث" terbaca utuh). Karena itu untuk bahan Arab, `PEMAHAMAN_BAHAN.md` **wajib** diisi lewat jalur visi (render→baca), dengan ekstraksi teks hanya sebagai peta halaman
     - **Font Arab:** untuk `.pptx` cukup menyebut nama font Arab (mis. Amiri); PowerPoint yang mengganti kalau tidak ada. Untuk preview (PIL/HTML) butuh font Arab + `arabic_reshaper`, **belum diverifikasi**
   - **Jalur unduh eksternal yang TERBUKA:** `api.github.com` bisa (HTTP 200) dan `git` ke GitHub bisa. Yang **diblokir:** `raw.githubusercontent.com` dan host umum via `curl` (`SSL_ERROR_SYSCALL`). Konsekuensi: berkas besar sebaiknya diambil lewat `git fetch` (commit ke branch), bukan lewat raw/API-contents (API contents hanya inline sampai ~1 MB)
-- **Prosedur recovery:** `_meta/PROTOKOL_CHECKPOINT_RECOVERY.md` + `STATUS.md` per deck. **Catatan:** protokol itu masih punya 2 celah terbuka (Q-O2 kriteria "alasan" mengulang tahap approved, Q-O3 interval "Waktu pembaruan") — lihat `_meta/_internal/arsip-pilot-002-2026-09-03/README.md`. Usulan penutupannya ada di `00_RENCANA_KERANGKA.md` bagian "Satu butir yang TIDAK boleh kuputuskan sendiri", **menunggu approval pengguna**
+- **Prosedur recovery:** `STATUS.md` per deck mengikuti kontrak checkpoint (`_template/T6_STATUS.md`: field deterministik `Pekerjaan belum tersimpan` + `Waktu pembaruan` per checkpoint/akhir sesi) + aturan sesi di `_sistem/11_LOG_SESI.md`. Induk: `_meta/PROTOKOL_CHECKPOINT_RECOVERY.md` (provenance). **Q-O2 & Q-O3 DITUTUP 5 Sep 2026 di meta v1.3.0** — alasan sah mengulang tahap approved = instruksi pengguna baru (kutip+tanggal) ATAU bukti kecacatan berpath, dicatat di STATUS; `Waktu pembaruan` diisi tiap checkpoint & akhir sesi, format `YYYY-MM-DD — <peristiwa>`
+
+## Warisan (Kontrak)
+
+Status butir `03_KONTRAK_WARISAN.md` meta v1.3.0 untuk sistem ini (disinkronkan 5 Sep 2026; tabel penuh sejak rencana kerangka — format warisan baru):
+
+| Butir | Status | Letak di folder sistem |
+|---|---|---|
+| W-01 pegangan 2-file | diterapkan | `PANDUAN_PENGGUNA.md` + `PROMPT_ENTRI_UNIVERSAL.md` (blok identik) |
+| W-02 LOG_SESI | diterapkan | `_sistem/11_LOG_SESI.md` + langkah pembuka/penutup di pegangan |
+| W-03 field checkpoint | diterapkan (v0.4.1) | `_template/T6_STATUS.md` + `deck-aktif/*/STATUS.md` |
+| W-04 manifest | diterapkan | `SYSTEM_MANIFEST.md` (file ini) |
+| W-05 log keputusan dokumen hidup | diterapkan | tabel `## Log Keputusan` per living document + deck |
+| W-06 QA 3-lapis | diterapkan (ringkas, di-izinkan desain) | bagian Quality & Evolution manifest + `qa_deck.py`/`validate_system.py` |
+| W-07 fakta platform | diterapkan | bagian Batasan Platform di bawah (3 fakta inline) |
+| W-08 approval bertingkat | diterapkan | definisi G1/G2/G3 di `00_RENCANA_KERANGKA.md` + `_sistem/` |
+| W-09 ringkasan cadangan | diterapkan (disinkronkan 5 Sep) | `_cadangan-claude/RINGKASAN_sistem-presentasi.md` (root master; provenance — dibuat oleh meta, bukan bagian folder standalone) |
 
 ## Batasan Platform
 

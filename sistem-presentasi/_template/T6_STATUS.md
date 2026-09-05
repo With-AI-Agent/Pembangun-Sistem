@@ -6,6 +6,7 @@
 - **Output resmi:** [belum / path keluaran]
 - **Sumber konteks yang dibaca:**
 - **Gerbang:** G1 [..] · G2 [..] · G3 [..]
+- **Pekerjaan belum tersimpan:** `Tidak ada` (wajib exact; jika ada: daftar path yang belum di-commit+push)
 - **Waktu pembaruan:** [YYYY-MM-DD — tahap]
 
 ## Log Keputusan
