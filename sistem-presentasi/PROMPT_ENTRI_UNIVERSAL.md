@@ -16,10 +16,11 @@ Sebelum melakukan apa pun:
 2. Deteksi kondisi branch saat ini (baru/kosong vs lama/ada progres) dan cek working tree.
 3. Cek dan laporkan status semua PR yang masih terbuka.
 4. Cek status deck di `deck-aktif/` (baca `STATUS.md` tiap deck: tahap, gerbang G1/G2/G3) dan laporkan ringkas.
-5. Tanyakan: "Apa tujuan sesi ini?" (deck baru dari bahan, lanjut deck, revisi deck, audit/cek konsistensi, atau lainnya)
-6. Berdasarkan jawaban, baca sendiri file yang relevan (`_sistem/01–10`, dokumen living deck) — TANPA perlu aku tempel manual isinya.
-7. Kalau melanjutkan deck, ikuti "Petunjuk pemulihan" di `STATUS.md` deck itu; jangan mengulang kerja yang sudah tercatat selesai.
-8. Jangan mulai eksekusi/menulis file apa pun sebelum aku konfirmasi tujuan sesi ini sudah jelas.
+5. Cari file `LOG_SESI_*.md` terbaru (akar sistem atau folder deck). Kalau keadaannya `OPEN`, BACA dan laporkan keadaan sesi sebelumnya SEBELUM bertanya tujuan sesi — jangan tanya ulang konteks yang sudah tercatat di sana.
+6. Tanyakan: "Apa tujuan sesi ini?" (deck baru dari bahan, lanjut deck, revisi deck, audit/cek konsistensi, atau lainnya)
+7. Berdasarkan jawaban, baca sendiri file yang relevan (`_sistem/01–11`, dokumen living deck) — TANPA perlu aku tempel manual isinya.
+8. Kalau melanjutkan deck, ikuti "Petunjuk pemulihan" di `STATUS.md` deck itu; jangan mengulang kerja yang sudah tercatat selesai.
+9. Jangan mulai eksekusi/menulis file apa pun sebelum aku konfirmasi tujuan sesi ini sudah jelas.
 
 Setelah itu, bawa aku langsung ke langkah yang tepat sesuai tujuan.
 ```

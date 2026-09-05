@@ -24,10 +24,11 @@ Sebelum melakukan apa pun:
 2. Deteksi kondisi branch saat ini (baru/kosong vs lama/ada progres) dan cek working tree.
 3. Cek dan laporkan status semua PR yang masih terbuka.
 4. Cek status deck di `deck-aktif/` (baca `STATUS.md` tiap deck: tahap, gerbang G1/G2/G3) dan laporkan ringkas.
-5. Tanyakan: "Apa tujuan sesi ini?" (deck baru dari bahan, lanjut deck, revisi deck, audit/cek konsistensi, atau lainnya)
-6. Berdasarkan jawaban, baca sendiri file yang relevan (`_sistem/01–10`, dokumen living deck) — TANPA perlu aku tempel manual isinya.
-7. Kalau melanjutkan deck, ikuti "Petunjuk pemulihan" di `STATUS.md` deck itu; jangan mengulang kerja yang sudah tercatat selesai.
-8. Jangan mulai eksekusi/menulis file apa pun sebelum aku konfirmasi tujuan sesi ini sudah jelas.
+5. Cari file `LOG_SESI_*.md` terbaru (akar sistem atau folder deck). Kalau keadaannya `OPEN`, BACA dan laporkan keadaan sesi sebelumnya SEBELUM bertanya tujuan sesi — jangan tanya ulang konteks yang sudah tercatat di sana.
+6. Tanyakan: "Apa tujuan sesi ini?" (deck baru dari bahan, lanjut deck, revisi deck, audit/cek konsistensi, atau lainnya)
+7. Berdasarkan jawaban, baca sendiri file yang relevan (`_sistem/01–11`, dokumen living deck) — TANPA perlu aku tempel manual isinya.
+8. Kalau melanjutkan deck, ikuti "Petunjuk pemulihan" di `STATUS.md` deck itu; jangan mengulang kerja yang sudah tercatat selesai.
+9. Jangan mulai eksekusi/menulis file apa pun sebelum aku konfirmasi tujuan sesi ini sudah jelas.
 
 Setelah itu, bawa aku langsung ke langkah yang tepat sesuai tujuan.
 ```
@@ -41,10 +42,11 @@ Sebelum menutup sesi — kerja mau di-merge, mau jeda, atau sesi sudah panjang �
 ```
 Tutup sesi ini dengan benar:
 1. Update STATUS.md deck yang disentuh (tahap selesai, tahap berikutnya, waktu pembaruan).
-2. Cek working tree: semua perubahan WAJIB ter-commit dan ter-push — tanpa itu sesi baru tidak bisa melanjutkan.
-3. Kalau ada deck baru/selesai, pastikan folder deck lengkap (bahan + dokumen + skrip + keluaran) dan ter-commit.
-4. Ringkaskan kondisi akhir: commit terakhir, status PR, dan langkah aman berikutnya.
-5. Kalau aku mau merge PR: pastikan semua sudah push SEBELUM merge — setelah merge/close, sesi ini TIDAK BISA push lagi (batasan platform); kerja lanjutan harus dari sesi baru yang dibuka dari main.
+2. Tutup log sesi ini: file `LOG_SESI_*.md` sesi ini — isi final "Keadaan Sesi" (yang selesai, yang terbuka, langkah berikutnya) dan tandai `CLOSED` kalau kerja sesi ini tuntas.
+3. Cek working tree: semua perubahan WAJIB ter-commit dan ter-push — tanpa itu sesi baru tidak bisa melanjutkan.
+4. Kalau ada deck baru/selesai, pastikan folder deck lengkap (bahan + dokumen + skrip + keluaran) dan ter-commit.
+5. Ringkaskan kondisi akhir: commit terakhir, status PR, dan langkah aman berikutnya.
+6. Kalau aku mau merge PR: pastikan semua sudah push SEBELUM merge — setelah merge/close, sesi ini TIDAK BISA push lagi (batasan platform); kerja lanjutan harus dari sesi baru yang dibuka dari main.
 ```
 
 ---
@@ -111,9 +113,9 @@ Mau diskusi dulu, jangan tulis file apa pun: [topik diskusi].
 ## Kebiasaan yang Perlu Dijaga
 
 - **Commit tiap tahap + push** — bukan birokrasi: kalau sesi crash (bisa terjadi kapan saja), yang belum di-commit hilang.
-- **Checkpoint diskusi** — kalau diskusi sudah panjang (>5 giliran) dan mendekati keputusan, minta agent simpan ke file dulu.
+- **Log sesi** — agent memelihara `LOG_SESI_YYYY-MM-DD.md` (aturan lengkap: `_sistem/11_LOG_SESI.md`): dicatat setelah setiap pertukaran penting + commit & push, header keadaannya selalu segar, ditutup `CLOSED` di akhir sesi. Kamu tidak perlu melakukan apa-apa — agent yang menjalankan ini.
 - **Jangan lanjut kerja di sesi yang PR-nya sudah di-merge** — file baru akan terjebak. Buka sesi baru dari `main`.
-- **Sesi crash?** — workaround resmi: tambahkan `/download-workspace` di akhir URL sesi (download zip), lalu buka sesi baru dan lanjut dari `STATUS.md` deck terakhir.
+- **Sesi crash?** — sesi baru akan otomatis membaca log sesi yang belum tertutup (`LOG_SESI_*.md` berkeadaan `OPEN`) dan melanjutkan darinya. Kalau log tidak ada, backstop = tambahkan `/download-workspace` di akhir URL sesi (download zip), lalu buka sesi baru dan lanjut dari `STATUS.md` deck terakhir.
 - **Bahan Arab/scan** — agent membacanya lewat jalur "visi" (render halaman → dibaca), bukan ekstraksi teks mentah. Kalau halaman penting perlu, minta agent tunjukkan buktinya (halaman mana yang dibaca).
 
 ---

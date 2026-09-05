@@ -25,6 +25,7 @@ sistem-presentasi/
 │   ├── 08_PERANCANGAN_BERBASIS_REKOMENDASI.md ← paket 5 bagian, dasar sah
 │   ├── 09_PEMAHAMAN_BAHAN_MENDALAM.md  ← 5 langkah, Arab=visi, fail-closed
 │   ├── 10_RENDER_DAN_VERIFIKASI.md     ← build + 3 jalur verifikasi
+│   ├── 11_LOG_SESI.md                  ← log sesi berkelanjutan (ingatan persisten, anti crash)
 │   ├── qa_deck.py                      ← cek otomatis per-produksi
 │   └── validate_system.py              ← cek kelengkapan struktur sistem+deck
 ├── _generator/  G1_BRIEF · G2_VISUAL · G3_KETENTUAN   ← prompt Discovery (berbasis rekomendasi)
