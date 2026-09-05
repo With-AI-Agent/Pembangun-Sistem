@@ -42,6 +42,7 @@
 | Approval bertingkat | Ya, kriteria spesifik domain | Besar = G1/G2/G3 + tiap gambar M4. Kecil = salah ketik, penataan folder, warna minor, nama deck | — |
 | Checkpoint & verifikasi | Ya, **wajib** | `STATUS.md` per deck diperbarui tiap tahap + commit & push. Checkpoint diskusi ringan bila >5 giliran | Tidak boleh di-override: sistem ini dipakai via lmarena (lihat Batasan Platform) |
 | Log keputusan | Ya | Di semua living document yang disebut di atas | — |
+| Self-contained / portabel | **Ya (wajib)** | Semua aturan yang benar-benar dipakai (desain, kedalaman isi, gambar, skrip build, template) diturunkan ke dalam `sistem-presentasi/` — lihat `_sistem/01_ATURAN_DESIGN_ISI_GAMBAR.md`; rujukan `_meta/` hanya provenance | Dinyatakan pengguna 5 Sep 2026: tiap sistem akan diunduh & dijadikan **repo standalone** terpisah dari meta-sistem, jadi harus berfungsi penuh tanpa `_meta/` |
 
 **Prinsip yang TIDAK diwarisi dari sistem konten kreator:** pemisahan "Konsistensi Visual vs Non-Visual" — `_meta/02_PRINSIP_UNIVERSAL.md` sendiri menyatakan prinsip itu spesifik-domain. Analognya digali sendiri untuk domain ini dan hasilnya: **jejak sumber** (tiap pernyataan → nomor halaman/URL) + **kepatuhan Paket Ketentuan** + **provenance & lisensi tiap gambar**.
 

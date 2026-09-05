@@ -12,6 +12,11 @@ Setelah 1 sistem berhasil dibangun dan teruji (Sistem Konten Kreator — lihat `
 
 > **Isi/konten tiap sistem = SPESIFIK dan maksimal untuk kebutuhan itu saja.** Sistem TIDAK dibuat generik/abstrak dengan alasan "supaya gampang dijadikan template nanti". Kemampuan untuk dijadikan template atau diduplikasi adalah **efek samping dari struktur yang rapi**, bukan tujuan aktif yang dikejar saat membangun. Struktur/organisasi file yang konsisten rapi berlaku di semua sistem — itu yang membuat duplikasi/jadi-template bisa dilakukan kapan saja (baik direncanakan dari awal maupun muncul tiba-tiba bertahun-tahun kemudian) tanpa persiapan khusus di muka.
 
+> **Setiap sistem dibangun SELF-CONTAINED karena akan dipisahkan.** (Prinsip tambahan, dinyatakan pengguna 5 Sep 2026.) Alur pakai nyata: setelah sebuah sistem jadi, pengguna **mengunduh folder sistem itu dan menjadikannya repo tersendiri yang hanya berisi sistem tersebut**, dipakai terpisah dari meta-sistem ini. Konsekuensi wajib saat membangun:
+> - Semua yang dibutuhkan sistem saat dipakai (dokumen instruksi, aturan desain/isi, skrip build, template, aset) harus berada **di dalam folder sistem itu sendiri**, tidak bergantung pada file di `_meta/` saat runtime.
+> - Rujukan ke `_meta/` boleh ada sebagai *provenance* (asal prinsip), tapi aturan yang benar-benar dipakai harus **disalin/diturunkan ke dalam folder sistem**, supaya hasil ekstraksi tetap berfungsi penuh.
+> - Ini TIDAK bertentangan dengan prinsip di atas: isi tetap spesifik-maksimal; self-containment hanyalah memastikan hasil yang spesifik itu bisa dibawa keluar tanpa rusak.
+
 ---
 
 ## Struktur Repo
