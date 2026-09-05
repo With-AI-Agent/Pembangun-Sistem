@@ -1,6 +1,6 @@
 # Status Unit — presentasi-tesis-fikih-hiasan-wanita
 
-- **Status:** `ready-for-review` (**G3** — berkas final diproduksi, menunggu approval pengguna)
+- **Status:** `completed` — G1, G2, G3 **semua disetujui** (5 Sep 2026)
 - **Level pemeriksaan:** `Sedang`
 - **Tahap terakhir selesai:** Tahap 4 — `keluaran/presentasi-...-hiasan-wanita.pptx` (13 slide RTL) + `keluaran/preview.html`; diverifikasi baca-balik (13 slide, rtl=1, font Amiri+ea, tabel 6×2, notes)
 - **Tahap berikutnya:** setelah G3 disetujui → selesai / iterasi revisi
@@ -9,7 +9,7 @@
 - **Gerbang:**
   - G1 Peta Pemahaman: **disetujui** (5 Sep 2026)
   - G2 Outline+Visual: **disetujui** (5 Sep 2026)
-  - G3 Berkas Final: **diproduksi — MENUNGGU approval pengguna**
+  - G3 Berkas Final: **disetujui** (5 Sep 2026)
 - **Sisa yang dicatat jujur:** kartu 7 (العلة) hal 67 lanjutan belum dibaca; wajib dibaca bila slide itu butuh detail mazhab tambahan.
 - **Waktu pembaruan:** 2026-09-05 — Tahap 2 selesai
 
@@ -20,6 +20,7 @@
 | 2026-09-05 | G1 diisi via visi; 13/13 bagian; halaman pemilik yang bergeser dicatat terbuka | agent |
 | 2026-09-05 | G2: 13 slide assertion; S8 tabel; palet A; font Amiri; M0 default | agent |
 | 2026-09-05 | G3: .pptx 13 slide RTL + preview.html; diverifikasi baca-balik | agent |
+| 2026-09-05 | G3 disetujui pengguna -> status completed; INDEKS_SISTEM.md diperbarui | agent+pengguna |
 
 ## Petunjuk pemulihan
 1. Baca `BRIEF.md` lalu file ini.
