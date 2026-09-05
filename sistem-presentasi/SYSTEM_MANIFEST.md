@@ -27,7 +27,7 @@
 ## Dokumen Navigasi
 
 - **Entry point:** `START_DI_SINI.md` — **sudah dibuat** (5 Sep 2026), self-contained agar sistem bisa diekstrak jadi repo tersendiri
-- **Dokumen instruksi aktif:** direncanakan di `_sistem/01`…`_sistem/08` — **belum ada satu pun**. Rencana lengkapnya di `00_RENCANA_KERANGKA.md` bagian Rencana Dokumen
+- **Dokumen instruksi aktif:** `_sistem/01`–`10` **sudah ada** (5 Sep 2026): aturan desain/isi/gambar, knowledge desain+riset+bahasa+layout, paham kebutuhan/tujuan, QA per-produksi, anti-ngarang, desain berbasis bukti, mode gambar+lisensi, perancangan rekomendasi, pemahaman bahan, render+verifikasi. `_generator/G1–G3`, `_template/T1–T9`, `ACCEPTANCE_TESTS.md`, `validate_system.py` sudah ada.
 - **Living documents:** per deck: `BRIEF.md`, `OUTLINE.md`, `RENCANA_VISUAL.md`, `DAFTAR_GAMBAR.md`, `STATUS.md`. Lintas deck: tiap `PAKET_KETENTUAN` dan `ASET_GAYA`
 - **Log keputusan:** wajib ada di tiap living document di atas
 - **Ringkasan cadangan:** `_cadangan-claude/RINGKASAN_sistem-presentasi.md` — **belum dibuat** (dibuat setelah struktur stabil)
@@ -87,7 +87,7 @@
 
 ## Acceptance
 
-- [ ] Semua dokumen wajib tersedia — **sebagian**: `_sistem/01`–`04` + `START_DI_SINI.md` + `qa_deck.py` sudah (5 Sep 2026); `_sistem/05`+, `_generator/G1`–`G3`, `_template/T1`–`T9` masih direncanakan
+- [x] Semua dokumen wajib tersedia — **YA**: `_sistem/01–10`, `_generator/G1–G3`, `_template/T1–T9`, `START_DI_SINI.md`, `ACCEPTANCE_TESTS.md`, `validate_system.py`, `qa_deck.py` (diverifikasi `validate_system.py` exit 0, 5 Sep 2026)
 - [ ] Semua dependency valid — **sebagian**: keempat library terbukti bisa diinstall, tapi belum ada skrip yang memasang dan memverifikasinya sebagai bagian sistem
 - [ ] Status dan versi sudah diperbarui — ya, `0.1.0-kerangka` / `Proposed`
 - [ ] Approval yang diperlukan sudah ada — **sebagian**: `00_RENCANA_KERANGKA.md` disetujui; proposal Q-O2/Q-O3 **belum**

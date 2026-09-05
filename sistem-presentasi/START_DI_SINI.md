@@ -17,7 +17,17 @@ sistem-presentasi/
 │   ├── 02_KNOWLEDGE_DESIGN_VISUAL.md   ← basis pengetahuan desain + akumulasi riset + bahasa + layout
 │   ├── 03_MEMAHAMI_KBUTUHAN_DAN_TUJUAN.md ← wajib: tangkap verbatim kebutuhan/tujuan + purpose-fit
 │   ├── 04_QA_PRODUKSI.md               ← QA SETIAP produksi (otomatis + gerbang manusia)
-│   └── qa_deck.py                      ← cek otomatis per-produksi (exit≠0 bila gagal)
+│   ├── 05_SUMBER_DAN_ANTI_NGARANG.md   ← jejak sumber, 3 tingkat, fail-closed
+│   ├── 06_PRINSIP_DESIGN_BERBASIS_BUKTI.md ← lantai desain + override sah
+│   ├── 07_MODE_GAMBAR_DAN_LISENSI.md   ← M0–M4, G-1, G-2, gerbang lisensi M4
+│   ├── 08_PERANCANGAN_BERBASIS_REKOMENDASI.md ← paket 5 bagian, dasar sah
+│   ├── 09_PEMAHAMAN_BAHAN_MENDALAM.md  ← 5 langkah, Arab=visi, fail-closed
+│   ├── 10_RENDER_DAN_VERIFIKASI.md     ← build + 3 jalur verifikasi
+│   ├── qa_deck.py                      ← cek otomatis per-produksi
+│   └── validate_system.py              ← cek kelengkapan struktur sistem+deck
+├── _generator/  G1_BRIEF · G2_VISUAL · G3_KETENTUAN   ← prompt Discovery (berbasis rekomendasi)
+├── _template/   T1–T9                                  ← blanko living-docs
+└── ACCEPTANCE_TESTS.md                                 ← skenario uji + prosedur SIMULASI
 └── deck-aktif/<nama-deck>/
     ├── bahan/                  ← sumber (PDF/dok)
     ├── BRIEF.md, PEMAHAMAN_BAHAN.md, CHECKLIST_CAKUPAN.md, OUTLINE.md,
@@ -51,4 +61,4 @@ PYTHONPATH=/tmp/pptxlib python3 export_html.py
 Di lingkungan lmarena, viewer/preview TIDAK bisa unduh biner dan link web dipagari token; jalur unduh yang didukung = **GitHub** (halaman file → Download raw). Setelah dijadikan repo sendiri, gunakan mekanisme repo itu.
 
 ## Status
-Belum 100%: `_sistem/03+`, `_template/`, `_generator/`, dan perluasan validator masih direncanakan. Alur inti (G1–G3 + build) sudah berfungsi & terbukti pada deck nyata #1.
+**Struktur lengkap sesuai rencana kerangka** (diverifikasi `validate_system.py` exit 0, 5 Sep 2026): `_sistem/01–10`, `_generator/G1–G3`, `_template/T1–T9`, acceptance tests, validator, QA per-produksi. Alur inti terbukti pada deck nyata #1. Yang inherently butuh manusia: tinjauan bahasa asli & approval gerbang (by design).
