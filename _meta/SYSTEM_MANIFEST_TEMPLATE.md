@@ -30,6 +30,7 @@
 - **Log keputusan:**
 - **Ringkasan cadangan:**
 - **Laporan audit:**
+- **Pegangan pengguna:** [`PANDUAN_PENGGUNA.md` + `PROMPT_ENTRI_UNIVERSAL.md` di dalam folder sistem — WAJIB, ikuti `_meta/PANDUAN_PENGGUNA_TEMPLATE.md`]
 
 ## Prinsip
 
@@ -72,3 +73,4 @@
 - [ ] Approval yang diperlukan sudah ada
 - [ ] Audit terakhir tercatat
 - [ ] Ringkasan cadangan sinkron
+- [ ] Pegangan pengguna tersedia di dalam folder sistem (prompt pembuka + prompt penutup)

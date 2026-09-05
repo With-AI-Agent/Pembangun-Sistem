@@ -35,6 +35,29 @@ cukup baca yang relevan dengan apa yang aku mau kerjakan.
 
 ---
 
+## Prompt Penutup Sesi — Pakai di Akhir Tiap Sesi
+
+Sebelum menutup sesi (baik kerja sudah selesai mau di-merge, mau jeda dulu, atau sesi mau di-crash-kan karena panjang), tempel ini supaya sesi berikutnya bisa melanjutkan tanpa kehilangan apa pun:
+
+```
+Tutup sesi ini dengan benar:
+1. Update STATUS.md unit kerja yang disentuh (tahap selesai, tahap
+   berikutnya, waktu pembaruan).
+2. Cek working tree: semua perubahan WAJIB ter-commit dan ter-push —
+   tanpa commit+push, sesi baru tidak bisa melanjutkan (fakta platform).
+3. Update "Terakhir Disentuh" + status tiap sistem yang disentuh di
+   _meta/INDEKS_SISTEM.md.
+4. Kalau kerja berlanjut lintas sesi, buat laporan sesi/handoff sesuai
+   template repo.
+5. Ringkaskan kondisi akhir: commit terakhir, status PR, dan langkah
+   aman berikutnya.
+6. Kalau aku mau merge PR: pastikan semua sudah push SEBELUM merge —
+   setelah merge/close, sesi ini TIDAK BISA push lagi (fakta platform);
+   kerja lanjutan harus dari sesi baru yang dibuka dari main.
+```
+
+---
+
 ## Setelah Baseline Di-merge — Prompt Handoff
 
 Untuk melanjutkan pekerjaan setelah merge atau setelah sesi terputus, gunakan prompt lengkap yang tersimpan di `_meta/NEXT_SESSION_PROMPT.md`. Prompt tersebut lebih aman daripada hanya berkata "lanjutkan", karena agent diwajibkan memverifikasi ulang repository, branch, PR, manifest, handoff, index, dan konteks yang dibaca.

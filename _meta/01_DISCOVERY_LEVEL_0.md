@@ -131,8 +131,9 @@ sistemnya.
 3. Untuk tiap dokumen yang direncanakan dengan status "perlu prompt Discovery detail" — tulis dulu prompt generatornya (pola sama seperti menulis `02_CHANNEL_DISCOVERY_PROMPT.md` dari nol, disesuaikan isi pertanyaannya dengan kebutuhan sistem ini), simpan di dalam folder `sistem-[nama-sistem]/` yang sama.
 4. Untuk dokumen dengan status "cukup template biasa" — bisa langsung dibuat template-nya (pola sama seperti `03_TEMPLATE_CHANNEL_BRIEF.md`), tidak perlu prompt diskusi panjang.
 5. Setelah semua dokumen generator/template siap, baru mulai jalankan satu-satu untuk mengisi konten sistem yang sebenarnya.
-6. Jalankan `DEFINITION_OF_DONE.md` secara bertahap; jangan tandai
+6. Buat **pegangan pengguna** sistem baru (`PANDUAN_PENGGUNA.md` + `PROMPT_ENTRI_UNIVERSAL.md` di dalam folder sistem) mengikuti `_meta/PANDUAN_PENGGUNA_TEMPLATE.md` — wajib sebelum sistem dianggap siap dipakai: prompt pembuka universal (satu prompt → agent langsung terorientasi penuh) + prompt penutup sesi.
+7. Jalankan `DEFINITION_OF_DONE.md` secara bertahap; jangan tandai
    sistem sebagai selesai sebelum checkpoint, dependency, dan recovery
    dapat diverifikasi.
-7. Update `INDEKS_SISTEM.md` dengan entri sistem baru ini begitu rencana kerangka sudah di-merge (statusnya masih "Kerangka dibuat, isi belum" — update lagi statusnya seiring progres).
-8. Buat ringkasan cadangan setelah struktur dan status sistem cukup stabil; ringkasan harus menyebutkan versi serta bagian yang belum selesai.
+8. Update `INDEKS_SISTEM.md` dengan entri sistem baru ini begitu rencana kerangka sudah di-merge (statusnya masih "Kerangka dibuat, isi belum" — update lagi statusnya seiring progres).
+9. Buat ringkasan cadangan setelah struktur dan status sistem cukup stabil; ringkasan harus menyebutkan versi serta bagian yang belum selesai.
