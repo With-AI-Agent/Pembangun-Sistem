@@ -11,16 +11,13 @@ Template bersih adalah salinan siap pakai untuk membuat repo baru, yang **tidak*
 - audit internal (`_meta/_internal/`)
 - keputusan domain contoh (misal isi `sistem-konten-kreator/` yang spesifik ke konten kreator)
 
-Template **wajib** membawa:
+Template **wajib** membawa (diselaraskan dengan temuan M-01/M-16 audit 5 Sep 2026):
 
-- entry point pengguna (`PANDUAN_PENGGUNA.md`)
-- entry point agent (`_meta/00_CARA_KERJA_META.md`)
-- discovery level-0 (`_meta/01_DISCOVERY_LEVEL_0.md`)
-- prinsip universal (`_meta/02_PRINSIP_UNIVERSAL.md`)
-- indeks sistem kosong (`_meta/INDEKS_SISTEM.md` dengan header saja)
-- manifest template (`_meta/SYSTEM_MANIFEST_TEMPLATE.md`)
-- definition of done, checkpoint recovery, **platform lmarena (fakta vs policy)**, QA & evolution, acceptance tests, session report, failure injection, next session prompt
-- manifest meta (`_meta/SYSTEM_MANIFEST.md`) sebagai referensi versi
+- SEMUA `_meta/*.md` top-level — daftar ini **tidak lagi manual**: `tools/build_template.py` men-glob folder, jadi file meta baru otomatis ikut; guard kelengkapan membuat BUILD GAGAL kalau ada `_meta/*.md` yang dirujuk dokumen aktif tapi tidak ikut terbawa
+- SEMUA `tools/*.py` — tanpa validator/FI/backup/template, repo hasil ekstrak kehilangan regresi struktural dan penegakan kontrak warisan (dulu tidak ikut: cacat M-01 kelas distribusi)
+- entry point pengguna (`PANDUAN_PENGGUNA.md`) + prompt entri (`PROMPT_ENTRI_UNIVERSAL.md`)
+- indeks sistem dikosongkan (`_meta/INDEKS_SISTEM.md` dengan header + baris kosong)
+- manifest meta (`_meta/SYSTEM_MANIFEST.md`) sebagai referensi versi — **diberi banner otomatis** oleh builder bahwa isinya sejarah master, bukan identitas repo baru (M-16)
 - `.gitignore`, `.gitattributes`
 - folder kosong `_pegangan-kamu/` dan `_cadangan-claude/` dengan `.gitkeep`
 
@@ -43,8 +40,11 @@ Output:
 - tidak ada `sistem-pilot-`
 - tidak ada `arsip-naskah`
 - tidak ada `unit-aktif`
+- **kelengkapan (M-01):** setiap `_meta/*.md` yang dirujuk dari dokumen aktif `_meta/` HARUS ikut terbawa; sumber INCLUDE yang hilang = build gagal
 
-Jika ada, build gagal.
+Jika ada pelanggaran, build gagal.
+
+**Smoke test pasca-build (wajib setiap kali template/validator berubah):** ekstrak zip ke direktori kosong, `git init`, lalu jalankan di sana `python3 tools/validate_repo.py` dan `python3 tools/test_failure_injection.py` — keduanya harus PASS (exit 0) tanpa ada sistem terdaftar. Ini membuktikan template berdiri sendiri (diverifikasi 5 Sep 2026; lihat `AUDIT_META_SISTEM_2026-09-05.md` rencana regressi #3). **Yang normal di repo hasil ekstrak:** warning (bukan error) yang menunjuk artefak khusus master — file `sistem-konten-kreator/…`, `_meta/_internal/…`, path pilot — karena template memang TIDAK membawanya; exit code tetap 0 dan itu bukan cacat template. Target "0 warning" hanya berlaku di master blueprint.
 
 ## Backup
 

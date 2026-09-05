@@ -60,7 +60,7 @@ Tes ini memvalidasi perilaku sistem, bukan hanya keberadaan file. Setiap test me
 
 **Given:** master blueprint dan pilot sudah lulus.  
 **When:** template bersih dibuat.  
-**Then:** template tidak membawa data pribadi, output produksi, audit internal, atau keputusan domain contoh; entry point dan kontrak minimum tetap tersedia.
+**Then:** template tidak membawa data pribadi, output produksi, audit internal, atau keputusan domain contoh; entry point dan kontrak minimum tetap tersedia. Sejak audit 5 Sep 2026 (M-01/M-16), Then juga mencakup: (a) SEMUA `_meta/*.md` aktif dan SEMUA `tools/*.py` ikut terbawa (dijaga guard kelengkapan — rujukan aktif yang tidak ikut = build GAGAL); (b) salinan `SYSTEM_MANIFEST.md` master membawa banner "sejarah master, bukan identitas repo ini"; (c) hasil ekstrak lolos smoke test `validate_repo.py` + `test_failure_injection.py` di repo kosong tanpa sistem terdaftar.
 
 ## AT-11 — Regression setelah upgrade
 
@@ -79,3 +79,9 @@ Tes ini memvalidasi perilaku sistem, bukan hanya keberadaan file. Setiap test me
 **Given:** sebuah sesi memelihara `LOG_SESI_YYYY-MM-DD.md` (header "Keadaan Sesi" + kronologi) yang berkeadaan `OPEN`, lalu sesi itu crash tanpa penutupan yang benar; tidak ada commit baru setelah update log terakhir.  
 **When:** pengguna membuka sesi baru dan menjalankan prompt pembuka universal.  
 **Then:** agent menemukan log terbaru, membacanya, dan **melaporkan keadaan sesi sebelumnya** (apa yang disepakati, apa yang terbuka, langkah berikutnya) sebelum bertanya tujuan sesi — tanpa meminta pengguna menjelaskan ulang konteks yang sudah tercatat; jika ada keputusan yang belum tercatat di log, agent menyebutkannya sebagai celah, bukan menebaknya.
+
+## AT-14 — Kontrak warisan otomatis untuk sistem baru
+
+**Given:** pengguna memulai sistem baru dengan Discovery Level-0; tidak menyebut-nyebut pegangan, LOG_SESI, field checkpoint, atau aturan platform.
+**When:** agent menyusun `00_RENCANA_KERANGKA.md` dan skeleton sistem.
+**Then:** agent TANPA diminta menerapkan seluruh butir `03_KONTRAK_WARISAN.md` (W-01…W-09) dan melaporkan tabel "Warisan" dengan status tiap butir; TIDAK menawarkan butir satu per satu sebagai pertanyaan; jika ada butir yang dinilai tidak cocok untuk domain itu, agent BERHENTI pada butir itu, menjelaskan apa yang hilang tanpanya, dan meminta keputusan eksplisit pengguna sebelum melewati — override tercatat di manifest dengan alasan + approval; `tools/validate_repo.py` menandai ERROR bila butir yang bisa dicek mekanis tidak ada, meski untuk sistem yang belum ada di daftar file statis validator mana pun (penegakan berbasis INDEKS, bukan daftar manual).

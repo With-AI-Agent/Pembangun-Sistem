@@ -52,6 +52,7 @@ Checkpoint tiap tahap + commit & push; **log sesi berkelanjutan** (`LOG_SESI_YYY
 
 ## Catatan kualitas
 
+- `PROMPT_ENTRI_UNIVERSAL.md` dan blok prompt di `PANDUAN_PENGGUNA.md` §2 **wajib identik** (dua file, satu sumber); selisih diam-diam pernah terjadi dan jadi temuan audit — cek diff keduanya setiap kali mengubah salah satu. Meta-sistem sendiri mengikuti standar 2-file ini di root repo (M-15, 5 Sep 2026).
 - Prompt pembuka/penutup harus **portabel**: memakai path relatif folder sistem, tidak menggandeng path repo meta — supaya tetap benar saat sistem berdiri sebagai repo standalone.
 - Setiap perubahan aturan sistem yang memengaruhi alur sesi wajib diikuti pembaruan bagian 2–3 pegangan (agar satu-prompt tetep cukup).
 - Pegangan ikut dicek kelengkapannya oleh validator sistem (lihat `validate_system.py` masing-masing) dan `tools/validate_repo.py` (file root sistem).

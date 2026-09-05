@@ -71,3 +71,13 @@ Tidak ada merge marker / code fence rusak (rglob seluruh .md); versi & status ko
 ## Status proses
 
 Audit ini menghasilkan temuan + proposal. Implementasi (termasuk M-10 dan M-13 yang disetujui lewat delegasi "lakukan yang terbaik" 16:50) berjalan pada sesi/branch `arena/01a070c7-pembangun-sistem`, commit terpisah per langkah, satu PR; review isi lengkap oleh pengguna sebelum merge (kategori Besar).
+
+## Addendum (ditemukan saat implementasi, 5 Sep)
+
+**M-19 (B, P2) — Baris temuan L-05 basi di `sistem-konten-kreator/SYSTEM_MANIFEST.md`.** Tabel "Temuan Audit yang Masih Terbuka" masih menulis "**AT-KK-05b belum diuji**" padahal gate di file yang sama (baris 54) dan Log Evolusi (baris 99) mencatat LULUS 5 Sep — satu file, dua status, bertentangan. (Baris unchecked pada baris 57 TIDAK termasuk temuan: ia berada dalam `<!-- riwayat gate -->` — komentar riwayat yang disengaja, diverifikasi.) **Diperbaiki di sesi ini** (baris L-05 disinkronkan + dicatat di Log Evolusi `0.3.2-warisan-sync`).
+
+**Koreksi cakupan M-07:** perintah regresi ditambahkan sebagai teks di bawah Entry Point 00_CARA_KERJA (bukan hanya blok struktur). **Bukti smoke test template** (regressi #3) dijalankan riil pada sesi ini di `/tmp/tpl_smoke`: validator & FI exit 0 di repo tanpa sistem; 8 warning di ekstrak = rujukan artefak khusus master → dinormalisasi sebagai ekspektasi di `TEMPLATE_RELEASE.md` (bukan cacat).
+
+## Hasil akhir sesi implementasi
+
+Semua M-01…M-17 & M-19 **diperbaiki** pada branch ini; M-18 tetap keputusan pengguna. Regresi akhir: `validate_repo.py` **PASS 0-warning** (24 required glob-dinamis; 67 dokumen; 186 rujukan; 2 sistem + kontrak warisan ditegakkan generik), `test_failure_injection.py` **PASS 11 skenario** (6 sintetis + 4 konsistensi unit nyata — deck presentasi kini termasuk), `backup_verify.py` PASS 29 file byte-exact, `build_template.py` PASS + guard kelengkapan + smoke ekstrak PASS, `validate_system.py` presentasi PASS. Versi: meta `1.3.0`; presentasi `0.4.1`; konten-kreator `0.3.2-warisan-sync`.

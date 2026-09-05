@@ -10,7 +10,8 @@ Laporan ini dibuat agent di awal sesi baru sebelum pekerjaan substantif dimulai.
 - **Working tree:** bersih / ada perubahan
 - **Commit terakhir:**
 - **PR terkait:** tidak ada / [nomor dan status]
-- **PR lain yang masih terbuka:** tidak ada / [daftar]
+- **PR lain yang masih terbuka:** tidak ada / [daftar] (cek dengan `gh pr list --state all --limit 20`; PR merged/closed dari branch aktif wajib dilaporkan — fakta platform #2)
+- **LOG_SESI terbaru:** tidak ada / [path] — keadaan `OPEN`/`CLOSED`; kalau `OPEN`: 1–3 baris keadaannya (laporkan sebelum bertanya tujuan; jangan tanya ulang konteks yang tercatat)
 
 ## Sistem dan Unit Kerja
 

@@ -64,9 +64,9 @@ Policy ini dibuat **karena** fakta platform di atas, bukan aturan sembarang.
 
 ### P3 — Verifikasi branch dan PR di awal sesi
 
-**Policy:** Di awal sesi baru, agent harus cek `git branch --show-current`, `git log --oneline -3`, dan `gh pr list --state open`.
+**Policy:** Di awal sesi baru, agent harus cek `git branch --show-current`, `git log --oneline -3`, dan `gh pr list --state all --limit 20`.
 
-**Alasan kausal:** Karena fakta #1 (branch otomatis), agent tidak boleh asumsi branch. Karena fakta #2, jika PR sudah merge tapi sesi lama masih dipakai, push akan gagal. Verifikasi mencegah mismatch (FI-04).
+**Alasan kausal:** Karena fakta #1 (branch otomatis), agent tidak boleh asumsi branch. Karena fakta #2, jika PR sudah merge tapi sesi lama masih dipakai, push akan gagal. Verifikasi mencegah mismatch (FI-04). **Perintahnya wajib `--state all`, bukan `--state open`** — P4 harus bisa MENGLIHAT PR branch aktif yang sudah MERGED/CLOSED, dan itu tidak pernah muncul di daftar `open` (dibetulkan di audit meta 5 Sep 2026, temuan M-04; dua sesi nyata 4–5 Sep terpaksa memakai `--state all` untuk bekerja benar).
 
 ### P4 — Jangan lanjut kerja di sesi yang PR-nya sudah merge
 

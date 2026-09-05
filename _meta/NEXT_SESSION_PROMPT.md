@@ -10,13 +10,13 @@ Sebelum melakukan perubahan apa pun, lakukan bootstrap secara berurutan:
 1. Verifikasi repository, branch aktif, base/default branch, working tree,
    commit terakhir, dan remote. Jangan mengasumsikan branch atau status dari
    percakapan sebelumnya. Ingat fakta platform: branch arena/... dibuat otomatis oleh lmarena (bukan manual), dan setelah PR merge/close sesi tersebut tidak bisa push lagi — lihat _meta/PLATFORM_LMARENA.md.
-2. Cek semua PR terbuka melalui tool GitHub dan laporkan nomor, judul, status,
-   branch, tujuan, serta apakah ada konflik atau pekerjaan yang menggantung. Jika PR dari branch aktif sudah MERGED, maka sesi ini tidak bisa push lagi (fakta platform #2) — harus buka sesi baru dari main.
+2. Cek PR melalui tool GitHub dengan `gh pr list --state all --limit 20` dan laporkan nomor, judul, status,
+   branch, tujuan, serta apakah ada konflik atau pekerjaan yang menggantung. `--state all` WAJIB (bukan `--state open`) supaya PR dari branch aktif yang sudah MERGED/CLOSED terlihat — jika PR dari branch aktif sudah MERGED, sesi ini tidak bisa push lagi (fakta platform #2) — harus buka sesi baru dari main.
    Cari juga `LOG_SESI_*.md` terbaru (root repo / folder sistem / folder unit);
    kalau keadaannya `OPEN`, BACA dan laporkan keadaan sesi sebelumnya —
    itu konteks yang tidak boleh ditanya ulang.
 3. Baca `_meta/SYSTEM_MANIFEST.md`.
-4. Baca `_meta/00_CARA_KERJA_META.md`.
+4. Baca `_meta/00_CARA_KERJA_META.md`. Bila kerja menyentuh sistem manapun atau berupa audit lintas-sistem, lanjut baca `_meta/03_KONTRAK_WARISAN.md` (daftar butir yang wajib tertanam di semua sistem — default aktif, override butuh konfirmasi pengguna).
 5. Baca `_meta/PLATFORM_LMARENA.md` — fakta platform vs policy, wajib paham.
 6. Baca `_meta/_internal/HANDOFF_NEXT_SESSION.md`.
 7. Baca `_meta/INDEKS_SISTEM.md`.

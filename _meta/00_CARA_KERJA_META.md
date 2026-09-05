@@ -19,31 +19,55 @@ Setelah 1 sistem berhasil dibangun dan teruji (Sistem Konten Kreator — lihat `
 
 > **Setiap sistem wajib menyertakan PEGANGAN PENGGUNA (buku pedoman) di dalam foldernya.** (Prinsip tambahan, dinyatakan pengguna 5 Sep 2026.) Standar mudahnya: **sama dengan meta-sistem ini sendiri** — pengguna cukup membuka sesi dengan **SATU prompt pembuka universal** yang sudah disiapkan, lalu agent otomatis terorientasi penuh (apa sistemnya, cara kerja, ketentuan, kondisi repo, PR menggantung) tanpa perlu ditempel manual. Bentuknya dua file di dalam folder sistem: `PROMPT_ENTRI_UNIVERSAL.md` (satu blok prompt pembuka siap tempel) + `PANDUAN_PENGGUNA.md` (pedoman lengkap: prompt pembuka + **prompt penutup sesi**, istilah awam, kalimat per situasi, cara review & merge, kebiasaan). Ikuti struktur `_meta/PANDUAN_PENGGUNA_TEMPLATE.md`. Preceden: meta-sistem sendiri (`PANDUAN_PENGGUNA.md` di root repo) dan `sistem-konten-kreator/` (`PANDUAN_PENGGUNA.md` + `PROMPT_ENTRI_UNIVERSAL.md`).
 
+> **Pegangan pengguna + self-containment + checkpoint + log sesi diringkas menjadi KONTRAK WARISAN** (`03_KONTRAK_WARISAN.md`, 5 Sep 2026 — permintaan pengguna pasca audit menyeluruh). Semua butir yang wajib tertanam di SETIAP sistem (W-01…W-09) ada di satu daftar induk: **default aktif** — agent membangun menerapkan dan MELAPORKAN seluruhnya tanpa perlu diminta maupun menawarkan satu-satu; yang butuh keputusan pengguna hanyalah **penonaktifan** (override), yang wajib tercatat dengan alasan + approval. Butir yang bisa dicek mekanis ditegakkan `tools/validate_repo.py` untuk semua sistem terdaftar di `INDEKS_SISTEM.md` — termasuk yang belum lahir.
+
 ---
 
 ## Struktur Repo
 
 ```
 repo-utama/
+├── PANDUAN_PENGGUNA.md               ← pegangan pengguna meta-sistem (prompt
+│                                        pembuka + penutup; standar utk semua sistem)
+├── PROMPT_ENTRI_UNIVERSAL.md         ← blok prompt pembuka siap tempel (identik
+│                                        dgn §1 PANDUAN — aturan 2-file berlaku
+│                                        utk meta sendiri, M-15 audit 5 Sep)
+│
 ├── _meta/
 │   ├── SYSTEM_MANIFEST.md            ← manifest meta-sistem ini
 │   ├── 00_CARA_KERJA_META.md         ← file ini
 │   ├── 01_DISCOVERY_LEVEL_0.md       ← gali "sistem apa ini, struktur macam apa"
 │   ├── 02_PRINSIP_UNIVERSAL.md       ← prinsip default untuk semua sistem
+│   ├── 03_KONTRAK_WARISAN.md         ← butir WAJIB yang otomatis tertanam di
+│   │                                    SEMUA sistem (dibangun oleh meta) — lihat
+│   │                                    bagian "Kontrak Warisan" di file ini
 │   ├── INDEKS_SISTEM.md              ← daftar semua sistem + status
 │   ├── SYSTEM_MANIFEST_TEMPLATE.md   ← kontrak identitas tiap sistem
 │   ├── PANDUAN_PENGGUNA_TEMPLATE.md  ← template pegangan pengguna tiap sistem
+│   ├── TEMPLATE_LOG_SESI.md          ← format LOG_SESI (diturunkan ke sistem)
+│   ├── TEMPLATE_RELEASE.md           ← definisi template bersih + cara build/verif
+│   ├── NEXT_SESSION_PROMPT.md        ← prompt bootstrap sesi lanjutan
 │   ├── DEFINITION_OF_DONE.md         ← kriteria selesai dan rilis
 │   ├── PROTOKOL_CHECKPOINT_RECOVERY.md ← status persisten dan pemulihan
-│   ├── PLATFORM_LMARENA.md           ← fakta platform vs policy (baru, wajib baca)
+│   ├── PLATFORM_LMARENA.md           ← fakta platform vs policy (wajib baca)
 │   ├── QUALITY_ASSURANCE_AND_EVOLUTION.md ← audit, upgrade, dan rollback tiga lapisan
 │   ├── ACCEPTANCE_TESTS.md            ← skenario uji perilaku meta-sistem
 │   ├── SESSION_REPORT_TEMPLATE.md     ← format laporan awal setiap sesi
-│   └── FAILURE_INJECTION_TESTS.md    ← uji jalur gagal dan state abnormal
+│   ├── FAILURE_INJECTION_TESTS.md     ← uji jalur gagal dan state abnormal
+│   └── _internal/                     ← audit & handoff HISTORIS (referensi,
+│                                        bukan instruksi aktif; tdk ikut template)
+│
+├── tools/                            ← regression check struktural (stdlib-only):
+│   ├── validate_repo.py              ← PASS wajib 0-warning; menegakkan kontrak
+│   │                                    warisan generik utk tiap sistem di INDEKS
+│   ├── test_failure_injection.py     ← cek fail-closed checkpoint
+│   ├── backup_verify.py              ← backup esensial + uji restore byte-per-byte
+│   └── build_template.py             ← template bersih + guard kelengkapan
 │
 ├── sistem-[nama-1]/                  ← misal sistem-konten-kreator/
 │   └── (struktur & jumlah file BEDA-BEDA per sistem, ditentukan hasil
-│        Discovery, TIDAK dipaksa sama seperti sistem lain)
+│        Discovery, TIDAK dipaksa sama seperti sistem lain — TAPI butir
+│        03_KONTRAK_WARISAN wajib tertanam, override hanya via approval)
 │
 ├── sistem-[nama-2]/                  ← sistem lain, struktur sendiri
 │
@@ -92,8 +116,11 @@ Berlaku sama seperti yang sudah terbukti penting di Sistem Konten Kreator: GitHu
 
 **APAPUN tujuan sesi ini, WAJIB dilakukan dulu di awal (Entry Point tingkat repo):**
 1. Buat laporan awal mengikuti `SESSION_REPORT_TEMPLATE.md`; verifikasi repo, branch, working tree, commit, dan PR.
-2. Cek apakah ada PR yang masih terbuka/menggantung di repo ini — dari SISTEM MANAPUN, bukan cuma sistem yang mau dikerjakan sekarang. Karena repo ini menampung banyak sistem sekaligus, PR menggantung dari sistem lain bisa gampang terlupakan kalau tidak dicek di level repo, bukan cuma di level 1 sistem.
+2. Cek apakah ada PR yang masih terbuka/menggantung di repo ini — dari SISTEM MANAPUN, bukan cuma sistem yang mau dikerjakan sekarang. Karena repo ini menampung banyak sistem sekaligus, PR menggantung dari sistem lain bisa gampang terlupakan kalau tidak dicek di level repo, bukan cuma di level 1 sistem. Gunakan `gh pr list --state all --limit 20` — PR branch aktif yang sudah MERGED/CLOSED wajib terlihat supaya fakta platform #2 terdeteksi (lihat `PLATFORM_LMARENA.md` P3–P4).
 3. Cek `INDEKS_SISTEM.md` untuk tahu sistem apa saja yang ada dan statusnya.
+4. Cari `LOG_SESI_*.md` **terbaru** (root repo / folder sistem / folder unit kerja). Kalau yang terbaru berkeadaan `OPEN` → baca, laporkan keadaannya, dan konfirmasi ke pengguna sebelum lanjut — itu konteks yang tidak boleh ditanya ulang. (Langkah ini dulu hanya ada di dokumen lain; diselaraskan ke sini 5 Sep 2026, temuan M-05.)
+
+Regresi struktural tersedia sebagai alat — jalankan saat menyentuh `_meta/`/`tools/` atau menyelesaikan audit: `python3 tools/validate_repo.py` (harus PASS 0 warning), `tools/test_failure_injection.py`, `tools/backup_verify.py`, `tools/build_template.py` (temuan M-07: blok struktur dulu tidak menyebut `tools/`).
 
 Baru setelah itu, arahkan sesuai tujuan. Jika state tidak konsisten, gunakan `FAILURE_INJECTION_TESTS.md` sebagai aturan berhenti dan recovery:
 
@@ -118,8 +145,12 @@ Baru setelah itu, arahkan sesuai tujuan. Jika state tidak konsisten, gunakan `FA
      akan dibangun, dengan fungsi masing-masing)
 
 2. BUAT folder `sistem-[nama-baru]/` dan salin `SYSTEM_MANIFEST_TEMPLATE.md`
-   menjadi manifest sistem tersebut. Buat skeleton kosong sesuai rencana
-   kerangka dari Langkah 1.
+   menjadi manifest sistem tersebut (PR yang sama dengan rencana kerangka —
+   manifest menyusul SETELAH merge adalah temuan M-14). Buat skeleton kosong
+   sesuai rencana kerangka dari Langkah 1. Pastikan bagian **"Warisan"** pada
+   rencana kerangka sudah memuat status tiap butir `03_KONTRAK_WARISAN.md`
+   (diterapkan / override + approval) — defaultnya TERPASANG SEMUA, tanpa
+   menawarkan butir satu-satu ke pengguna.
 
 3. UNTUK TIAP DOKUMEN yang direncanakan: TULIS DULU prompt Discovery
    detailnya (dokumen generator, setara 01_BRAND_CORE.md/
