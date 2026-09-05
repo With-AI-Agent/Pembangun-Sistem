@@ -16,11 +16,20 @@ BACKUP_DIR.mkdir(parents=True, exist_ok=True)
 
 # M-01 (audit 5 Sep 2026): ESSENTIAL was a static list frozen at v1.0.0 and
 # silently missed every _meta file added later (PANDUAN_PENGGUNA_TEMPLATE.md,
-# TEMPLATE_LOG_SESI.md). It is now derived: every active _meta/*.md + root
-# pegangan + every tool ships in the backup. Restore verification (existence
-# + byte match of every file, not just the manifest) closes the drift risk.
+# TEMPLATE_LOG_SESI.md). It is now the STATIC CORE inventory (obligation,
+# checkpoint_core) UNION the derived repository glob: a new active file ships
+# automatically, and a deleted core file makes the backup FAIL instead of
+# silently shrinking the list (review finding F1). Restore verification
+# (existence + byte match of every file, not just the manifest) closes the
+# drift risk.
+import checkpoint_core as core
+
+
 def essential_list():
-    items = sorted(f"_meta/{p.name}" for p in (ROOT / "_meta").glob("*.md"))
+    items = sorted(
+        set(core.CORE_META_FILES)
+        | {f"_meta/{p.name}" for p in (ROOT / "_meta").glob("*.md")}
+    )
     items += [
         "PANDUAN_PENGGUNA.md",
         "PROMPT_ENTRI_UNIVERSAL.md",
@@ -28,7 +37,10 @@ def essential_list():
         ".gitignore",
         ".gitattributes",
     ]
-    items += sorted(f"tools/{p.name}" for p in (ROOT / "tools").glob("*.py"))
+    items += sorted(
+        set(core.CORE_TOOL_FILES)
+        | {f"tools/{p.name}" for p in (ROOT / "tools").glob("*.py")}
+    )
     items += sorted(
         f"{p.parent.name}/SYSTEM_MANIFEST.md"
         for p in ROOT.glob("sistem-*/SYSTEM_MANIFEST.md")

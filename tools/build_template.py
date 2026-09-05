@@ -22,15 +22,18 @@ TEMPLATE_ZIP = ROOT / "_meta" / "_internal" / "template_clean.zip"
 # Files to include in clean template.
 # M-01 (audit 5 Sep 2026): the list used to be static and silently drifted —
 # files added to _meta/ after v1.0.0 (PANDUAN_PENGGUNA_TEMPLATE, TEMPLATE_LOG_SESI)
-# were missing from the template. INCLUDE is now DERIVED from the repository:
-# every top-level `_meta/*.md` and every `tools/*.py` ships automatically.
+# were missing from the template. INCLUDE is now the STATIC CORE inventory
+# (obligation, checkpoint_core) UNION the derived repository glob: a new file
+# ships automatically, and a deleted core file makes the build FAIL instead
+# of silently disappearing (review finding F1).
+import checkpoint_core as core
+
 ROOT_META_EXCLUDE = ()  # no _meta file is excluded; empty = fail-loud default
 
 def include_list():
     items = sorted(
-        f"_meta/{p.name}"
-        for p in (ROOT / "_meta").glob("*.md")
-        if p.name not in ROOT_META_EXCLUDE
+        set(core.CORE_META_FILES)
+        | {f"_meta/{p.name}" for p in (ROOT / "_meta").glob("*.md")}
     )
     items += [
         "PANDUAN_PENGGUNA.md",
@@ -38,7 +41,10 @@ def include_list():
         ".gitignore",
         ".gitattributes",
     ]
-    items += sorted(f"tools/{p.name}" for p in (ROOT / "tools").glob("*.py"))
+    items += sorted(
+        set(core.CORE_TOOL_FILES)
+        | {f"tools/{p.name}" for p in (ROOT / "tools").glob("*.py")}
+    )
     return items
 
 # Additional empty dirs to create
@@ -79,14 +85,66 @@ def build():
         body = manifest_copy.read_text(encoding="utf-8")
         manifest_copy.write_text(MANIFEST_BANNER + body, encoding="utf-8")
 
-    # M-01 guard: every _meta/*.md that EXISTS in the master and is referenced
-    # (bare filename or _meta/path) from any active _meta document must ship in
-    # the template — this is what silently broke for PANDUAN_PENGGUNA_TEMPLATE.md
-    # and TEMPLATE_LOG_SESI.md.
+    # F5 (review PR #11, 5 Sep 2026): template self-containment transforms.
+    # Two active instructions in the shipped master docs point at files the
+    # template deliberately does not ship (the handoff doc, and the
+    # konten-kreator user guide). Rewrite them in the TEMPLATE COPIES only —
+    # the master keeps its operational references. An anchor that no longer
+    # matches means the source doc changed: fail the build, do not ship a
+    # template with a silently stale bootstrap.
+    def transform(rel, pairs):
+        path = TEMPLATE_DIR / rel
+        t = path.read_text(encoding="utf-8")
+        for old, new in pairs:
+            # Idempotent: re-running on an already-templated repo is a no-op;
+            # a doc that has NEITHER the anchor NOR the target text has
+            # drifted — fail the build.
+            if old in t:
+                t = t.replace(old, new)
+            elif new not in t:
+                return (f"transform anchor not found in {rel}: {old[:70]!r} "
+                        "(dan teks target tidak ada — dokumen berubah?)")
+        path.write_text(t, encoding="utf-8")
+        return None
+
+    for err in (
+        transform("_meta/NEXT_SESSION_PROMPT.md", [
+            ("6. Baca `_meta/_internal/HANDOFF_NEXT_SESSION.md`.",
+             "6. Kalau `_meta/_internal/HANDOFF_NEXT_SESSION.md` ada, bacanya. "
+             "Di repo baru dari template file ini TIDAK ada — lewati tanpa konflik "
+             "(handoff dibuat sesi terakhir di repo asal; ketiadaannya bukan cacat)."),
+            ("9. Verifikasi bahwa path dan artefak yang disebut handoff benar-benar ada.",
+             "9. Verifikasi bahwa path dan artefak yang disebut handoff (kalau ada) "
+             "benar-benar ada."),
+        ]),
+        transform("PANDUAN_PENGGUNA.md", [
+            ("Untuk istilah teknis lain (branch, PR, merge, commit) — lihat "
+             "`sistem-konten-kreator/panduan/PANDUAN_PENGGUNA.md`, penjelasannya sama "
+             "berlaku di sini.",
+             "Istilah teknis singkat: **branch** = salinan kerja; **commit** = snapshot "
+             "tersimpan; **PR** = usulan penggabungan kerja; **merge** = penggabungan "
+             "usulan yang sudah disetujui. Tiap sistem di repo ini juga punya "
+             "PANDUAN_PENGGUNA.md miliknya sendiri (kontrak W-01) dengan istilah yang "
+             "disesuaikan."),
+        ]),
+    ):
+        if err:
+            print(f"TEMPLATE BUILD FAILED: {err}")
+            return False
+
+    # M-01 guard: every core _meta file (obligation) that is referenced
+    # (bare filename or _meta/path) from any active _meta document must ship
+    # in the template — this is what silently broke for
+    # PANDUAN_PENGGUNA_TEMPLATE.md and TEMPLATE_LOG_SESI.md. The core list is
+    # checked even for files that no longer exist on disk (F1).
     import re
 
     ref_re = re.compile(r"`([^`\n]+\.md)`")
-    meta_files = {p.name: p for p in (ROOT / "_meta").glob("*.md")}
+    meta_files = {
+        Path(f).name: ROOT / f
+        for f in (set(core.CORE_META_FILES)
+                  | {f"_meta/{p.name}" for p in (ROOT / "_meta").glob("*.md")})
+    }
     drifted = []
     for doc in meta_files.values():
         for line in doc.read_text(encoding="utf-8").splitlines():
