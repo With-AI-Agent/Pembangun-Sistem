@@ -1,9 +1,13 @@
 # -*- coding: utf-8 -*-
-"""Render preview HTML dari .pptx final (identik dengan berkas). Dir=rtl, palet A."""
+"""Render preview HTML dari .pptx final (identik dengan berkas). Dir=rtl, palet A.
+CWD-independen: path relatif terhadap folder deck (AP-01, audit 5 Sep 2026 —
+path lama hardcode ke root repo dan merusak portabilitas/self-contained)."""
+import os
 from pptx import Presentation
 
-P = "sistem-presentasi/deck-aktif/presentasi-tesis-fikih-hiasan-wanita/keluaran/presentasi-tesis-fikih-hiasan-wanita.pptx"
-OUT = "sistem-presentasi/deck-aktif/presentasi-tesis-fikih-hiasan-wanita/keluaran/preview.html"
+HERE = os.path.dirname(os.path.abspath(__file__))
+P = os.path.join(HERE, "keluaran", "presentasi-tesis-fikih-hiasan-wanita.pptx")
+OUT = os.path.join(HERE, "keluaran", "preview.html")
 
 prs = Presentation(P)
 GREEN="#0F3D2E"; GOLD="#C9A227"; CREAM="#F7F3E9"
