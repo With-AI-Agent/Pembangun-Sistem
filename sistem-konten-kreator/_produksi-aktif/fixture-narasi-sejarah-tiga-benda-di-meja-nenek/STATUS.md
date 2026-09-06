@@ -42,7 +42,7 @@
   - `G1 Tahap 5 (Assets):` **disetujui 2026-09-06 — asset diterima; marking kecil dial segmen 04 accepted limitation; jangan regenerate**
   - `G2 konten final + metadata (Tahap 6):` **belum — menunggu review pengguna**
   - `G3 merge:` belum
-- **Commit terakhir:** akan menunjuk commit output Tahap 6 setelah commit dibuat. Commit output Tahap 5: `a28eaf4`; commit keputusan gerbang sebelumnya: `65e3492`.
+- **Commit terakhir:** `bcb188e` — paket Tahap 6, metadata, naskah final + metadata reproducibility di arsip, dan indeks. Commit output Tahap 5: `a28eaf4`; commit keputusan gerbang sebelumnya: `65e3492`.
 - **PR terkait:** [PR #13](https://github.com/With-AI-Agent/Pembangun-Sistem/pull/13) — head `arena/01a073cf-pembangun-sistem` → base `main`; **MERGED** `2026-09-06T01:13:39Z` (merge commit `d1fd0a5`). [PR #14](https://github.com/With-AI-Agent/Pembangun-Sistem/pull/14) — head `arena/01a0744b-pembangun-sistem` → base `main`; **MERGED** `2026-09-06T11:59:58Z` (merge commit `d4e687c`). PR sesi ini: **belum dibuat**.
 - **Pekerjaan belum tersimpan:** Tidak ada
 - **Risiko atau blocker:**
