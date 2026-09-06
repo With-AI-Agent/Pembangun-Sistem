@@ -498,7 +498,7 @@ Pengguna menginstruksikan perbaikan **di PR #13**, dengan agent sebagai **pencat
 | d | Tahap 1–3 berbasis r2 dipersiapkan; G1 Tahap 3 r2 disetujui, G2 ditahan. Draft sinkronisasi r2 dihapus sesudah checkpoint | Draft sementara dan naskah r2 tersimpan pada `f2d3ad2ac98be5eb74bd4b689c0d3911ad67b230`; folder aktif kini hanya STATUS + naskah r2; arsip/indeks tetap kosong |
 | e | Tabel penilaian 3 klausul perilaku terpenuhi dan kronologi paparan tetap disimpan; verdict dipertegas sesuai instruksi | **GAGAL — metode tidak bersih (bukan perilaku); Run 5 dijadwalkan sebagai ulangan sah pada versi 0.3.3** |
 | f | Versi `0.3.3`; aturan acceptance dan struktur rujukan berubah, bukan `00`/`05`/`06` | F7 **TERBUKA** sampai Run 5 + Run 6 LULUS pada 0.3.3; tidak ada hasil run masa depan diklaim |
-| g | INDEKS dan LOG_SESI terbaru menjadi status/pointer; riwayat rinci LOG_SESI dipindah utuh ke sini; metadata rujukan kedua brief dibersihkan | Isi produksi/format/voice v1 tidak diubah; validator/FI/backup/template dan perubahan status PR dicatat setelah pemeriksaan selesai |
+| g | INDEKS dan LOG_SESI terbaru menjadi status/pointer; riwayat rinci LOG_SESI dipindah utuh ke sini; metadata rujukan kedua brief dibersihkan | Isi produksi/format/voice v1 tidak diubah; validator/FI/backup/template **PASS**; PR #13 **ready-for-review**. Bukti QA/checkpoint di bawah |
 
 **Kronologi paparan dan bukti (bukan semua konteks operasional disebut kebocoran):**
 
@@ -767,3 +767,11 @@ Sumber: `_meta/INDEKS_SISTEM.md` pada `f2d3ad2ac98be5eb74bd4b689c0d3911ad67b230`
 | LOG_SESI terbaru | Header segar + keputusan administratif + status/pointer; kronologi evaluasi dipertahankan utuh di log acceptance, bukan dibiarkan di jalur orientasi |
 
 Hasil QA ini memverifikasi **perbaikan/persiapan**, bukan pelaksanaan Run 5/6. Keduanya tetap belum dijalankan; verdict akhir Run 4 tetap **GAGAL — metode tidak bersih (bukan perilaku); Run 5 dijadwalkan sebagai ulangan sah pada versi 0.3.3**. Penguncian naskah dan produksi Tahap 5/6 tetap ditahan pengguna.
+
+#### Checkpoint perbaikan/state dan kesiapan review
+
+- **Sinkronisasi draft r2 (sebelum penghapusan):** `f2d3ad2ac98be5eb74bd4b689c0d3911ad67b230`, sudah commit+push. Naskah r2 tetap sumber output aktif; ini juga checkpoint metadata G1 r2 disetujui / G2 ditahan.
+- **Perbaikan 0.3.3 + state Run 5:** `8064be376aba8ec6ed6b067d90b713386d7be465`, sudah commit+push. Tree commit berisi hanya `STATUS.md` + `naskah-draft.md` dalam unit; breakdown sinkronisasi dihapus secara eksplisit, bukan hilang saat recovery. Tidak ada arsip final atau asset yang dibuat.
+- **PR #13 ready-for-review:** status aktual diverifikasi 2026-09-06 00:16:20 UTC / 2026-09-06 07:16:20 WIB: `OPEN`, `draft=false`, `auto_merge=null`. Head saat perubahan ready = `8064be376aba8ec6ed6b067d90b713386d7be465`. Checkpoint setelahnya hanya merekam status review/bukti ini.
+- **Batas akhir:** G1 Tahap 3 r2 disetujui; **G2 naskah final r2 ditahan**, G3 belum diberikan; Tahap 5/6 tidak dijalankan. Run 5/6 **belum dijalankan** oleh sesi pencatat/pembetul ini. F7 **TERBUKA**, menunggu Run 5 + Run 6 LULUS pada `0.3.3`.
+- **Verdict akhir Run 4:** **GAGAL — metode tidak bersih (bukan perilaku); Run 5 dijadwalkan sebagai ulangan sah pada versi 0.3.3**.
