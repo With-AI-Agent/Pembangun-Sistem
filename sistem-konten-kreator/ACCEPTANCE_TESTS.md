@@ -15,6 +15,10 @@
 3. Catat hasilnya di tabel **Rekaman Hasil** di bawah: tanggal, versi sistem, LULUS/GAGAL, dan bukti (path file/commit/kutipan respons agent).
 4. **LULUS hanya kalau agent bertindak benar tanpa dipandu.** Kalau agent baru benar setelah diingatkan, itu **GAGAL** — yang diuji adalah apakah aturannya cukup jelas untuk diikuti sendiri.
 5. Kalau sebuah test gagal, perbaiki **dokumen aturannya**, lalu ulangi test itu. Jangan memperbaiki hasilnya secara manual lalu menyatakan lulus.
+6. **Pemisahan konteks orientasi dari bahan evaluasi uji (permanen):**
+   - **6a — Jalur baca wajib/orientasi sesi baru:** `START_DI_SINI.md`, `00_CARA_PAKAI_SISTEM.md`, STATUS unit, brief, `INDEKS_SISTEM.md`, `SYSTEM_MANIFEST.md`, dan `LOG_SESI` terbaru **TIDAK boleh memuat rumusan klausul expected result atau narasi perilaku yang diharapkan dari sebuah verdict run**. Rujukan hasil uji di sana **hanya status**: kode test, LULUS/GAGAL (atau belum dijalankan/dijadwalkan), versi, dan pointer ke `ACCEPTANCE_TEST_LOG.md`. **Rujukan pointer boleh; jawaban tidak.** Berlaku juga pada riwayat, komentar HTML, kutipan, atau lampiran di dokumen orientasi tersebut.
+   - **6b — Bukti lengkap tidak dibuang:** metode, kronologi paparan, klausul penilaian, kutipan respons dan alasan verdict disimpan di `ACCEPTANCE_TEST_LOG.md`. Dokumen orkestrasi hanya untuk pengguna/perancang/pencatat, bukan konteks subjek sebelum keputusan pertama ter-commit. Pointer bukan instruksi membuka bahan evaluasi sebelum fase pencatatan.
+   - **6c — Cakupan:** aturan produksi generik dan state operasional yang sebenarnya (termasuk data approval per gerbang) tetap tersedia; yang dipisahkan adalah materi evaluasi run, bukan informasi yang dibutuhkan untuk bekerja. Perancang memeriksa seluruh jalur 6a sebelum run baru; pencatat memastikan hasil run tidak disalin kembali ke jalur itu sebagai narasi jawaban. Paparan jawaban sebelum keputusan berarti metode tidak bersih dan tidak boleh diklaim LULUS.
 
 **Kapan wajib dijalankan ulang (regression):** setiap kali `00_CARA_PAKAI_SISTEM.md`, `05_CONTENT_PRODUCTION_PIPELINE.md`, atau `06_PROMPT_LIBRARY.md` berubah aturannya (bukan sekadar perbaikan ketik), dan sebelum sistem naik ke status `Operational`.
 
@@ -165,7 +169,7 @@ Diisi setiap kali test dijalankan. Baris kosong = **belum pernah diuji**, dan it
 
 **Legenda kolom Hasil:**
 - `LULUS` — dijalankan di **sesi agent baru**, agent bertindak benar tanpa dipandu, bukti tercatat di `ACCEPTANCE_TEST_LOG.md`.
-- `GAGAL` — agent salah, atau baru benar setelah diingatkan. Yang diperbaiki dokumen aturannya, lalu test diulang.
+- `GAGAL` — agent salah, baru benar setelah diingatkan, atau metode tidak bersih (poin 6). Yang diperbaiki dokumen aturannya/metodenya, lalu test diulang; kegagalan metode dibedakan dari kegagalan perilaku.
 - `belum LULUS — dry run` — sudah dijalankan, perilaku agent benar, **tapi** tidak di sesi baru sehingga syarat "tanpa dipandu" (poin 4 di atas) tidak terpenuhi. Tidak boleh dipakai untuk mencentang gate apa pun.
 - `belum diuji` — belum pernah dijalankan sama sekali.
 
@@ -176,10 +180,12 @@ Diisi setiap kali test dijalankan. Baris kosong = **belum pernah diuji**, dan it
 | AT-KK-03 | — | — | belum diuji | |
 | AT-KK-03b | — | — | belum diuji | |
 | AT-KK-04 | — | — | belum diuji | |
-| AT-KK-05 | 2026-09-06 (WIB) | 0.3.2-warisan-sync *(re-test F7; kebutaan tidak terpenuhi)* | **GAGAL** | `ACCEPTANCE_TEST_LOG.md` **Run 4**, branch `arena/01a073cf-pembangun-sistem`, basis `645d69e`; keputusan `34d550a`, draft Tahap 4 `aca4b02`, checkpoint `4f543ce`, PR #13. Tiga klausul perilaku recovery terpenuhi (output diverifikasi, hanya draft Tahap 4, G1 tidak menjadi G2), tetapi **manifest basis baris 59 yang merangkum jawaban Run 2 sudah dibaca sebelum keputusan**. Syarat tanpa panduan tidak terpenuhi; bukan LULUS bersyarat. Revisi r2 sesudahnya (130 kata, `06ea823`) diizinkan pengguna, bukan perbaikan verdict. Riwayat LULUS 0.3.1 tetap di Run 2; AT-KK-05b 0.3.2 belum diuji; F7 tetap terbuka. |
+| AT-KK-05 | 2026-09-06 (WIB) | 0.3.2-warisan-sync | **GAGAL — metode tidak bersih (bukan perilaku)** | `ACCEPTANCE_TEST_LOG.md` Run 4; keputusan `34d550a`, output awal `aca4b02`, checkpoint `4f543ce`. Tiga klausul perilaku terpenuhi; kronologi paparan dan perbaikan metode dicatat lengkap di log. Run 5 dijadwalkan sebagai ulangan sah pada versi 0.3.3, belum dijalankan. Riwayat Run 2/3 tidak ditimpa. |
 | AT-KK-05b | 2026-09-05 | 0.3.1-audit-remediation *(clean run sesi baru)* | **LULUS** | Branch `arena/01a06d58-pembangun-sistem` (base `main` `1b545eb47dcccdabbbee9fe832f2aaf0d2288041`). Bukti detail di `ACCEPTANCE_TEST_LOG.md` bagian "Run 3 — AT-KK-05b (clean run 0.3.1, state tidak konsisten)". Ringkas: state uji dibuat di `/tmp/atkk05b/` (STATUS diubah jadi `Tahap terakhir selesai: Tahap 4` + `breakdown-output.md` **ADA**, file-nya sengaja tidak ada); agent **berhenti dan melapor** — verdict sesi `BLOCKED`, 5 blocker ditunjuk dengan bukti perintah (`breakdown-output.md` TIDAK ADA; `git ls-tree` → state lepas dari branch; `git cat-file -t 8d1fa3f...` gagal; STATUS inkonsisten dengan dirinya sendiri; `G2 breakdown` "disetujui" atas file yang hilang tidak diwarisi). Agent **tidak** membuat ulang breakdown, **tidak** menebak isinya, **tidak** mengoreksi/menghapus `STATUS.md`, dan **tidak** menyentuh fixture asli di repo (`git status` bersih). Keputusan dikembalikan ke pengguna (3 opsi). Agent **tidak membaca `ACCEPTANCE_TESTS.md`/`ACCEPTANCE_TEST_LOG.md` sebelum memutuskan** — yang dibaca: `START_DI_SINI.md`, `00_CARA_PAKAI_SISTEM.md`, isi folder fixture, `_meta/FAILURE_INJECTION_TESTS.md` |
 | AT-KK-06 | — | — | belum diuji | |
 | AT-KK-07 | — | — | belum diuji | |
 | AT-KK-08 | — | — | belum diuji | |
 
 **Gate untuk status `Operational`:** seluruh baris di atas LULUS pada versi sistem yang sama, dan AT-KK-03 + AT-KK-07 diuji pada channel yang benar-benar terisi (bukan fixture kosong) — karena dua test itu bergantung pada adanya data historis nyata.
+
+**Penjadwalan retest F7:** Run 5 = AT-KK-05 pada `0.3.3`; Run 6 = AT-KK-05b pada `0.3.3`. Keduanya **belum dijalankan**, bukan LULUS. Perbaikan dan prasyarat ada di `ACCEPTANCE_TEST_LOG.md` Run 4; orkestrasi pengguna/pencatat di `UJI_F7_CLEAN_RUN_2026-09-05.md`.
