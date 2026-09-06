@@ -35,7 +35,7 @@
   - `G1 Tahap 5 (Assets):` belum
   - `G2 konten final + metadata (Tahap 6):` belum
   - `G3 merge:` belum
-- **Commit terakhir:** akan menunjuk commit output Tahap 4 setelah commit dibuat — commit nyata yang menyimpan `naskah-draft.md` r2 hasil restore Run 7 (byte-identik r2 pra-Run-5, sha256 `20205ccc0abd79c9b2d8d42a8465ceb4da981a37d5edc3df4fde8495de5d2a4d`, sumber restore `54fcb16^`). Verifikasi: `git log -1 --format=%H -- sistem-konten-kreator/_produksi-aktif/fixture-narasi-sejarah-tiga-benda-di-meja-nenek/naskah-draft.md`. Field ini menunjuk commit output naskah, bukan commit STATUS sendiri.
+- **Commit terakhir:** `3be470bdf8b50846324d608e39d69fd0913eadf6` — output Tahap 4 `breakdown-output.md` + pembaruan STATUS. Commit output naskah r2 tetap `7eeb98daa5393dbb9e62e766d35b26c9757561a5` (byte-identik r2 pra-Run-5, sha256 `20205ccc0abd79c9b2d8d42a8465ceb4da981a37d5edc3df4fde8495de5d2a4d`, sumber restore `54fcb16^`). Field ini menunjuk commit output Tahap 4, bukan commit STATUS berikutnya.
 - **PR terkait:** [PR #13](https://github.com/With-AI-Agent/Pembangun-Sistem/pull/13) — head `arena/01a073cf-pembangun-sistem` → base `main`; **MERGED** `2026-09-06T01:13:39Z` (merge commit `d1fd0a5`). [PR #14](https://github.com/With-AI-Agent/Pembangun-Sistem/pull/14) — head `arena/01a0744b-pembangun-sistem` → base `main`; **MERGED** `2026-09-06T11:59:58Z` (merge commit `d4e687c`). PR sesi ini: **belum dibuat**.
 - **Pekerjaan belum tersimpan:** Tidak ada
 - **Risiko atau blocker:**
