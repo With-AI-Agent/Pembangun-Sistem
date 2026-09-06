@@ -1,16 +1,16 @@
-# Naskah Draft — Tiga Benda di Meja Nenek
+# Naskah Final — Tiga Benda di Meja Nenek
 
 - **Channel:** `channel-fixture-narasi-sejarah/` (FIXTURE)
 - **Model konten:** Narasi 60 Detik (v1) — **tetap**, target 130–145 kata, durasi 55–65 detik, tempo ±130 kata/menit
 - **Revisi:** **r2**, 2026-09-06 WIB — pemadatan r1 atas izin eksplisit pengguna
-- **Tahap:** 3 — Naskah/Script (**draft revisi**, belum dikunci G2)
+- **Tahap:** 3 — Naskah/Script (**final untuk produksi ini**, dikunci G2; diarsipkan pada Tahap 6)
 - **Jumlah kata VO:** **130** — dihitung dari bagian Naskah saja, berdasarkan pemisah whitespace
 - **Rencana durasi:** **63 detik estimasi** = 60 detik pada 130 kata/menit + enam jeda antarparagraf masing-masing 0,5 detik. **Belum diukur lewat rekaman/TTS**; tambahan jeda internal/intonasi harus diperiksa saat produksi audio nanti.
-- **Approval revisi:** **G1 Tahap 3 r2 disetujui 2026-09-06 WIB**. **G2 naskah final r2 belum — ditahan pengguna** untuk keperluan administratif; naskah tetap draft. Tahap 5/6 tidak diizinkan.
+- **Approval revisi:** **G1 Tahap 3 r2 disetujui 2026-09-06 WIB**. **G2 naskah final r2 disetujui 2026-09-06 WIB** — dikunci apa adanya, tanpa revisi teks. Tahap 5 asset diterima pada G1; Tahap 6 paket final dan metadata disiapkan, G2 Tahap 6 masih menunggu.
 - **Sumber eksternal:** tidak ada — cerita personal dummy/fiksi fixture, bukan klaim sejarah hasil riset. “Pukul lima” adalah detail cerita, bukan temuan faktual yang diverifikasi.
 - **Karakter Tipe B:** tidak ada wujud karakter baru; nenek/anak-anak hanya disebut dalam VO, visual tetap b-roll benda sesuai model
 
-> **FIXTURE UJI — BELUM FINAL.** Pengguna memilih revisi dalam batas brief, **bukan** perubahan brief atau penguncian naskah. Fokus tetap radio tua sebagai pengatur pagi; voice hangat, sedikit melankolis, tidak menggurui. Judul masih judul kerja, bukan metadata publish yang disetujui.
+> **FIXTURE UJI — NASKAH FINAL UNTUK PRODUKSI INI.** G2 mengunci r2 apa adanya; tidak ada revisi teks. Fokus tetap radio tua sebagai pengatur pagi; voice hangat, sedikit melankolis, tidak menggurui. Judul masih judul kerja, bukan metadata publish yang disetujui.
 
 ---
 
@@ -47,6 +47,6 @@ Yang berubah bukan kebiasaannya. Yang berubah: kita tidak lagi tahu siapa yang d
 ## Status produksi
 
 - G1 Tahap 3 r2: **disetujui 2026-09-06 WIB**.
-- G2 naskah final r2: **belum — ditahan pengguna**, alasan administratif.
-- Tahap 5/6: belum dimulai; tidak ada izin untuk memproduksi asset atau konten final.
+- G2 naskah final r2: **disetujui 2026-09-06 WIB** — dikunci apa adanya, tanpa revisi teks.
+- Tahap 5: asset diterima pada G1 Tahap 5. Tahap 6: paket final + metadata disiapkan; G2 Tahap 6 masih menunggu.
 - Inventaris output dan checkpoint terkini dicatat di `STATUS.md`.
