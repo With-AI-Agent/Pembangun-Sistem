@@ -2,7 +2,7 @@
 
 - **Konten:** Tiga Benda di Meja Nenek (fixture)
 - **Tahap:** 5 — Generate/Acquire Assets
-- **Status:** asset tersimpan; **G1 Tahap 5 belum disetujui**
+- **Status:** asset tersimpan; **G1 Tahap 5 disetujui 2026-09-06 WIB**
 - **Metode:** tujuh still frame vertikal dibuat dengan tool image generation Agent berdasarkan breakdown yang sudah dikunci. Ini bukan footage video dan bukan stok pihak ketiga.
 - **Bank Konsistensi Visual:** tidak berlaku menurut Channel Brief/Model Konten Brief; `segmen-01-radio-pintu-masuk.png` dipakai sebagai reference image hanya untuk kontinuitas internal konten pada segmen 2, 4, dan 7.
 - **Sumber eksternal:** tidak ada; tidak ada `SUMBER.md` dan tidak ada atribusi eksternal yang perlu dicatat.
@@ -24,9 +24,9 @@
 - [x] Tujuh file asset ada di `assets/` dan seluruhnya PNG vertikal `768×1376`.
 - [x] Setiap file dipetakan ke satu segmen breakdown; tidak ada file tak terpakai.
 - [x] Review visual awal: tidak ada wajah yang dapat dikenali, watermark, atau logo merek yang dominan; palet kayu/cokelat/krem dan cahaya hangat konsisten.
-- [ ] **G1 Tahap 5:** pengguna belum menerima atau menolak asset. G1 tetap wajib sebelum Tahap 6.
+- [x] **G1 Tahap 5:** pengguna menerima seluruh asset pada 2026-09-06 WIB; marking kecil dial segmen 04 diterima apa adanya.
 - [ ] Audio, footage bergerak, dan assembly belum dibuat; itu bukan klaim selesai Tahap 6.
 
 ### Catatan review
 
-Segmen 4 mempertahankan detail dial radio yang sama, termasuk marking fisik kecil pada dial; tidak ada teks overlay atau branding besar. Ini tetap perlu dinilai pengguna pada G1 Tahap 5. Jika asset atau pendekatan still frame tidak sesuai, lakukan regenerate/acquire ulang sebelum lanjut.
+Segmen 4 mempertahankan detail dial radio yang sama, termasuk marking fisik kecil pada dial; tidak ada teks overlay atau branding besar. Pengguna menerima marking ini apa adanya sebagai accepted limitation fixture. Jangan regenerate asset atau memanggil image generation lagi pada run ini.
