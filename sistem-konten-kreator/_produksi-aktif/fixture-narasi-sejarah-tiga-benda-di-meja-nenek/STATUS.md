@@ -2,11 +2,11 @@
 
 > **STATE UJI RUN 7** — versi sistem `0.3.4`, naskah r2. Status uji: AT-KK-05 / Run 5 **GAGAL-metode** (koreksi pasca-review 6 Sep); AT-KK-05 / Run 7 **LULUS** (pencatat sesi terpisah); AT-KK-05b / Run 8 **dijadwalkan**; Run 6 lama **void**. F7 TERBUKA. Rujukan: `sistem-konten-kreator/ACCEPTANCE_TEST_LOG.md`.
 
-- **Status:** `approved`
+- **Status:** `merged`
 - **Channel:** `sistem-konten-kreator/channel-fixture-narasi-sejarah/` — v1, `Operational`
 - **Model konten:** `sistem-konten-kreator/channel-fixture-narasi-sejarah/model-konten/narasi-60-detik/brief.md` — v1, `Operational`
 - **Tahap terakhir selesai:** **Tahap 6** — paket konten final + metadata disetujui G2; judul tayang resmi opsi 1, `Radio Tua yang Menjadi Jam Rumah`.
-- **Tahap berikutnya:** **G3 merge** — PR disiapkan tanpa auto-merge; keputusan merge tetap di pengguna.
+- **Tahap berikutnya:** tidak ada tahap produksi tersisa — G3 selesai (PR #15 merged). Folder produksi **dipertahankan** (belum dihapus); penghapusan folder per `05` Tahap 6 langkah 5 menunggu instruksi pengguna.
 - **Output resmi:**
   - `arsip-naskah/2026-09-06-tiga-benda-di-meja-nenek.md` — **ADA**, naskah final r2, 130 kata; dipindahkan dari produksi aktif
   - `breakdown-output.md` — **ADA**, 7 segmen; G1 Tahap 4 dan G2 breakdown disetujui/dikunci
@@ -42,18 +42,18 @@
   - `G2 breakdown (Tahap 4):` **disetujui 2026-09-06 — dikunci**
   - `G1 Tahap 5 (Assets):` **disetujui 2026-09-06 — asset diterima; marking kecil dial segmen 04 accepted limitation; jangan regenerate**
   - `G2 konten final + metadata (Tahap 6):` **disetujui 2026-09-06 — judul resmi opsi 1**
-  - `G3 merge:` **belum — PR #15 terbuka; keputusan tetap di pengguna**
-- **Commit terakhir:** `100e904` — keputusan G2 Tahap 6 dan judul resmi opsi 1; commit status/PR closure menyusul. Commit output Tahap 6: `bcb188e`; commit keputusan G1 Tahap 5: `65e3492`.
-- **PR terkait:** PR #13 dan PR #14 sudah `MERGED`; **PR #15** — [Produksi fixture: paket final Tiga Benda di Meja Nenek](https://github.com/With-AI-Agent/Pembangun-Sistem/pull/15) — **OPEN**, tanpa auto-merge; G3 belum diberikan.
+  - `G3 merge:` **disetujui 2026-09-06 — PR #15 di-merge pengguna ke `main` 14:07:02Z (merge commit `454507e`)**
+- **Commit terakhir:** `100e904` — commit produksi terakhir (keputusan G2 Tahap 6 dan judul resmi opsi 1); masuk `main` lewat merge PR #15 `454507e`. Commit output Tahap 6: `bcb188e`; commit keputusan G1 Tahap 5: `65e3492`. Sinkron header status uji: `437ceeb` (PR #16, merge `88436b8`). Koreksi field Status `approved` → `merged` (higiene, tanpa keputusan baru): commit sesi 2026-09-06 branch `arena/01a0775e-pembangun-sistem` — sha lihat `git log`.
+- **PR terkait:** PR #13 dan PR #14 sudah `MERGED`; **PR #15** — [Produksi fixture: paket final Tiga Benda di Meja Nenek](https://github.com/With-AI-Agent/Pembangun-Sistem/pull/15) — **MERGED** 2026-09-06T14:07:02Z oleh pengguna (= G3); PR #16 (pencatat Run 7) `MERGED` 15:27:11Z; PR higiene sesi 2026-09-06 (branch `arena/01a0775e-pembangun-sistem`) — tanpa auto-merge.
 - **Pekerjaan belum tersimpan:** Tidak ada
 - **Risiko atau blocker:**
   - G1 Tahap 5 sudah disetujui; marking kecil pada dial segmen 04 diterima apa adanya sebagai **accepted limitation** fixture. Jangan regenerate asset pada run ini.
   - Paket Tahap 6 sudah disiapkan; belum ada render MP4 atau audio voice over karena tool/asset tersebut tidak dibuat dalam run ini. Ini harus dipertimbangkan pada G2 Tahap 6.
-  - G2 Tahap 6 sudah disetujui; G3 merge belum disetujui dan tidak boleh dianggap tercapai.
+  - G2 Tahap 6 dan G3 (merge PR #15 oleh pengguna) sudah tercapai; tidak ada keputusan baru di luar keduanya. Field Status semula `approved` dikoreksi ke `merged` karena state nyata sudah lewat G3 (koreksi higiene, bukan approval baru).
   - Approved limitation: tidak ada render MP4/audio; paket still frame + naskah final + metadata + spesifikasi assembly diterima untuk fixture ini.
   - Temuan durasi r1 tetap tercatat: 144 kata → 66,46 detik tanpa jeda / 69,46 detik dengan enam jeda. r2: 130 kata → 60 + 3 = **63 detik estimasi**, bukan pengukuran rekaman. Batas model tetap 55–65 detik; tambahan jeda/intonasi belum diukur.
   - Brand Core masih kosong. Judul masih judul kerja, bukan metadata publish yang disetujui.
-- **Waktu pembaruan:** 2026-09-06 — PR #15 terbuka tanpa auto-merge; sesi menunggu keputusan G3 pengguna
+- **Waktu pembaruan:** 2026-09-06 — koreksi state pasca-merge PR #15 (Status `merged`, G3 tercatat); sesi higiene, tanpa perubahan artefak produksi
 
 ## Aturan
 
