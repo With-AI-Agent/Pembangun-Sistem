@@ -5,11 +5,11 @@
 - **Status:** `in-progress`
 - **Channel:** `sistem-konten-kreator/channel-fixture-narasi-sejarah/` — v1, `Operational`
 - **Model konten:** `sistem-konten-kreator/channel-fixture-narasi-sejarah/model-konten/narasi-60-detik/brief.md` — v1, `Operational`
-- **Tahap terakhir selesai:** **Tahap 1–3** — ideation, konsep/angle, dan naskah r2 (130 kata); review G1 selesai, G2 naskah final belum. Tahap 4 sudah menghasilkan `breakdown-output.md`, tetapi G1 dan G2 Tahap 4 belum diputuskan.
-- **Tahap berikutnya:** Menunggu **G1 Tahap 4** (lanjut/ulang) dan **G2 breakdown** (kunci/tidak); jika keduanya disetujui, lanjut ke Tahap 5 sesuai keputusan gerbang.
+- **Tahap terakhir selesai:** **Tahap 4** — breakdown 7 segmen narasi; G2 naskah r2, G1 Tahap 4, dan G2 breakdown sudah disetujui pada 2026-09-06 WIB.
+- **Tahap berikutnya:** Tahap 5 — Generate/Acquire Assets; setelah asset tersimpan, berhenti di G1 Tahap 5.
 - **Output resmi:**
-  - `naskah-draft.md` — **ADA**, r2, 130 kata; draft, G2 naskah final belum
-  - `breakdown-output.md` — **ADA**, draft Tahap 4; G1 dan G2 breakdown belum
+  - `naskah-draft.md` — **ADA**, r2, 130 kata; final produksi ini, G2 disetujui dan dikunci apa adanya
+  - `breakdown-output.md` — **ADA**, 7 segmen; G1 Tahap 4 dan G2 breakdown disetujui/dikunci
   - `assets/` — **BELUM ADA**; Tahap 5 belum dimulai
 - **Sumber konteks yang dibaca:**
   - `_sistem/START_DI_SINI.md`, `_sistem/00_CARA_PAKAI_SISTEM.md`
@@ -29,20 +29,20 @@
   - `G1 Tahap 1 (Ideation):` disetujui 2026-09-04
   - `G1 Tahap 2 (Konsep & Angle):` disetujui 2026-09-04
   - `G1 Tahap 3 r2 (Naskah/Script):` disetujui 2026-09-06
-  - `G2 naskah final r2 (Tahap 3):` **belum — ditahan pengguna** 2026-09-06
-  - `G1 Tahap 4 (Breakdown Output):` belum — menunggu keputusan pengguna
-  - `G2 breakdown (Tahap 4):` belum — menunggu keputusan pengguna
+  - `G2 naskah final r2 (Tahap 3):` **disetujui 2026-09-06 — dikunci apa adanya, tanpa revisi teks**
+  - `G1 Tahap 4 (Breakdown Output):` **disetujui 2026-09-06 — lanjut**
+  - `G2 breakdown (Tahap 4):` **disetujui 2026-09-06 — dikunci**
   - `G1 Tahap 5 (Assets):` belum
   - `G2 konten final + metadata (Tahap 6):` belum
   - `G3 merge:` belum
-- **Commit terakhir:** `3be470bdf8b50846324d608e39d69fd0913eadf6` — output Tahap 4 `breakdown-output.md` + pembaruan STATUS. Commit output naskah r2 tetap `7eeb98daa5393dbb9e62e766d35b26c9757561a5` (byte-identik r2 pra-Run-5, sha256 `20205ccc0abd79c9b2d8d42a8465ceb4da981a37d5edc3df4fde8495de5d2a4d`, sumber restore `54fcb16^`). Field ini menunjuk commit output Tahap 4, bukan commit STATUS berikutnya.
+- **Commit terakhir:** akan menunjuk commit keputusan G2 naskah + G1/G2 Tahap 4 setelah commit dibuat. Commit output naskah r2 sebelumnya: `7eeb98daa5393dbb9e62e766d35b26c9757561a5` (byte-identik r2 pra-Run-5, sha256 `20205ccc0abd79c9b2d8d42a8465ceb4da981a37d5edc3df4fde8495de5d2a4d`, sumber restore `54fcb16^`).
 - **PR terkait:** [PR #13](https://github.com/With-AI-Agent/Pembangun-Sistem/pull/13) — head `arena/01a073cf-pembangun-sistem` → base `main`; **MERGED** `2026-09-06T01:13:39Z` (merge commit `d1fd0a5`). [PR #14](https://github.com/With-AI-Agent/Pembangun-Sistem/pull/14) — head `arena/01a0744b-pembangun-sistem` → base `main`; **MERGED** `2026-09-06T11:59:58Z` (merge commit `d4e687c`). PR sesi ini: **belum dibuat**.
 - **Pekerjaan belum tersimpan:** Tidak ada
 - **Risiko atau blocker:**
-  - G2 naskah final ditahan administratif oleh pengguna; Tahap 5/6 tidak diizinkan.
+  - Belum ada asset di `assets/`; Tahap 5 harus menghasilkan/mengakuisisi asset sesuai breakdown, lalu menunggu G1 Tahap 5.
   - Temuan durasi r1 tetap tercatat: 144 kata → 66,46 detik tanpa jeda / 69,46 detik dengan enam jeda. r2: 130 kata → 60 + 3 = **63 detik estimasi**, bukan pengukuran rekaman. Batas model tetap 55–65 detik; tambahan jeda/intonasi belum diukur.
   - Brand Core masih kosong. Judul masih judul kerja, bukan metadata publish yang disetujui.
-- **Waktu pembaruan:** 2026-09-06 — checkpoint Tahap 3 → 4 selesai; `breakdown-output.md` tersimpan (7 segmen narasi), G1/G2 Tahap 4 menunggu keputusan
+- **Waktu pembaruan:** 2026-09-06 — G2 naskah r2 + G1/G2 Tahap 4 disetujui; lanjut Tahap 5
 
 ## Aturan
 

@@ -3,9 +3,9 @@
 - **Channel:** `channel-fixture-narasi-sejarah/` (FIXTURE)
 - **Model konten:** Narasi 60 Detik v1
 - **Tahap:** 4 — Breakdown Output
-- **Versi sumber naskah:** r2, 130 kata; **belum dikunci G2**
+- **Versi sumber naskah:** r2, 130 kata; **dikunci G2 pada 2026-09-06 WIB, tanpa revisi teks**
 - **Bentuk unit:** segmen narasi — satu blok VO dipasangkan dengan satu konsep b-roll/footage atau foto benda. Ini mengikuti override Model Konten Brief; unit bukan shot karakter.
-- **Status gerbang:** `G1 Tahap 4` dan `G2 breakdown` **belum diminta/disetujui**; output ini adalah bahan review.
+- **Status gerbang:** `G1 Tahap 4` dan `G2 breakdown` **disetujui 2026-09-06 WIB**; output ini dikunci sebagai dasar Tahap 5.
 - **Sumber eksternal:** tidak ada yang dipakai pada penyusunan breakdown. Belum ada footage/stok yang diakuisisi, sehingga `SUMBER.md` belum dibuat.
 
 ## Checkpoint Tahap 3 → Tahap 4
@@ -129,12 +129,12 @@ Sumber resmi dibaca ulang sebelum breakdown dibuat:
 - Hook segmen 1 diperkirakan `7,88 detik`, masih berada dalam acuan 0–8 detik.
 - Segmen 5 mulai sekitar 2,5 detik lebih awal daripada batas kasar “yang berubah” pada 35 detik. Ini akibat pembagian paragraf dan timing estimasi; makna struktur tetap terbaca, total tetap di dalam target 55–65 detik. Jangan mengubah naskah atau mempercepat voice tanpa keputusan pengguna.
 - Tidak ada klaim sejarah eksternal, nama tokoh nyata, karakter Tipe B, atau perubahan pada Channel Brief/Model Konten Brief.
-- G2 naskah r2 tetap **ditahan**; breakdown ini tidak mengubah atau mengunci naskah. Jika naskah berubah menjadi r3, breakdown wajib disinkronkan ulang sebelum dipakai.
+- G2 naskah r2 sudah **disetujui dan dikunci apa adanya**; breakdown ini menjadi dasar Tahap 5. Jika nanti ada perubahan naskah, perubahan itu harus melalui gerbang yang sesuai dan breakdown wajib disinkronkan ulang.
 
-## Gerbang berikutnya
+## Gerbang yang sudah dilalui
 
-- **G2 Tahap 3 — naskah final r2:** apakah naskah r2 dikunci apa adanya sebagai naskah final? Recovery confirmation tidak menggantikan gerbang ini.
-- **G1 Tahap 4 — Review output:** apakah breakdown ini sudah sesuai dan boleh lanjut ke Tahap 5, atau ada bagian yang harus diulang?
-- **G2 breakdown — Approval keputusan besar:** apakah breakdown ini dikunci sebagai dasar Generate/Acquire Assets?
+- **G2 Tahap 3 — naskah final r2:** disetujui 2026-09-06 WIB; dikunci apa adanya, tanpa revisi teks.
+- **G1 Tahap 4 — Review output:** disetujui 2026-09-06 WIB; breakdown sesuai Model Konten Brief dan boleh lanjut.
+- **G2 breakdown — Approval keputusan besar:** disetujui 2026-09-06 WIB; breakdown dikunci sebagai dasar Generate/Acquire Assets.
 
-Ketiga gerbang di atas terpisah. G1 tidak otomatis menjadi G2; G2 naskah tidak otomatis menjadi G2 breakdown; dan tidak ada yang menjadi G3 merge.
+Ketiga gerbang tetap terpisah. Tidak satu pun merupakan G3 merge. Gerbang berikutnya adalah **G1 Tahap 5 — review asset hasil generate/acquire**.
