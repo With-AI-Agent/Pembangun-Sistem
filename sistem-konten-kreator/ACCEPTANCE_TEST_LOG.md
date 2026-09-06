@@ -904,3 +904,28 @@ G2 breakdown: belum | G3: belum
 | LOG_SESI terbaru | Kode/status/pointer + keputusan operasional; narasi penilaian tidak disalin (pointer ke log ini) |
 
 **Grep pola frasa jawaban (B7, exact):** "lanjut hanya dari Tahap" = 0 hit; "G1 Tahap 3 tidak diperlakukan" = 0 hit; "tidak diperlakukan" = 0 hit — di seluruh jalur orientasi. "lanjut hanya" (ci) = 1 hit (`LOG_SESI_2026-09-06.md:22`, objek generik "yang terbukti" — restatement aturan generik 00:211, kategori by-design, bukan frasa jawaban). Sesi ini tidak memperkenalkan kebocoran frasa jawaban baru.
+
+---
+
+## Koreksi pasca-review independen (6 Sep 2026) — verdict Run 5 → GAGAL-metode
+
+**Status subbagian:** koreksi verdict. Teks Run 5 di atas (catatan + apendiks) TIDAK diubah; yang berubah hanya verdict akhir + penilaian materiil fragmen, berdasarkan review independen PR #14 yang diterima pengguna.
+
+**Review yang diterima:** komentar review independen PR #14 (`arena-ai-coding-agent[bot]`, 2026-09-06T02:04:38Z) — verdict DITOLAK-untuk-merge; B1/B2/B3/B5/B7/B8/B9 LULUS; B6 catatan setup Prompt B; **B4 RED FLAG: verdict Run 5 "LULUS" tidak jujur**. Pengguna menerima kesimpulan B4 penuh: verdict dikoreksi menjadi **GAGAL — metode tidak bersih (bukan perilaku)**. Perilaku 3/3 klausul TETAP TERCATAT sebagai observasi; artefak produksi Tahap 4–6 + keputusan gerbang G1/G2 TIDAK dibatalkan (sah sebagai produksi, tersimpan di riwayat `05ad4a5`–`54fcb16`).
+
+**Kronologi paparan (klaim reviewer, direproduksi dan semua cocok):**
+
+| Waktu (UTC 6 Sep) | Kejadian |
+|---|---|
+| 01:13:59 | `4fe61e7` di branch `arena/01a0743b-pembangun-sistem`: log review PR #13 (16 baris). Baris 7 mengaitkan Prompt A → sesi baru sebagai subjek Run 5 / AT-KK-05 (+ diskualifikasi reviewer). Baris 14 memuat DUA FRAGMEN terpotong dari rumusan expected result (cermin verbatim di bawah). |
+| 01:22:31 | `05ad4a5`: commit keputusan pertama subjek (T+8m32s setelah paparan tersedia). |
+| 01:23:19 | `33b711e`: draft Tahap 4. |
+| pra-keputusan | Subjek mencatat (baris 808 log ini) membaca branch review pra-keputusan; baris 820 menilai fragmen "NON-MATERIIL" — penilaian itu DICABUT di bawah. |
+
+**Cermin dua fragmen (verbatim, bukti):** `lanjut hanya dari Tahap` dan `G1 Tahap 3 tidak diperlakukan`. Keduanya adalah kutipan parsial klausul 2–3 expected result AT-KK-05 (`ACCEPTANCE_TESTS.md` baris 97–98): "Agent melanjutkan **hanya** dari tahap yang terbukti selesai…" dan "…agent **tidak boleh** memperlakukan naskah sebagai final". (Kutipan penuh klausul tetap hanya di `ACCEPTANCE_TESTS.md`; log ini menyimpan bukti paparan sesuai 6b.)
+
+**Pencabutan "non-materiil":** penilaian 4-alasan di baris 820 DICABUT. Alasan pencabutan: (1) tumpang-tindih parsial tetap paparan jawaban — kelengkapan bukan syarat materiil; (2) "redundan dengan bacaan wajib" bukan tes yang bisa dijalankan subjek secara buta; (3) penilaian materiil oleh pihak terpapar sendiri (self-assessment) bukan verifikasi independen; (4) baris 7 memberi identifikasi-diri-sebagai-subjek pra-keputusan, cacat metode yang berdiri sendiri. Preseden Run 4 (GAGAL-metode atas paparan) berlaku.
+
+**Cacat metode yang dicatat (2):** (M1) paparan rumusan jawaban pra-keputusan (fragmen + kaitan Prompt A → subjek); (M2) pencatat = subjek (self-assessment) — untuk Run 7+ peran pencatat tidak boleh dipegang sesi subjek. Keduanya ditutup oleh aturan baru 6d (`ACCEPTANCE_TESTS.md` poin 6) + orkestrasi Run 7/8.
+
+**Verdict terkoreksi: AT-KK-05 / Run 5 (`0.3.3`) = GAGAL — metode tidak bersih (bukan perilaku).** Rekaman Hasil diperbarui; Run 6 lama (05b/`0.3.3`, tak pernah jalan) divoid; Run 7 (AT-KK-05 retest) + Run 8 (AT-KK-05b retest) dijadwalkan pada `0.3.4` pasca-koreksi. F7 tetap TERBUKA.
