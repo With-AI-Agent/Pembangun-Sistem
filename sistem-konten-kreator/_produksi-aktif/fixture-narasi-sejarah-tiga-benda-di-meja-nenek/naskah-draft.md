@@ -2,11 +2,11 @@
 
 - **Channel:** `channel-fixture-narasi-sejarah/` (FIXTURE)
 - **Model konten:** Narasi 60 Detik (v1) — **tetap**, target 130–145 kata, durasi 55–65 detik, tempo ±130 kata/menit
-- **Revisi:** **r2**, 2026-09-06 WIB — pemadatan r1 atas izin eksplisit pengguna; bukan pengulangan diam-diam saat recovery
+- **Revisi:** **r2**, 2026-09-06 WIB — pemadatan r1 atas izin eksplisit pengguna
 - **Tahap:** 3 — Naskah/Script (**draft revisi**, belum dikunci G2)
 - **Jumlah kata VO:** **130** — dihitung dari bagian Naskah saja, berdasarkan pemisah whitespace
 - **Rencana durasi:** **63 detik estimasi** = 60 detik pada 130 kata/menit + enam jeda antarparagraf masing-masing 0,5 detik. **Belum diukur lewat rekaman/TTS**; tambahan jeda internal/intonasi harus diperiksa saat produksi audio nanti.
-- **Approval revisi:** izin membuat r2 sudah diberikan; review **G1 Tahap 3 r2** dan **G2 naskah final r2** belum. G1 historis atas r1 bukan penguncian r2.
+- **Approval revisi:** **G1 Tahap 3 r2 disetujui 2026-09-06 WIB**. **G2 naskah final r2 belum — ditahan pengguna** untuk keperluan administratif; naskah tetap draft. Tahap 5/6 tidak diizinkan.
 - **Sumber eksternal:** tidak ada — cerita personal dummy/fiksi fixture, bukan klaim sejarah hasil riset. “Pukul lima” adalah detail cerita, bukan temuan faktual yang diverifikasi.
 - **Karakter Tipe B:** tidak ada wujud karakter baru; nenek/anak-anak hanya disebut dalam VO, visual tetap b-roll benda sesuai model
 
@@ -44,9 +44,9 @@ Yang berubah bukan kebiasaannya. Yang berubah: kita tidak lagi tahu siapa yang d
 - Pembuka 16 kata ≈7,38 detik ucapan +0,5 detik jeda = **7,88 detik**, sesuai acuan hook 0–8 detik secara estimasi. Penutup tetap membawa cerita ke masa kini. Pembagian beat rinci belum dikunci.
 - Jeda 0,5 detik dipasang di enam pergantian gagasan utama/antarparagraf. Jangan mempercepat voice diam-diam untuk mengejar durasi; jika pembacaan nyata nanti melewati 65 detik, laporkan dan minta keputusan revisi, bukan mengubah brief sendiri.
 
-## Dependency Tahap 4 dan gerbang berikutnya
+## Status produksi
 
-- `breakdown-output.md` yang sudah ada masih berasal dari **r1 (144 kata)**. Ditandai **draft lama/tidak sinkron**, bukan dianggap breakdown untuk r2 atau ditulis ulang sebelum review naskah.
-- **G1 Tahap 3 r2:** apakah revisi ini cukup untuk melanjutkan penyesuaian draft breakdown?
-- **G2 naskah final r2:** apakah teks revisi ini dikunci sebagai naskah final? **Belum ada approval.**
-- Setelah dasar naskah disetujui, selaraskan breakdown sebagai **segmen narasi** sesuai model, lalu minta **G1 dan G2 breakdown** secara eksplisit. Tahap 5 belum dimulai, G2 konten final dan G3 merge juga belum diberikan.
+- G1 Tahap 3 r2: **disetujui 2026-09-06 WIB**.
+- G2 naskah final r2: **belum — ditahan pengguna**, alasan administratif.
+- Tahap 5/6: belum dimulai; tidak ada izin untuk memproduksi asset atau konten final.
+- Inventaris output dan checkpoint terkini dicatat di `STATUS.md`.

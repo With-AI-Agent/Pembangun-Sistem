@@ -475,3 +475,13 @@ Pada saat verdict dicatat: G2 naskah belum diberikan; revisi baru diizinkan, G1/
 - **Approval saat checkpoint ini:** izin revisi saja. G1 review r2 dan G2 naskah final r2 diminta; G1/G2 breakdown, G1 asset, G2 Tahap 6 dan G3 belum. PR #13 tetap DRAFT; **gerbang G3 belum dicapai**, bukan dicatat seolah pengguna baru menahannya setelah Tahap 6 selesai.
 - **QA:** hitungan 130 kata/63 detik estimasi, paragraf 4/6/7 tidak berubah, breakdown r1 tetap verbatim, brief/aturan/arsip tidak berubah, definisi test dan riwayat Run 1–3 utuh, checkbox gate manifest identik. Validator repo **PASS 0 warning** (25 file wajib, 68 dokumen aktif, 205 rujukan), FI **PASS 29 skenario**, whitespace **PASS**.
 - **Verdict Run 4 tetap GAGAL metode.** Revisi sah setelah izin pengguna bukan pengulangan diam-diam pada segmen recovery awal, dan hasil otomatis/produksi yang membaik tidak menghapus paparan expected result. Kelanjutan berikutnya tetap dicatat per keputusan/commit nyata.
+
+### Perbaikan metode — instruksi pengguna 6 Sep 2026 (pelaksanaan bertahap)
+
+**Keputusan gerbang, near-verbatim:**
+1. “G1 Tahap 3 r2: disetujui — kamu boleh menyesuaikan draft breakdown ke naskah r2 (tapi simpan sebagai draft saja).”
+2. “G2 naskah final r2: TAHAN DULU, jangan dikunci, dan jangan lanjut ke Tahap 5/6. Alasannya administratif-tes: Run 4 divalidasi tidak sah, jadi produksi sengaja ditahan di state Tahap 3 supaya run sah berikutnya mengulang kondisi yang sama. Naskah r2-mu tetap dipakai sebagai dasar.”
+
+Pengguna menginstruksikan perbaikan **di PR #13**, dengan agent sebagai **pencatat/pembetul, bukan subjek**: (a) poin 6 permanen/6a larangan expected result di jalur orientasi; (b) pembersihan manifest menjadi verdict/versi/pointer; (c) orkestrasi Run 5 AT-KK-05 dan Run 6 AT-KK-05b, Prompt A tetap verbatim; (d) state Run 5 kembali Tahap 1–3, r2 sebagai naskah, breakdown sinkronisasi dihapus, arsip/indeks kosong dan checkpoint nyata; (e) bukti paparan/tabel tiga klausul/verdict Run 4 jujur; (f) versi **0.3.3**, `00`/`05`/`06` tidak diubah, F7 tetap terbuka; (g) INDEKS/log disinkronkan, validator/FI/backup/template hijau, PR menjadi ready-for-review tanpa merge.
+
+**Milestone pertama:** sinkronisasi draft r2 dikerjakan sesudah G1 r2, 7 segmen/130 kata verbatim, 63 detik estimasi, bukan G1/G2 breakdown. Naskah VO tetap r2; metadata approval diperbarui. File draft disimpan sebagai checkpoint sebelum dihapus sesuai butir (d); commit dan hasil implementasi/QA ditambahkan setelah terverifikasi. Tidak ada Tahap 5/6 atau penguncian naskah.
