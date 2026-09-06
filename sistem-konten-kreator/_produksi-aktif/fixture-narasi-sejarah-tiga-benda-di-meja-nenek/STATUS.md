@@ -41,7 +41,7 @@
   - `G2 konten final + metadata (Tahap 6):` belum
   - `G3 merge:` belum
 - **Commit terakhir:** `f2d3ad2ac98be5eb74bd4b689c0d3911ad67b230` — commit nyata yang menyimpan `naskah-draft.md` r2 beserta metadata G1/G2 terkini. Verifikasi: `git log -1 --format=%H -- sistem-konten-kreator/_produksi-aktif/fixture-narasi-sejarah-tiga-benda-di-meja-nenek/naskah-draft.md`. Field ini menunjuk commit output naskah, bukan commit STATUS sendiri.
-- **PR terkait:** [PR #13](https://github.com/With-AI-Agent/Pembangun-Sistem/pull/13) — head `arena/01a073cf-pembangun-sistem` → base `main`; **MERGED** `2026-09-06T01:13:39Z` (merge commit `d1fd0a5`). PR sesi ini: (diisi setelah dibuka — tanpa merge, G3 tidak diminta)
+- **PR terkait:** [PR #13](https://github.com/With-AI-Agent/Pembangun-Sistem/pull/13) — head `arena/01a073cf-pembangun-sistem` → base `main`; **MERGED** `2026-09-06T01:13:39Z` (merge commit `d1fd0a5`). PR sesi ini: [PR #14](https://github.com/With-AI-Agent/Pembangun-Sistem/pull/14) — head `arena/01a0744b-pembangun-sistem` → base `main`; **OPEN**, `MERGEABLE/CLEAN`, tanpa merge (G3 tidak diminta)
 - **Pekerjaan belum tersimpan:** Tidak ada
 - **Risiko atau blocker:**
   - G2 naskah final ditahan administratif oleh pengguna; Tahap 5/6 tidak diizinkan.
