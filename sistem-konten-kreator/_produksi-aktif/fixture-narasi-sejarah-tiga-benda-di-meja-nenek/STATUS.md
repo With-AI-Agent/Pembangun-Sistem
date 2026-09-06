@@ -38,7 +38,7 @@
   - `G1 Tahap 5 (Assets):` belum — menunggu review pengguna
   - `G2 konten final + metadata (Tahap 6):` belum
   - `G3 merge:` belum
-- **Commit terakhir:** akan menunjuk commit output Tahap 5 setelah commit dibuat. Commit keputusan gerbang sebelumnya: `054b1ea`; commit output naskah r2: `7eeb98daa5393dbb9e62e766d35b26c9757561a5`.
+- **Commit terakhir:** `a28eaf4` — output Tahap 5 (asset + `asset-manifest.md`) dan STATUS/log checkpoint. Commit keputusan gerbang sebelumnya: `054b1ea`; commit output naskah r2: `7eeb98daa5393dbb9e62e766d35b26c9757561a5`.
 - **PR terkait:** [PR #13](https://github.com/With-AI-Agent/Pembangun-Sistem/pull/13) — head `arena/01a073cf-pembangun-sistem` → base `main`; **MERGED** `2026-09-06T01:13:39Z` (merge commit `d1fd0a5`). [PR #14](https://github.com/With-AI-Agent/Pembangun-Sistem/pull/14) — head `arena/01a0744b-pembangun-sistem` → base `main`; **MERGED** `2026-09-06T11:59:58Z` (merge commit `d4e687c`). PR sesi ini: **belum dibuat**.
 - **Pekerjaan belum tersimpan:** Tidak ada
 - **Risiko atau blocker:**
