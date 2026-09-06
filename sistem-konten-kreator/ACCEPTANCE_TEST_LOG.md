@@ -1047,3 +1047,15 @@ Subjek berhenti di **G3** sesuai aturan: PR #15 `OPEN`, `auto_merge=null`, tanpa
 
 - `python3 tools/validate_repo.py` pada state pencatatan: **PASS, 0 warning** (25 file wajib, 68 dokumen aktif, 198 rujukan, 0 unresolved).
 - `python3 tools/test_failure_injection.py` pada state pencatatan: **FAIL 1 skenario** — `real unit consistent: …/fixture-narasi-sejarah-tiga-benda-di-meja-nenek/STATUS.md`. Sebab: STATUS unit akhir subjek berisi `- Status: approved` (pasca-G2 Tahap 6) tanpa file `OUTPUT.md` di folder (fixture memakai nama output spesifik `naskah-draft.md`/`breakdown-output.md`/`metadata.md`/`final-content.md`, bukan `OUTPUT.md` generik), sehingga aturan fail-closed FI (F3) menolak. **Kondisi ini pra-eksis dari produksi subjek (sudah ada di `main` `454507e` sebelum pencatatan ini), bukan diperkenalkan pencatat.** Ini pengamatan higiene produksi, tidak mengubah verdict AT-KK-05, dan diserahkan ke pengguna/reviewer untuk disposition (mis. menyesuaikan field Status unit atau nama output) — pencatat tidak mengubah state produksi subjek.
+
+### Koreksi pasca-review PR #16 (runde 1)
+
+- **Reviewer independen PR #16 memasang RED FLAG; PR tetap OPEN, tanpa merge.** Dua temuan:
+  - **(A) objektif — frasa jawaban verbatim di file buatan pencatat:** `LOG_SESI_2026-09-06_3.md` baris 16 (file baru milik sesi pencatat) memuat tiga frasa jawaban verbatim; audit grep pencatat sebelumnya hanya menyasar jalur orientasi lama dan **tidak menyertakan file buatan sendiri**. **DIPERBAIKI** — baris itu diganti rumusan pointer status-saja.
+  - **(B) materialitas residual** (worked-example di log lama + komentar B4 PR #14) — **diputus reviewer round-2; pencatat tidak memutuskan sendiri.**
+- **Perbaikan yang dilakukan (append-only, tanpa menilai verdict):**
+  1. `LOG_SESI_2026-09-06_3.md` baris 16 — frasa verbatim → rumusan pointer status-saja.
+  2. Sanitasi vektor reviewer di `LOG_SESI_2026-09-06.md` (closed) dan `LOG_SESI_2026-09-05_4.md` (closed) — entri kronologi + baris header yang memuat kesimpulan pemulihan fixture-subjek sebelumnya ("Tahap berikut = Tahap 4", status G2 per kasus, dsb.) diganti pointer + catatan "(diredaksi 6 Sep per pola 6d; bukti utuh di ACCEPTANCE_TEST_LOG.md / riwayat commit)". Narasi lengkap **tidak** disalin kembali ke jalur orientasi mana pun.
+  3. Komentar review B4 PR #14 diedit (satu-satunya suntingan di luar branch pencatat; PR #14 sudah merged, jendela tertutup) — kutipan klausul verbatim dihapus, diganti pointer SHA+baris (`sistem-konten-kreator/ACCEPTANCE_TESTS.md` blob `ae95ec0294022e755b961a85a387a37b938ef99c` baris 98–99), diakhiri "[diedit 2026-09-06: kutipan klausul diredaksi per aturan 6d]".
+- **Hasil grep pola verbatim di SELURUH tree head PR #16 (di luar `ACCEPTANCE_TESTS.md` + `ACCEPTANCE_TEST_LOG.md`): 0 hit** — pola: `lanjut hanya dari Tahap`, `G1 Tahap 3 tidak diperlakukan`, `tidak diperlakukan`, `memperlakukan naskah sebagai final`.
+- **Status verdict:** verdict **LULUS** Run 7 dicatat **menunggu konfirmasi round-2**; tidak diubah dulu. F7 tetap TERBUKA.
