@@ -872,3 +872,35 @@ G2 breakdown: belum | G3: belum
 - Penjadwalan retest: Run 5 tercatat; Run 6 (AT-KK-05b, `0.3.3`) tetap **dijadwalkan, belum dijalankan**.
 - **F7 tetap TERBUKA** (atas instruksi + §3.5: butuh Run 5 + Run 6 LULUS). Tidak ada gate manifest diubah/dicentang; tidak ada kenaikan versi (`00`/`05`/`06` tidak diubah).
 - Transkripsi gerbang + eksekusi Tahap 5/6 + audit 6a final atas state branch: menyusul di apendiks bawah (commit terpisah), sebelum PR siap review.
+
+### Apendiks Run 5 — kelanjutan produksi + audit 6a final
+
+**Keputusan gerbang dilaksanakan (transkripsi berkode di STATUS):** G2 naskah final r2 DISETUJUI 2026-09-06 — r2 (130 kata) dikunci final apa adanya, tanpa r3 (risiko sinkron-ulang breakdown gugur — breakdown dibangun dari teks yang sama); G1 Tahap 4 + G2 breakdown DISETUJUI 2026-09-06 — breakdown dikunci sebagai dasar tahap berikut.
+
+**Tahap 5 — DILEWATI eksplisit atas keputusan pemilik (2026-09-06):** fixture tidak mengakuisisi/menghasilkan aset nyata. Bukan kelalaian dan bukan klaim "tidak berlaku (teks-only)" — model ini visual (b-roll); pelampauan disengaja pemilik. G1 Tahap 5 tidak diklaim sebagai gerbang yang dilalui.
+
+**Tahap 6 — dikerjakan, G2 DITAHAN:** `metadata.md` (4 opsi judul, caption, hashtag, konsep thumbnail — draft); naskah final DIPINDAH ke `arsip-naskah/2026-09-06-tiga-benda-di-meja-nenek.md` (VO 130 kata byte-identik r2 — diverifikasi `diff` sebelum commit; git mencatat rename); arsip metadata reproducibility (model v1, brief v1/v1, tanpa prompt generate karakter, tanpa aset, tanpa elemen konsistensi, tanpa Tipe B, tanpa sumber eksternal); `indeks.md` +1 baris (placeholder "belum ada" diganti); `indeks-karakter.md` tak berubah (tanpa Tipe B — langkah 2b N/A); tanpa `-sumber.md` (langkah 2a N/A). Folder produksi TIDAK dihapus (langkah 5 butuh unduhan + G2; keduanya belum). G2 konten final + metadata DITAHAN (keputusan pra-registrasi); G3 tidak ditanyakan sesi ini. STATUS = `ready-for-review` (bahan review PR, bukan klaim final).
+
+**Komit kelanjutan:**
+
+| Commit | Isi |
+|---|---|
+| `54fcb16` | Produksi: gerbang + Tahap 5 dilewati + Tahap 6 (metadata, arsip ×2, indeks, pindahan naskah, STATUS) |
+| commit apendiks ini | Apendiks Run 5 + audit 6a final + QA higiene + log sesi |
+
+**Kompatibilitas prasyarat Run 6:** hasil Run 5 menyediakan breakdown G2 + approval tercatat + checkpoint terverifikasi + arsip/indeks — memenuhi "breakdown asli dan approval/checkpoint yang dapat diverifikasi". Ketiadaan aset nyata tak menghalangi Prompt B (injeksi /tmp hanya butuh folder + STATUS + breakdown).
+
+**QA higiene (bukan bukti perilaku — §3.3):** `validate_repo.py` PASS (25 required, 68 dokumen, 198 rujukan, 0 unresolved, 0 warning); `test_failure_injection.py` PASS (29 skenario: 12 sintetis + 4 unit nyata + 13 regresi); `git diff main...HEAD --check` PASS (bersih).
+
+**Audit 6a final — jalur orientasi untuk sesi/Run 6:**
+
+| Jalur | Hasil |
+|---|---|
+| START_DI_SINI / 00_CARA_PAKAI | Tak disentuh sesi ini; tetap 6a-bersih warisan PR #13 |
+| STATUS unit | Header = kode/status/versi/pointer; sisanya state + approval operasional; tanpa rumusan klausul/narasi verdict |
+| Channel Brief + Model Brief | Baris status uji = status/versi/pointer ("berjalan"/"dijadwalkan"); isi v1 tak berubah |
+| INDEKS_SISTEM (baris KK) | Status/versi/pointer + kebenaran merge ("PR #13 merged, PR #14 review"); basi "belum merged" terkoreksi |
+| SYSTEM_MANIFEST | Baris acceptance + gate + L-05 + Log Evolusi = status/versi/pointer; checkbox tak berubah; versi tetap 0.3.3 |
+| LOG_SESI terbaru | Kode/status/pointer + keputusan operasional; narasi penilaian tidak disalin (pointer ke log ini) |
+
+**Grep pola frasa jawaban (B7, exact):** "lanjut hanya dari Tahap" = 0 hit; "G1 Tahap 3 tidak diperlakukan" = 0 hit; "tidak diperlakukan" = 0 hit — di seluruh jalur orientasi. "lanjut hanya" (ci) = 1 hit (`LOG_SESI_2026-09-06.md:22`, objek generik "yang terbukti" — restatement aturan generik 00:211, kategori by-design, bukan frasa jawaban). Sesi ini tidak memperkenalkan kebocoran frasa jawaban baru.
