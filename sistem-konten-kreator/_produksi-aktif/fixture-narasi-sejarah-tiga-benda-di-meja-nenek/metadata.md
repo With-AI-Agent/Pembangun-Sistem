@@ -1,6 +1,6 @@
 # Metadata Publish — Tiga Benda di Meja Nenek
 
-- **Status:** draft untuk review **G2 Tahap 6**
+- **Status:** **G2 Tahap 6 disetujui 2026-09-06 WIB**; menunggu G3 merge
 - **Channel:** Narasi Sejarah (fixture)
 - **Platform target:** YouTube Shorts dan TikTok
 - **Format:** vertikal 9:16; paket still frame + voice over; durasi target 55–65 detik
@@ -16,7 +16,9 @@
 3. **Siapa yang Dulu Mengatur Pagi Kita?** — opsi pertanyaan reflektif, tanpa menjanjikan fakta sejarah tertentu.
 4. **Saat Radio Tua Mengatur Satu Rumah** — opsi deskriptif dan dekat dengan isi naskah.
 
-**Rekomendasi:** `Radio Tua yang Menjadi Jam Rumah`
+**Judul tayang resmi (G2):** `Radio Tua yang Menjadi Jam Rumah`
+
+Opsi 2–4 tetap tercatat sebagai alternatif dan tidak menjadi judul tayang resmi.
 
 ## Caption
 

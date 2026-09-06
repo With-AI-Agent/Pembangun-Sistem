@@ -2,17 +2,17 @@
 
 > **STATE UJI RUN 7** — versi sistem `0.3.4`, naskah r2. Status uji: AT-KK-05 / Run 5 **GAGAL-metode** (koreksi pasca-review 6 Sep); AT-KK-05 / Run 7 **dijadwalkan, belum dijalankan**; AT-KK-05b / Run 8 **dijadwalkan**; Run 6 lama **void**. F7 TERBUKA. Rujukan: `sistem-konten-kreator/ACCEPTANCE_TEST_LOG.md`.
 
-- **Status:** `ready-for-review`
+- **Status:** `approved`
 - **Channel:** `sistem-konten-kreator/channel-fixture-narasi-sejarah/` — v1, `Operational`
 - **Model konten:** `sistem-konten-kreator/channel-fixture-narasi-sejarah/model-konten/narasi-60-detik/brief.md` — v1, `Operational`
-- **Tahap terakhir selesai:** **Tahap 6** — paket konten final + metadata siap review; naskah final sudah diarsipkan, G2 Tahap 6 belum diputuskan.
-- **Tahap berikutnya:** **G2 Tahap 6 — Approval konten final + metadata**; setelah G2, siapkan PR dan tanyakan G3 merge secara terpisah.
+- **Tahap terakhir selesai:** **Tahap 6** — paket konten final + metadata disetujui G2; judul tayang resmi opsi 1, `Radio Tua yang Menjadi Jam Rumah`.
+- **Tahap berikutnya:** **G3 merge** — PR disiapkan tanpa auto-merge; keputusan merge tetap di pengguna.
 - **Output resmi:**
   - `arsip-naskah/2026-09-06-tiga-benda-di-meja-nenek.md` — **ADA**, naskah final r2, 130 kata; dipindahkan dari produksi aktif
   - `breakdown-output.md` — **ADA**, 7 segmen; G1 Tahap 4 dan G2 breakdown disetujui/dikunci
   - `asset-manifest.md` — **ADA**, manifest Tahap 5 + hash tujuh asset; G1 Tahap 5 disetujui
-  - `metadata.md` — **ADA**, opsi judul, caption, hashtag, dan konsep thumbnail; G2 Tahap 6 belum
-  - `final-content.md` — **ADA**, paket assembly final; belum ada MP4/audio render
+  - `metadata.md` — **ADA**, judul resmi opsi 1 + alternatif 2–4, caption, hashtag, dan konsep thumbnail; G2 Tahap 6 disetujui
+  - `final-content.md` — **ADA**, paket assembly final; G2 Tahap 6 disetujui; belum ada MP4/audio render
   - `arsip-naskah/2026-09-06-tiga-benda-di-meja-nenek-metadata.md` — **ADA**, arsip reproducibility prompt/asset/versi brief
   - `assets/` — **ADA**, 7 still frame PNG vertikal; G1 Tahap 5 disetujui
 - **Sumber konteks yang dibaca:**
@@ -32,6 +32,7 @@
   - Pengguna 2026-09-06 menyetujui G1 Tahap 4 dan G2 breakdown; breakdown dikunci sebagai dasar Tahap 5.
   - Tahap 5 menghasilkan 7 still frame vertikal; manifest dan hash tercatat di `asset-manifest.md`.
   - Pengguna menyetujui G1 Tahap 5; marking kecil pada dial segmen 04 diterima apa adanya sebagai accepted limitation fixture. Tidak ada regenerate atau panggilan image generation lagi pada run ini.
+  - Pengguna menyetujui G2 Tahap 6; judul tayang resmi adalah metadata opsi 1 `Radio Tua yang Menjadi Jam Rumah`, sementara opsi 2–4 tetap alternatif. Tidak ada G3 dalam keputusan ini.
 - **Approval yang sudah diberikan:**
   - `G1 Tahap 1 (Ideation):` disetujui 2026-09-04
   - `G1 Tahap 2 (Konsep & Angle):` disetujui 2026-09-04
@@ -40,18 +41,19 @@
   - `G1 Tahap 4 (Breakdown Output):` **disetujui 2026-09-06 — lanjut**
   - `G2 breakdown (Tahap 4):` **disetujui 2026-09-06 — dikunci**
   - `G1 Tahap 5 (Assets):` **disetujui 2026-09-06 — asset diterima; marking kecil dial segmen 04 accepted limitation; jangan regenerate**
-  - `G2 konten final + metadata (Tahap 6):` **belum — menunggu review pengguna**
+  - `G2 konten final + metadata (Tahap 6):` **disetujui 2026-09-06 — judul resmi opsi 1**
   - `G3 merge:` belum
-- **Commit terakhir:** `bcb188e` — paket Tahap 6, metadata, naskah final + metadata reproducibility di arsip, dan indeks. Commit output Tahap 5: `a28eaf4`; commit keputusan gerbang sebelumnya: `65e3492`.
-- **PR terkait:** [PR #13](https://github.com/With-AI-Agent/Pembangun-Sistem/pull/13) — head `arena/01a073cf-pembangun-sistem` → base `main`; **MERGED** `2026-09-06T01:13:39Z` (merge commit `d1fd0a5`). [PR #14](https://github.com/With-AI-Agent/Pembangun-Sistem/pull/14) — head `arena/01a0744b-pembangun-sistem` → base `main`; **MERGED** `2026-09-06T11:59:58Z` (merge commit `d4e687c`). PR sesi ini: **belum dibuat**.
+- **Commit terakhir:** akan menunjuk commit keputusan G2 Tahap 6 setelah commit dibuat. Commit output Tahap 6: `bcb188e`; commit keputusan G1 Tahap 5: `65e3492`.
+- **PR terkait:** PR #13 dan PR #14 sudah `MERGED`; PR final sesi ini **belum dibuat** dan akan dibuat setelah commit keputusan G2 ini.
 - **Pekerjaan belum tersimpan:** Tidak ada
 - **Risiko atau blocker:**
   - G1 Tahap 5 sudah disetujui; marking kecil pada dial segmen 04 diterima apa adanya sebagai **accepted limitation** fixture. Jangan regenerate asset pada run ini.
   - Paket Tahap 6 sudah disiapkan; belum ada render MP4 atau audio voice over karena tool/asset tersebut tidak dibuat dalam run ini. Ini harus dipertimbangkan pada G2 Tahap 6.
-  - G2 Tahap 6 dan G3 merge belum boleh dianggap tercapai.
+  - G2 Tahap 6 sudah disetujui; G3 merge belum disetujui dan tidak boleh dianggap tercapai.
+  - Approved limitation: tidak ada render MP4/audio; paket still frame + naskah final + metadata + spesifikasi assembly diterima untuk fixture ini.
   - Temuan durasi r1 tetap tercatat: 144 kata → 66,46 detik tanpa jeda / 69,46 detik dengan enam jeda. r2: 130 kata → 60 + 3 = **63 detik estimasi**, bukan pengukuran rekaman. Batas model tetap 55–65 detik; tambahan jeda/intonasi belum diukur.
   - Brand Core masih kosong. Judul masih judul kerja, bukan metadata publish yang disetujui.
-- **Waktu pembaruan:** 2026-09-06 — Tahap 6 siap review; naskah final + metadata + paket assembly tersedia, G2 menunggu
+- **Waktu pembaruan:** 2026-09-06 — G2 Tahap 6 disetujui; judul opsi 1 resmi; siap menyiapkan PR tanpa auto-merge
 
 ## Aturan
 

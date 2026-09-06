@@ -3,7 +3,8 @@
 - **Tanggal produksi:** 2026-09-06
 - **Model konten:** Narasi 60 Detik v1
 - **Versi brief:** Channel Brief v1; Model Konten Brief v1
-- **Status:** disiapkan pada Tahap 6; G2 Tahap 6 belum disetujui
+- **Status:** G2 Tahap 6 disetujui 2026-09-06 WIB; G3 merge belum disetujui
+- **Judul tayang resmi:** Radio Tua yang Menjadi Jam Rumah (metadata opsi 1)
 
 ## Prompt final asset
 

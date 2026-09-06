@@ -1,6 +1,7 @@
 # Final Content Package — Tiga Benda di Meja Nenek
 
-- **Status:** siap review **G2 Tahap 6**; belum disetujui G2 dan belum menjadi izin G3
+- **Status:** **G2 Tahap 6 disetujui 2026-09-06 WIB**; belum menjadi izin G3
+- **Judul tayang resmi:** `Radio Tua yang Menjadi Jam Rumah` (metadata opsi 1)
 - **Naskah final:** `sistem-konten-kreator/channel-fixture-narasi-sejarah/arsip-naskah/2026-09-06-tiga-benda-di-meja-nenek.md`
 - **Metadata:** `metadata.md`
 - **Asset manifest:** `asset-manifest.md`
