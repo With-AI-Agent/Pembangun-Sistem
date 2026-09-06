@@ -2,7 +2,7 @@
 
 > **FIXTURE — bukan channel produksi sungguhan.** Bukan penutup temuan L-04.
 >
-> **Status uji:** AT-KK-05 / Run 4 **GAGAL**, `0.3.2-warisan-sync`; AT-KK-05 / Run 5 **berjalan** (PR #14 review, belum merged), `0.3.3`; AT-KK-05b / Run 6 **dijadwalkan**, `0.3.3`. Rujukan: [ACCEPTANCE_TEST_LOG.md](../ACCEPTANCE_TEST_LOG.md).
+> **Status uji:** AT-KK-05 / Run 4 **GAGAL**, `0.3.2-warisan-sync`; AT-KK-05 / Run 5 **GAGAL-metode** (koreksi pasca-review 6 Sep), `0.3.3`; Run 6 lama **void**; AT-KK-05 / Run 7 + AT-KK-05b / Run 8 **dijadwalkan**, `0.3.4`; F7 TERBUKA. Rujukan: [ACCEPTANCE_TEST_LOG.md](../ACCEPTANCE_TEST_LOG.md).
 
 ### Dokumen "hidup" milik SATU channel, mengikuti struktur `_sistem/03_TEMPLATE_CHANNEL_BRIEF.md`.
 
