@@ -55,6 +55,12 @@ Tutup sesi ini dengan benar:
 
 ---
 
+## Kapan Perlu Sesi Review Independen (varian 1-baris)
+
+Untuk pekerjaan yang menutup klaim permanen — **penutupan gate/pengecualian (mis. F), bump versi aturan `00`/`05`/`06`, operasi riwayat, atau perubahan klaim di `SYSTEM_MANIFEST.md`** — **buka sesi baru dan tempel prompt reviewer sesuai `PROTOKOL_REVIEW_INDEPENDEN.md`** (varian KK di root sistem; anatomi prompt + mekanika putusan lengkap di `_meta/PROTOKOL_REVIEW_INDEPENDEN.md`). Sesi itu bertindak sebagai reviewer independen: ia memutuskan, bukan melanjutkan, dan **tidak akan meng-merge tanpa izin eksplisit kamu**. Untuk commit produksi biasa, typo, atau housekeeping reversibel (level L3), review independen TIDAK diperlukan.
+
+---
+
 ## Istilah yang perlu kamu tahu (versi awam)
 
 - **Repo** — folder besar di GitHub tempat semua dokumen sistem dan hasil kerja kamu tersimpan. Ibaratnya "markas" tempat semua file hidup.

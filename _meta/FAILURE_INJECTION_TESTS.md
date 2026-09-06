@@ -79,6 +79,6 @@ FI-01…FI-10 di atas adalah test perilaku AGENT. Skrip `tools/test_failure_inje
 | R3 (F2) | baris "Daftar Sistem" tanpa backtick di kolom Folder | validator HARUS gagal (parse ketat; sebelumnya: baris diabaikan, cakupan hilang) |
 | R4 (F3) | hapus satu-satunya unit STATUS sistem terdaftar | validator & FI HARUS gagal (sebelumnya: cakupan menyusut, tetap lulus) |
 | R5/R6 (F9) | sistem skeleton `Tahap: kerangka` tanpa artefak W-01/W-02/W-03 / kondisi sama dengan `Tahap: siap-pakai` | PASS (warning saja) / HARUS gagal |
-| R7 (F5) | build template di salinan → ekstrak → `git init` → validator | exit 0 + PERSIS 4 warning normalisasi (daftar di `TEMPLATE_RELEASE.md`, dipin di skrip) + tanpa warning di bootstrap/pegangan pengguna |
+| R7 (F5) | build template di salinan → ekstrak → `git init` → validator | exit 0 + PERSIS 5 warning normalisasi (daftar di `TEMPLATE_RELEASE.md`, dipin di skrip) + tanpa warning di bootstrap/pegangan pengguna |
 
 **Jumlah:** 29 skenario di master (12 sintetis + 4 unit nyata + 13 regresi), 24 di ekstrak template (0 unit nyata; R4 vacuous).

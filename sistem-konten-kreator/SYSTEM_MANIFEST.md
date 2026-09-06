@@ -3,7 +3,7 @@
 - **Tujuan:** membangun dan memproduksi konten kreator berbantuan AI dari fondasi brand sampai konten siap publish.
 - **Consumer:** operator/kreator solo dan agent kerja yang terhubung ke repository.
 - **Status:** `candidate — audit P0+P1 closed, belum divalidasi pemakaian nyata`
-- **Versi:** `0.3.4`
+- **Versi:** `0.3.5`
 - **Tahap:** siap-pakai
 - **Pemilik keputusan:** pengguna
 - **Entry point agent:** `PROMPT_ENTRI_UNIVERSAL.md` (atau bagian Prompt Pembuka Universal di `panduan/PANDUAN_PENGGUNA.md`)
@@ -105,3 +105,4 @@ Dari `_meta/_internal/AUDIT_SISTEM_KONTEN_KREATOR_2026-09-03.md`:
 | 6 Sep 2026 | **0.3.4** | Koreksi pasca-review: verdict Run 5 → GAGAL-metode; aturan 6d (`ACCEPTANCE_TESTS.md` poin 6); reset state uji Run 7; dokumen `00`/`05`/`06` tidak diubah | F7 **TERBUKA**; Run 6 lama **void**; Run 7 / AT-KK-05 + Run 8 / AT-KK-05b **dijadwalkan**, `0.3.4`. Rincian: `ACCEPTANCE_TEST_LOG.md` (koreksi pasca-review) |
 | 6 Sep 2026 | 0.3.4 | AT-KK-05 / Run 7: **LULUS** (pencatat sesi terpisah, M2); F7 **TERBUKA** (menunggu Run 8) | `ACCEPTANCE_TEST_LOG.md` Run 7 |
 | 6 Sep 2026 | 0.3.4 | AT-KK-05b / Run 8: **LULUS** (pencatat sesi terpisah, M2); **F7 DITUTUP** — Run 7 + Run 8 LULUS pada `0.3.4` | `ACCEPTANCE_TEST_LOG.md` Run 8 |
+| 6 Sep 2026 | **0.3.5** | Protokol Review Independen diwariskan dari meta v1.4.0: file baru `PROTOKOL_REVIEW_INDEPENDEN.md` (root sistem — varian KK: audit paparan di penutupan gate + materialitas dinilai reviewer; pencatatan run tidak dipegang sesi subjek (M2); 6d berlaku juga untuk reviewer selama jendela run) + rujukan di `_sistem/START_DI_SINI.md`, `QUALITY_ASSURANCE_AND_EVOLUTION.md` (level trigger KK), `ACCEPTANCE_TESTS.md` (poin 7; poin 1–6 tidak diubah), `panduan/PANDUAN_PENGGUNA.md` (varian 1-baris; blok pembuka/penutup tidak disentuh) | Alasan: dokumen protokol baru yang TIDAK mengubah aturan 00/05/06 → regresi acceptance AT-KK tidak terpicu (diff `00`/`05`/`06` = 0 baris; induk: `_meta/PROTOKOL_REVIEW_INDEPENDEN.md`) |

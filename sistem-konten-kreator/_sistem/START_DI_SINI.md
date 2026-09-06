@@ -34,6 +34,9 @@
 **Mau menguji apakah sistem ini sendiri masih berperilaku benar** (setelah aturannya diubah, atau sebelum menaikkan status sistem)
 → Jalankan skenario di `ACCEPTANCE_TESTS.md` (di root sistem, bukan di `_sistem/`) dan isi tabel Rekaman Hasil
 
+**Mau menutup pengecualian/gate (mis. F), menaikkan versi aturan, atau mengubah klaim di manifest (pekerjaan L1)?**
+→ Review independen oleh SESI LAIN wajib sebelum klaim boleh masuk main — protokol varian KK di `PROTOKOL_REVIEW_INDEPENDEN.md` (root sistem) + induk `_meta/PROTOKOL_REVIEW_INDEPENDEN.md`; varian prompt reviewer siap tempel ada di `panduan/PANDUAN_PENGGUNA.md`
+
 ---
 
 ## Urutan wajar membangun sesuatu dari nol
