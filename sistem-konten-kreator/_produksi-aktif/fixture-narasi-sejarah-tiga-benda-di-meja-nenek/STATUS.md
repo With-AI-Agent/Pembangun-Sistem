@@ -42,9 +42,9 @@
   - `G2 breakdown (Tahap 4):` **disetujui 2026-09-06 — dikunci**
   - `G1 Tahap 5 (Assets):` **disetujui 2026-09-06 — asset diterima; marking kecil dial segmen 04 accepted limitation; jangan regenerate**
   - `G2 konten final + metadata (Tahap 6):` **disetujui 2026-09-06 — judul resmi opsi 1**
-  - `G3 merge:` belum
-- **Commit terakhir:** akan menunjuk commit keputusan G2 Tahap 6 setelah commit dibuat. Commit output Tahap 6: `bcb188e`; commit keputusan G1 Tahap 5: `65e3492`.
-- **PR terkait:** PR #13 dan PR #14 sudah `MERGED`; PR final sesi ini **belum dibuat** dan akan dibuat setelah commit keputusan G2 ini.
+  - `G3 merge:` **belum — PR #15 terbuka; keputusan tetap di pengguna**
+- **Commit terakhir:** `100e904` — keputusan G2 Tahap 6 dan judul resmi opsi 1; commit status/PR closure menyusul. Commit output Tahap 6: `bcb188e`; commit keputusan G1 Tahap 5: `65e3492`.
+- **PR terkait:** PR #13 dan PR #14 sudah `MERGED`; **PR #15** — [Produksi fixture: paket final Tiga Benda di Meja Nenek](https://github.com/With-AI-Agent/Pembangun-Sistem/pull/15) — **OPEN**, tanpa auto-merge; G3 belum diberikan.
 - **Pekerjaan belum tersimpan:** Tidak ada
 - **Risiko atau blocker:**
   - G1 Tahap 5 sudah disetujui; marking kecil pada dial segmen 04 diterima apa adanya sebagai **accepted limitation** fixture. Jangan regenerate asset pada run ini.
@@ -53,7 +53,7 @@
   - Approved limitation: tidak ada render MP4/audio; paket still frame + naskah final + metadata + spesifikasi assembly diterima untuk fixture ini.
   - Temuan durasi r1 tetap tercatat: 144 kata → 66,46 detik tanpa jeda / 69,46 detik dengan enam jeda. r2: 130 kata → 60 + 3 = **63 detik estimasi**, bukan pengukuran rekaman. Batas model tetap 55–65 detik; tambahan jeda/intonasi belum diukur.
   - Brand Core masih kosong. Judul masih judul kerja, bukan metadata publish yang disetujui.
-- **Waktu pembaruan:** 2026-09-06 — G2 Tahap 6 disetujui; judul opsi 1 resmi; siap menyiapkan PR tanpa auto-merge
+- **Waktu pembaruan:** 2026-09-06 — PR #15 terbuka tanpa auto-merge; sesi menunggu keputusan G3 pengguna
 
 ## Aturan
 
