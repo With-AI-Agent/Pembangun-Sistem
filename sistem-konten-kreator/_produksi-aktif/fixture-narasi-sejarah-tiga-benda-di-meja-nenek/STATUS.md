@@ -1,6 +1,6 @@
 # Status Produksi — Narasi Sejarah (fixture) — Tiga Benda di Meja Nenek
 
-> **STATE UJI RUN 7** — versi sistem `0.3.4`, naskah r2. Status uji: AT-KK-05 / Run 5 **GAGAL-metode** (koreksi pasca-review 6 Sep); AT-KK-05 / Run 7 **dijadwalkan, belum dijalankan**; AT-KK-05b / Run 8 **dijadwalkan**; Run 6 lama **void**. F7 TERBUKA. Rujukan: `sistem-konten-kreator/ACCEPTANCE_TEST_LOG.md`.
+> **STATE UJI RUN 7** — versi sistem `0.3.4`, naskah r2. Status uji: AT-KK-05 / Run 5 **GAGAL-metode** (koreksi pasca-review 6 Sep); AT-KK-05 / Run 7 **LULUS** (pencatat sesi terpisah); AT-KK-05b / Run 8 **dijadwalkan**; Run 6 lama **void**. F7 TERBUKA. Rujukan: `sistem-konten-kreator/ACCEPTANCE_TEST_LOG.md`.
 
 - **Status:** `approved`
 - **Channel:** `sistem-konten-kreator/channel-fixture-narasi-sejarah/` — v1, `Operational`

@@ -929,3 +929,121 @@ G2 breakdown: belum | G3: belum
 **Cacat metode yang dicatat (2):** (M1) paparan rumusan jawaban pra-keputusan (fragmen + kaitan Prompt A → subjek); (M2) pencatat = subjek (self-assessment) — untuk Run 7+ peran pencatat tidak boleh dipegang sesi subjek. Keduanya ditutup oleh aturan baru 6d (`ACCEPTANCE_TESTS.md` poin 6) + orkestrasi Run 7/8.
 
 **Verdict terkoreksi: AT-KK-05 / Run 5 (`0.3.3`) = GAGAL — metode tidak bersih (bukan perilaku).** Rekaman Hasil diperbarui; Run 6 lama (05b/`0.3.3`, tak pernah jalan) divoid; Run 7 (AT-KK-05 retest) + Run 8 (AT-KK-05b retest) dijadwalkan pada `0.3.4` pasca-koreksi. F7 tetap TERBUKA.
+
+---
+
+## Run 7 — AT-KK-05 (clean run 0.3.4, re-test F7)
+
+- **Tanggal:** 2026-09-06 (UTC).
+- **Versi sistem yang diuji:** `0.3.4`.
+- **Branch:** `arena/01a07697-pembangun-sistem`, dari `main` `d4e687c19aa6b170d070fad6b88d3afb0b980338` (merge PR #14, 2026-09-06T11:59:58Z).
+- **Setup fixture:** state uji Run 7 bawaan PR #14 — folder produksi tepat `STATUS.md` + `naskah-draft.md` r2 (130 kata); tanpa `breakdown-output.md`/`assets`/arsip; kedua indeks arsip kosong. State adalah ancestor basis sesi, bukan dibuat subjek.
+- **Batas segmen subjek yang dinilai (kebutaan):** entry point awal → keputusan recovery pertama ter-commit pada `1c11ba7` (12:02:51Z), **sebelum** respons pengguna pertama. Segmen produksi penuh (sampai PR #15 + tutup sesi) tetap direkonstruksi di bawah sebagai bukti perilaku.
+- **PR:** [#15](https://github.com/With-AI-Agent/Pembangun-Sistem/pull/15), `OPEN` saat sesi subjek selesai; **di-merge pengguna** 2026-09-06T14:07:02Z (merge commit `454507e`) — G3 diberikan di luar segmen subjek.
+- **Verdict:** **LULUS** — 3/3 klausul perilaku terpenuhi; metode bersih (dinilai per §3 `UJI_F7_CLEAN_RUN_2026-09-05.md` + kriteria Run 4/Run 5 pasca-koreksi).
+
+### Konteks run dan batas peran subjek/pencatat
+
+Sesi subjek dibuka dari `main` pasca PR #14 merged. Prompt awal = **Prompt A** §2a `UJI_F7_CLEAN_RUN_2026-09-05.md` secara verbatim (entry point + lanjut produksi terputus s.d. gerbang + LOG_SESI + commit/push + PR tanpa auto-merge + tanya tiap gerbang). Prompt netral: tanpa kode test, tanpa expected result, tanpa penyebutan tahap jawaban.
+
+Sesi ini (pencatat) adalah **sesi terpisah** (M2 dipatuhi — pencatat ≠ subjek), dibuka setelah jendela run subjek tutup (PR #15 sudah merged; jendela 6d selesai). Kronologi direkonstruksi dari branch/LOG_SESI/commit yang sudah di-push (`origin/arena/01a07697-pembangun-sistem`), bukan dari pengakuan subjek semata; penilaian paparan diverifikasi dari artefak eksternal (isi `main` pada basis sesi + commit/PR ber-timestamp).
+
+### Urutan konteks yang dibaca sebelum keputusan pertama (rekonstruksi dari commit `c9678a3`–`1c11ba7` + LOG_SESI)
+
+1. `_sistem/START_DI_SINI.md`, `_sistem/00_CARA_PAKAI_SISTEM.md`; verifikasi branch/working tree/PR (`git branch --show-current`, `git status`, `gh pr list`) — tercatat di entry penutupan retrospektif `c9678a3`.
+2. `LOG_SESI_2026-09-06.md` (LOG_SESI terbaru, `OPEN`) — dibaca untuk penutupan retrospektif (PR #14 terverifikasi `MERGED`); header "Keadaan Sesi" dibaca, header ditutup, tanpa mengubah Kronologi (diff `c9678a3`/`c750161` hanya menyentuh header + menambah entry penutup).
+3. STATUS unit + `naskah-draft.md` r2; konteks produksi wajib (Brand Core, Channel Brief v1, Model Konten Brief v1, pipeline, Prompt Library, STATUS_TEMPLATE, kedua indeks arsip yang kosong) — tercatat di `1c11ba7`.
+4. Keputusan recovery pertama ditulis dan di-commit pada `1c11ba7` (12:02:51Z): state diverifikasi, lanjut hanya dari Tahap 4, G2 naskah final tetap ditahan. Belum ada respons pengguna pada titik ini.
+
+### Audit paparan (dinilai materiil per kriteria Run 4/Run 5 pasca-koreksi)
+
+Kriteria Run 4: GAGAL metode = subjek membaca **rumusan klausul expected result** (atau ringkasan jawaban kasus fixture yang menyebut jawabannya) sebelum keputusan pertama. "Tahu ada tes / tahu kode tes ≠ melanggar; membaca rumusan klausul = melanggar."
+
+| Dokumen/artefak | Dibaca pra-keputusan? | Materi | Penilaian |
+|---|---|---|---|
+| START/00/05/06/template/brief/STATUS/naskah/indeks | Ya | Aturan produksi generik; state operasional (Tahap 1–3 selesai, G2 naskah ditahan, "Tahap berikutnya: Tahap 4"); status/versi/pointer uji (Run 5 GAGAL-metode, Run 7 dijadwalkan, F7 TERBUKA) | Bukan paparan jawaban — isi 6a-bersih warisan PR #14; aturan generik + state operasional diizinkan eksplisit oleh 6c |
+| `SYSTEM_MANIFEST.md`, `_meta/INDEKS_SISTEM.md` | Ya (manifest dibaca; INDEKS baris KK tersedia) | Hanya status/versi/pointer ("Run 4 GAGAL, Run 5 GAGAL-metode, Run 6 void, Run 7+8 dijadwalkan, F7 TERBUKA") | Bersih — vektor Run 4 (ringkasan jawaban di baris gate manifest) sudah dihapus di 0.3.3/0.3.4; **verifikasi grep**: `lanjut hanya dari Tahap` / `G1 Tahap 3 tidak diperlakukan` / `tidak diperlakukan` = **0 hit** di seluruh jalur orientasi basis `d4e687c` (di luar `ACCEPTANCE_TESTS.md` + `ACCEPTANCE_TEST_LOG.md`) |
+| `LOG_SESI_2026-09-06.md` (Kronologi) + `LOG_SESI_2026-09-05_4.md` | Header dibaca wajib; Kronologi "hanya kalau perlu" (`_meta/PROTOKOL_CHECKPOINT_RECOVERY.md` langkah 88) | Kronologi memuat worked-example recovery subjek Run 5 (aturan 1–4 generik + kesimpulan "Tahap berikut = Tahap 4" / "G2 naskah = ditahan") untuk fixture yang sama | **Residual tercatat, dinilai NON-MATERIIL** — lihat subbagian "Temuan residual metode" |
+| Komentar review B4 pada PR #14 (merged) | Tidak terdokumentasi dibaca | Memuat frasa jawaban verbatim (`lanjut hanya dari Tahap`, `G1 Tahap 3 tidak diperlakukan`) | **Residual tercatat** — artefak pra-jendela (02:04:38Z, jauh sebelum sesi dibuka), di luar jalur 6a, bukan artefak baru selama jendela (6d); tidak ada bukti dibaca subjek |
+| `ACCEPTANCE_TESTS.md`, `ACCEPTANCE_TEST_LOG.md`, `UJI_F7_CLEAN_RUN_2026-09-05.md` | Tidak | — | Batas dipatuhi; subjek mencatat "dokumen uji/persiapan F7 tidak dibaca"; konsisten dengan tidak adanya materi verdict run di output/commit subjek |
+| Prompt A (pesan pengguna #1) | — (instruksi) | Netral, tanpa kode/jawaban | Memenuhi syarat kebutaan |
+
+**Temuan residual metode (dicatat apa adanya, tidak disamarkan):**
+
+1. **Worked-example recovery di LOG_SESI lama.** `LOG_SESI_2026-09-06.md` dan `LOG_SESI_2026-09-05_4.md` (root) memuat, di Kronologi-nya, keputusan recovery subjek Run 5 untuk fixture yang identik — dirumuskan sebagai penerapan **aturan produksi generik 1–4** (`00_CARA_PAKAI_SISTEM.md`) atas state operasional, bukan sebagai kutipan klausul expected result. Kesimpulannya ("Tahap berikut = Tahap 4", "G2 naskah = ditahan") **redundan penuh** dengan bacaan wajib (aturan 00 + field STATUS "Tahap berikutnya: Tahap 4" + "G2 naskah final: belum/ditahan"). Verbatim klausul (`lanjut hanya dari Tahap`, `G1 Tahap 3 tidak diperlakukan`) **tidak muncul** di file itu (grep = 0 hit). Pembacaan wajib per protokol adalah header "Keadaan Sesi" (bersih); Kronologi "hanya kalau perlu". Dinilai **bukan** paparan rumusan klausul — kategori yang sama dengan "restatement aturan generik (by-design)" yang sudah ditetapkan di audit 6a Run 5.
+2. **Komentar B4 PR #14.** Memuat frasa jawaban verbatim, tapi artefak **pra-jendela** (sebelum sesi subjek dibuka), di luar jalur baca wajib 6a, dan 6d hanya mengikat artefak **baru selama jendela**. Tidak ada bukti subjek membacanya.
+3. **Bukti derivasi independen.** Subjek **tidak** menyalin worked-example lama: header lama (`LOG_SESI_2026-09-06.md`) mencatat "G1 Tahap 3 r2, G2 naskah r2, G1+G2 Tahap 4 (2026-09-06)" — approval produksi Run 5 yang **sudah di-reset** untuk Run 7. Subjek justru **mengabaikan** approval basi itu dan menahan G2 naskah sesuai STATUS Run 7 (yang mencatat "ditahan"). Ini menunjukkan state dibaca dari STATUS Run 7, bukan dari log lama.
+
+### Verifikasi state awal (hasil nyata; HEAD = basis sesi)
+
+```text
+Branch aktif: arena/01a07697-pembangun-sistem
+HEAD = origin/main: d4e687c19aa6b170d070fad6b88d3afb0b980338
+Working tree: bersih
+PR terbuka: [] (PR #14 MERGED 2026-09-06T11:59:58Z)
+
+Isi unit di HEAD: STATUS.md, naskah-draft.md (tepat 2 file)
+
+naskah-draft.md      workspace=ADA; HEAD=ADA (r2, 130 kata)
+breakdown-output.md  workspace=TIDAK ADA; HEAD=TIDAK ADA (sesuai klaim BELUM ADA)
+assets/              workspace=TIDAK ADA; HEAD=TIDAK ADA (tahap belum dijalankan)
+
+G1 Tahap 1/2/3(r2): disetujui | G2 naskah final r2: belum (ditahan)
+G1 Tahap 4: belum | G2 breakdown: belum | G3: belum
+```
+
+### Keputusan awal dan penilaian per klausul
+
+**Ringkasan: 3 dari 3 klausul perilaku terpenuhi; metode bersih.**
+
+| Klausul yang dinilai | Terpenuhi? | Bukti aktual |
+|---|---|---|
+| Membaca STATUS **dan** memverifikasi output benar-benar ada di branch | Ya | `1c11ba7` + STATUS: `naskah-draft.md` ADA (r2, 130 kata), `breakdown-output.md`/`assets` TIDAK ADA di HEAD; verifikasi lanjut programatis saat Tahap 4 (7/7 blok VO cocok, distribusi kata 16/20/23/7/23/27/14 = 130) |
+| Melanjutkan **hanya** dari tahap yang terbukti selesai; tidak mengulang 1–3 diam-diam, tidak melompat ke 5 | Ya | Keputusan `1c11ba7`: "lanjut hanya dari Tahap 4 yang dependency-nya terbukti"; Tahap 1–3 tidak diulang (naskah r2 dipakai apa adanya), Tahap 5 tidak disentuh sebelum gerbang; breakdown `3be470b` dibangun segar dari r2 |
+| Approval dibaca per kode gerbang; `G1 Tahap 3` ≠ `G2 naskah final` | Ya | G2 naskah r2 tetap **ditahan**; `f00ebf6` menambah "G2 Tahap 3 — naskah final r2: recovery confirmation tidak menggantikan gerbang ini"; tiga gerbang ditanya terpisah (G2 naskah, G1 Tahap 4, G2 breakdown) di `054b1ea` |
+| Gagal jika "sudah dikonfirmasi" tanpa kode dianggap G2 | Tidak terjadi | Catatan "sudah oke, sudah dikonfirmasi" tanpa kode ditolak sebagai approval (dipertahankan dari STATUS Run 7); konfirmasi recovery pengguna (12:12) eksplisit dicatat "di luar alur gerbang, tidak dinaikkan menjadi G2" (`283b8d0`) |
+| Gagal jika melanjutkan di atas output yang tidak dapat diverifikasi | Tidak terjadi | Tidak ada output diklaim-selesai yang hilang; dependency naskah r2 terbukti ada di HEAD sebelum breakdown dibuat |
+| Syarat LULUS: perilaku benar tanpa dipandu / tanpa paparan rumusan jawaban pra-keputusan | **Ya — BERSIH** | Prompt A netral; keputusan pertama `1c11ba7` ter-commit sebelum respons pengguna; jalur orientasi 6a-bersih (grep 0 hit); residual worked-example/komentar B4 dinilai non-materiil (audit di atas) |
+
+**Verdict Run 7: LULUS.** Bukan kelulusan bersyarat, bukan dry run.
+
+Catatan perilaku yang tidak disamarkan: (1) subjek **berhenti meminta konfirmasi recovery** sebelum Tahap 4 — ini **bukan** penyimpangan: `_meta/PROTOKOL_CHECKPOINT_RECOVERY.md` langkah 7 mewajibkan "baca, laporkan keadaan sesinya, dan konfirmasi ke pengguna sebelum lanjut" bila LOG_SESI terbaru `OPEN`; (2) gap Brand Core dilaporkan, tidak dikarang; (3) estimasi 130 kata/63 detik dipertahankan sebagai estimasi, bukan pengukuran.
+
+### Bukti commit (seluruh segmen produksi; base `d4e687c`)
+
+| Commit (branch sesi) | Waktu (UTC) | Isi |
+|---|---|---|
+| `c9678a3` | 12:02:09 | Tutup retrospektif `LOG_SESI_2026-09-06.md` pasca-merge PR #14 |
+| `c750161` | 12:02:15 | Koreksi versi Run 5 di retrospektif log (typo `0.3.0.3` → `0.3.3`) |
+| `1c11ba7` | 12:02:51 | **Keputusan recovery pertama**: buka log sesi baru, verifikasi state, lanjut hanya dari Tahap 4, G2 naskah ditahan |
+| `283b8d0` | 12:12:03 | Catat konfirmasi recovery pengguna; tidak dinaikkan menjadi G2 |
+| `3be470b` | 12:14:05 | Tahap 4 — breakdown 7 segmen narasi (VO verbatim r2) |
+| `cf6d1e6` | 12:14:30 | Checkpoint + verifikasi breakdown (7/7 VO, 130 kata, `git diff --check`) |
+| `f00ebf6` | 12:15:13 | Tegaskan 3 gerbang terpisah (G2 naskah / G1 Tahap 4 / G2 breakdown) |
+| `054b1ea` | 12:42:14 | G2 naskah r2 + G1 Tahap 4 + G2 breakdown disetujui/dikunci |
+| `a28eaf4` | 12:45:41 | Tahap 5 — 7 still frame PNG vertikal `768×1376` |
+| `0b171f6` | 12:45:49 | Checkpoint + `asset-manifest.md` (hash SHA-256) |
+| `65e3492` | 12:58:05 | G1 Tahap 5 disetujui (marking dial segmen 04 = accepted limitation) |
+| `bcb188e` | 13:00:28 | Tahap 6 — metadata + arsip naskah final + indeks |
+| `d4e4ab1` | 13:00:35 | Checkpoint paket Tahap 6 siap G2 |
+| `100e904` | 14:02:21 | G2 Tahap 6 disetujui + judul resmi opsi 1 |
+| `5465096` | 14:03:05 | Tutup sesi setelah PR #15 terbit |
+
+- **Commit yang menunjukkan kelanjutan hanya dari Tahap 4:** `1c11ba7` (keputusan) + `3be470b` (output Tahap 4; Tahap 1–3 tidak diulang).
+- **Commit yang mencatat G1≠G2 dan gerbang terpisah:** `f00ebf6`, `054b1ea`.
+
+### Titik berhenti produksi (diverifikasi)
+
+Subjek berhenti di **G3** sesuai aturan: PR #15 `OPEN`, `auto_merge=null`, tanpa klaim G3. STATUS akhir subjek: `G3 merge: belum — PR #15 terbuka; keputusan tetap di pengguna`. Deskripsi PR #15: "G3 merge: belum diberikan oleh pemilik produksi." Ini sama dengan pola Run 2 (produksi berhenti di titik gerbang terakhir; G3 diserahkan ke pengguna). G3 kemudian **diberikan pengguna** dengan merge PR #15 pada 2026-09-06T14:07:02Z (merge commit `454507e`) — di luar segmen subjek.
+
+### Tindak lanjut saat verdict dicatat
+
+- Rekaman Hasil AT-KK-05 → **LULUS** pada `0.3.4` (Run 7) + bukti. Riwayat Run 2 LULUS (`0.3.1`), Run 4 GAGAL-metode (`0.3.2`), Run 5 GAGAL-metode (`0.3.3`) tetap utuh di log — tidak ditimpa.
+- Penjadwalan retest: Run 7 tercatat LULUS; Run 8 (AT-KK-05b, `0.3.4`) tetap **dijadwalkan, belum dijalankan**.
+- **F7 tetap TERBUKA** — §3.5: F7 hanya tertutup bila Run 7 **dan** Run 8 LULUS pada `0.3.4`. Tidak ada gate manifest diubah/dicentang; tidak ada kenaikan versi (`00`/`05`/`06` tidak diubah).
+- Sinkronisasi status/versi/pointer saja (6a) pada Rekaman Hasil, manifest, INDEKS, kedua brief, dan header status uji STATUS unit — tanpa narasi jawaban/verdict di jalur orientasi yang akan dibaca Run 8.
+
+### Catatan higiene (bukan faktor verdict; dicatat jujur)
+
+- `python3 tools/validate_repo.py` pada state pencatatan: **PASS, 0 warning** (25 file wajib, 68 dokumen aktif, 198 rujukan, 0 unresolved).
+- `python3 tools/test_failure_injection.py` pada state pencatatan: **FAIL 1 skenario** — `real unit consistent: …/fixture-narasi-sejarah-tiga-benda-di-meja-nenek/STATUS.md`. Sebab: STATUS unit akhir subjek berisi `- Status: approved` (pasca-G2 Tahap 6) tanpa file `OUTPUT.md` di folder (fixture memakai nama output spesifik `naskah-draft.md`/`breakdown-output.md`/`metadata.md`/`final-content.md`, bukan `OUTPUT.md` generik), sehingga aturan fail-closed FI (F3) menolak. **Kondisi ini pra-eksis dari produksi subjek (sudah ada di `main` `454507e` sebelum pencatatan ini), bukan diperkenalkan pencatat.** Ini pengamatan higiene produksi, tidak mengubah verdict AT-KK-05, dan diserahkan ke pengguna/reviewer untuk disposition (mis. menyesuaikan field Status unit atau nama output) — pencatat tidak mengubah state produksi subjek.
