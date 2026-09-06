@@ -133,7 +133,8 @@ Sumber resmi dibaca ulang sebelum breakdown dibuat:
 
 ## Gerbang berikutnya
 
+- **G2 Tahap 3 — naskah final r2:** apakah naskah r2 dikunci apa adanya sebagai naskah final? Recovery confirmation tidak menggantikan gerbang ini.
 - **G1 Tahap 4 — Review output:** apakah breakdown ini sudah sesuai dan boleh lanjut ke Tahap 5, atau ada bagian yang harus diulang?
 - **G2 breakdown — Approval keputusan besar:** apakah breakdown ini dikunci sebagai dasar Generate/Acquire Assets?
 
-Kedua gerbang di atas terpisah. Persetujuan G1 tidak otomatis menjadi G2 atau G3.
+Ketiga gerbang di atas terpisah. G1 tidak otomatis menjadi G2; G2 naskah tidak otomatis menjadi G2 breakdown; dan tidak ada yang menjadi G3 merge.
