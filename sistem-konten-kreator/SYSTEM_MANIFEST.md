@@ -11,7 +11,7 @@
 - **Instruksi utama:** `_sistem/00_CARA_PAKAI_SISTEM.md`
 - **Living documents:** Brand Core, Channel Brief, Bank Konsistensi Visual, Model Konten Brief, arsip naskah
 - **Audit acuan (provenance):** `_meta/_internal/AUDIT_SISTEM_KONTEN_KREATOR_2026-09-03.md` di master blueprint — P0+P1 ditutup 4 Sep, P2 sebagian (lihat tabel temuan di bawah)
-- **Acceptance test:** **F7 TERBUKA — run ulang dijadwalkan.** AT-KK-05 / Run 4: **GAGAL**, `0.3.2-warisan-sync`. AT-KK-05 / Run 5 dan AT-KK-05b / Run 6: **dijadwalkan, belum dijalankan**, `0.3.3`. F7 tetap TERBUKA sampai Run 5 + Run 6 LULUS pada `0.3.3`. Bukti/status: `ACCEPTANCE_TEST_LOG.md`.
+- **Acceptance test:** **F7 TERBUKA — Run 5 berjalan.** AT-KK-05 / Run 4: **GAGAL**, `0.3.2-warisan-sync`. AT-KK-05 / Run 5: **berjalan** (dicatat; PR #14 review, belum merged), `0.3.3`. AT-KK-05b / Run 6: **dijadwalkan, belum dijalankan**, `0.3.3`. F7 tetap TERBUKA sampai Run 5 + Run 6 LULUS pada `0.3.3`. Bukti/status: `ACCEPTANCE_TEST_LOG.md` (Run 5).
 - **Referensi historis (bukan instruksi aktif):** `_sistem/09_AUDIT_MIGRASI_GITHUB_AGENT.md` — ditandai `agent_instruction: reference_only`, dikecualikan dari template bersih
 - **Backup/template:** belum dirilis
 
@@ -56,11 +56,11 @@ W-01 pegangan ✔ (`panduan/PANDUAN_PENGGUNA.md` + `PROMPT_ENTRI_UNIVERSAL.md`);
 - [ ] Brand Core dan brief terkait sudah approved/merged — *belum: belum ada channel nyata yang diisi*
 - [x] Index arsip naskah dan index karakter tersedia bila relevan — *kontrak & format ditetapkan (K-01); sudah diinstansiasi (masih kosong) di fixture `channel-fixture-narasi-sejarah/arsip-naskah/` 4 Sep 2026; instansiasi channel nyata tetap menyusul*
 - [x] Workflow standar/custom sudah dinyatakan eksplisit — *termasuk jalur non-visual (M-04)*
-- [x] Prosedur checkpoint dan recovery diuji — **historis**: AT-KK-05 / Run 2 **LULUS**, AT-KK-05b / Run 3 **LULUS**, keduanya `0.3.1-audit-remediation`. Retest: AT-KK-05 / Run 4 **GAGAL**, `0.3.2-warisan-sync`; Run 5 + Run 6 `0.3.3` **belum dijalankan**. Status/bukti: `ACCEPTANCE_TEST_LOG.md`.
+- [x] Prosedur checkpoint dan recovery diuji — **historis**: AT-KK-05 / Run 2 **LULUS**, AT-KK-05b / Run 3 **LULUS**, keduanya `0.3.1-audit-remediation`. Retest: AT-KK-05 / Run 4 **GAGAL**, `0.3.2-warisan-sync`; Run 5 `0.3.3` **berjalan** (PR #14 review); Run 6 `0.3.3` **belum dijalankan**. Status/bukti: `ACCEPTANCE_TEST_LOG.md`.
 
 - [x] Audit P0 sudah ditutup — *K-01 s/d K-05 + M-01, lihat Log Evolusi*
 - [ ] Pilot end-to-end berhasil — belum; temuan L-04 masih terbuka.
-- [ ] Acceptance test sistem ini LULUS — **belum**. Run 5 / AT-KK-05 dan Run 6 / AT-KK-05b pada `0.3.3` dijadwalkan; AT-KK-01/02/03/03b/04/06/07/08 belum diuji. Status/bukti: `ACCEPTANCE_TEST_LOG.md`.
+- [ ] Acceptance test sistem ini LULUS — **belum**. Run 5 / AT-KK-05 `0.3.3` berjalan (PR #14 review); Run 6 / AT-KK-05b `0.3.3` dijadwalkan; AT-KK-01/02/03/03b/04/06/07/08 belum diuji. Status/bukti: `ACCEPTANCE_TEST_LOG.md`.
 
 ## Temuan Audit yang Masih Terbuka
 
@@ -86,7 +86,7 @@ Dari `_meta/_internal/AUDIT_SISTEM_KONTEN_KREATOR_2026-09-03.md`:
 | L-02 klaim agent tahu semua konteks | P2 | **Ditutup** 4 Sep 2026 |
 | L-03 batas ukuran arsip & indexing | P2 | **Terbuka** |
 | L-04 contoh channel terisi penuh | P2 | **Terbuka** — gate pilot end-to-end |
-| L-05 acceptance test dapat diulang | P2 | **Sebagian**. AT-KK-05 / Run 4 **GAGAL**, `0.3.2-warisan-sync`; AT-KK-05b / Run 3 **LULUS**, `0.3.1-audit-remediation`. Run 5 + Run 6 `0.3.3` **dijadwalkan**. Status/bukti: `ACCEPTANCE_TEST_LOG.md` |
+| L-05 acceptance test dapat diulang | P2 | **Sebagian**. AT-KK-05 / Run 4 **GAGAL**, `0.3.2-warisan-sync`; AT-KK-05b / Run 3 **LULUS**, `0.3.1-audit-remediation`. Run 5 `0.3.3` **berjalan**; Run 6 `0.3.3` **dijadwalkan**. Status/bukti: `ACCEPTANCE_TEST_LOG.md` |
 
 ## Log Evolusi
 
@@ -101,3 +101,4 @@ Dari `_meta/_internal/AUDIT_SISTEM_KONTEN_KREATOR_2026-09-03.md`:
 | 5 Sep 2026 | 0.3.1-audit-remediation | AT-KK-05b / Run 3: **LULUS** | `ACCEPTANCE_TEST_LOG.md` Run 3 |
 | 6 Sep 2026 | 0.3.2-warisan-sync | AT-KK-05 / Run 4: **GAGAL**; F7 **TERBUKA** | `ACCEPTANCE_TEST_LOG.md` Run 4 |
 | 6 Sep 2026 | **0.3.3** | Aturan metode pada `ACCEPTANCE_TESTS.md` poin 6/6a dan struktur rujukan diperbarui; dokumen `00`/`05`/`06` tidak diubah | F7 **TERBUKA**; Run 5 / AT-KK-05 dan Run 6 / AT-KK-05b **dijadwalkan**, `0.3.3`. Rincian: `ACCEPTANCE_TEST_LOG.md` Run 4 |
+| 6 Sep 2026 | 0.3.3 | AT-KK-05 / Run 5: **berjalan** (dicatat; PR #14 review, belum merged); F7 **TERBUKA** | `ACCEPTANCE_TEST_LOG.md` Run 5 |
