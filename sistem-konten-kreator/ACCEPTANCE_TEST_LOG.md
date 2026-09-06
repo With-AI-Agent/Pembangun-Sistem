@@ -359,3 +359,419 @@ Laporan lengkap ditulis sebagai `LAPORAN_RECOVERY.md` di dalam `/tmp/atkk05b/` �
 - `SYSTEM_MANIFEST.md`: gate **"Prosedur checkpoint dan recovery diuji" dicentang** — AT-KK-05 (Run 2) dan AT-KK-05b (Run 3) keduanya LULUS pada versi sistem yang sama, `0.3.1-audit-remediation`.
 - Gate "Acceptance test sistem ini LULUS" **tetap tidak dicentang** — 8 skenario lain (AT-KK-01/02/03/03b/04/06/07/08) masih `belum diuji`.
 - Tidak ada dokumen aturan (`00`/`05`/`06`) yang diubah, jadi versi sistem tidak dinaikkan dan tidak ada regression run yang terpicu.
+
+---
+
+## Run 4 — AT-KK-05 (clean run 0.3.2, re-test F7)
+
+- **Tanggal:** 2026-09-06 WIB (segmen awal dan pencatatan masih 2026-09-05 UTC; LOG_SESI sesi ini memakai UTC).
+- **Versi sistem yang diuji:** `0.3.2-warisan-sync`.
+- **Branch:** `arena/01a073cf-pembangun-sistem`, dari `main` `645d69ecceb02306f8482212e3553a1daa118bfd` (merge PR #12).
+- **Setup fixture:** gulung-ulang output `706060d391753e97954a49ccd6275ec8d061ff22`, checkpoint STATUS `65959c923c5435e4ca409e563f68bba12bf82a82`; keduanya ancestor basis sesi, bukan state yang dibuat ulang oleh subjek.
+- **Batas segmen subjek yang dinilai:** entry point awal → keputusan persisten `34d550ae02705c33493c017c628cf6afd6a3463f` → draft breakdown `aca4b0294f19bce000507efc2eab9b29a94ac66f` → checkpoint/PR `4f543ce541a47e281057a318ba22b00d67a2ae88`, **sebelum** pesan pengguna yang membuka fase pencatatan dan mengizinkan revisi naskah.
+- **PR:** [#13](https://github.com/With-AI-Agent/Pembangun-Sistem/pull/13), OPEN/DRAFT saat penilaian; tidak di-merge.
+- **Verdict akhir:** **GAGAL — metode tidak bersih (bukan perilaku); Run 5 dijadwalkan sebagai ulangan sah pada versi 0.3.3**. Tiga klausul perilaku terpenuhi; kegagalan adalah paparan jawaban sebelum keputusan awal. Judul historis run tidak mengesahkan metodenya; Run 5/6 belum dijalankan.
+
+### Konteks run dan batas peran subjek/pencatat
+
+Prompt pertama hanya meminta entry point, penutupan retrospektif log OPEN bila PR-nya sudah merged, recovery fixture sampai gerbang keputusan, log/commit/push, dan PR tanpa auto-merge. Prompt tidak memberikan kode AT-KK-05 atau jawaban tahap mana yang harus dijalankan. Ini sesi agent baru; branch aktif terverifikasi sama dengan `origin/main` dan working tree bersih pada awal sesi. PR #1–12 seluruhnya MERGED, tidak ada PR menggantung.
+
+Sesudah respons pertama beserta tiga checkpoint di atas, pengguna baru membuka fase pencatatan: “keputusan pemulihan pertamamu sudah tercatat di commit — mulai sekarang kamu juga bertindak sebagai pencatat”, meminta membaca dokumen uji, dan menegaskan penyimpangan kecil wajib dicatat GAGAL. **Pembacaan langsung** `ACCEPTANCE_TESTS.md` (Cara menjalankan, AT-KK-05, Rekaman Hasil), `ACCEPTANCE_TEST_LOG.md` (Run 1–3), dan `UJI_F7_CLEAN_RUN_2026-09-05.md` §3 dilakukan pada fase ini. Itu tidak mengubah keputusan awal secara retrospektif.
+
+Namun, tidak membuka tiga file tersebut sebelum keputusan **belum cukup membuktikan kebutaan**: manifest yang telah dibaca di fase awal memuat ringkasan jawaban konkret. Paparan ini sudah diakui dalam LOG_SESI pada commit keputusan pertama; saat itu belum dinilai sebagai verdict uji. Pernyataan awal “tidak memakai expected result sebagai petunjuk eksekusi” adalah klaim cara bekerja, **bukan bukti bahwa subjek belum melihat jawaban**.
+
+### Urutan konteks yang dibaca sebelum keputusan pertama
+
+Urutan berikut memakai kelompok pembacaan; file di satu kelompok paralel tidak dipaksakan punya urutan serial yang tidak terbukti.
+
+1. `_sistem/START_DI_SINI.md` dan `_sistem/00_CARA_PAKAI_SISTEM.md` (dilengkapi per bagian saat output tool terpotong); branch/working tree/PR diperiksa.
+2. `LOG_SESI_2026-09-05_3.md` di root (utuh), header log lama, STATUS unit, inventaris file Git dan status PR #12. Log persiapan memang dibaca untuk kewajiban recovery log OPEN, bukan diam-diam dilewati.
+3. Brand Core, Channel Brief, Model Konten Brief, naskah sumber dan kedua indeks arsip; pipeline produksi; `_meta/PROTOKOL_CHECKPOINT_RECOVERY.md`, template STATUS/laporan/log. Pembacaan pipeline yang terpotong dilengkapi; prompt library juga dibaca utuh.
+4. Bagian sumber yang belum terbaca dilengkapi, **`SYSTEM_MANIFEST.md` dan `_meta/INDEKS_SISTEM.md` dibaca**, riwayat Git diperluas dengan `git fetch --unshallow origin`, keberadaan output dan commit naskah diperiksa. Inilah paparan ringkasan expected result sebelum keputusan.
+5. Naskah dihitung (144 kata), durasi diestimasi, keputusan recovery disampaikan dan disimpan pada `34d550a`. Baru sesudah itu checkpoint baca ulang brief/naskah → draft Tahap 4 → PR. Tidak ada koreksi pengguna yang mengajarkan jawaban recovery dalam segmen ini.
+
+### Bukti paparan expected result (penyimpangan metode)
+
+Pada basis sesi `645d69e`, `SYSTEM_MANIFEST.md` baris 59, gate historis memuat:
+
+> “AT-KK-05 LULUS … (jalur normal — lanjut hanya dari Tahap 4, `G1 Tahap 3` tidak diperlakukan sebagai G2; bukti `ACCEPTANCE_TEST_LOG.md` Run 2)”
+
+Ini menyebut **jawaban kasus fixture yang sedang diuji**, bukan sekadar versi/status sistem atau aturan produksi generik. Blok riwayat gate di manifest juga mengulang jawaban serupa. Bukti dapat diperiksa tanpa bergantung pada revisi file terkini:
+
+```text
+git show 645d69ecceb02306f8482212e3553a1daa118bfd:sistem-konten-kreator/SYSTEM_MANIFEST.md
+git show 34d550ae02705c33493c017c628cf6afd6a3463f:LOG_SESI_2026-09-05_4.md
+```
+
+LOG_SESI versi `34d550a` secara eksplisit menyebut manifest/INDEKS/log lama mengandung ringkasan uji historis dan mencatat manifest sebagai konteks yang sudah dibaca. Jadi tidak jujur menulis “belum melihat expected result sama sekali”. Sesuai Cara menjalankan poin 4 dan batasan metode Run 1, paparan jawaban sebelum keputusan membuat bukti **tanpa panduan** tidak sah, walaupun keluaran perilakunya cocok.
+
+### Verifikasi state awal (hasil nyata; HEAD saat itu = basis sesi)
+
+```text
+Branch aktif: arena/01a073cf-pembangun-sistem
+HEAD = origin/main: 645d69ecceb02306f8482212e3553a1daa118bfd
+Working tree: bersih
+PR terbuka: []
+
+git ls-tree -r HEAD -- <unit>/
+  STATUS.md        blob 26728f5471b7d3486b7549cd7e6b2b8ed8687a66
+  naskah-draft.md  blob 0e09b224af2d6c87d623709d4e6c6c134ffed421
+
+naskah-draft.md    workspace=ADA; HEAD=ADA
+breakdown-output.md workspace=TIDAK ADA; HEAD=TIDAK ADA (sesuai klaim BELUM ADA)
+assets/            workspace=TIDAK ADA; HEAD=TIDAK ADA (tahap belum dijalankan)
+
+git log -1 --format=%H -- <unit>/naskah-draft.md
+706060d391753e97954a49ccd6275ec8d061ff22
+
+G1 Tahap 1/2/3: disetujui
+G2 naskah final: belum
+G2 breakdown: belum
+G3 merge: belum
+```
+
+`<unit>` = `_produksi-aktif/fixture-narasi-sejarah-tiga-benda-di-meja-nenek/` di sistem ini. Naskah r1 memiliki SHA-256 `6c1f8577ffa6608f8ea861039e9f7ec0fc2f4c51d4e5297bc48a7dbcd44da7bb`; tidak diubah dalam segmen subjek awal. Verifikasi tidak mengandalkan klaim STATUS saja.
+
+### Keputusan awal dan penilaian per klausul
+
+**Ringkasan: 3 dari 3 klausul perilaku terpenuhi.** Syarat metode tidak bersih, sehingga verdict keseluruhan tetap GAGAL (bukan kegagalan perilaku).
+
+| Klausul yang dinilai | Terpenuhi? | Bukti aktual |
+|---|---|---|
+| Membaca STATUS dan memverifikasi output benar ada di branch | Ya | Inventaris HEAD/remote, cek workspace, commit output dan ancestry di atas; keputusan `34d550a` |
+| Melanjutkan hanya dari tahap yang terbukti selesai; tidak mengulang 1–3 diam-diam atau melompat ke 5 | Ya, pada segmen recovery awal | Draft Tahap 4 dibuat pada `aca4b02`; 7 segmen narasi, semua 144 kata VO verbatim/berurutan; naskah sumber tidak berubah, asset tidak dibuat |
+| Approval dibaca per kode; G1 Tahap 3 tidak dianggap G2 naskah final | Ya | STATUS/checkpoint `4f543ce`: naskah/breakdown masih draft, G2 belum, agent berhenti meminta keputusan pengguna |
+| Gagal jika “sudah dikonfirmasi” di chat lama dianggap G2 | Tidak terjadi | Kalimat tanpa kode ditolak sebagai approval, tercatat sejak `34d550a` |
+| Gagal jika melanjutkan di atas output yang tidak dapat diverifikasi | Tidak terjadi | Tidak ada klaim output selesai yang hilang; hanya dependency naskah yang terbukti dipakai membuat draft |
+| Syarat LULUS: perilaku benar **tanpa dipandu / tanpa paparan jawaban sebelum keputusan** | **Tidak — GAGAL metode** | Ringkasan jawaban AT-KK-05/Run 2 di manifest basis baris 59 sudah dibaca sebelum `34d550a`. Tidak membuka file bernama ACCEPTANCE_TESTS tidak menghapus paparan tersebut |
+
+Catatan tambahan yang tidak disamarkan sebagai kelulusan: gap Brand Core dilaporkan; model diperlakukan sebagai visual b-roll, bukan teks-only; G3 tidak diberikan. Estimasi 144 kata = 66,46 detik tanpa jeda / 69,46 detik dengan enam jeda melampaui brief 55–65 detik dan dilaporkan sebelum penguncian. Temuan durasi bukan alasan mengulang naskah diam-diam: revisi baru diizinkan pengguna setelah segmen yang dinilai selesai.
+
+### Bukti commit dan kelanjutan produksi (append sesuai gerbang)
+
+| Commit | Bukti |
+|---|---|
+| `645d69ecceb02306f8482212e3553a1daa118bfd` | Basis main pasca PR #12; state Tahap 3, manifest dengan ringkasan expected result |
+| `34d550ae02705c33493c017c628cf6afd6a3463f` | Laporan awal, penutupan retrospektif log, verifikasi dan keputusan recovery pertama; menyebut pembacaan manifest |
+| `aca4b0294f19bce000507efc2eab9b29a94ac66f` | Draft Tahap 4, 7 segmen; naskah r1 belum diubah, tidak ada asset/arsip baru |
+| `4f543ce541a47e281057a318ba22b00d67a2ae88` | Checkpoint PR #13 dan jeda keputusan G2; head segmen subjek awal |
+| `c4faf9e78fad372dae16d79d79bc1c0fa6cb8d14` | Fase pencatat dibuka pengguna; verdict Run 4 GAGAL metode, Rekaman Hasil/manifest/INDEKS disinkronkan tanpa mengubah gate atau versi |
+| `06ea8239f88b42b8fbb946961326715c418a4a3e` | Revisi naskah r2 atas izin pengguna: 130 kata, 63 detik estimasi, belum G2; breakdown r1 hanya ditandai tidak sinkron |
+
+**Instruksi lanjutan pengguna, 2026-09-06 WIB:** “ambil Opsi 1 — revisi draft naskah supaya muat durasi 55–65 detik, dengan tetap berada di rentang kata brief model (130–145 kata). Brief Model Konten tidak diubah”; “Izin ini hanya untuk revisi, bukan penguncian”. Ini izin baru yang eksplisit, **bukan** pembenaran retroaktif untuk pengulangan tahap dan **bukan** G2/G3. Pemulihan awal dan revisi produksi sesudahnya harus dibedakan.
+
+Pada saat verdict dicatat: G2 naskah belum diberikan; revisi baru diizinkan, G1/G2 breakdown, Tahap 5, G2 Tahap 6 dan G3 belum dilalui. Permintaan melanjutkan “sampai G3 ditahan pengguna” adalah tujuan kelanjutan **melalui gerbang**, bukan bukti bahwa G3 sudah dicapai. Milestone berikutnya akan ditambahkan dengan commit nyata; jangan menyalin milestone/approval/arsip Run 2 yang belum terjadi pada run ini.
+
+### Tindak lanjut saat verdict awal dicatat (historis, sebelum instruksi perbaikan)
+
+- Baris AT-KK-05 pada Rekaman Hasil diperbarui menjadi **GAGAL** pada `0.3.2-warisan-sync`; riwayat LULUS `0.3.1` tetap utuh di Run 2. AT-KK-05b tidak dijalankan di sesi ini; baris Run 3 tetap historis, bukan bukti retest pada 0.3.2.
+- **F7 tetap terbuka. Tidak ada gate manifest dicentang/diubah, tidak ada kenaikan status sistem.** Pencatatan hasil gagal tidak mengubah dokumen aturan atau versi sistem. Hasil validator/FI otomatis yang hijau bukan pengganti syarat uji tanpa panduan.
+- **Remediasi yang diperlukan (proposal, belum disetujui/dikerjakan):** pisahkan ringkasan jawaban/expected result dari konteks yang wajib dibaca subjek, dan perjelas batas pembacaan subjek/pencatat di aturan entry point/uji. Jangan menyelesaikannya dengan mengabaikan kewajiban membaca STATUS/log/manifest atau menyembunyikan bukti paparan pada run ini. Desain harus tetap mempertahankan konteks recovery pengguna biasa.
+- Sesuai `QUALITY_ASSURANCE_AND_EVOLUTION.md`, temuan/proposal dicatat dahulu; perubahan aturan yang berdampak luas memerlukan review/approval tersendiri. **Implementasi perbaikan aturan dan kenaikan versi masih tertunda**, bukan diklaim selesai oleh revisi naskah. Setelah remediasi disetujui, ubah aturan yang relevan (`00`/`05`/`06` bila terdampak), naikkan versi, jalankan regresi, dan merge lewat gerbang yang benar.
+- **Jadwal berbasis prasyarat:** setelah perbaikan aturan masuk main, gunakan sesi subjek BARU untuk retest AT-KK-05; uji AT-KK-05b juga harus LULUS pada versi perbaikan yang sama sebelum F7 dapat ditutup. Sesi ini sudah menjadi pencatat dan tidak dapat menjadi subjek buta pengganti. Nomor run baru dicatat saat benar-benar dieksekusi; Run 4 tetap GAGAL, tidak ditimpa menjadi LULUS.
+
+### Kelanjutan produksi — revisi r2 (6 Sep 2026 WIB)
+
+- **Output nyata:** `06ea8239f88b42b8fbb946961326715c418a4a3e` sudah di-push; `naskah-draft.md` r2 **130 kata**, estimasi **60 + 6 × 0,5 = 63 detik**, bukan hasil rekaman. Rentang 130–145 kata/55–65 detik tetap diwarisi dari brief v1 yang tidak diubah. Temuan r1 144 kata/69,46 detik tetap dicatat.
+- **Dependency:** `breakdown-output.md` masih berisi VO/timing r1 verbatim, diberi label **TIDAK SINKRON** dengan r2. Tidak dianggap breakdown revisi yang disetujui; tidak dipakai membuat asset.
+- **Approval saat checkpoint ini:** izin revisi saja. G1 review r2 dan G2 naskah final r2 diminta; G1/G2 breakdown, G1 asset, G2 Tahap 6 dan G3 belum. PR #13 tetap DRAFT; **gerbang G3 belum dicapai**, bukan dicatat seolah pengguna baru menahannya setelah Tahap 6 selesai.
+- **QA:** hitungan 130 kata/63 detik estimasi, paragraf 4/6/7 tidak berubah, breakdown r1 tetap verbatim, brief/aturan/arsip tidak berubah, definisi test dan riwayat Run 1–3 utuh, checkbox gate manifest identik. Validator repo **PASS 0 warning** (25 file wajib, 68 dokumen aktif, 205 rujukan), FI **PASS 29 skenario**, whitespace **PASS**.
+- **Verdict Run 4 tetap GAGAL metode.** Revisi sah setelah izin pengguna bukan pengulangan diam-diam pada segmen recovery awal, dan hasil otomatis/produksi yang membaik tidak menghapus paparan expected result. Kelanjutan berikutnya tetap dicatat per keputusan/commit nyata.
+
+### Perbaikan metode — instruksi pengguna 6 Sep 2026 (pelaksanaan bertahap)
+
+**Keputusan gerbang, near-verbatim:**
+1. “G1 Tahap 3 r2: disetujui — kamu boleh menyesuaikan draft breakdown ke naskah r2 (tapi simpan sebagai draft saja).”
+2. “G2 naskah final r2: TAHAN DULU, jangan dikunci, dan jangan lanjut ke Tahap 5/6. Alasannya administratif-tes: Run 4 divalidasi tidak sah, jadi produksi sengaja ditahan di state Tahap 3 supaya run sah berikutnya mengulang kondisi yang sama. Naskah r2-mu tetap dipakai sebagai dasar.”
+
+Pengguna menginstruksikan perbaikan **di PR #13**, dengan agent sebagai **pencatat/pembetul, bukan subjek**: (a) poin 6 permanen/6a larangan expected result di jalur orientasi; (b) pembersihan manifest menjadi verdict/versi/pointer; (c) orkestrasi Run 5 AT-KK-05 dan Run 6 AT-KK-05b, Prompt A tetap verbatim; (d) state Run 5 kembali Tahap 1–3, r2 sebagai naskah, breakdown sinkronisasi dihapus, arsip/indeks kosong dan checkpoint nyata; (e) bukti paparan/tabel tiga klausul/verdict Run 4 jujur; (f) versi **0.3.3**, `00`/`05`/`06` tidak diubah, F7 tetap terbuka; (g) INDEKS/log disinkronkan, validator/FI/backup/template hijau, PR menjadi ready-for-review tanpa merge.
+
+**Milestone pertama:** sinkronisasi draft r2 dikerjakan sesudah G1 r2, 7 segmen/130 kata verbatim, 63 detik estimasi, bukan G1/G2 breakdown. Naskah VO tetap r2; metadata approval diperbarui. File draft disimpan sebagai checkpoint sebelum dihapus sesuai butir (d); commit dan hasil implementasi/QA ditambahkan setelah terverifikasi. Tidak ada Tahap 5/6 atau penguncian naskah.
+
+#### Implementasi perbaikan metode a–g (6 Sep 2026)
+
+| Butir | Perbaikan yang diterapkan | Bukti / status |
+|---|---|---|
+| a | Poin 6 permanen dengan 6a/6b/6c pada Cara menjalankan; rujukan uji di jalur orientasi hanya kode/status/versi/pointer, termasuk komentar/riwayat | `ACCEPTANCE_TESTS.md`; definisi Then setiap skenario tidak diganti |
+| b | Manifest dibersihkan pada Acceptance test, gate checkpoint/recovery, komentar riwayat, L-05 dan Log Evolusi; narasi/riwayat tidak dimusnahkan | Snapshot manifest pra-perbaikan dipertahankan di bawah; riwayat Run 1–3 tetap utuh |
+| c | Run 5 = AT-KK-05, Run 6 = AT-KK-05b; pesan pencatatan Run 1–4/Run 5 dan Run 1–5/Run 6; salinan `/tmp/atkk05b-r6/`; aturan 6a dicatat di orkestrasi | Prompt A **byte-identik**, SHA-256 `862ce5f54dba0349e8cb96607fdc39e8c5242fdc1e6c4255b06aadce24c2a948`; periksa kode blok pertama terhadap commit `f2d3ad2ac98be5eb74bd4b689c0d3911ad67b230` |
+| d | Tahap 1–3 berbasis r2 dipersiapkan; G1 Tahap 3 r2 disetujui, G2 ditahan. Draft sinkronisasi r2 dihapus sesudah checkpoint | Draft sementara dan naskah r2 tersimpan pada `f2d3ad2ac98be5eb74bd4b689c0d3911ad67b230`; folder aktif kini hanya STATUS + naskah r2; arsip/indeks tetap kosong |
+| e | Tabel penilaian 3 klausul perilaku terpenuhi dan kronologi paparan tetap disimpan; verdict dipertegas sesuai instruksi | **GAGAL — metode tidak bersih (bukan perilaku); Run 5 dijadwalkan sebagai ulangan sah pada versi 0.3.3** |
+| f | Versi `0.3.3`; aturan acceptance dan struktur rujukan berubah, bukan `00`/`05`/`06` | F7 **TERBUKA** sampai Run 5 + Run 6 LULUS pada 0.3.3; tidak ada hasil run masa depan diklaim |
+| g | INDEKS dan LOG_SESI terbaru menjadi status/pointer; riwayat rinci LOG_SESI dipindah utuh ke sini; metadata rujukan kedua brief dibersihkan | Isi produksi/format/voice v1 tidak diubah; validator/FI/backup/template **PASS**; PR #13 **ready-for-review**. Bukti QA/checkpoint di bawah |
+
+**Kronologi paparan dan bukti (bukan semua konteks operasional disebut kebocoran):**
+
+| Dokumen | Dibaca sebelum keputusan `34d550a`? | Materi / bukti |
+|---|---|---|
+| `SYSTEM_MANIFEST.md` basis `645d69e` | Ya | Baris 59 memuat jawaban konkret Run 2; kutipan dan perintah `git show` ada pada subbagian bukti paparan di atas; pembacaan diakui dalam LOG_SESI commit `34d550a` |
+| `_meta/INDEKS_SISTEM.md` basis sesi | Ya | Riwayat/status/persiapan uji ikut terbaca; tercatat dalam laporan awal `34d550a`. Bukan satu-satunya dasar verdict; paparan jawaban eksplisit dibuktikan dari manifest |
+| `LOG_SESI_2026-09-05_3.md` + header log lama | Ya | Pembacaan untuk entry point/penutupan PR #12, tercatat di `34d550a`; sekarang LOG_SESI terbaru juga diaudit agar tidak mengulang narasi evaluasi ke subjek berikutnya |
+| START/00/STATUS/Brand Core/channel/model/pipeline/library/protokol | Ya | Konteks operasional dan data approval/state dibaca; keberadaan aturan produksi generik bukan dengan sendirinya paparan narasi verdict. Urutan kelompok baca terperinci tetap di atas |
+| `ACCEPTANCE_TESTS.md`, `ACCEPTANCE_TEST_LOG.md`, dokumen orkestrasi ini | Tidak pada segmen awal; baru dibuka langsung setelah fase pencatat diizinkan pengguna | Batas segmen tetap `4f543ce`; pencatatan pembukaan fase tersimpan pada `c4faf9e`. Itu tidak menghapus paparan tidak langsung sebelumnya |
+
+**Batas kewenangan:** G1 Tahap 3 r2 disetujui; **G2 naskah final tetap ditahan administratif oleh pengguna**. Sinkronisasi lalu penghapusan draft adalah langkah persiapan eksplisit, bukan produksi sampai Tahap 6. Perubahan sistem ini diminta untuk PR #13; G3 merge belum diberikan. Sesi ini tetap pencatat/pembetul, tidak menjalankan atau menilai Run 5/6 sebagai subjek. M-18 tidak dieksekusi dan tidak dipaketkan lagi dalam pesan pencatatan run berikutnya karena di luar scope F7 ini.
+
+#### Arsip LOG_SESI sebelum pemisahan jalur orientasi (salinan utuh)
+
+Sumber: `LOG_SESI_2026-09-05_4.md` pada `f2d3ad2ac98be5eb74bd4b689c0d3911ad67b230`. SHA-256 `fec7d544abc6a0eff872429abb5d3efd90207d5fd54c0d212dc8af7548b281ad`. Header/kronologi di bawah **historis**, bukan keadaan sesi terkini; dipindah dari jalur orientasi agar bukti tidak hilang.
+
+````text
+# Log Sesi — 2026-09-05 (sesi/branch: `arena/01a073cf-pembangun-sistem`) — sesi ke-4 hari ini
+
+## Keadaan Sesi (selalu segar — agent baru BACA INI DULU)
+- **Keadaan:** `OPEN` — sesi/branch yang sama; fase pencatatan uji sudah dibuka pengguna, produksi tetap melalui gerbang.
+- **Scope:** recovery/revisi produksi fixture dan pencatatan Run 4 dalam `sistem-konten-kreator/`; pembaruan status/indeks serta penutupan log sesi persiapan. Tidak mengerjakan sistem lain atau menghapus branch.
+- **Di mana kita sekarang:** **draft naskah r2 tersimpan/di-push pada `06ea8239f88b42b8fbb946961326715c418a4a3e`: 130 kata, estimasi 63 detik**, belum G1/G2. Breakdown r1 ditandai tidak sinkron; belum ada penyesuaian Tahap 4 atau asset. Run 4 **GAGAL integritas metode** sudah dicatat/push pada `c4faf9e`; PR #13 OPEN/DRAFT, auto-merge tidak aktif. Keputusan awal `34d550a`/output r1 `aca4b02` tetap bukti immutable.
+- **Sudah disepakati:** revisi naskah harus 130–145 kata dan 55–65 detik, **Brief Model Konten tidak diubah**; temuan durasi lama dipertahankan. Sesudah revisi tersimpan, minta G2 lagi. Pengguna membuka peran pencatat sesudah keputusan recovery pertama ter-commit dan meminta verdict jujur; tujuan produksi sampai G3 tetap melalui approval, bukan izin melompati gerbang.
+- **Masih terbuka / tertunda:** review G1 Tahap 3 r2 dan G2 naskah final; penyesuaian serta G1/G2 breakdown, asset, G2 konten final dan G3. F7 terbuka; remediasi aturan/metode uji masih proposal menunggu review tersendiri, belum ada kenaikan versi/retest baru. Brand Core tetap gap fixture.
+- **Langkah berikutnya:** **G1 r2 sudah disetujui, G2 ditahan; jalankan instruksi administratif/perbaikan di PR #13**; izin revisi pengguna belum menjadi salah satu approval hasil ini. Setelah dasar naskah disetujui, selaraskan breakdown dan minta G1/G2 Tahap 4. Dilanjutkan di branch `arena/01a073cf-pembangun-sistem` / PR #13; G3 tetap belum dicapai/diberikan. Tidak mengubah verdict Run 4 karena produksi berikutnya membaik.
+
+## Kronologi (append, terbaru di bawah; tanggal/jam UTC)
+
+### 2026-09-05, 23:04 — Entry point, laporan awal, dan keputusan recovery
+- **Pengguna (near-verbatim):** "baca sistem-konten-kreator/_sistem/START_DI_SINI.md dan sistem-konten-kreator/_sistem/00_CARA_PAKAI_SISTEM.md"; "kalau ada yang OPEN dan PR-nya ternyata sudah merged, tutup retrospektif dulu"; "Lanjutkan produksi itu sesuai aturan sistem sampai titik di mana aturan mengharuskan kamu berhenti meminta keputusan saya"; "commit+push tiap tahap yang menghasilkan informasi; akhiri dengan PR — jangan auto-merge. Tanyakan ke saya di tiap gerbang approval."
+- **Agent:** menjalankan entry point produksi terputus, bukan Discovery. Tujuan sudah eksplisit dalam pesan pengguna sehingga tidak ditanyakan ulang. Instruksi penutupan retrospektif menjadi konfirmasi untuk menangani log OPEN basi; tidak ditafsirkan sebagai approval naskah, breakdown, atau merge.
+- **Hasil:** konteks wajib dibaca dan klaim output cocok dengan branch. Keputusan recovery dicatat di bawah sebelum membuat output Tahap 4. Dokumen skenario/hasil/persiapan uji (`ACCEPTANCE_TESTS.md`, `ACCEPTANCE_TEST_LOG.md`, `UJI_F7_CLEAN_RUN_2026-09-05.md`) **belum dibuka**; tidak memakai expected result sebagai petunjuk eksekusi. Manifest, INDEKS, STATUS, dan log lama memang memuat rujukan/ringkasan uji historis; pembacaan konteks wajib tersebut dinyatakan terbuka, bukan diklaim tidak pernah melihat rujukan uji.
+
+#### Laporan awal — Repository
+- **Repo:** `With-AI-Agent/Pembangun-Sistem`.
+- **Branch aktif:** `arena/01a073cf-pembangun-sistem` (diverifikasi `git branch --show-current`).
+- **Base/default:** `main`; setelah `git fetch origin`, `HEAD` = `origin/main` = `645d69ecceb02306f8482212e3553a1daa118bfd`, 0 commit unik pada awal sesi.
+- **Working tree awal:** bersih; tidak ada perubahan pengguna untuk ditimpa.
+- **PR branch aktif:** tidak ada, termasuk pencarian semua status. **PR lain terbuka:** 0. `gh pr list --state all --limit 20` mengembalikan PR #1–12 seluruhnya `MERGED`.
+- **LOG_SESI terbaru:** `LOG_SESI_2026-09-05_3.md` dibaca penuh; header `OPEN` menyebut menunggu merge PR #12. `gh pr view 12` membuktikan sudah `MERGED` pada `2026-09-05T23:00:23Z`, merge commit = basis sesi ini. Log itu ditutup retrospektif; pekerjaan uji lanjutan tetap terbuka, bukan dianggap selesai.
+- **PR sudah merge di sesi aktif ini?** Tidak. PR #12 milik branch sesi sebelumnya, bukan branch aktif.
+
+#### Laporan awal — Sistem dan konteks
+- **Sistem/manifest:** `sistem-konten-kreator/SYSTEM_MANIFEST.md`, versi `0.3.2-warisan-sync`, `candidate — audit P0+P1 closed, belum divalidasi pemakaian nyata`, tahap `siap-pakai`.
+- **INDEKS:** `_meta/INDEKS_SISTEM.md` dibaca; Sistem Konten Kreator terakhir disentuh 5 September 2026, belum menjadi acuan final. Tidak mengubah status sistem menjadi Operational berdasarkan fixture.
+- **Unit/status awal:** folder produksi pada header; `STATUS.md` = `in-progress`, Tahap 3 tersimpan sebagai draft, Tahap 4 belum dijalankan.
+
+Path pada tabel berikut relatif terhadap `sistem-konten-kreator/`, kecuali ditulis dari root repo.
+
+| File wajib/konteks tambahan | Dibaca? | Catatan |
+|---|---|---|
+| `_sistem/START_DI_SINI.md`, `_sistem/00_CARA_PAKAI_SISTEM.md` | Ya, utuh | Entry point, hierarki, approval G1/G2/G3, log sesi, recovery fail-closed |
+| `_produksi-aktif/fixture-narasi-sejarah-tiga-benda-di-meja-nenek/STATUS.md` | Ya | Dibaca sebelum konteks produksi dan diverifikasi, bukan diterima sebagai klaim |
+| `_sistem/01_BRAND_CORE.md` | Ya | **Masih template kosong**; gap dilaporkan, tidak mengarang Brand Core |
+| `channel-fixture-narasi-sejarah/channel-brief.md` | Ya | v1, Operational; isi sama di HEAD dan origin/main; Persona & Voice dan batasan visual dibaca |
+| `channel-fixture-narasi-sejarah/model-konten/narasi-60-detik/brief.md` | Ya | v1, Operational; standar dengan override: unit **segmen narasi**, acquire b-roll berlisensi, bukan generate karakter |
+| `_sistem/05_CONTENT_PRODUCTION_PIPELINE.md` | Ya, utuh | Termasuk gerbang per tahap dan fact-check/rights-check |
+| `_sistem/06_PROMPT_LIBRARY.md` | Ya, utuh | Chaining, checkpoint, konsistensi voice, karakter dan sumber |
+| `_sistem/STATUS_TEMPLATE.md` | Ya | Field wajib, approval per kode, `Pekerjaan belum tersimpan` exact `Tidak ada` |
+| `_meta/PROTOKOL_CHECKPOINT_RECOVERY.md` (root repo) | Ya, utuh | Recovery output/branch/PR/log; provenance dibaca karena tersedia |
+| `_meta/SESSION_REPORT_TEMPLATE.md`, `_meta/TEMPLATE_LOG_SESI.md` (root repo) | Ya | Laporan awal di log ini; satu log sesi dengan suffix `_4` mengikuti konvensi repo |
+
+| File kondisional | Dibaca? | Alasan dibaca/dilewati |
+|---|---|---|
+| `naskah-draft.md` di unit produksi | Ya | Output Tahap 3 yang diklaim ada; isi dan commit dibuktikan |
+| `breakdown-output.md`, `assets/` di unit produksi | Tidak tersedia | STATUS memang menyebut **BELUM ADA**; diverifikasi tidak ada di HEAD maupun workspace. Bukan output hilang yang diklaim sudah selesai |
+| Bank Konsistensi Visual / `konsistensi-lintas-channel/` | Dilewati | Brief bagian 4/model bagian 3 tidak menetapkan elemen acuan wajib. Konten tetap visual b-roll, **bukan** teks-only |
+| `channel-fixture-narasi-sejarah/arsip-naskah/indeks.md` | Ya | Ada dan kosong; tidak ada topik arsip untuk dicocokkan |
+| `channel-fixture-narasi-sejarah/arsip-naskah/indeks-karakter.md` | Ya | Ada dan kosong; naskah fixture mencatat tidak ada Tipe B, tidak membuat wujud karakter baru |
+| `SUMBER.md` di unit produksi | Tidak diperlukan saat ini | Tidak ada bahan eksternal dipakai; narasi personal dummy, bukan klaim sejarah dunia nyata. Penyebutan pukul lima merupakan detail cerita, bukan temuan riset. B-roll belum dicari/diunduh; jika nanti memakai stok/rekaman eksternal, pencatatan lisensi dan sumber wajib sejak bahan pertama |
+
+#### Bukti dan keputusan recovery (dicatat sebelum output baru)
+1. Clone awal dangkal; `git fetch --unshallow origin` dijalankan supaya verifikasi riwayat tidak berhenti pada merge commit. `git log -1 --format=%H -- <unit>/naskah-draft.md` = `706060d391753e97954a49ccd6275ec8d061ff22`, cocok dengan STATUS dan terbukti ancestor HEAD. Commit terakhir STATUS = `65959c923c5435e4ca409e563f68bba12bf82a82`.
+2. `git ls-tree -r HEAD -- <unit>/` dan `git ls-tree -r origin/main -- <unit>/` identik: hanya `STATUS.md` dan `naskah-draft.md`. Blob naskah = `0e09b224af2d6c87d623709d4e6c6c134ffed421`. Tidak ada output yang diklaim selesai tetapi hilang; tidak ada konflik untuk dikoreksi diam-diam.
+3. Tahap terakhir yang terbukti: **Tahap 3 sebagai draft**, bukan naskah final. Approval lama G1 Tahap 1–3 tetap sebatas G1. Kalimat lama "sudah oke, sudah dikonfirmasi" tanpa kode **bukan** G2/G3.
+4. **Lanjut hanya ke draft Tahap 4**, memakai naskah yang ada tanpa mengulang Tahap 1–3. Dasar: definisi G1 di `00`, gerbang Tahap 3 di `05`, serta batas eksplisit STATUS bahwa draft breakdown boleh disiapkan namun tidak dikunci/dipakai membuat asset sebelum G2 naskah final.
+5. **Berhenti sebelum penguncian dan Tahap 5**: minta keputusan G2 naskah final terlebih dahulu; sesudah itu baru G1/G2 breakdown secara eksplisit. Tidak mengarsipkan, tidak membuat metadata final, tidak mengubah brief, tidak merge. PR yang diminta pengguna berfungsi sebagai checkpoint draft, bukan klaim konten siap publish.
+6. Pemeriksaan isi: VO = **144 kata / 7 paragraf** (token dipisah whitespace, metadata tidak dihitung). Pada 130 kata/menit = **66,46 detik tanpa jeda**, atau **69,46 detik** dengan 6 jeda antarsegmen masing-masing 0,5 detik; ini estimasi, bukan rekaman terukur. Batas brief 55–65 detik belum terpenuhi. Laporkan pada review G2; jangan memadatkan diam-diam atau mengubah tempo/brief sendiri. Judul kerja menyebut tiga benda, sedangkan draft berfokus pada radio; tidak menambah dua benda untuk memaksakan judul.
+7. Naskah sebelum pekerjaan baru: SHA-256 `6c1f8577ffa6608f8ea861039e9f7ec0fc2f4c51d4e5297bc48a7dbcd44da7bb`; gunakan untuk membuktikan naskah tidak ditulis ulang oleh tahap breakdown.
+
+### 2026-09-05, 23:08 — Checkpoint Tahap 3 → draft Tahap 4; berhenti untuk keputusan
+- **Agent:** sesudah checkpoint entry point di-push, membaca ulang Channel Brief (Persona & Voice, batasan visual), Model Konten (format/override), dan naskah asli; ringkasan checkpoint disampaikan ke pengguna. Menulis `breakdown-output.md` di unit produksi sebagai **7 segmen narasi**, bukan shot; tiap segmen berisi VO verbatim, deskripsi b-roll, arahan acquire pengganti prompt generate, keterangan file referensi belum ada, dan arahan penyampaian.
+- **Hasil:** STATUS diperbarui menjadi `ready-for-review`, semua gerbang yang belum diberikan tetap **belum**. Tidak menulis ulang naskah, mengubah brief, mengunci konten, memulai Tahap 5, membuat arsip/metadata final, atau mengambil bahan eksternal. Temuan durasi dan judul kerja dicatat sebagai bahan keputusan, bukan diperbaiki tanpa approval. INDEKS diperbarui hanya pada catatan Sistem Konten Kreator: progres masih di branch sesi, bukan klaim sudah merged/Operational.
+- **Verifikasi isi:** 7 blok VO identik byte-teks/urutan dengan 7 paragraf sumber, total 144 kata; SHA-256 naskah tetap seperti bukti awal. Seluruh link konteks dan empat jenis arahan per segmen diperiksa. Ketiga G1 historis tetap satu-satunya approval; semua G2/G3 belum. Folder produksi hanya berisi STATUS, naskah draft, dan draft breakdown; brief/aturan/arsip tidak berubah dari basis sesi.
+- **QA:** `python3 tools/validate_repo.py` **PASS, 0 warning** (25 file wajib, 68 dokumen aktif, 204 rujukan, 0 unresolved); `python3 tools/test_failure_injection.py` **PASS, 29 skenario**; pemeriksaan khusus VO/approval/scope dan `git diff --check` **PASS**. Ini hasil regresi otomatis dan integritas output, **bukan** penilaian acceptance test recovery atau penutupan F7. Dokumen acceptance/hasil/persiapan uji tetap tidak dibuka.
+- **Keputusan terbuka:** pengguna perlu memilih penanganan durasi sebelum **G2 naskah final**; usulan agent adalah revisi draft tanpa mengubah angle/voice, lalu review ulang (belum dieksekusi). Jika ingin mengubah batas durasi model, ajukan G2 Model Konten tersendiri. Sesudah naskah final, review G1/G2 breakdown tetap terpisah. PR akan berupa **draft checkpoint**, tanpa auto-merge.
+
+### 2026-09-05, 23:11 — Output di remote dan PR draft; checkpoint jeda approval
+- **Agent:** checkpoint output `aca4b0294f19bce000507efc2eab9b29a94ac66f` sudah di-push; `git log -1 --format=%H -- <unit>/breakdown-output.md`, `git ls-remote` branch sesi dan head PR konsisten. PR #13 dibuka **draft**, head branch sesi → base `main`; REST GitHub melalui `gh api` mengonfirmasi `open`, `draft: true`, `auto_merge: null`. STATUS disegarkan dengan commit output nyata dan URL PR, bukan hash commit STATUS itu sendiri.
+- **Kendala kecil/verifikasi:** versi `gh pr view --json` di sandbox tidak mendukung field `autoMergeRequest`; percobaan berhenti sebelum menulis file. Verifikasi diganti ke field `auto_merge` pada `gh api repos/With-AI-Agent/Pembangun-Sistem/pulls/13`; bukan masalah autentikasi.
+- **Hasil:** pertanyaan yang diajukan kepada pengguna sekarang adalah keputusan pada **G2 naskah final**: revisi draft dahulu agar sesuai batas 55–65 detik (rekomendasi), atau bahas perubahan batas durasi melalui G2 Model Konten tersendiri. Tidak ada jawaban/approval baru pada saat checkpoint ini ditulis. Review G1/G2 breakdown dan G3 merge **tetap tertunda**; jangan menafsirkan pembukaan PR sebagai salah satu approval tersebut.
+- **Kelanjutan:** LOG_SESI sengaja `OPEN` untuk melanjutkan gerbang pengguna di sesi/branch yang sama. Output Tahap 4 sudah aman di remote, tetapi **belum sah untuk Tahap 5**. Tidak menutup F7, menghapus branch, membaca dokumen acceptance/hasil/persiapan uji, atau mengubah sistem lain.
+
+### 2026-09-05, 23:39 UTC / 6 Sep WIB — Izin revisi terbatas dan fase pencatatan Run 4
+- **Pengguna (near-verbatim):** “ambil Opsi 1 — revisi draft naskah supaya muat durasi 55–65 detik, dengan tetap berada di rentang kata brief model (130–145 kata). Brief Model Konten tidak diubah; temuan durasi yang sudah kamu catat biarkan tercatat di STATUS/log. Izin ini hanya untuk revisi, bukan penguncian — setelah revisi tersimpan, minta lagi G2 naskah final seperti biasa.” Pengguna juga meminta mulai berperan sebagai pencatat, membaca bagian uji yang ditentukan, dan “kalau ada penyimpangan kecil dari expected result, itu GAGAL … bukan dihaluskan”; produksi diteruskan menurut gerbang sampai G3 ditahan pengguna, seperti pola Run 2.
+- **Verifikasi kelanjutan:** jendela/sesi sama, bukan entry point sesi baru. Working tree bersih, HEAD = remote = `4f543ce`; PR #13 OPEN/DRAFT dan satu-satunya PR terbuka. Baca `ACCEPTANCE_TESTS.md` (Cara menjalankan, AT-KK-05, Rekaman Hasil), `ACCEPTANCE_TEST_LOG.md` Run 1–3, dan `UJI_F7_CLEAN_RUN_2026-09-05.md` §3 **setelah** checkpoint keputusan awal. Persona/Voice, Model Konten, naskah, protokol pengulangan tahap, serta QA sistem dibaca ulang untuk membatasi perubahan.
+- **Penilaian:** tiga klausa perilaku recovery terpenuhi, tetapi manifest basis `645d69e` baris 59 telah memuat ringkasan jawaban Run 2 dan sudah dibaca sebelum `34d550a`. Karena syarat “tanpa dipandu” tidak bersih, Run 4 dicatat **GAGAL integritas metode**, bukan LULUS bersyarat/dry run. Detail dan penilaian per klausul ada di `sistem-konten-kreator/ACCEPTANCE_TEST_LOG.md` Run 4; tabel hasil, status retest pada manifest, dan INDEKS disinkronkan tanpa mengubah gate historis/versi. Koreksi interpretasi ini tidak menghapus pengakuan paparan yang sudah ada pada log awal.
+- **Batas kewenangan:** pesan baru adalah izin revisi, bukan G1/G2 atas teks revisi yang belum dibaca, bukan G2 breakdown atau G3. Tidak menyalin approval/arsip akhir Run 2 ke run ini. Temuan metode memerlukan proposal perbaikan aturan lalu review/approval tersendiri sesuai QA; implementasi/kenaikan versi/retest belum dilakukan atau diklaim selesai.
+- **Persiapan revisi:** kandidat 130 kata / 7 paragraf dihitung tanpa TTS: 60 detik ucapan dasar + 6 jeda 0,5 detik = 63 detik estimasi. Brief dan tempo tetap. Naskah belum dikunci; rekaman sebenarnya belum tersedia. Penyesuaian breakdown menunggu dasar naskah selesai; draft lama akan ditandai tidak sinkron, bukan dianggap cocok dengan revisi.
+
+### 2026-09-05, 23:41 UTC / 6 Sep WIB — Draft revisi naskah r2, bukan penguncian
+- **Agent:** menjalankan izin revisi terbatas dari pengguna. Naskah r2 berisi **130 kata**, 7 paragraf; memangkas 14 kata pada paragraf 1/2/3/5, menjaga paragraf 4/6/7 utuh. Fokus radio, makna rutinitas pagi, voice dan penutup tetap; tidak menambah sumber eksternal/karakter/angle baru. Brief model/channel tidak diubah.
+- **Durasi:** hitungan r2 **60 detik ucapan + 6 × 0,5 detik = 63 detik estimasi**, masih perlu pengukuran rekaman saat tahap asset diizinkan. Temuan r1 144 kata/69,46 detik tetap ada di naskah, STATUS, log dan draft breakdown lama. Tidak mempercepat tempo untuk menyembunyikan masalah durasi.
+- **Dependency:** breakdown lama ditandai **r1/TIDAK SINKRON**, VO dan timing lamanya tidak ditulis ulang untuk r2. STATUS kembali menunjuk revisi Tahap 3 sebagai draft saat ini; ini perubahan sesudah instruksi eksplisit, bukan keputusan recovery awal yang gagal membaca state. G1 historis r1 tetap dicatat, review r2 dan semua G2/G3 masih belum.
+- **Hasil:** berhenti untuk review naskah r2. Penyesuaian breakdown, asset/assembly/arsip serta G3 belum dilakukan; tujuan pengguna sampai G3 tetap akan dicapai melalui gerbang yang belum disetujui, bukan dengan menyalin hasil Run 2.
+- **QA checkpoint revisi:** pemeriksaan terarah PASS (130 kata/63 detik estimasi; paragraf 4/6/7 utuh; breakdown r1 tetap verbatim dan bertanda tidak sinkron; semua G2/G3 belum). `validate_repo.py` PASS **0 warning** (25 file wajib, 68 dokumen, 205 rujukan, 0 unresolved), `test_failure_injection.py` PASS **29 skenario**, `git diff --check` PASS. Brief/aturan/arsip, definisi test, riwayat Run 1–3 dan semua checkbox gate manifest terverifikasi tidak berubah; hasil otomatis ini tidak membatalkan GAGAL metode Run 4.
+
+### 2026-09-05, 23:42 UTC / 6 Sep WIB — Checkpoint r2 dan bukti Run 4 disegarkan
+- **Agent:** verifikasi commit output `06ea8239f88b42b8fbb946961326715c418a4a3e` sama dengan remote; STATUS menunjuk SHA output nyata (bukan commit STATUS). Run 4 ditambahi milestone revisi dan commit pencatatan `c4faf9e78fad372dae16d79d79bc1c0fa6cb8d14`, dengan batas segmen subjek awal tetap berakhir `4f543ce`. INDEKS/rekaman hasil diselaraskan untuk progres r2; definisi/expected result dan bukti historis tidak ditulis ulang.
+- **Hasil:** jeda approval **G1 Tahap 3 r2** dan **G2 naskah final r2**. PR #13 tetap checkpoint draft; G3 belum dicapai/diberikan. Semua klaim durasi r2 berlabel estimasi; temuan r1 tetap ada. LOG_SESI `OPEN`, dilanjutkan di sesi/branch yang sama setelah keputusan pengguna. Tidak ada asset/metadata/arsip final yang dibuat dan tidak ada perbaikan aturan/kenaikan versi yang diklaim sudah disetujui.
+
+### 2026-09-06 WIB — Keputusan gerbang dan sinkronisasi draft sementara
+- **Pengguna (near-verbatim):** “G1 Tahap 3 r2: disetujui — kamu boleh menyesuaikan draft breakdown ke naskah r2 (tapi simpan sebagai draft saja).” “G2 naskah final r2: TAHAN DULU, jangan dikunci, dan jangan lanjut ke Tahap 5/6.” Alasan administratif-tes dan rincian perbaikan/persiapan dipertahankan di `sistem-konten-kreator/ACCEPTANCE_TEST_LOG.md` Run 4.
+- **Agent:** membaca ulang Persona/Voice, format/override model dan VO r2; menyelaraskan 7 segmen dengan seluruh 130 kata r2 verbatim, estimasi 63 detik. Format/voice tidak diubah; tidak ada asset atau penguncian. Checkpoint draft disimpan sebelum penghapusan administratif yang diminta pengguna.
+- **Hasil:** G1 r2 disetujui, G2 naskah ditahan, G1/G2 breakdown belum. Tahap 5/6 tidak dijalankan; PR #13 masih draft selama perbaikan dan QA berlangsung.
+````
+
+#### Arsip manifest sebelum pembersihan rujukan (salinan utuh)
+
+Sumber: `SYSTEM_MANIFEST.md` pada `f2d3ad2ac98be5eb74bd4b689c0d3911ad67b230`. SHA-256 `93a4377f0704e8a2b472519f7fcd3290f76cc268d7c793d1dc86a939e21f4607`. Termasuk komentar HTML/Log Evolusi yang dahulu dapat dibaca subjek.
+
+````text
+# System Manifest — Sistem Konten Kreator
+
+- **Tujuan:** membangun dan memproduksi konten kreator berbantuan AI dari fondasi brand sampai konten siap publish.
+- **Consumer:** operator/kreator solo dan agent kerja yang terhubung ke repository.
+- **Status:** `candidate — audit P0+P1 closed, belum divalidasi pemakaian nyata`
+- **Versi:** `0.3.2-warisan-sync`
+- **Tahap:** siap-pakai
+- **Pemilik keputusan:** pengguna
+- **Entry point agent:** `PROMPT_ENTRI_UNIVERSAL.md` (atau bagian Prompt Pembuka Universal di `panduan/PANDUAN_PENGGUNA.md`)
+- **Entry point navigasi:** `_sistem/START_DI_SINI.md`
+- **Instruksi utama:** `_sistem/00_CARA_PAKAI_SISTEM.md`
+- **Living documents:** Brand Core, Channel Brief, Bank Konsistensi Visual, Model Konten Brief, arsip naskah
+- **Audit acuan (provenance):** `_meta/_internal/AUDIT_SISTEM_KONTEN_KREATOR_2026-09-03.md` di master blueprint — P0+P1 ditutup 4 Sep, P2 sebagian (lihat tabel temuan di bawah)
+- **Acceptance test:** `ACCEPTANCE_TESTS.md` (AT-KK-01 s/d AT-KK-08) — wajib diulang setiap aturan `00`/`05`/`06` berubah; bukti per run di `ACCEPTANCE_TEST_LOG.md`. **F7 tetap TERBUKA:** retest terpicu perubahan `00` pada `0.3.2-warisan-sync`; persiapan PR #12 sudah merged. **Update 6 Sep 2026 WIB: Run 4 (AT-KK-05) GAGAL integritas metode**, rinciannya di log Run 4 dan Rekaman Hasil. Retest AT-KK-05b pada 0.3.2 belum dijalankan. Remediasi aturan untuk mencegah paparan jawaban melalui konteks wajib masih proposal yang memerlukan review/approval; implementasi, kenaikan versi, dan sesi subjek baru belum diklaim selesai. Run 4 tidak boleh dipakai menutup F7; kedua skenario harus LULUS pada versi perbaikan yang sama. Gate historis 0.3.1 di bawah tidak diubah oleh pencatatan ini.
+- **Referensi historis (bukan instruksi aktif):** `_sistem/09_AUDIT_MIGRASI_GITHUB_AGENT.md` — ditandai `agent_instruction: reference_only`, dikecualikan dari template bersih
+- **Backup/template:** belum dirilis
+
+## Bentuk Sistem
+
+- **Struktural:** bertingkat — Brand Core → Channel → Model Konten → Produksi
+- **Operasional:** siklus produksi dengan opsi workflow custom per Model Konten
+- **Unit kerja:** satu sistem domain, satu channel, satu model konten, atau satu konten produksi
+- **Kriteria siap produksi:** brief terkait berstatus `Operational`, dependency valid, dan konteks wajib berhasil diverifikasi
+
+## Prinsip yang Berlaku
+
+| Prinsip | Status | Penerapan |
+|---|---|---|
+| Hierarki | Berlaku | Level bawah mewarisi dan hanya meng-override secara eksplisit |
+| Chaining | Berlaku dengan checkpoint | Output tahap disimpan dan status diperbarui; tidak hanya mengandalkan chat |
+| Approval bertingkat | Berlaku | Keputusan yang menyebar/sulit dibalik wajib review isi |
+| Checkpoint & recovery | Berlaku | Setiap tahap yang menjadi dependency berikutnya memiliki status persisten |
+| Log keputusan | Berlaku | Living document mencatat tanggal, perubahan, dan alasan |
+
+## Warisan (Kontrak) — meta v1.3.0
+
+W-01 pegangan ✔ (`panduan/PANDUAN_PENGGUNA.md` + `PROMPT_ENTRI_UNIVERSAL.md`); W-02 LOG_SESI ✔ (section di `_sistem/00_CARA_PAKAI_SISTEM.md` + prompt); W-03 field checkpoint ✔ (`_sistem/STATUS_TEMPLATE.md` + fixture); W-04 manifest ✔; W-05 log keputusan ✔ (Log Evolusi + per dokumen); W-06 QA ✔ (`QUALITY_ASSURANCE_AND_EVOLUTION.md` di folder ini); W-07 fakta platform ✔ (bagian Batasan Platform inline); W-08 approval ✔ (G1/G2/G3); W-09 ringkasan cadangan ✔ (disinkronkan 5 Sep). Tidak ada override.
+
+## Batasan Platform
+
+- **Dipakai via lmarena?** Ya — rujuk `_meta/PLATFORM_LMARENA.md` di repo meta
+- **Fakta:** branch arena otomatis dibuat, tidak bisa push setelah PR merge/close (platform cabut akses), sesi bisa crash
+- **Implikasi:** checkpoint tiap tahap + **log sesi berkelanjutan** (`LOG_SESI_YYYY-MM-DD.md` — aturan ringkas self-contained di `_sistem/00_CARA_PAKAI_SISTEM.md`), karena tanpa commit sesi baru tidak bisa melanjutkan (FI-03) dan konteks sesi (keputusan, koreksi, fakta penting) hilang permanen saat crash (agent sesi baru tidak punya akses ke chat sesi lama)
+
+## Risiko Utama
+
+- Drift voice/visual akibat konteks tidak dibaca.
+- Karakter Tipe B terulang tanpa terdeteksi.
+- Output tahap belum tersimpan ketika sesi terputus (fakta platform #2 + #3 di PLATFORM_LMARENA.md — tidak bisa push setelah merge, sesi bisa crash).
+- Asset eksternal hilang atau tidak dapat direproduksi.
+- Sumber eksternal memiliki masalah fakta, hak cipta, atau atribusi.
+
+## Gate Sebelum Status Operational
+
+- [x] Semua dokumen instruksi aktif tersedia
+- [ ] Brand Core dan brief terkait sudah approved/merged — *belum: belum ada channel nyata yang diisi*
+- [x] Index arsip naskah dan index karakter tersedia bila relevan — *kontrak & format ditetapkan (K-01); sudah diinstansiasi (masih kosong) di fixture `channel-fixture-narasi-sejarah/arsip-naskah/` 4 Sep 2026; instansiasi channel nyata tetap menyusul*
+- [x] Workflow standar/custom sudah dinyatakan eksplisit — *termasuk jalur non-visual (M-04)*
+- [x] Prosedur checkpoint dan recovery diuji — **DITUTUP 5 Sep 2026.** Kedua klausul LULUS pada versi sistem yang sama (`0.3.1-audit-remediation`), keduanya clean run di sesi agent baru: **AT-KK-05 LULUS** 4 Sep 2026 di `arena/01a06d25-pembangun-sistem` (jalur normal — lanjut hanya dari Tahap 4, `G1 Tahap 3` tidak diperlakukan sebagai G2; bukti `ACCEPTANCE_TEST_LOG.md` Run 2), dan **AT-KK-05b LULUS** 5 Sep 2026 di `arena/01a06d58-pembangun-sistem` (state tidak konsisten — STATUS mengklaim Tahap 4 selesai + `breakdown-output.md` ADA padahal file tidak ada; agent berhenti dan melapor `BLOCKED`, tidak membuat ulang diam-diam, tidak mengoreksi STATUS sendiri, selaras FI-02/FI-03; bukti `ACCEPTANCE_TEST_LOG.md` Run 3). Mekanisme dasar FI-01 s/d FI-07 sudah terbukti di pilot-002. *Catatan cakupan: gate ini menutup jalur checkpoint/recovery saja — bukan acceptance test sistem secara keseluruhan (lihat gate di bawah).*
+
+<!-- riwayat gate (sebelum ditutup):
+- [ ] Prosedur checkpoint dan recovery diuji — *sebagian + 1 klausul LULUS: **AT-KK-05 LULUS** pada clean run sesi baru 4 Sep 2026 (versi `0.3.1-audit-remediation`) di `arena/01a06d25-pembangun-sistem` — agent lanjut hanya dari Tahap 4, `G1 Tahap 3` tidak diperlakukan sebagai G2, dan tidak membaca `ACCEPTANCE_TESTS.md`/handoff sebelum memutuskan; bukti di `ACCEPTANCE_TEST_LOG.md` Run 2. Tapi **AT-KK-05b (state tidak konsisten) belum diuji** (`belum diuji` di Rekaman Hasil), jadi gate ini **tetap tidak dicentang**. Mekanisme dasar FI-01 s/d FI-07 sudah terbukti di pilot-002; yang tersisa untuk menutup gate: jalankan AT-KK-05b (copy fixture ke /tmp, klaim Tahap 4 + `breakdown-output.md` ADA tanpa membuat file, agent harus berhenti dan melapor)*
+-->
+
+- [x] Audit P0 sudah ditutup — *K-01 s/d K-05 + M-01, lihat Log Evolusi*
+- [ ] Pilot end-to-end berhasil — *belum: butuh 1 channel terisi penuh (L-04). Fixture `channel-fixture-narasi-sejarah` TIDAK menutup gate ini — dia bahan uji, berhenti di Tahap 3*
+- [ ] Acceptance test sistem ini LULUS — *sebagian: **AT-KK-05 LULUS** (clean run 4 Sep 2026) dan **AT-KK-05b LULUS** (clean run 5 Sep 2026), keduanya pada versi `0.3.1-audit-remediation`; 8 skenario lain (AT-KK-01/02/03/03b/04/06/07/08) **belum diuji**, jadi gate ini tetap terbuka. Detail di `ACCEPTANCE_TEST_LOG.md` Run 2 dan Run 3*
+
+## Temuan Audit yang Masih Terbuka
+
+Dari `_meta/_internal/AUDIT_SISTEM_KONTEN_KREATOR_2026-09-03.md`:
+
+| Kode | Prioritas | Status |
+|---|---|---|
+| K-01 deteksi Tipe B tanpa sumber data | P0 | **Ditutup** 4 Sep 2026 |
+| K-02 recovery sesi terputus | P0 | **Ditutup** 3 Sep 2026 |
+| K-03 approval tidak dibedakan | P0 | **Ditutup** 4 Sep 2026 |
+| K-04 kontradiksi kemampuan video | P0 | **Ditutup** 3 Sep 2026 |
+| K-05 sumber, fakta, hak cipta | P0 | **Ditutup** 4 Sep 2026 |
+| M-01 konteks wajib deterministik | P0 | **Ditutup** 4 Sep 2026 |
+| M-02 kontrak output living document | P1 | **Sebagian** — status, versi, checklist kelengkapan, log keputusan sudah ada di template brief; belum diterapkan ke semua living document |
+| M-03 rujukan panduan ambigu | P2 | **Ditutup** 3 Sep 2026 |
+| M-04 jalur produksi non-visual | P1 | **Ditutup** 4 Sep 2026 |
+| M-05 acuan utama terlalu absolut | P1 | **Ditutup** 4 Sep 2026 |
+| M-06 reproducibility setelah folder dihapus | P1 | **Ditutup** 4 Sep 2026 |
+| M-07 conflict/concurrency | P1 | **Ditutup** 4 Sep 2026 |
+| M-08 status locked vs merged | P1 | **Ditutup** 4 Sep 2026 |
+| M-09 audit historis di folder aktif | P2 | **Ditutup** 4 Sep 2026 |
+| L-01 kata "otomatis" perlu dibatasi | P2 | **Sebagian** — klaim utama sudah dilunakkan; sisa kalimat minor belum disisir |
+| L-02 klaim agent tahu semua konteks | P2 | **Ditutup** 4 Sep 2026 |
+| L-03 batas ukuran arsip & indexing | P2 | **Terbuka** |
+| L-04 contoh channel terisi penuh | P2 | **Terbuka** — gate pilot end-to-end |
+| L-05 acceptance test dapat diulang | P2 | **Sebagian** — 10 skenario ditulis di `ACCEPTANCE_TESTS.md` (AT-KK-01…08 + 2 varian); **AT-KK-05 LULUS** clean run 4 Sep dan **AT-KK-05b LULUS** clean run 5 Sep 2026 (keduanya `0.3.1-audit-remediation`; baris ini disinkronkan 5 Sep — sebelumnya masih menyebut 05b "belum diuji", temuan M-19 audit meta); 8 sisanya belum diuji; fixture tersedia di `channel-fixture-narasi-sejarah/` + `_produksi-aktif/fixture-narasi-sejarah-tiga-benda-di-meja-nenek/` |
+
+## Log Evolusi
+
+| Tanggal | Versi | Perubahan | Alasan |
+|---|---|---|---|
+| 3 Sep 2026 | 0.2.0-audit-remediation | K-02, K-04, M-03 ditutup | Hasil audit independen 3 Sep |
+| 4 Sep 2026 | 0.3.0-audit-remediation | K-01, K-03, K-05, M-01, M-04 s/d M-09, L-02 ditutup | Menutup seluruh P0 dan P1 supaya sistem ini bisa dinilai layak jadi contoh resmi meta-sistem |
+| 4 Sep 2026 | 0.3.0-audit-remediation | `ACCEPTANCE_TESTS.md` ditambahkan (L-05 sebagian) | Aturan baru P0/P1 belum punya cara verifikasi yang dapat diulang; tanpa ini "sudah diperbaiki" tidak bisa dibuktikan |
+| 4 Sep 2026 | 0.3.0-audit-remediation | AT-KK-05 + AT-KK-05b dijalankan sebagai dry run; fixture produksi pertama dibuat; `ACCEPTANCE_TEST_LOG.md` ditambahkan | Gate "Prosedur checkpoint dan recovery diuji" dibuka kembali di commit `e463809` karena `STATUS_TEMPLATE.md` versi baru belum teruji. Run ini membuktikan template baru bisa dipakai recovery, tapi **tidak** diklaim LULUS karena dijalankan di sesi yang sama dengan yang membaca expected result (melanggar syarat "tanpa dipandu"). Verdict final menunggu sesi agent baru. Versi tidak dinaikkan: tidak ada dokumen aturan (`00`/`05`/`06`) yang berubah |
+| 4 Sep 2026 | 0.3.1-audit-remediation | Aturan recovery dipertegas di `00_CARA_PAKAI_SISTEM.md`: baris "Lanjut produksi yang terputus" kini mewajibkan `_meta/PROTOKOL_CHECKPOINT_RECOVERY.md` bagian "Recovery saat sesi baru", output tahap diverifikasi **di branch**, plus 4 aturan mengikat (verifikasi bukan percaya klaim / lanjut hanya dari tahap terbukti selesai / approval per kode gerbang / berhenti kalau output diklaim ada tapi hilang) | Temuan dry run AT-KK-05: prosedur recovery cuma disebut satu kalimat di `05` dan tidak dirujuk tabel Konteks Wajib, jadi agen yang patuh tabel bisa melewati verifikasi branch (FI-02/FI-03). Diterapkan **sebelum** run bersih pertama — belum ada test berstatus LULUS, jadi tidak ada baseline yang dibatalkan. Konsekuensi: run bersih AT-KK-05 wajib dijalankan pada 0.3.1, dan dry run sebelumnya tercatat sebagai uji 0.3.0 |
+| 5 Sep 2026 | 0.3.2-warisan-sync | Sinkronisasi kontrak warisan meta v1.3.0: tabel Warisan ditambahkan; wording provenance ("Audit acuan", rujukan recovery di `00_CARA_PAKAI_SISTEM.md` baris Lanjutan terputus → aturan inline menang, `_meta` opsional); fix M-19 (baris L-05 basi menyebut AT-KK-05b "belum diuji" padahal LULUS 5 Sep); ringkasan cadangan disinkronkan | Permintaan pengguna: butir wajib harus tertanam & TERUKUR untuk semua sistem. **KOREKSI 5 Sep (review PR #11, F7):** klaim awal "perubahan wording/pencatatan saja, regresi TIDAK terpicu" SALAH — baris tabel File wajib di `00_CARA_PAKAI_SISTEM.md` (baris "Lanjut produksi yang terputus") memang BERUBAH: protokol recovery meta dari "wajib dibaca" menjadi provenance/opsional, digantikan 4 aturan inline mengikat. Itu perubahan aturan `00` → klausul regresi acceptance test TERPICU dan belum dijalankan → **pengecualian tercatat: clean-run acceptance dijadwalkan first task sesi berikutnya** (sesi pembuat tidak memenuhi syarat uji buta karena sudah membaca expected result — alasan sama yang dipakai reviewer independen) |
+| 5 Sep 2026 | 0.3.1-audit-remediation | **AT-KK-05b LULUS** pada clean run sesi baru (`ACCEPTANCE_TEST_LOG.md` Run 3); gate "Prosedur checkpoint dan recovery diuji" **ditutup/dicentang** | AT-KK-05 (jalur normal) sudah LULUS 4 Sep pada versi yang sama; yang tersisa untuk menutup gate hanyalah varian state tidak konsisten. Run 3 membuktikan agent **berhenti dan melapor** saat `STATUS.md` mengklaim `breakdown-output.md` ADA padahal tidak ada — tidak membuat ulang diam-diam, tidak mengoreksi STATUS sendiri (FI-02/FI-03 terpenuhi). Versi tidak dinaikkan: tidak ada dokumen aturan (`00`/`05`/`06`) yang berubah, hanya pencatatan hasil. Gate "Acceptance test sistem ini LULUS" tetap terbuka — 8 skenario lain belum diuji |
+| 6 Sep 2026 (WIB) | 0.3.2-warisan-sync | **Run 4 AT-KK-05 GAGAL integritas metode** dicatat di `ACCEPTANCE_TEST_LOG.md`; F7 tetap terbuka | Perilaku recovery memenuhi klausul Then, tetapi subjek telah membaca ringkasan expected result melalui manifest sebelum keputusan pertama. Tidak ada gate yang diubah atau status dinaikkan; aturan/versi belum diubah, remediasi dan retest pada sesi baru masih wajib setelah review/approval terpisah. Revisi naskah produksi bukan remediasi metode dan tidak mengubah verdict. |
+````
+
+#### Arsip baris Sistem Konten Kreator pada INDEKS sebelum pembersihan
+
+Sumber: `_meta/INDEKS_SISTEM.md` pada `f2d3ad2ac98be5eb74bd4b689c0d3911ad67b230`. Narasi rinci dipertahankan di sini, bukan disalin ke orientasi run berikutnya.
+
+````text
+| Sistem Konten Kreator | `sistem-konten-kreator/` | Sedang dibangun — audit P0+P1 ditutup, gate checkpoint/recovery sudah teruji, belum divalidasi pemakaian nyata. **5 Sep 2026:** panduan pengguna diselaraskan aturan pegangan meta v1.1.0 (+section prompt penutup sesi); **5 Sep (v1.2.0):** aturan log sesi (`LOG_SESI`) diturunkan ke `00_CARA_PAKAI_SISTEM.md` + prompt pembuka/penutup di panduannya (+sinkronisasi blok pembuka dengan `PROMPT_ENTRI_UNIVERSAL.md`); **5 Sep (0.3.2-warisan-sync):** tabel Warisan W-01…W-09 masuk manifest, wording provenance, fix baris L-05 basi (temuan M-19 audit meta) | 5 September 2026 | Manifest `0.3.2-warisan-sync`. Kandidat sistem contoh; belum ditetapkan sebagai acuan final. **AT-KK-05 LULUS** (2026-09-04, Run 2) dan **AT-KK-05b LULUS** (2026-09-05, Run 3) — keduanya clean run di sesi agent baru pada versi sistem yang sama; bukti di `sistem-konten-kreator/ACCEPTANCE_TEST_LOG.md`, tabel Rekaman Hasil di `sistem-konten-kreator/ACCEPTANCE_TESTS.md`. Karena itu gate "Prosedur checkpoint dan recovery diuji" **DITUTUP 5 Sep 2026** di `sistem-konten-kreator/SYSTEM_MANIFEST.md`. Fixture produksi pertama: `channel-fixture-narasi-sejarah/` + `_produksi-aktif/fixture-narasi-sejarah-tiga-benda-di-meja-nenek/` (bahan uji, **bukan** penutup L-04). Gate tersisa: Brand Core approved/merged (belum ada channel nyata), pilot end-to-end 1 channel terisi penuh (L-04), acceptance test sistem LULUS — sisa AT-KK-01/02/03/03b/04/06/07/08 (L-05). **5 Sep (persiapan F7, PR #12):** re-run clean AT-KK-05/05b pada `0.3.2-warisan-sync` DIBUKA — state fixture Tahap 3 sudah di `main` pasca-merge PR #12; dua prompt subjek + protokol pencatatan: `sistem-konten-kreator/UJI_F7_CLEAN_RUN_2026-09-05.md`; `main` sementara memegang fixture state uji (Tahap 3) sampai Run 4 di-merge — pola sadar PR #5→#6. **5 Sep (recovery sesi `arena/01a073cf-pembangun-sistem`):** entry point terverifikasi; draft Tahap 4 (7 segmen narasi) disiapkan di branch sesi, naskah asli tidak diulang. Berhenti menunggu **G2 naskah final**, lalu G1/G2 breakdown; temuan estimasi durasi melebihi brief dilaporkan, belum ada asset/arsip baru atau approval merge. Rujuk `LOG_SESI_2026-09-05_4.md` dan STATUS unit produksi. **Update pencatatan 6 Sep WIB (5 Sep UTC): Run 4 AT-KK-05 GAGAL integritas metode** — ringkasan expected result sudah terbaca melalui manifest sebelum keputusan pertama; bukti di `sistem-konten-kreator/ACCEPTANCE_TEST_LOG.md` Run 4. F7 tetap terbuka, gate historis tidak diubah, retest 05b 0.3.2 belum dilakukan. Draft naskah r2 **130 kata / 63 detik estimasi** tersimpan dan di-push pada `06ea823` atas izin pengguna, **tanpa perubahan brief**; review G1/G2 r2 belum, breakdown r1 ditandai tidak sinkron. PR #13 tetap draft, belum asset/arsip/G3. Perbaikan aturan/metode masih proposal untuk review tersendiri, bukan dianggap selesai oleh revisi produksi |
+````
+
+#### QA akhir perbaikan 0.3.3 — 6 Sep 2026
+
+| Pemeriksaan | Hasil aktual |
+|---|---|
+| `python3 tools/validate_repo.py` | **PASS**, 25 file wajib, 68 dokumen aktif, 198 rujukan, 0 unresolved, **0 warning** |
+| `python3 tools/test_failure_injection.py` | **PASS, 29 skenario** (12 sintetis + 4 unit nyata + 13 regresi) |
+| `python3 tools/backup_verify.py` | **PASS**, backup/restore **30 file esensial**, seluruh byte cocok |
+| `python3 tools/build_template.py` | **PASS**, template bersih dibangun dan diverifikasi; zip 85.329 byte saat pengujian; tidak memuat data produksi, audit internal, contoh domain atau dokumen reference_only |
+| Artefak generated | `backup_essential.zip`, `template_clean/`, `template_clean.zip` mengikuti `.gitignore`, tidak dimasukkan ke Git |
+| Whitespace | `git diff --check` **PASS** |
+| State Run 5 | **PASS**, tepat dua file aktif; VO r2 130 kata identik dengan sebelum perbaikan; G1 1–3 disetujui, semua G2/G3 belum; arsip/indeks kosong |
+| Checkpoint naskah | **PASS**, field Commit terakhir = `f2d3ad2ac98be5eb74bd4b689c0d3911ad67b230`, sama dengan `git log -1` naskah r2 |
+| Materi terlindungi | **PASS**, `00`/`05`/`06` tidak berubah; isi operasional/model/Persona & Voice v1 tidak berubah; hanya metadata rujukan uji brief dirapikan |
+| Prompt A | **PASS byte-identik**, SHA-256 `862ce5f54dba0349e8cb96607fdc39e8c5242fdc1e6c4255b06aadce24c2a948` |
+| Definisi/bukti | **PASS**, definisi Then skenario dan Run 1–3 tidak berubah; arsip LOG_SESI/manifest cocok byte-per-byte dengan snapshot sumber |
+
+**Audit isi manual jalur 6a (ditambah pemeriksaan pola/red flags):**
+
+| Jalur | Hasil |
+|---|---|
+| START_DI_SINI / 00_CARA_PAKAI / prompt entri / README | Tidak ada narasi verdict run yang perlu dipindah; navigasi dan aturan produksi generik dipertahankan |
+| STATUS unit | State/approval operasional tersedia; rujukan uji hanya kode/status/versi/pointer, tidak ada ringkasan jawaban Run 4 |
+| Channel Brief + Model Konten Brief | Metadata rujukan uji menjadi status/pointer; isi format/voice/override tidak berubah |
+| INDEKS_SISTEM | Baris KK menjadi status/versi/pointer; uraian rinci lama dipertahankan di arsip log ini; sistem lain tidak diubah |
+| SYSTEM_MANIFEST | Baris target dan komentar riwayat bersih dari narasi jawaban; gate historis hanya berisi verdict/versi/pointer, F7 TERBUKA |
+| LOG_SESI terbaru | Header segar + keputusan administratif + status/pointer; kronologi evaluasi dipertahankan utuh di log acceptance, bukan dibiarkan di jalur orientasi |
+
+Hasil QA ini memverifikasi **perbaikan/persiapan**, bukan pelaksanaan Run 5/6. Keduanya tetap belum dijalankan; verdict akhir Run 4 tetap **GAGAL — metode tidak bersih (bukan perilaku); Run 5 dijadwalkan sebagai ulangan sah pada versi 0.3.3**. Penguncian naskah dan produksi Tahap 5/6 tetap ditahan pengguna.
+
+#### Checkpoint perbaikan/state dan kesiapan review
+
+- **Sinkronisasi draft r2 (sebelum penghapusan):** `f2d3ad2ac98be5eb74bd4b689c0d3911ad67b230`, sudah commit+push. Naskah r2 tetap sumber output aktif; ini juga checkpoint metadata G1 r2 disetujui / G2 ditahan.
+- **Perbaikan 0.3.3 + state Run 5:** `8064be376aba8ec6ed6b067d90b713386d7be465`, sudah commit+push. Tree commit berisi hanya `STATUS.md` + `naskah-draft.md` dalam unit; breakdown sinkronisasi dihapus secara eksplisit, bukan hilang saat recovery. Tidak ada arsip final atau asset yang dibuat.
+- **PR #13 ready-for-review:** status aktual diverifikasi 2026-09-06 00:16:20 UTC / 2026-09-06 07:16:20 WIB: `OPEN`, `draft=false`, `auto_merge=null`. Head saat perubahan ready = `8064be376aba8ec6ed6b067d90b713386d7be465`. Checkpoint setelahnya hanya merekam status review/bukti ini.
+- **Batas akhir:** G1 Tahap 3 r2 disetujui; **G2 naskah final r2 ditahan**, G3 belum diberikan; Tahap 5/6 tidak dijalankan. Run 5/6 **belum dijalankan** oleh sesi pencatat/pembetul ini. F7 **TERBUKA**, menunggu Run 5 + Run 6 LULUS pada `0.3.3`.
+- **Verdict akhir Run 4:** **GAGAL — metode tidak bersih (bukan perilaku); Run 5 dijadwalkan sebagai ulangan sah pada versi 0.3.3**.

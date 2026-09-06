@@ -1,26 +1,30 @@
 # Naskah Draft — Tiga Benda di Meja Nenek
 
 - **Channel:** `channel-fixture-narasi-sejarah/` (FIXTURE)
-- **Model konten:** Narasi 60 Detik (v1) — target 130-145 kata, tempo 130 kata/menit
-- **Tahap:** 3 — Naskah/Script (**draft**, belum dikunci G2)
-- **Sumber eksternal:** tidak ada — naskah ini tidak memuat klaim faktual, angka, tanggal, atau nama tokoh; seluruhnya observasi personal
-- **Karakter Tipe B:** tidak ada
+- **Model konten:** Narasi 60 Detik (v1) — **tetap**, target 130–145 kata, durasi 55–65 detik, tempo ±130 kata/menit
+- **Revisi:** **r2**, 2026-09-06 WIB — pemadatan r1 atas izin eksplisit pengguna
+- **Tahap:** 3 — Naskah/Script (**draft revisi**, belum dikunci G2)
+- **Jumlah kata VO:** **130** — dihitung dari bagian Naskah saja, berdasarkan pemisah whitespace
+- **Rencana durasi:** **63 detik estimasi** = 60 detik pada 130 kata/menit + enam jeda antarparagraf masing-masing 0,5 detik. **Belum diukur lewat rekaman/TTS**; tambahan jeda internal/intonasi harus diperiksa saat produksi audio nanti.
+- **Approval revisi:** **G1 Tahap 3 r2 disetujui 2026-09-06 WIB**. **G2 naskah final r2 belum — ditahan pengguna** untuk keperluan administratif; naskah tetap draft. Tahap 5/6 tidak diizinkan.
+- **Sumber eksternal:** tidak ada — cerita personal dummy/fiksi fixture, bukan klaim sejarah hasil riset. “Pukul lima” adalah detail cerita, bukan temuan faktual yang diverifikasi.
+- **Karakter Tipe B:** tidak ada wujud karakter baru; nenek/anak-anak hanya disebut dalam VO, visual tetap b-roll benda sesuai model
 
-> **FIXTURE UJI** untuk AT-KK-05/05b. Naskah ini sengaja ditulis pendek dan tanpa klaim faktual supaya test recovery tidak bercampur dengan gerbang fact-check (itu diuji terpisah di AT-KK-07).
+> **FIXTURE UJI — BELUM FINAL.** Pengguna memilih revisi dalam batas brief, **bukan** perubahan brief atau penguncian naskah. Fokus tetap radio tua sebagai pengatur pagi; voice hangat, sedikit melankolis, tidak menggurui. Judul masih judul kerja, bukan metadata publish yang disetujui.
 
 ---
 
 ## Naskah (voice over)
 
-Ada satu benda yang tidak pernah pindah dari sudut meja nenek: radio tua berwarna cokelat, tombolnya aus di satu sisi.
+Ada satu benda di sudut meja nenek: radio tua cokelat, dengan tombol aus di satu sisi.
 
-Dulu, radio itu yang membangunkan satu rumah. Bukan alarm. Suara penyiar pagi yang mulai bicara pukul lima, lalu berita, lalu lagu yang itu-itu lagi.
+Dulu, radio itu membangunkan satu rumah. Bukan alarm. Suara penyiar pagi pukul lima, lalu berita, lalu lagu yang itu-itu lagi.
 
-Nenek tidak pernah benar-benar mendengarkannya. Yang dia dengar adalah urutannya. Kalau lagunya sudah berganti, artinya air sudah matang. Kalau penyiar sudah menyebut cuaca, artinya anak-anak harus sudah mandi.
+Nenek tidak benar-benar mendengarkannya. Yang dia dengar adalah urutannya. Kalau lagunya berganti, air sudah matang. Kalau penyiar menyebut cuaca, anak-anak harus sudah mandi.
 
 Radio itu bukan hiburan. Radio itu jam.
 
-Sekarang radionya sudah tidak ada. Diganti ponsel yang bisa bangun sendiri, yang bisa kita suruh diam, yang layarnya kita lihat sebelum melihat siapa pun.
+Sekarang radionya tidak ada. Diganti ponsel yang bisa bangun sendiri, yang bisa kita suruh diam, yang layarnya kita lihat sebelum melihat siapa pun.
 
 Tapi urutan paginya masih sama. Air dimasak dulu, baru anak-anak dibangunkan. Hanya saja sekarang tidak ada yang memberi tanda, jadi kami menebak-nebak sendiri kapan pagi seharusnya mulai.
 
@@ -28,7 +32,21 @@ Yang berubah bukan kebiasaannya. Yang berubah: kita tidak lagi tahu siapa yang d
 
 ---
 
-## Catatan untuk Tahap 4 (belum dijalankan)
+## Jejak revisi dan pemeriksaan durasi
 
-- Bentuk unit sesuai Model Konten Brief: **segmen narasi**, disimpan sebagai `breakdown-output.md`.
-- Kolom prompt generate dan file referensi visual: diisi deskripsi b-roll netral (radio, meja kayu, dapur pagi), **bukan** prompt generate karakter — channel ini tidak mengunci elemen visual apa pun.
+| Versi | Kata VO | Dasar @130 kata/menit | Enam jeda × 0,5 detik | Hasil estimasi |
+|---|---:|---:|---:|---|
+| r1 — sebelum revisi | 144 | 66,46 detik | 3 detik | **69,46 detik**, melebihi brief 55–65 detik |
+| r2 — draft ini | **130** | **60 detik** | **3 detik** | **63 detik**, berada dalam target secara estimasi; belum pengukuran audio |
+
+- r1 tetap dapat diperiksa pada commit `706060d391753e97954a49ccd6275ec8d061ff22`; temuan durasi awal tetap tersimpan di STATUS dan LOG_SESI, tidak dihapus atau dianggap keliru.
+- Pemadatan: paragraf 1 dari 20 → 16 kata; paragraf 2 dari 24 → 20; paragraf 3 dari 28 → 23; paragraf 5 dari 24 → 23. Paragraf 4/6/7 tetap utuh. Total berkurang 14 kata, tanpa menambah klaim/benda/tokoh baru atau mengubah angle.
+- Pembuka 16 kata ≈7,38 detik ucapan +0,5 detik jeda = **7,88 detik**, sesuai acuan hook 0–8 detik secara estimasi. Penutup tetap membawa cerita ke masa kini. Pembagian beat rinci belum dikunci.
+- Jeda 0,5 detik dipasang di enam pergantian gagasan utama/antarparagraf. Jangan mempercepat voice diam-diam untuk mengejar durasi; jika pembacaan nyata nanti melewati 65 detik, laporkan dan minta keputusan revisi, bukan mengubah brief sendiri.
+
+## Status produksi
+
+- G1 Tahap 3 r2: **disetujui 2026-09-06 WIB**.
+- G2 naskah final r2: **belum — ditahan pengguna**, alasan administratif.
+- Tahap 5/6: belum dimulai; tidak ada izin untuk memproduksi asset atau konten final.
+- Inventaris output dan checkpoint terkini dicatat di `STATUS.md`.
