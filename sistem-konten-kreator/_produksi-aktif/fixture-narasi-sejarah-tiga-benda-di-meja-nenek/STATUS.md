@@ -1,6 +1,6 @@
 # Status Produksi — Narasi Sejarah (fixture) — Tiga Benda di Meja Nenek
 
-> **STATE UJI RUN 5** — versi sistem `0.3.3`, naskah r2. Status uji: AT-KK-05 / Run 5 **dijadwalkan, belum dijalankan**. Rujukan: `sistem-konten-kreator/ACCEPTANCE_TEST_LOG.md`.
+> **STATE UJI RUN 7** — versi sistem `0.3.4`, naskah r2. Status uji: AT-KK-05 / Run 5 **GAGAL-metode** (koreksi pasca-review 6 Sep); AT-KK-05 / Run 7 **dijadwalkan, belum dijalankan**; AT-KK-05b / Run 8 **dijadwalkan**; Run 6 lama **void**. F7 TERBUKA. Rujukan: `sistem-konten-kreator/ACCEPTANCE_TEST_LOG.md`.
 
 - **Status:** `in-progress`
 - **Channel:** `sistem-konten-kreator/channel-fixture-narasi-sejarah/` — v1, `Operational`
@@ -35,14 +35,14 @@
   - `G1 Tahap 5 (Assets):` belum
   - `G2 konten final + metadata (Tahap 6):` belum
   - `G3 merge:` belum
-- **Commit terakhir:** `f2d3ad2ac98be5eb74bd4b689c0d3911ad67b230` — commit nyata yang menyimpan `naskah-draft.md` r2 beserta metadata G1/G2 terkini. Verifikasi: `git log -1 --format=%H -- sistem-konten-kreator/_produksi-aktif/fixture-narasi-sejarah-tiga-benda-di-meja-nenek/naskah-draft.md`. Field ini menunjuk commit output naskah, bukan commit STATUS sendiri.
-- **PR terkait:** [PR #13](https://github.com/With-AI-Agent/Pembangun-Sistem/pull/13) — head `arena/01a073cf-pembangun-sistem` → base `main`; belum merged
+- **Commit terakhir:** `7eeb98daa5393dbb9e62e766d35b26c9757561a5` — commit nyata yang menyimpan `naskah-draft.md` r2 hasil restore Run 7 (byte-identik r2 pra-Run-5, sha256 `20205ccc0abd79c9b2d8d42a8465ceb4da981a37d5edc3df4fde8495de5d2a4d`, sumber restore `54fcb16^`). Verifikasi: `git log -1 --format=%H -- sistem-konten-kreator/_produksi-aktif/fixture-narasi-sejarah-tiga-benda-di-meja-nenek/naskah-draft.md`. Field ini menunjuk commit output naskah, bukan commit STATUS sendiri.
+- **PR terkait:** [PR #13](https://github.com/With-AI-Agent/Pembangun-Sistem/pull/13) — head `arena/01a073cf-pembangun-sistem` → base `main`; **MERGED** `2026-09-06T01:13:39Z` (merge commit `d1fd0a5`). PR sesi ini: [PR #14](https://github.com/With-AI-Agent/Pembangun-Sistem/pull/14) — head `arena/01a0744b-pembangun-sistem` → base `main`; **OPEN**, tanpa merge (G3 tidak diminta)
 - **Pekerjaan belum tersimpan:** Tidak ada
 - **Risiko atau blocker:**
   - G2 naskah final ditahan administratif oleh pengguna; Tahap 5/6 tidak diizinkan.
   - Temuan durasi r1 tetap tercatat: 144 kata → 66,46 detik tanpa jeda / 69,46 detik dengan enam jeda. r2: 130 kata → 60 + 3 = **63 detik estimasi**, bukan pengukuran rekaman. Batas model tetap 55–65 detik; tambahan jeda/intonasi belum diukur.
   - Brand Core masih kosong. Judul masih judul kerja, bukan metadata publish yang disetujui.
-- **Waktu pembaruan:** 2026-09-06 — state uji Run 5 disiapkan; naskah r2/G1 tersedia, G2 ditahan
+- **Waktu pembaruan:** 2026-09-06 — state uji Run 7 direset (restore r2 + output Run 5 dihapus dari tree, tersimpan di riwayat); naskah r2/G1 tersedia, G2 ditahan
 
 ## Aturan
 

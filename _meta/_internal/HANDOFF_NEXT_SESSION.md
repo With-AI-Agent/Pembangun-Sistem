@@ -99,7 +99,8 @@ WARNINGS: 0 (warning tier, exit code unaffected)
 
 Lihat tabel Rekaman Hasil di `sistem-konten-kreator/ACCEPTANCE_TESTS.md` untuk status per test. Poin yang perlu diketahui sesi berikutnya:
 
-- **AT-KK-05 LULUS** pada clean run sesi baru versi `0.3.1-audit-remediation` (dicatat PR #6): agent lanjut hanya dari Tahap 4, `G1 Tahap 3` tidak diperlakukan sebagai G2, dan tidak membaca `ACCEPTANCE_TESTS.md`/handoff sebelum memutuskan. Bukti: `ACCEPTANCE_TEST_LOG.md` Run 2.
+- **AT-KK-05 LULUS** pada clean run sesi baru versi `0.3.1-audit-remediation` (dicatat PR #6): agent melanjutkan hanya dari tahap yang terbukti di branch dan memperlakukan approval per kode gerbang — bukti & kriteria lengkap: lihat `ACCEPTANCE_TEST_LOG.md` bagian Run 2/5.
+  *(diredaksi 6 Sep per aturan 6d — konteks lengkap di log acceptance)*
 - **AT-KK-05b LULUS** pada clean run sesi baru versi `0.3.1-audit-remediation` (dicatat PR #7): saat `STATUS.md` mengklaim `breakdown-output.md` ADA padahal tidak ada, agent **berhenti dan melapor** `BLOCKED`, tidak membuat ulang diam-diam, tidak mengoreksi STATUS sendiri. Bukti: `ACCEPTANCE_TEST_LOG.md` Run 3.
 - Kedua test itu sudah menutup gate **"Prosedur checkpoint dan recovery diuji"** (`sistem-konten-kreator/SYSTEM_MANIFEST.md`, dicentang 5 Sep 2026). **Tidak perlu dijalankan ulang** AT-KK-05/05b di sesi berikutnya, kecuali aturan `00`/`05`/`06` berubah lagi (klausul regression).
 - Fixture-nya sudah ada dan ter-commit — tidak perlu dibuat ulang untuk sisa test.
