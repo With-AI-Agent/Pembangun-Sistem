@@ -195,6 +195,12 @@ Versi lama tidak boleh dihapus sebelum versi baru terbukti stabil.
 
 ---
 
+## Lapisan pengeluaran: paket repo mandiri
+
+Sebuah sistem yang tidak bisa dikeluarkan dari repo ini menjadi repo yang berdiri sendiri dan tetap lolos validasi **belum** benar-benar self-contained — protokol, definisi "siap di-upload", dan cara mengujinya ada di `_meta/PAKET_REPO_MANDIRI.md`.
+
+---
+
 ## Batasan anti-recursion
 
 Mekanisme ini bersifat rekursif secara prinsip, tetapi tidak boleh menghasilkan audit tanpa akhir. Pada setiap lapisan, tetapkan:

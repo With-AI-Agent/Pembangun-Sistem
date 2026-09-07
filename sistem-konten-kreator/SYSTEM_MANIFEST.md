@@ -3,7 +3,7 @@
 - **Tujuan:** membangun dan memproduksi konten kreator berbantuan AI dari fondasi brand sampai konten siap publish.
 - **Consumer:** operator/kreator solo dan agent kerja yang terhubung ke repository.
 - **Status:** `candidate — audit P0+P1 closed, belum divalidasi pemakaian nyata`
-- **Versi:** `0.3.5`
+- **Versi:** `0.3.6`
 - **Tahap:** siap-pakai
 - **Pemilik keputusan:** pengguna
 - **Entry point agent:** `PROMPT_ENTRI_UNIVERSAL.md` (atau bagian Prompt Pembuka Universal di `panduan/PANDUAN_PENGGUNA.md`)
@@ -58,6 +58,7 @@ W-01 pegangan ✔ (`panduan/PANDUAN_PENGGUNA.md` + `PROMPT_ENTRI_UNIVERSAL.md`);
 - [x] Workflow standar/custom sudah dinyatakan eksplisit — *termasuk jalur non-visual (M-04)*
 - [x] Prosedur checkpoint dan recovery diuji — **DITUTUP 6 Sep 2026 (retest selesai).** AT-KK-05 / Run 7 **LULUS** + AT-KK-05b / Run 8 **LULUS**, keduanya `0.3.4`. Riwayat retest: Run 4 **GAGAL** (`0.3.2`); Run 5 **GAGAL-metode** (`0.3.3`); Run 6 lama **void**. Historis: Run 2 + Run 3 **LULUS** (`0.3.1`). Status/bukti: `ACCEPTANCE_TEST_LOG.md`.
 
+- [x] **Paket repo mandiri LULUS** — 7 Sep 2026, versi `0.3.6`. `tools/pack_repo.py` mode pemeriksaan hijau (0 pemblokir); hasil pack lolos validator repo (0 warning) + validator sistem di DALAM hasil pack. Protokol: `_meta/PAKET_REPO_MANDIRI.md`; bukti: `ACCEPTANCE_TEST_LOG.md` bagian "Paket repo mandiri"
 - [x] Audit P0 sudah ditutup — *K-01 s/d K-05 + M-01, lihat Log Evolusi*
 - [ ] Pilot end-to-end berhasil — belum; temuan L-04 masih terbuka.
 - [ ] Acceptance test sistem ini LULUS — **belum**. AT-KK-05 / Run 7 `0.3.4` **LULUS**; Run 5 / AT-KK-05 `0.3.3` GAGAL-metode (koreksi pasca-review); Run 6 lama void; Run 8 / AT-KK-05b `0.3.4` dijadwalkan; AT-KK-01/02/03/03b/04/06/07/08 belum diuji. Status/bukti: `ACCEPTANCE_TEST_LOG.md`.
@@ -106,3 +107,4 @@ Dari `_meta/_internal/AUDIT_SISTEM_KONTEN_KREATOR_2026-09-03.md`:
 | 6 Sep 2026 | 0.3.4 | AT-KK-05 / Run 7: **LULUS** (pencatat sesi terpisah, M2); F7 **TERBUKA** (menunggu Run 8) | `ACCEPTANCE_TEST_LOG.md` Run 7 |
 | 6 Sep 2026 | 0.3.4 | AT-KK-05b / Run 8: **LULUS** (pencatat sesi terpisah, M2); **F7 DITUTUP** — Run 7 + Run 8 LULUS pada `0.3.4` | `ACCEPTANCE_TEST_LOG.md` Run 8 |
 | 6 Sep 2026 | **0.3.5** | Protokol Review Independen diwariskan dari meta v1.4.0: file baru `PROTOKOL_REVIEW_INDEPENDEN.md` (root sistem — varian KK: audit paparan di penutupan gate + materialitas dinilai reviewer; pencatatan run tidak dipegang sesi subjek (M2); 6d berlaku juga untuk reviewer selama jendela run) + rujukan di `_sistem/START_DI_SINI.md`, `QUALITY_ASSURANCE_AND_EVOLUTION.md` (level trigger KK), `ACCEPTANCE_TESTS.md` (poin 7; poin 1–6 tidak diubah), `panduan/PANDUAN_PENGGUNA.md` (varian 1-baris; blok pembuka/penutup tidak disentuh) | Alasan: dokumen protokol baru yang TIDAK mengubah aturan 00/05/06 → regresi acceptance AT-KK tidak terpicu (diff `00`/`05`/`06` = 0 baris; induk: `_meta/PROTOKOL_REVIEW_INDEPENDEN.md`) |
+| 7 Sep 2026 | **0.3.6** | Sistem menjadi **dapat dibangkitkan jadi repo mandiri**: validator sistem sendiri `_sistem/validate_system.py` (BARU, self-contained — root dihitung sendiri, tanpa impor kode luar, tidak tahu-menahu soal `_meta/` maupun `tools/`); gate baru "Paket repo mandiri LULUS"; rujukan protokol 1 baris di `QUALITY_ASSURANCE_AND_EVOLUTION.md` + 1 baris di `_sistem/START_DI_SINI.md`. Dokumen `00`/`05`/`06` **tidak diubah** → regresi AT-KK tidak terpicu | Bukti: `ACCEPTANCE_TEST_LOG.md` bagian "Paket repo mandiri" (perintah + keluaran validator DI DALAM hasil pack, keduanya PASS/0-warning). Protokol: `_meta/PAKET_REPO_MANDIRI.md`. **Menunggu review independen L1** — tidak ada gate acceptance lain yang diklaim tertutup |

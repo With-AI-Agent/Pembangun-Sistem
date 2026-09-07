@@ -10,6 +10,13 @@ _meta/_internal/backups/
 _meta/_internal/template_clean/
 _meta/_internal/template_clean.zip
 
+# Hasil `tools/pack_repo.py` (paket repo mandiri per sistem). Putusan pemilik
+# 7 Sep 2026: pack TIDAK di-commit ke master — master adalah satu-satunya sumber
+# kebenaran dan pack selalu bisa dibangkitkan ulang dari sha yang tercatat di
+# PAKET_REPO.md. Lihat _meta/PAKET_REPO_MANDIRI.md.
+dist/
+*-repo-*.zip
+
 # M-12 (audit meta 5 Sep 2026): state UI lokal Obsidian berubah tiap buka vault —
 # noise diff & sumber konflik sync. Pengaturan vault lainnya tetap ikut repo.
 .obsidian/workspace.json

@@ -85,3 +85,52 @@ Tes ini memvalidasi perilaku sistem, bukan hanya keberadaan file. Setiap test me
 **Given:** pengguna memulai sistem baru dengan Discovery Level-0; tidak menyebut-nyebut pegangan, LOG_SESI, field checkpoint, atau aturan platform.
 **When:** agent menyusun `00_RENCANA_KERANGKA.md` dan skeleton sistem.
 **Then:** agent TANPA diminta menerapkan seluruh butir `03_KONTRAK_WARISAN.md` (W-01…W-09) dan melaporkan tabel "Warisan" dengan status tiap butir; TIDAK menawarkan butir satu per satu sebagai pertanyaan; jika ada butir yang dinilai tidak cocok untuk domain itu, agent BERHENTI pada butir itu, menjelaskan apa yang hilang tanpanya, dan meminta keputusan eksplisit pengguna sebelum melewati — override tercatat di manifest dengan alasan + approval; `tools/validate_repo.py` menandai ERROR bila butir yang bisa dicek mekanis tidak ada, meski untuk sistem yang belum ada di daftar file statis validator mana pun (penegakan berbasis INDEKS, bukan daftar manual).
+
+## AT-15 — Sistem jadi dapat dibangkitkan jadi repo mandiri yang tervalidasi
+
+**Given:** sebuah sistem domain sudah terdaftar di `INDEKS_SISTEM.md` dan hendak diberi (atau sudah memegang) status "Siap dipakai produksi". Penguji adalah sesi baru yang **tidak** ikut membangun sistem itu dan tidak diberi pengetahuan tersirat apa pun.
+**When:** penguji menjalankan prosedur di bawah, apa adanya, dari root repo master.
+**Then:** keempat kriteria LULUS di bawah terpenuhi. Satu saja tidak terpenuhi = sistem itu **belum** boleh mengklaim "Siap dipakai produksi" (`DEFINITION_OF_DONE.md`). Aturan normatifnya: `_meta/PAKET_REPO_MANDIRI.md`.
+
+**Prosedur uji (bisa diulang, tanpa pengetahuan tersirat):**
+
+```bash
+# 0. baseline master harus hijau lebih dulu — kalau merah, hentikan; itu
+#    masalah lain, bukan hasil uji ini
+python3 tools/validate_repo.py
+
+# 1. mode pemeriksaan: tidak menulis apa pun
+python3 tools/pack_repo.py <nama-folder-sistem> --check ; echo "exit=$?"
+
+# 2. run sungguhan ke folder di luar repo
+python3 tools/pack_repo.py <nama-folder-sistem> --out /tmp/uji-pack-1 ; echo "exit=$?"
+
+# 3. verifikasi DI DALAM hasil pack
+cd /tmp/uji-pack-1 && python3 tools/validate_repo.py ; echo "exit=$?"
+cd /tmp/uji-pack-1/<nama-folder-sistem> && python3 _sistem/validate_system.py ; echo "exit=$?"
+
+# 4. determinisme
+cd <root repo master>
+python3 tools/pack_repo.py <nama-folder-sistem> --out /tmp/uji-pack-2 >/dev/null
+diff -r /tmp/uji-pack-1 /tmp/uji-pack-2 ; echo "exit=$?"
+
+# 5. tidak ada isi dokumen yang ditulis ulang
+diff -r <root repo master>/<nama-folder-sistem> /tmp/uji-pack-1/<nama-folder-sistem>
+
+# 6. negatif: sistem yang dirusak HARUS gagal (di SALINAN sementara, bukan di master)
+cp -r <root repo master> /tmp/uji-rusak && cd /tmp/uji-rusak
+rm <nama-folder-sistem>/_sistem/validate_system.py
+python3 tools/pack_repo.py <nama-folder-sistem> --check ; echo "exit=$?"
+```
+
+**Kriteria LULUS (semuanya, tanpa penilaian rasa):**
+
+| # | Kriteria | Bukti yang harus terlihat |
+|---|---|---|
+| L1 | Langkah 1 hijau | bagian "(d) DAFTAR PEMBLOKIR — 0", baris `CHECK HIJAU`, `exit=0` |
+| L2 | Langkah 2 selesai dan foldernya ada | baris `PACK OK:` dan `exit=0`. Kalau exit non-nol, folder memang sudah dihapus — itu perilaku yang benar, bukan kegagalan alat |
+| L3 | Langkah 3 hijau dua-duanya | validator repo: `WARNINGS: 0` + `exit=0`; validator sistem: `HASIL: PASS` + `exit=0` |
+| L4 | Langkah 4 dan 5 bersih | `diff -r` langkah 4 **kosong** (`exit=0`). `diff -r` langkah 5 kosong, atau selisihnya HANYA berkas yang tercantum sebagai dikecualikan di `PAKET_REPO.md` — tidak boleh ada satu pun berkas yang **isinya** berbeda |
+| L5 | Langkah 6 merah | `exit` non-nol dan pemblokirnya menyebut validator sistem yang hilang. Uji ini gagal kalau langkah 6 justru hijau |
+
+**Catatan pelaksanaan:** langkah 6 dijalankan di salinan sementara. Merusak master untuk keperluan uji dilarang. Bersihkan `/tmp/uji-*` setelah selesai; hasil pack tidak pernah di-commit ke master.

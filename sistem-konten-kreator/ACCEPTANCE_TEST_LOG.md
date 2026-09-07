@@ -1171,3 +1171,71 @@ Karena **Run 7 LULUS** dan **Run 8 LULUS** pada versi `0.3.4`:
 - Sinkronisasi tabel Rekaman Hasil dan `INDEKS_SISTEM.md` dengan status/versi/pointer (6a).
 - Tidak ada perubahan pada `00`/`05`/`06` → versi tidak dinaikkan.
 - Narasi/bukti evaluasi hanya di `ACCEPTANCE_TEST_LOG.md`; jalur orientasi hanya status/versi/pointer (6a).
+
+---
+
+## Run 2026-09-07 — AT-15 Paket repo mandiri (`sistem-konten-kreator`)
+
+- **Tanggal:** 2026-09-07 (UTC)
+- **Versi sistem:** `0.3.6`
+- **Branch:** `arena/01a07a07-pembangun-sistem` (dari `main` `2de9409`)
+- **Commit sumber paket:** `430e69c` (pohon kerja bersih saat paket dibangkitkan)
+- **Skenario:** AT-15 di `_meta/ACCEPTANCE_TESTS.md` (protokol: `_meta/PAKET_REPO_MANDIRI.md`)
+- **Metode:** eksekusi alat, bukan penilaian naratif. Paket dibangkitkan ke direktori sementara di luar repo; paket TIDAK di-commit.
+- **Verdict:** **LULUS** pada `0.3.6` — dengan catatan: klaim ini menunggu **review independen L1**; tidak ada gate acceptance lain yang ikut diklaim tertutup.
+
+### Perintah dan keluaran
+
+Mode pemeriksaan (tanpa menulis apa pun):
+
+```
+$ python3 tools/pack_repo.py sistem-konten-kreator --check
+(d) DAFTAR PEMBLOKIR — 0
+  (kosong — siap di-pack)
+verifikasi kering di calon paket:
+  validate_repo.py exit=0 | WARNINGS: 0 (warning tier, exit code unaffected)
+  validate_system.py exit=0
+CHECK HIJAU
+exit=0
+```
+
+Run sungguhan (67 berkas; subset meta 18 dokumen; 6 entri daftar putih rujukan-absen):
+
+```
+$ python3 tools/pack_repo.py sistem-konten-kreator --out <dir-sementara>
+PACK sistem-konten-kreator -> <dir-sementara>
+  berkas: 67 | subset _meta: 18 | absent_refs_allowed: 6
+--- python3 tools/validate_repo.py (DI DALAM hasil pack) ---
+VALIDATION PASSED: 28 required files and Markdown invariants checked
+COVERAGE: 38 active documents scanned, 215 path references checked, 0 unresolved
+SYSTEMS CHECKED (inheritance contract): 1 registered + pilot excluded by design
+WARNINGS: 0 (warning tier, exit code unaffected)
+exit=0
+--- python3 _sistem/validate_system.py (DI DALAM sistem-konten-kreator/) ---
+VALIDATOR SISTEM KONTEN KREATOR
+  root sistem      : sistem-konten-kreator/
+  channel          : channel-fixture-narasi-sejarah
+  arsip naskah     : 1
+  unit produksi    : fixture-narasi-sejarah-tiga-benda-di-meja-nenek
+  temuan           : 0
+HASIL: PASS
+exit=0
+PACK OK: <dir-sementara>
+```
+
+### Bukti pendukung
+
+| Kriteria AT-15 | Cara diuji | Hasil |
+|---|---|---|
+| L1 paket berdiri sendiri | `validate_repo.py` dijalankan DARI DALAM paket | PASS, 0 warning, 0 rujukan menggantung |
+| L2 sistem sehat di dalam paket | `_sistem/validate_system.py` dijalankan dari dalam folder sistem di paket | `HASIL: PASS`, 0 temuan |
+| L3 isi dokumen tidak ditulis ulang | `diff -r` folder sistem di repo master vs di dalam paket | selisih tunggal: dokumen `UJI_F7_CLEAN_RUN_2026-09-05.md` sengaja tidak ikut (rekaman sesi, terdaftar di "yang sengaja TIDAK ikut"); tidak ada satu pun berkas dengan isi berbeda |
+| L4 deterministik | dua run berurutan ke dua direktori berbeda, lalu `diff -r` antar keduanya | tidak ada selisih (exit 0); 0 direktori bytecode tertinggal |
+| L5 fail-closed | lima perusakan pada SALINAN paket | semuanya MERAH (exit 1): (a) hapus 1 dokumen meta yang terdaftar di profil → `missing required file`; (b) hapus validator sistem → "validator sistem wajib"; (c) sisipkan rujukan menggantung → "MANDIRI unresolved reference"; (d) tambah entri daftar putih yang tidak lagi cocok → "entri basi"; (e) profil menuntut berkas yang tidak ikut → `missing required file` |
+| L5 (validator sistem) | tiga perusakan pada SALINAN folder sistem di dalam paket | semuanya `HASIL: FAIL` exit 1: field checkpoint dihapus dari STATUS unit; naskah arsip tidak tercatat di indeks; satu dokumen instruksi `_sistem/` hilang |
+
+Regresi terkunci: dua skenario baru (P1, P2) di `tools/test_failure_injection.py` memin perilaku ini — lihat `_meta/FAILURE_INJECTION_TESTS.md`. Keduanya diuji-mutasi (dimatikan → MERAH), jadi bukan check kosong.
+
+### Batas klaim
+
+Yang dibuktikan: paket bisa dibangkitkan, berdiri sendiri, lolos kedua validator, dan reproduktif. Yang **tidak** dibuktikan di sini: pengalaman upload ke GitHub sungguhan, dan perilaku agent pada repo hasil upload — keduanya di luar jangkauan run ini.

@@ -63,6 +63,10 @@ Sebelum output dianggap released, agent memeriksa sesuai jenisnya:
 - [ ] File dapat dibuka dan formatnya sesuai
 - [ ] Output yang dipakai pengguna sudah diunduh sebelum folder sementara dihapus
 
+## Pengeluaran jadi repo mandiri
+
+Sistem ini harus tetap lolos validasi ketika foldernya dikeluarkan jadi repo sendiri — protokol + cara mengujinya di `_meta/PAKET_REPO_MANDIRI.md` (repo master); di sisi sistem, alat yang menilai isinya adalah `_sistem/validate_system.py` yang ikut folder ini.
+
 ## Status output
 
 ```text
