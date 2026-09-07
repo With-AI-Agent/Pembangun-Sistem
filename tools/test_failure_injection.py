@@ -22,6 +22,7 @@ inside a copied repo by the R scenarios themselves — prevents recursion).
 """
 from pathlib import Path
 from tempfile import TemporaryDirectory
+import json
 import os
 import re
 import shutil
@@ -221,6 +222,67 @@ def regression_scenarios(base_dir: Path):
     return checks
 
 
+def pack_scenarios(base_dir: Path):
+    """P1-P2 (7 Sep 2026): fail-closed paket repo mandiri (tools/pack_repo.py).
+
+    Dijalankan di SALINAN repo. Dua klaim yang dipin di sini adalah klaim yang
+    kalau diam-diam melemah membuat paket "LULUS" tanpa isi yang benar:
+      P1 profil paket = daftar KEWAJIBAN, bukan daftar kelonggaran;
+      P2 run yang gagal TIDAK meninggalkan folder paket setengah jadi.
+    """
+    checks = []
+    env = {**os.environ, "FI_SKIP_NESTED": "1", "PYTHONDONTWRITEBYTECODE": "1"}
+    sistem = "sistem-konten-kreator"
+
+    def sh(cwd: Path, *args):
+        return subprocess.run([sys.executable, "-B", *args], cwd=str(cwd),
+                              capture_output=True, text=True, env=env)
+
+    cp = base_dir / "repo"
+    shutil.copytree(
+        ROOT, cp,
+        ignore=shutil.ignore_patterns(
+            ".git", "backups", "template_clean", "template_clean.zip",
+            "__pycache__", "dist"),
+    )
+
+    # --- P1: hapus satu dokumen yang TERDAFTAR di meta_subset profil paket.
+    # Kalau kewajiban diturunkan dari "apa yang kebetulan ada" (bug F1 versi
+    # paket), penghapusan ini akan lolos diam-diam.
+    out = base_dir / "pak1"
+    ok = sh(cp, "tools/pack_repo.py", sistem, "--out", str(out)).returncode == 0
+    checks.append(("P1 pra-syarat: pack sistem-konten-kreator berhasil", ok))
+    if ok:
+        prof = json.loads((out / "_meta" / "PAKET_REPO.json").read_text(encoding="utf-8"))
+        rel = prof["meta_subset"][0]
+        (out / rel).unlink()
+        r = subprocess.run([sys.executable, "-B", "tools/validate_repo.py"],
+                           cwd=str(out), capture_output=True, text=True, env=env)
+        # Bukan cukup "gagal" — harus gagal DENGAN ALASAN kewajiban profil,
+        # supaya check ini tidak lulus lewat error lain (mis. rujukan
+        # menggantung) kalau daftar kewajiban diam-diam dilemahkan.
+        checks.append(("P1 entri profil paket dihapus dari paket -> validator paket FAIL "
+                       "dengan alasan 'missing required file'",
+                       r.returncode != 0
+                       and f"missing required file: {rel}" in r.stdout))
+    else:
+        checks.append(("P1 entri profil paket dihapus dari paket -> validator paket FAIL "
+                       "dengan alasan 'missing required file'", False))
+
+    # --- P2: rujukan menggantung yang TIDAK bisa dikategorikan = pemblokir.
+    # `--check` harus non-zero, run sungguhan harus non-zero DAN tidak boleh
+    # meninggalkan folder paket (paket setengah jadi = bukti palsu).
+    (cp / sistem / "README.md").open("a", encoding="utf-8").write(
+        "\nRujukan uji injeksi: `panduan/BERKAS_YANG_TIDAK_ADA.md`\n")
+    rc_check = sh(cp, "tools/pack_repo.py", sistem, "--check").returncode
+    out2 = base_dir / "pak2"
+    rc_run = sh(cp, "tools/pack_repo.py", sistem, "--out", str(out2)).returncode
+    checks.append(("P2 rujukan menggantung tak terkategori -> --check FAIL", rc_check != 0))
+    checks.append(("P2 run gagal -> exit non-zero DAN folder paket tidak ditinggalkan",
+                   rc_run != 0 and not out2.exists()))
+    return checks
+
+
 def run():
     checks = []
     with TemporaryDirectory() as d:
@@ -366,6 +428,13 @@ def run():
             reg = regression_scenarios(Path(d))
     checks += reg
 
+    # P1–P2 paket repo mandiri (skipped when nested, same reason).
+    pak = []
+    if not os.environ.get("FI_SKIP_NESTED"):
+        with TemporaryDirectory() as d:
+            pak = pack_scenarios(Path(d))
+    checks += pak
+
     failed = [name for name, ok in checks if not ok]
     if failed:
         print("FAILURE-INJECTION TESTS FAILED")
@@ -373,7 +442,8 @@ def run():
             print(f"- {name}")
         raise SystemExit(1)
     print(f"FAILURE-INJECTION TESTS PASSED: {len(checks)} scenarios "
-          f"({n_synth} sintetis + {len(real)} unit nyata + {len(reg)} regresi review PR-11)")
+          f"({n_synth} sintetis + {len(real)} unit nyata + {len(reg)} regresi review PR-11"
+          f" + {len(pak)} paket repo mandiri)")
 
 
 if __name__ == "__main__":
