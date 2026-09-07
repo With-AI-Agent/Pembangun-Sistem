@@ -33,13 +33,15 @@ import checkpoint_core as core
 
 ROOT = Path(__file__).resolve().parents[1]
 
-# The 4 normalized warnings a clean-template extract MUST produce (and only
+# The 5 normalized warnings a clean-template extract MUST produce (and only
 # those): labeled master-history references. Any warning elsewhere — above
 # all in the bootstrap doc (NEXT_SESSION_PROMPT.md) or the user guide
 # (PANDUAN_PENGGUNA.md) — means an active instruction points at a file the
 # template does not ship. This set is deliberately exact: it is the
 # normalization list of _meta/TEMPLATE_RELEASE.md, pinned here so drift
-# fails loudly.
+# fails loudly. (5th pair pinned 6 Sep 2026, meta v1.4.0: the v1.4.0 Log
+# Evolusi Bukti cell cites the KK acceptance log as provenance — same
+# category as the two earlier SYSTEM_MANIFEST.md history references.)
 EXPECTED_TEMPLATE_WARNINGS = {
     ("_meta/00_CARA_KERJA_META.md",
      "sistem-konten-kreator/_sistem/09_AUDIT_MIGRASI_GITHUB_AGENT.md"),
@@ -49,6 +51,8 @@ EXPECTED_TEMPLATE_WARNINGS = {
      "sistem-pilot-catatan-belajar/unit-aktif/pilot-002-behavioral/OUTPUT.md"),
     ("_meta/SYSTEM_MANIFEST.md",
      "_sistem/11_LOG_SESI.md"),
+    ("_meta/SYSTEM_MANIFEST.md",
+     "sistem-konten-kreator/ACCEPTANCE_TEST_LOG.md"),
 }
 
 MINI_MANIFEST = """# System Manifest — Sistem Uji Kerangka (skenario FI)
@@ -196,7 +200,7 @@ def regression_scenarios(base_dir: Path):
                 if m:
                     got.add((m.group(1), m.group(2)))
             checks.append(("R7 validator di ekstrak template exit 0", out.returncode == 0))
-            checks.append(("R7 warning ekstrak = persis daftar normalisasi (4 histori master)",
+            checks.append(("R7 warning ekstrak = persis daftar normalisasi (5 histori master)",
                            got == EXPECTED_TEMPLATE_WARNINGS))
             checks.append(("R7 bootstrap mandiri: tanpa warning di NEXT_SESSION_PROMPT/PANDUAN_PENGGUNA",
                            not any(doc in ("_meta/NEXT_SESSION_PROMPT.md", "PANDUAN_PENGGUNA.md")

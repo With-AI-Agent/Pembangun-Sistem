@@ -24,3 +24,12 @@
 1. Terima verbatim perkataan pemilik → `BRIEF.md` (G1 generator).
 2. Jalankan Tahap 2 (peta+cakupan) → G1. 3. Tahap 3 (outline+visual) → G2. 4. Produksi → 5. QA (04) → G3.
 Catat hasil tiap tahap ke `ACCEPTANCE_TEST_LOG.md` + `STATUS.md`.
+
+---
+
+## Review independen (sesi lain) — rujukan + level trigger
+
+Protokol: `_meta/PROTOKOL_REVIEW_INDEPENDEN.md` (meta v1.4.0, 6 Sep 2026) — reviewer = sesi yang berbeda dari penulis/subjek/pencatat, verifikasi dari artefak, tidak ada auto-merge.
+- **L1 (WAJIB):** penutupan gate acceptance (mis. AT-SP-15 / klaim deck `released`), bump versi aturan `_sistem/`, merge yang mengubah klaim DONE/manifest.
+- **L2 (DISARANKAN):** PR dokumentasi besar, perubahan `_template/`, sanitasi/redaksi.
+- **L3 (TIDAK perlu):** commit produksi deck biasa, typo, housekeeping reversibel.

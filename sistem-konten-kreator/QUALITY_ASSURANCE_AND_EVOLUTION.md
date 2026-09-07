@@ -20,6 +20,14 @@ Minimum regression check:
 - [ ] Arsip dan indeks masih memiliki data yang dibutuhkan
 - [ ] Klaim kemampuan tool masih sesuai toolset aktual
 - [ ] Acceptance test di `ACCEPTANCE_TESTS.md` dijalankan ulang untuk skenario yang terdampak perubahan (wajib kalau yang berubah aturan di `00`/`05`/`06`)
+- [ ] Pekerjaan L1 (lihat level trigger di bawah) sudah melewati review independen sesi lain sebelum klaim ditutup
+
+## Review independen (sesi lain) — level trigger KK
+
+Rujukan: `PROTOKOL_REVIEW_INDEPENDEN.md` (root sistem); protokol induk: `_meta/PROTOKOL_REVIEW_INDEPENDEN.md` (meta v1.4.0). Reviewer = sesi yang berbeda dari penulis/subjek/pencatat; memverifikasi dari artefak; tidak meng-merge tanpa izin eksplisit pemilik.
+- **L1 (WAJIB review independen):** penutupan pengecualian/gate (mis. F), bump versi aturan `00`/`05`/`06`, operasi riwayat (reset/revert/fungsi-forcing), perubahan `SYSTEM_MANIFEST.md` yang memuat klaim (DONE/versi/gate).
+- **L2 (DISARANKAN review ringkas):** mengikuti protokol induk (PR dokumentasi besar, perubahan template, sanitasi/redaksi).
+- **L3 (TIDAK perlu):** commit produksi biasa, typo, housekeeping reversibel.
 
 ## Lapisan 2 — Memeriksa kesehatan sistem saat digunakan
 

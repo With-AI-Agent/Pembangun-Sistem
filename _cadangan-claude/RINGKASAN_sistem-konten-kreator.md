@@ -14,6 +14,7 @@ sistem-konten-kreator/
 ├── SYSTEM_MANIFEST.md             ← identitas + gate + Log Evolusi + tabel Warisan
 ├── QUALITY_ASSURANCE_AND_EVOLUTION.md   (turunan self-contained; induk _meta = provenance)
 ├── ACCEPTANCE_TESTS.md / ACCEPTANCE_TEST_LOG.md
+├── PROTOKOL_REVIEW_INDEPENDEN.md        ← varian KK dari _meta/PROTOKOL_REVIEW_INDEPENDEN.md (meta v1.4.0, 6 Sep)
 ├── panduan/PANDUAN_PENGGUNA.md    ← pegangan pengguna (subfolder panduan/)
 ├── _sistem/  (12 dokumen: START_DI_SINI, 00_CARA_PAKAI_SISTEM [LOG_SESI + fakta
 │            platform inline + 4 aturan recovery self-contained], 01_BRAND_CORE,
@@ -30,7 +31,7 @@ sistem-konten-kreator/
 Mengikuti semua 5 Prinsip Universal dari `_meta/02_PRINSIP_UNIVERSAL.md` TANPA override — sistem ini justru yang jadi SUMBER dari prinsip-prinsip itu (dipilah dari sini ke level universal setelah terbukti works). Tambahan spesifik-domain: Pemisahan Konsistensi Visual vs Non-Visual (khusus konten kreator, tidak universal).
 
 ## Status sekarang
-**`0.3.2-warisan-sync` — kandidat sistem contoh; audit P0+P1 tertutup; recovery teruji nyata.** AT-KK-05 & AT-KK-05b LULUS clean run di sesi agent baru (4–5 Sep 2026); gate checkpoint/recovery DITUTUP 5 Sep. Sisa gate: Brand Core channel nyata belum ada; pilot end-to-end (L-04) butuh 1 channel terisi penuh; acceptance AT-KK-01/02/03/03b/04/06/07/08 belum diuji; L-03 terbuka. Kontrak warisan meta v1.3.0: tabel Warisan W-01…W-09 tercatat di `SYSTEM_MANIFEST.md`, tanpa override.
+**`0.3.5` — kandidat sistem contoh; audit P0+P1 tertutup; recovery teruji nyata.** **F7 DITUTUP 6 Sep 2026** — AT-KK-05 / Run 7 + AT-KK-05b / Run 8 **LULUS** pada `0.3.4`, clean run di sesi agent baru (bukti: `ACCEPTANCE_TEST_LOG.md`; status/pointer saja, sesuai pola 6a). v0.3.5 (6 Sep): protokol review independen diwariskan dari meta v1.4.0 — file `PROTOKOL_REVIEW_INDEPENDEN.md` di root sistem + rujukan di `START_DI_SINI`/QA/`ACCEPTANCE_TESTS` (poin 7)/panduan; aturan 00/05/06 tidak berubah. Sisa gate: Brand Core channel nyata belum ada; pilot end-to-end (L-04) butuh 1 channel terisi penuh; acceptance AT-KK-01/02/03/03b/04/06/07/08 belum diuji; L-03 terbuka. Kontrak warisan meta v1.3.0: tabel Warisan W-01…W-09 tercatat di `SYSTEM_MANIFEST.md`, tanpa override.
 
 ## PENTING — hasil kerja sesi ini akan dibawa ke mana
 Hasil dari sesi Claude ini akan di-paste manual oleh pengguna ke lokasi yang sesuai di Obsidian (sync otomatis ke GitHub via plugin git). Pastikan format/struktur yang dihasilkan KOMPATIBEL dengan 11 dokumen yang sudah ada — cek dulu dokumen terkait yang diupload bersama ringkasan ini sebelum menulis apa pun. Karena sistem ini mendekati status contoh resmi (gate pemakaian nyata masih terbuka), perubahan apapun ke sistem ini sebaiknya dianggap REVISI terhadap sesuatu yang sudah teruji — pertimbangkan matang-matang sebelum mengubah struktur besar yang sudah ada, kecuali memang ada kebutuhan nyata yang jelas.

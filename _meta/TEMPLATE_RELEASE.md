@@ -53,14 +53,15 @@ Jika anchor transformasi tidak ketemu dan teks targetnya pun tidak ada (dokumen 
 
 Jika ada pelanggaran, build gagal.
 
-**Smoke test pasca-build (wajib setiap kali template/validator berubah):** ekstrak zip ke direktori kosong, `git init`, lalu jalankan di sana `python3 tools/validate_repo.py` dan `python3 tools/test_failure_injection.py` — keduanya harus PASS (exit 0) tanpa ada sistem terdaftar; validator di sana harus menghasilkan PERSIS 4 warning normalisasi di bawah, dan FI berjalan 24 skenario. Ini membuktikan template berdiri sendiri (diverifikasi 5 Sep 2026; diperketat pasca review PR #11; lihat `AUDIT_META_SISTEM_2026-09-05.md` Addendum 2).
+**Smoke test pasca-build (wajib setiap kali template/validator berubah):** ekstrak zip ke direktori kosong, `git init`, lalu jalankan di sana `python3 tools/validate_repo.py` dan `python3 tools/test_failure_injection.py` — keduanya harus PASS (exit 0) tanpa ada sistem terdaftar; validator di sana harus menghasilkan PERSIS 5 warning normalisasi di bawah, dan FI berjalan 24 skenario. Ini membuktikan template berdiri sendiri (diverifikasi 5 Sep 2026; diperketat pasca review PR #11; lihat `AUDIT_META_SISTEM_2026-09-05.md` Addendum 2; warning ke-5 dipin 6 Sep 2026, meta v1.4.0).
 
-**Yang normal di repo hasil ekstrak — PERSIS 4 warning (daftar normalisasi, dipin di FI skenario R7):** semuanya rujukan historis master yang dilabeli (bukan instruksi aktif); exit code tetap 0. (Format daftar sengaja tanpa backtick pada path-nya: baris ini mendokumentasikan warning, bukan menunjuk dependensi — ia sendiri tidak boleh menjadi warning.)
+**Yang normal di repo hasil ekstrak — PERSIS 5 warning (daftar normalisasi, dipin di FI skenario R7):** semuanya rujukan historis master yang dilabeli (bukan instruksi aktif); exit code tetap 0. (Format daftar sengaja tanpa backtick pada path-nya: baris ini mendokumentasikan warning, bukan menunjuk dependensi — ia sendiri tidak boleh menjadi warning.)
 
 1. lokasi 00_CARA_KERJA_META.md:111 → target sistem-konten-kreator/_sistem/09_AUDIT_MIGRASI_GITHUB_AGENT.md — konteks "alasan detail" historis
 2. lokasi 00_CARA_KERJA_META.md:111 → target sistem-konten-kreator/_sistem/00_CARA_PAKAI_SISTEM.md — konteks pemakaian harian historis
 3. lokasi SYSTEM_MANIFEST.md:89 → target sistem-pilot-catatan-belajar/unit-aktif/pilot-002-behavioral/OUTPUT.md — bukti rilis di manifest ber-banner "sejarah master"
 4. lokasi SYSTEM_MANIFEST.md:93 → target _sistem/11_LOG_SESI.md — rujukan turunan di sejarah rilis master (relatif sistem presentasi)
+5. lokasi SYSTEM_MANIFEST.md (baris Log Evolusi v1.4.0) → target sistem-konten-kreator/ACCEPTANCE_TEST_LOG.md — kolom Bukti v1.4.0: implementasi prompt reviewer terbukti pada Run 7/8 (provenance, bukan instruksi aktif; dipin 6 Sep 2026, meta v1.4.0)
 
 Rujukan ke `_meta/_internal/…` tidak pernah di-warn (area histori; tidak pernah ikut template — tidak bisa menjadi dependensi operasional). **Bootstrap mandiri (F5):** tidak boleh ADA warning di `NEXT_SESSION_PROMPT.md` maupun `PANDUAN_PENGGUNA.md` — jika muncul, artinya instruksi aktif menunjuk file yang tidak ikut. Target "0 warning" tetap hanya berlaku di master blueprint.
 
@@ -78,7 +79,7 @@ Output:
 
 ## Status Rilis
 
-- Template bersih: built dan verified 2026-09-04 via `tools/build_template.py`; **rebuilt & re-verified 2026-09-05** (pasca review PR #11: transformasi self-containment + daftar 4 warning dipin)
+- Template bersih: built dan verified 2026-09-04 via `tools/build_template.py`; **rebuilt & re-verified 2026-09-05** (pasca review PR #11: transformasi self-containment + daftar 4 warning dipin); **re-verified 2026-09-06** (meta v1.4.0: warning normalisasi ke-5 dipin — rujukan provenance Log Evolusi v1.4.0 ke acceptance log KK)
 - Backup: created dan verified 2026-09-04 via `tools/backup_verify.py`; **re-verified 2026-09-05** (inventaris inti statis, 30 file)
 
 Kedua artefak disimpan di `_meta/_internal/` (bukan bagian dari template bersih itu sendiri).

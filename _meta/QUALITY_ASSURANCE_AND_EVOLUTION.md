@@ -143,6 +143,8 @@ Draft → Checked → Approved → Released → Observed
 | Sedang | Output dipakai berulang atau memengaruhi satu area | Checklist lengkap, cross-check, review ringkas |
 | Mendalam | Keputusan menyebar, sulit dibalik, atau output publik/berisiko | Audit multi-lensa, uji skenario, review manusia, bukti dan rollback |
 
+Lapisan eksternal (meta v1.4.0, 6 Sep 2026): **eksternal: review oleh sesi lain sesuai `PROTOKOL_REVIEW_INDEPENDEN.md`** — wajib untuk pekerjaan level trigger L1 di protokol itu (penutupan gate/klaim permanen, bump versi aturan, perubahan struktural `_meta/`, operasi riwayat, merge yang mengubah klaim DONE/manifest); reviewer memverifikasi dari artefak dan tidak meng-merge atas namanya sendiri tanpa izin eksplisit pemilik (tidak ada auto-merge, kapan pun).
+
 Agent harus menjelaskan level yang dipakai. Pengguna dapat meminta audit lebih dalam kapan saja.
 
 ### Lensa audit (dikodifikasi 5 Sep 2026 — temuan M-08; sebelumnya "multi-lensa" disebut tapi tidak pernah didefinisikan)
