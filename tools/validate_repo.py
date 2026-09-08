@@ -93,6 +93,21 @@ for p in ROOT.rglob("*.md"):
     if text.count("```") % 2:
         errors.append(f"unpaired code fence: {p.relative_to(ROOT)}")
 
+# --- Volatile corpus counts are forbidden in permanent evidence (C5/AT-16) --
+manifest_path = ROOT / "_meta/SYSTEM_MANIFEST.md"
+if manifest_path.is_file():
+    in_evolution = False
+    corpus_terms = r"rujukan|path\s+references|dokumen|active\s+documents"
+    for lineno, line in enumerate(manifest_path.read_text(encoding="utf-8").splitlines(), 1):
+        if line.strip() == "## Log Evolusi": in_evolution = True; continue
+        if in_evolution and line.startswith("## "): break
+        if not in_evolution or not line.startswith("|"): continue
+        cells = [c.strip() for c in line.strip().strip("|").split("|")]
+        if len(cells) < 5 or cells[0].lower() in {"tanggal", "---"}: continue
+        evidence = cells[3]
+        if re.search(r"\d+\s+(?:" + corpus_terms + r")|(?:" + corpus_terms + r")\s*[:=]?\s*\d+", evidence, re.IGNORECASE):
+            errors.append(f"SYSTEM_MANIFEST Log Evolusi:{lineno}: sel Bukti mengutip angka korpus; angka ini bergerak setiap kali LOG_SESI ditulis sehingga tidak bisa menjadi bukti permanen")
+
 # --- Index-driven system coverage (inheritance contract) -------------------
 INDEX_PATH = ROOT / "_meta/INDEKS_SISTEM.md"
 index_text = INDEX_PATH.read_text(encoding="utf-8") if INDEX_PATH.is_file() else ""

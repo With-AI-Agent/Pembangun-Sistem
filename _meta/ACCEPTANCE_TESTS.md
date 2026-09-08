@@ -147,9 +147,16 @@ gh api repos/With-Ai-Agent/Pembangun-Sistem/releases --jq '.[] | {id, tag_name, 
 | L3 | Langkah 3 hijau dua-duanya | validator repo: `WARNINGS: 0` + `exit=0`; validator sistem: `HASIL: PASS` + `exit=0` |
 | L4 | Langkah 4 dan 5 bersih | `diff -r` langkah 4 **kosong** (`exit=0`). `diff -r` langkah 5 kosong, atau selisihnya HANYA berkas yang tercantum sebagai dikecualikan di `PAKET_REPO.md` — tidak boleh ada satu pun berkas yang **isinya** berbeda |
 | L5 | Langkah 6 merah | `exit` non-nol dan pemblokirnya menyebut validator sistem yang hilang. Uji ini gagal kalau langkah 6 justru hijau |
-| L6 | Angka bukti tidak basi | angka bukti (`berkas`, `subset _meta`, `absent_refs_allowed`, dan angka validator DI DALAM paket) diambil dari run pada **sha commit yang dicatat** di entri bukti, dan entri itu ditulis **setelah** semua perubahan isi selesai. Kalau isi paket bergeser setelah entri ditulis, tulis **ENTRI BARU** yang menggantikannya — entri lama dibiarkan apa adanya dan dirujuk sebagai "digantikan", tidak disunting diam-diam |
+| L6 | Angka bukti tidak basi | angka yang dihitung dari korpus dokumen dilarang dikutip dalam sel Bukti; angka stabil tetap boleh dicatat. Jika isi paket bergeser, verifikasi ulang paket dan tulis entri baru tanpa mengutip angka korpus |
 | L7 | paket tersedia bagi pemilik di luar sandbox (repo mandiri ter-push ATAU aset release dengan nama paket-<sistem>-<versi>-<sha>) | URL repo privat + commit ter-push, ATAU URL release di master privat + aset ZIP terunggah dan terverifikasi; draft tanpa aset tidak memenuhi langkah ini. Pointer: langkah 7 blok "Prosedur uji" + butir 4–7 bagian "Memindahkan paket ke luar sandbox" |
 
 **Catatan pelaksanaan:** langkah 6 dijalankan di salinan sementara. Merusak master untuk keperluan uji dilarang. Bersihkan `/tmp/uji-*` setelah selesai; hasil pack tidak pernah di-commit ke master.
 
 **Kenapa L6 ada (akar masalah B1/B2):** sebelum 8 Sep 2026, benih subset `_meta/` memindai SEMUA `.md` sistem, termasuk `ACCEPTANCE_TEST_LOG.md` (dokumen bukti). Akibatnya, menulis entri bukti ikut mengubah subset `_meta/` — angka yang baru dicatat langsung basi di sha berikutnya. Perbaikannya: benih = dokumen aktif saja (definisi tunggal di `tools/checkpoint_core.py`, dijelaskan di `_meta/PAKET_REPO_MANDIRI.md` bagian 3b). Dengan itu menulis bukti tidak mengubah isi paket, dan L6 menutup kelas regresi "bukti basi" secara terukur.
+
+
+## AT-16 — Larangan angka korpus dalam bukti permanen
+
+**Given:** Log Evolusi, manifest, atau indeks mencatat bukti numerik.
+**When:** angka itu dihitung dari korpus dokumen dan dapat berubah karena penulisan dokumen atau log sesi.
+**Then:** angka tersebut dilarang dikutip dalam sel **Bukti**, termasuk jika ditemani atau dipin ke SHA. Verdict dan angka stabil tetap boleh atau wajib dicatat. `tools/validate_repo.py` gagal bila sel kolom **Bukti** Log Evolusi memuat angka yang berdekatan dengan `rujukan`, `path references`, `dokumen`, atau `active documents`.

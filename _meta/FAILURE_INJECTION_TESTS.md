@@ -91,4 +91,11 @@ FI-01…FI-10 di atas adalah test perilaku AGENT. Skrip `tools/test_failure_inje
 
 Ketiganya diuji-mutasi saat ditulis: mematikan penghapusan paket gagal membuat P2 MERAH; menurunkan daftar kewajiban profil dari "apa yang kebetulan ada" membuat P1 MERAH; mematikan blok pemeriksaan anti pembusukan di `tools/validate_repo.py` membuat P3 MERAH (validator paket LOLOS padahal entri hantu tersisa).
 
-**Jumlah:** 36 skenario di master (12 sintetis + 4 unit nyata + 13 regresi + 7 paket repo mandiri), 12 di ekstrak template (0 unit nyata; regresi R1–R7 dan paket P1–P3 tidak dijalankan bersarang).
+**Jumlah:** 39 skenario di master (15 sintetis + 4 unit nyata + 13 regresi + 7 paket repo mandiri), 12 di ekstrak template (0 unit nyata; tiga skenario C5, regresi R1–R7, dan paket P1–P3 tidak dijalankan bersarang karena ekstrak menjalankan smoke test tanpa skenario bersarang).
+
+
+### AT-16/C5 — larangan angka korpus di sel Bukti
+
+- **C5-01:** mutasi `377 rujukan` pada sel Bukti harus MERAH.
+- **C5-02:** mutasi `377 rujukan pada 2a717dce93f098d2f61d260d1413f2207f1dbb78` tetap MERAH; pin SHA bukan pengecualian.
+- **C5-03:** mutasi `PASS 0-warning (29 wajib)` harus LOLOS karena verdict dan jumlah berkas wajib stabil.

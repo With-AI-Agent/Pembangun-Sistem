@@ -458,6 +458,21 @@ def run():
         )
         checks.append(("kutipan blok (>) tidak dihitung -> aman", core.state_is_safe(unit)))
 
+    # AT-16/C5: corpus counts are forbidden even when pinned to a SHA.
+    def c5_mutation(text):
+        with TemporaryDirectory() as d:
+            cp = Path(d) / "repo"
+            shutil.copytree(ROOT, cp, ignore=shutil.ignore_patterns(".git"))
+            mp = cp / "_meta/SYSTEM_MANIFEST.md"
+            mt = mp.read_text(encoding="utf-8")
+            old = "verdict PASS 0-warning; angka stabil tetap"
+            mp.write_text(mt.replace(old, text, 1), encoding="utf-8")
+            r = subprocess.run([sys.executable, "tools/validate_repo.py"], cwd=cp, capture_output=True)
+            return r.returncode
+    checks.append(("C5 377 rujukan ditolak", c5_mutation("377 rujukan") != 0))
+    checks.append(("C5 377 rujukan pada SHA tetap ditolak", c5_mutation("377 rujukan pada 2a717dce93f098d2f61d260d1413f2207f1dbb78") != 0))
+    checks.append(("C5 PASS 0-warning angka stabil lolos", c5_mutation("PASS 0-warning (29 wajib)") == 0))
+
     n_synth = len(checks)
 
     # Regression against REAL repo data (F3): every registered system must

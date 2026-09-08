@@ -13,7 +13,7 @@ Dokumen atau sistem **tidak boleh disebut selesai hanya karena file sudah dituli
 - [ ] Approval sesuai tingkat risiko sudah diberikan
 - [ ] Perubahan sudah di-commit
 - [ ] PR sudah diproses sesuai aturan
-- [ ] Penutupan sesi: PR dibuka → `tools/review_prompt.py --pr <N>` dijalankan dan keluarannya ditempel di chat (`PROTOKOL_REVIEW_INDEPENDEN.md` §"Sumber prompt")
+- [ ] Penutupan sesi: PR dibuka → keluaran `tools/review_prompt.py --pr <N>` harus muncul sebagai satu blok berpagar di badan pesan chat terakhir, bukan keluaran perintah yang terlipat; kalau blok itu tidak ada, langkah penutupan dianggap BELUM dikerjakan dan PR belum boleh dinilai. Pemilik dapat membuka sesi baru dari main dan membangkitkan sendiri dengan `python3 tools/review_prompt.py --pr <N>` (`PROTOKOL_REVIEW_INDEPENDEN.md` §"Sumber prompt")
 
 ## Sistem domain
 
