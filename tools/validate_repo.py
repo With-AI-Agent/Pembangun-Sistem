@@ -308,15 +308,18 @@ if errors:
         print(w)
     sys.exit(1)
 
-# Jangan cetak angka korpus/dokumen/rujukan di ringkasan: bukti PR dan log
-# harus menyebut status, bukan mengulang metrik yang mudah basi. Detail baris
-# warning tetap dicetak agar rujukan bermasalah bisa diperbaiki.
-print("VALIDATION PASSED: required files and Markdown invariants checked")
-print("COVERAGE: active documents scanned; path references checked; unresolved references are listed below")
-print("SYSTEMS CHECKED (inheritance contract): registered systems + pilot excluded by design")
+# The line below is quoted verbatim by _meta/_internal/HANDOFF_NEXT_SESSION.md
+# and by audit records on other branches. Keep the FORMAT byte-identical;
+# the count is live data and moves with the required set.
+print(f"VALIDATION PASSED: {len(required)} required files and Markdown invariants checked")
+print(
+    f"COVERAGE: {len(ref_docs)} active documents scanned, "
+    f"{ref_checked} path references checked, {len(ref_warnings)} unresolved"
+)
+print(f"SYSTEMS CHECKED (inheritance contract): {len(index_folders)} registered + pilot excluded by design")
 for w in ref_warnings:
     print(w)
 if ref_warnings:
-    print("WARNINGS: warning tier, exit code unaffected")
+    print(f"WARNINGS: {len(ref_warnings)} (warning tier, exit code unaffected)")
 else:
     print("WARNINGS: none")

@@ -68,6 +68,8 @@ CORE_TOOL_FILES = [
     "tools/test_failure_injection.py",
     "tools/backup_verify.py",
     "tools/build_template.py",
+    "tools/check_selfcontained.py",
+    "tools/review_prompt.py",
 ]
 CORE_REQUIRED = CORE_META_FILES + CORE_ROOT_FILES + CORE_TOOL_FILES
 

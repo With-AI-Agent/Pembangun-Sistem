@@ -129,12 +129,16 @@ def label_info_for(path: Path, rel: str, findings: list[Finding]) -> LabelInfo |
             )
         )
         return None
-    diff = ""
-    for line in first3[1:]:
-        dm = re.match(r"^>\s*Perbedaan\s*:\s*(.*)$", line, re.IGNORECASE)
-        if dm:
-            diff = dm.group(1).strip()
-            break
+    diff_match = re.match(r"^>\s*Perbedaan\s*:\s*(.*)$", first3[1], re.IGNORECASE)
+    if not diff_match:
+        findings.append(
+            Finding(
+                "LABEL-FORMAT",
+                f"{rel}: baris kedua label wajib berbentuk '> Perbedaan: <...>'",
+            )
+        )
+        return None
+    diff = diff_match.group(1).strip()
     return LabelInfo(
         rel=rel,
         source=m.group("src"),

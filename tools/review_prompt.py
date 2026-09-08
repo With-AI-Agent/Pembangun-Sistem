@@ -268,12 +268,27 @@ def reading_order(files: list[str]) -> list[str]:
     return base + dedup
 
 
-def open_test_window(files: list[str] | None = None) -> tuple[list[str], list[str]]:
-    """LOG_SESI OPEN yang menyebut jendela uji berjalan.
+LOG_STATUS_RE = re.compile(
+    r"^\s*(?:[-*]\s+)?(?:\*\*)?\s*"
+    r"(?:Keadaan(?:\s+Sesi)?|Status(?:\s+Sesi)?)"
+    r"\s*(?:\*\*)?\s*[:：]\s*(?:\*\*)?\s*`?(OPEN|CLOSED)\b`?",
+    re.IGNORECASE,
+)
 
-    Return: (blocking_pointers, writer_log_pointers). Log penulis PR sendiri
-    adalah berkas LOG_SESI yang disentuh PR; ia tetap dipointerkan, tetapi
-    tidak memicu penyembunyian rumusan acceptance.
+
+def latest_log_status(lines: list[str]) -> str:
+    statuses = [m.group(1).upper() for line in lines if (m := LOG_STATUS_RE.match(line))]
+    return statuses[-1] if statuses else "OPEN"
+
+
+def open_test_window(files: list[str] | None = None) -> tuple[list[str], list[str]]:
+    """LOG_SESI terbuka yang menyebut jendela uji berjalan.
+
+    Status sesi diambil dari kemunculan OPEN/CLOSED terakhir di seluruh berkas,
+    bukan hanya header. Jika tidak ada status yang bisa dibaca, fail-closed:
+    log dianggap masih OPEN. Return: (blocking_pointers, writer_log_pointers).
+    Log penulis PR sendiri tetap dipointerkan, tetapi tidak memicu
+    penyembunyian rumusan acceptance.
     """
     blocking: list[str] = []
     writer_hits: list[str] = []
@@ -288,15 +303,7 @@ def open_test_window(files: list[str] | None = None) -> tuple[list[str], list[st
             lines = log.read_text(encoding="utf-8").splitlines()
         except OSError:
             continue
-        # Keadaan dibaca dari baris berlabel, bukan dari kemunculan kata "OPEN"
-        # di mana saja: banyak log CLOSED menceritakan header yang dulu OPEN.
-        keadaan = ""
-        for line in lines[:15]:
-            m = re.match(r"\s*[-*]\s*\*\*(?:Keadaan(?:\s+Sesi)?|Status):\*\*\s*(.+)", line)
-            if m:
-                keadaan = m.group(1)
-                break
-        if not re.match(r"\s*`?OPEN`?", keadaan):
+        if latest_log_status(lines) != "OPEN":
             continue
         for idx, line in enumerate(lines, start=1):
             if pattern.search(line):
