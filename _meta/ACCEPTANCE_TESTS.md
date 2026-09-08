@@ -133,6 +133,7 @@ python3 tools/pack_repo.py <nama-folder-sistem> --check ; echo "exit=$?"
 | L4 | Langkah 4 dan 5 bersih | `diff -r` langkah 4 **kosong** (`exit=0`). `diff -r` langkah 5 kosong, atau selisihnya HANYA berkas yang tercantum sebagai dikecualikan di `PAKET_REPO.md` — tidak boleh ada satu pun berkas yang **isinya** berbeda |
 | L5 | Langkah 6 merah | `exit` non-nol dan pemblokirnya menyebut validator sistem yang hilang. Uji ini gagal kalau langkah 6 justru hijau |
 | L6 | Angka bukti tidak basi | angka bukti (`berkas`, `subset _meta`, `absent_refs_allowed`, dan angka validator DI DALAM paket) diambil dari run pada **sha commit yang dicatat** di entri bukti, dan entri itu ditulis **setelah** semua perubahan isi selesai. Kalau isi paket bergeser setelah entri ditulis, tulis **ENTRI BARU** yang menggantikannya — entri lama dibiarkan apa adanya dan dirujuk sebagai "digantikan", tidak disunting diam-diam |
+| L7 | paket tersedia bagi pemilik di luar sandbox (repo mandiri ter-push ATAU aset release dengan nama paket-<sistem>-<versi>-<sha>) | URL repo privat + commit ter-push, ATAU URL release di master privat + aset ZIP terunggah dan terverifikasi; draft tanpa aset tidak memenuhi langkah ini |
 
 **Catatan pelaksanaan:** langkah 6 dijalankan di salinan sementara. Merusak master untuk keperluan uji dilarang. Bersihkan `/tmp/uji-*` setelah selesai; hasil pack tidak pernah di-commit ke master.
 
