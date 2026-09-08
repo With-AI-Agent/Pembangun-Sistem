@@ -42,3 +42,9 @@
 - **Selesai, belum diaudit** — semua dokumen yang direncanakan sudah ditulis, tapi belum melalui audit menyeluruh
 - **Selesai, teraudit [n]x** — sudah melalui audit menyeluruh sebanyak n kali, siap dipakai
 - **Aktif dipakai** — sedang dipakai untuk kerja produksi/operasional sehari-hari (bukan lagi tahap pembangunan)
+
+
+## Catatan pemindahan repo mandiri — 2026-09-08 (bukan penutupan gate)
+
+- Sistem Presentasi: repo mandiri **BELUM tersedia di luar sandbox**, percobaan 2026-09-08 dari sha 1609cfba83798d168d171c67aaa1d9715988c14a, privat; createRepository ditolak integration, upload ZIP gagal EOF; [draft release tanpa aset](https://github.com/With-AI-Agent/Pembangun-Sistem/releases/tag/untagged-9cc6b35931837ea69df2), bukan klaim "dibuat" atau "tersedia sebagai aset release".
+- Sistem Konten Kreator: repo mandiri **BELUM tersedia di luar sandbox**, percobaan 2026-09-08 dari sha 1609cfba83798d168d171c67aaa1d9715988c14a, privat; createRepository ditolak integration, upload ZIP gagal EOF; [draft release tanpa aset](https://github.com/With-AI-Agent/Pembangun-Sistem/releases/tag/untagged-2004269a4cf25d30081b), bukan klaim "dibuat" atau "tersedia sebagai aset release".
