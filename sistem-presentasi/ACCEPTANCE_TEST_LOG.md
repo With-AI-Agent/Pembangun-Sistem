@@ -73,3 +73,64 @@ Regresi terkunci: skenario P1–P2 di `tools/test_failure_injection.py` (lihat `
 ### Batas klaim
 
 Terbukti: paket bisa dibangkitkan, berdiri sendiri, lolos kedua validator, reproduktif byte-per-byte. Tidak terbukti di sini: upload GitHub sungguhan dan perilaku agent di repo hasil upload.
+
+---
+
+## Run 2026-09-08 — AT-15 Paket repo mandiri (`sistem-presentasi`) — ENTRY DIGANTIKAN
+
+- **Tanggal:** 2026-09-08 (UTC) · **Versi sistem:** `0.4.2` · **Branch:** `arena/01a07ea8-pembangun-sistem` (dari `main` `7c6f528`) · **Commit sumber paket:** `0064fc1` (pohon kerja bersih)
+- **Menggantikan entri 2026-09-07 (sha `430e69c`)**: angka lama (86 berkas / 21 subset / 31 required / 50 dokumen / 145 rujukan) TIDAK reproduktif di HEAD — akar masalahnya, benih subset `_meta/` memindai `ACCEPTANCE_TEST_LOG.md` sehingga menulis bukti mengubah isi paket. Perbaikan meta v1.6.0 (benih = dokumen aktif, satu definisi di `tools/checkpoint_core.py`) membuat bukti tidak lagi menggeser isi paket. Entri lama dibiarkan apa adanya, tidak disunting.
+- **Skenario:** AT-15 di `_meta/ACCEPTANCE_TESTS.md` (kriteria L1–L6); protokol `_meta/PAKET_REPO_MANDIRI.md`. Paket dibangkitkan ke direktori sementara di luar repo dan TIDAK di-commit.
+- **Verdict:** **LULUS** pada `0.4.2` — menunggu **review independen L1**; tidak ada gate lain yang ikut diklaim tertutup.
+
+### Perintah dan keluaran
+
+```text
+$ python3 tools/pack_repo.py sistem-presentasi --check
+(d) DAFTAR PEMBLOKIR — 0
+  (kosong — siap di-pack)
+verifikasi kering di calon paket:
+  validate_repo.py exit=0 | WARNINGS: 0 (warning tier, exit code unaffected)
+  validate_system.py exit=0
+CHECK HIJAU
+exit=0
+
+$ python3 tools/pack_repo.py sistem-presentasi --out <dir-sementara>
+PACK sistem-presentasi -> <dir-sementara>
+  berkas: 84 | subset _meta: 19 | absent_refs_allowed: 10
+--- python3 tools/validate_repo.py (DI DALAM hasil pack) ---
+VALIDATION PASSED: 29 required files and Markdown invariants checked
+COVERAGE: 49 active documents scanned, 169 path references checked, 0 unresolved
+SYSTEMS CHECKED (inheritance contract): 1 registered + pilot excluded by design
+WARNINGS: 0 (warning tier, exit code unaffected)
+exit=0
+--- python3 _sistem/validate_system.py (DI DALAM sistem-presentasi/) ---
+deck ditemukan: ['presentasi-tesis-fikih-hiasan-wanita']
+SAKTI/struktur lengkap? YA
+temuan isi: 0
+HASIL: PASS
+exit=0
+PACK OK: <dir-sementara>
+```
+
+### Bukti pendukung
+
+| Kriteria AT-15 | Cara diuji | Hasil |
+|---|---|---|
+| L1 paket berdiri sendiri | `validate_repo.py` dari DALAM paket | PASS, 0 warning, 169 rujukan diperiksa, 0 menggantung |
+| L2 sistem sehat di dalam paket | `_sistem/validate_system.py` dari dalam folder sistem di paket | `HASIL: PASS`, 0 temuan isi, deck terdeteksi |
+| L3 isi dokumen tidak ditulis ulang | `diff -r` folder sistem di master vs di dalam paket | **kosong** (exit 0) — nol selisih, termasuk PDF, gambar, dan skrip build deck |
+| L4 deterministik | dua run ke dua direktori berbeda + `diff -r` | tidak ada selisih (exit 0) |
+| L5 fail-closed (validator sistem) | field checkpoint dihapus dari STATUS deck pada SALINAN | `temuan isi: 1` → `HASIL: FAIL`, exit 1 |
+| L5 fail-closed (paket) | perusakan pada SALINAN paket (lihat `_meta/FAILURE_INJECTION_TESTS.md` P1–P3) | semua exit 1 dengan alasan spesifik |
+| L6 angka bukti tidak basi | stabilitas C2 diuji: entri bukti karangan ditambahkan ke salinan kerja, paket dibangkitkan ulang | **daftar file paket identik** (84 berkas / 19 subset / 10 absent); rujukan karangan ke master-artefak TIDAK terseret, hanya tercatat di `PAKET_REPO.md` bagian "Rujukan yang tidak dijamin resolve" |
+
+Regresi terkunci: skenario P1–P3 di `tools/test_failure_injection.py` (lihat `_meta/FAILURE_INJECTION_TESTS.md`), ketiganya diuji-mutasi.
+
+### Catatan khusus kasus C3 (rujukan dokumen non-aktif)
+
+`DISKUSI_MENTAH_DISCOVERY_LEVEL_0.md` menunjuk `_meta/_internal/CABANG_MENGGANTUNG_2026-09-04.md`. Setelah benih = dokumen aktif, berkas `_meta/_internal/CABANG_MENGGANTUNG_2026-09-04.md` TIDAK lagi ikut sebagai lampiran (ia hanya dirujuk dokumen non-aktif). Dipastikan: (i) tidak ada dokumen aktif di paket yang menunjuknya; (ii) rujukan non-aktifnya tercatat di `PAKET_REPO.md`; (iii) validator di dalam paket tetap 0-warning.
+
+### Batas klaim
+
+Terbukti: paket bisa dibangkitkan, berdiri sendiri, lolos kedua validator, reproduktif byte-per-byte, dan bukti tidak lagi mengubah isi paket. Tidak terbukti di sini: upload GitHub sungguhan dan perilaku agent di repo hasil upload.
