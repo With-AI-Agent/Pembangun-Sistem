@@ -84,10 +84,12 @@ MASTER_ARTIFACT_NAME_RE = re.compile(r"^(LOG_SESI_.*|UJI_F7_CLEAN_RUN_.*)\.md$")
 PILOT = core.EXACT_PILOT
 
 # --- Pemindai rujukan (untuk closure `_meta/` saja) -------------------------
-# Cerminan sengaja dari aturan di tools/validate_repo.py. Ia dipakai HANYA
-# untuk memutuskan berkas `_meta/` mana yang ikut. Verdict resmi tetap milik
-# validator yang dijalankan di dalam hasil pack; kalau cerminan ini meleset,
-# validator itu yang menjatuhkan paketnya — melenceng diam-diam tidak mungkin.
+# Parser rujukan (REF_RE/is_path_like/refs_of) adalah cerminan dari yang ada di
+# tools/validate_repo.py — dipakai HANYA untuk memutuskan berkas `_meta/` mana
+# yang ikut. Cakupan dokumen yang DIPINDAI (benih) TIDAK lagi cerminan: ia
+# memakai SATU definisi `checkpoint_core.dokumen_aktif()` yang sama dengan
+# validator. Verdict resmi tetap milik validator yang dijalankan di dalam
+# hasil pack; kalau alat ini meleset, validator itu yang menjatuhkan paketnya.
 REF_RE = re.compile(r"`([^`\n]+)`")
 PATH_EXTENSIONS = (".md", ".py", ".zip", ".json")
 
@@ -111,17 +113,6 @@ def refs_of(path: Path):
             if is_path_like(ref):
                 out.append(ref)
     return out
-
-
-SYSTEM_DOC_GLOBS = ("{n}/*.md", "{n}/_sistem/*.md", "{n}/panduan/*.md",
-                    "{n}/_generator/*.md", "{n}/_template/*.md")
-
-
-def system_active_docs(name: str):
-    docs = []
-    for pat in SYSTEM_DOC_GLOBS:
-        docs += [p for p in ROOT.glob(pat.format(n=name)) if p.is_file()]
-    return sorted(set(docs))
 
 
 # --- Helper -----------------------------------------------------------------
@@ -179,11 +170,15 @@ def meta_subset(name: str):
     hilang     : rujukan `_meta/` yang tidak ada berkasnya di master
     """
     seed, internal, hilang = set(), set(), set()
-    # Benih = dokumen aktif sistem + berkas root yang ikut paket dan ikut
-    # dipindai validator (pegangan pengguna). Keduanya adalah dokumen aktif
-    # repo mandiri, jadi rujukan `_meta/` keduanya sama-sama mengikat.
-    seed_docs = system_active_docs(name) + [
-        ROOT / r for r in ROOT_COPY_FILES if (ROOT / r).suffix == ".md"
+    # Benih = dokumen AKTIF non-meta: dokumen sistem + pegangan pengguna root
+    # (definisi bersama di checkpoint_core.dokumen_aktif). Dokumen `_meta/`
+    # TIDAK jadi benih — subset `_meta/` justru yang sedang dihitung. Karena
+    # dokumen bukti (ACCEPTANCE_TEST_LOG.md) dan diskusi mentah (DISKUSI_MENTAH*)
+    # TIDAK aktif, menulis/mengubahnya TIDAK lagi menggeser isi paket
+    # (stabilitas yang dijanjikan bagian "dokumen aktif" di protokol).
+    seed_docs = [
+        p for p in core.dokumen_aktif(ROOT, name)
+        if not p.relative_to(ROOT).as_posix().startswith("_meta/")
     ]
     for doc in seed_docs:
         for ref in refs_of(doc):
@@ -223,6 +218,44 @@ def meta_subset(name: str):
         closure |= new
         frontier = new
     return sorted(closure), depth, sorted(internal), sorted(hilang)
+
+
+# --- Rujukan dari dokumen NON-aktif (C3 protokol) ---------------------------
+def non_active_unshipped_refs(name, shipped):
+    """Rujukan path dari dokumen NON-aktif sistem yang IKUT paket, ke berkas
+    master yang TIDAK ikut paket. Dicatat di PAKET_REPO.md supaya tidak ada
+    rujukan yang menggantung tanpa jejak.
+
+    Ini catatan keterbukaan, BUKAN kelas toleransi kedua yang longgar: dokumen
+    non-aktif memang tidak dipindai validator, jadi daftar inilah yang membuat
+    rujukannya terlihat dan bisa diaudit. Rujukan yang muncul di dokumen AKTIF
+    tetap lewat mekanisme `absent_refs_allowed` seperti biasa.
+    """
+    shipped = set(shipped)
+    active = {p.relative_to(ROOT).as_posix() for p in core.dokumen_aktif(ROOT, name)}
+    rows = []
+    for p in sorted((ROOT / name).rglob("*.md")):
+        if is_junk(p):
+            continue
+        rel = p.relative_to(ROOT).as_posix()
+        if rel not in shipped or rel in active:
+            continue
+        for ref in refs_of(p):
+            if _unshipped_master_ref(ref, rel, shipped):
+                rows.append((rel, ref))
+    return sorted(set(rows))
+
+
+def _unshipped_master_ref(ref, doc_rel, shipped):
+    """True bila `ref` menunjuk berkas master NYATA yang tidak ikut paket."""
+    first = doc_rel.split("/")[0]
+    candidates = [ref]
+    if first.startswith("sistem-"):
+        candidates.append(f"{first}/{ref}")
+    resolved = [c for c in candidates if (ROOT / c).is_file()]
+    if not resolved:
+        return False  # bukan berkas master nyata — di luar kategori catatan ini
+    return not any(c in shipped for c in resolved)
 
 
 # --- Tiga suntingan yang diizinkan ------------------------------------------
@@ -323,7 +356,7 @@ EXCLUDE_REASONS = [
 ]
 
 
-def render_paket_repo(name, versi, sha, dirty, tanggal, edits, absent, digests, meta_files, internal_files):
+def render_paket_repo(name, versi, sha, dirty, tanggal, edits, absent, non_active, digests, meta_files, internal_files):
     lines = []
     A = lines.append
     A(f"# Paket Repo Mandiri — {name}")
@@ -390,6 +423,23 @@ def render_paket_repo(name, versi, sha, dirty, tanggal, edits, absent, digests, 
             A(f"| `{item['ref']}` | {item['kategori']} | {item['alasan']} |")
     else:
         A("(kosong — tidak ada rujukan menggantung sama sekali)")
+    A("")
+    A("## Rujukan yang tidak dijamin resolve (dokumen non-aktif)")
+    A("")
+    A("Dokumen di bawah ini IKUT sebagai bagian utuh folder sistem, tapi dikategorikan "
+      "**non-aktif** (lihat protokol, bagian \"Apa yang dihitung sebagai dokumen aktif\") "
+      "sehingga tidak dipindai validator. Rujukan path-nya ke berkas master yang TIDAK "
+      "ikut repo ini dicatat di sini supaya tidak menggantung tanpa jejak — ini catatan "
+      "keterbukaan, bukan kelas toleransi kedua (rujukan dari dokumen aktif tetap lewat "
+      "`absent_refs_allowed` di atas).")
+    A("")
+    if non_active:
+        A("| Dokumen non-aktif | Rujukan |")
+        A("|---|---|")
+        for doc, ref in non_active:
+            A(f"| `{doc}` | `{ref}` |")
+    else:
+        A("(kosong — tidak ada rujukan dari dokumen non-aktif ke berkas yang tidak ikut)")
     A("")
     A("## sha256 tiap berkas")
     A("")
@@ -541,6 +591,7 @@ def produce(name, versi, out: Path, sha, dirty, tanggal, master_systems, verbose
     """Bangun paket lengkap di `out`, dua-pass. Kembalikan (info, blockers)."""
     blockers = []
     copied, meta_md, depth, meta_internal, edits = build(name, versi, out, sha, dirty, tanggal)
+    non_active = non_active_unshipped_refs(name, set(copied))
 
     # Pass 1 — profil dengan daftar putih KOSONG; validator yang memberi tahu
     # rujukan mana yang benar-benar menggantung.
@@ -573,12 +624,13 @@ def produce(name, versi, out: Path, sha, dirty, tanggal, master_systems, verbose
                if rel != "PAKET_REPO.md"]
     (out / "PAKET_REPO.md").write_text(
         render_paket_repo(name, versi, sha, dirty, tanggal, edits, absent,
-                          digests, meta_md, meta_internal),
+                          non_active, digests, meta_md, meta_internal),
         encoding="utf-8")
 
     info = {
         "copied": copied, "meta_md": meta_md, "depth": depth,
         "meta_internal": meta_internal, "edits": edits, "absent": absent,
+        "non_active": non_active,
         "files": all_pack_files(out),
     }
     return info, blockers

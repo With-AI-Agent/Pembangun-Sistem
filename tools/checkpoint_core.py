@@ -355,3 +355,78 @@ def profile_absent_refs(profile):
                 f"{PROFILE_REL}: entri absent_refs_allowed tidak sah: {item!r} "
                 "(harus string path atau objek dengan kunci 'ref')")
     return out
+
+
+# --- Dokumen aktif — SATU definisi cakupan pemindaian (8 Sep 2026) ----------
+# SEBELUMNYA dua alat membawa salinan daftar glob sendiri yang meleset satu
+# sama lain: tools/pack_repo.py memakai ACCEPTANCE_TEST_LOG.md (bukti run)
+# sebagai benih subset `_meta/`, padahal tools/validate_repo.py
+# mengecualikannya dari pemindaian rujukan. Akibat strukturalnya: menulis
+# bukti mengubah isi paket, sehingga bukti yang baru saja ditulis langsung
+# basi (angka 86/21/31/50/145 tidak bisa direproduksi di HEAD final). Definisi
+# tunggal di bawah menghapus drift itu: validator DAN packager memakai fungsi
+# `dokumen_aktif()` yang sama. Penjelasan normatif + alasan tiap pengecualian
+# ada di `_meta/PAKET_REPO_MANDIRI.md` bagian "Apa yang dihitung sebagai
+# dokumen aktif".
+#
+# `{name}` pada glob diganti nama folder sistem saat `dokumen_aktif()` dipanggil
+# dengan argumen `sistem`.
+
+ACTIVE_DOC_GLOBS = [
+    # Dokumen master — berlaku di semua repo (master blueprint, ekstrak
+    # template, repo paket mandiri).
+    "_meta/*.md",
+    "PANDUAN_PENGGUNA.md",
+    "PROMPT_ENTRI_UNIVERSAL.md",
+    # Dokumen aktif satu sistem.
+    "{name}/*.md",
+    "{name}/_sistem/*.md",
+    "{name}/panduan/*.md",
+    "{name}/_generator/*.md",
+    "{name}/_template/*.md",
+]
+
+# Direktori yang TIDAK pernah dihitung dokumen aktif:
+ACTIVE_DOC_EXCLUDE_DIRS = (
+    "_internal",      # audit & handoff historis = referensi, bukan instruksi aktif
+    "deck-aktif",     # state kerja per unit (diperiksa aturan C-01 + alat sistem)
+    "unit-aktif",     # idem
+    "_produksi-aktif",  # idem
+)
+
+# Nama berkas yang TIDAK pernah dihitung dokumen aktif:
+ACTIVE_DOC_EXCLUDE_NAMES = (
+    "00_RENCANA_KERANGKA.md",  # rencana kerangka = sejarah (penomoran final terdokumentasi di dalamnya)
+    "ACCEPTANCE_TEST_LOG.md",  # catatan run uji (bukti) — menulis bukti tidak boleh mengubah isi paket
+    "DISKUSI_MENTAH",          # diskusi mentah discovery, bukan aturan aktif
+)
+
+
+def dokumen_aktif(root, sistem):
+    """Dokumen aktif untuk cakupan `sistem`, terurut deterministik.
+
+    sistem=None → hanya dokumen master (`_meta/*.md` + pegangan pengguna root).
+    sistem=nama → dokumen master + dokumen aktif sistem `nama`.
+
+    Dipakai oleh tools/validate_repo.py (pemindaian rujukan path) DAN
+    tools/pack_repo.py (benih subset `_meta/`). Alat lain TIDAK boleh membawa
+    salinan daftar glob sendiri — kalau cakupan berubah, ubah di sini saja.
+    """
+    root = Path(root)
+    patterns = [
+        g.format(name=sistem) if "{name}" in g else g
+        for g in ACTIVE_DOC_GLOBS
+        if sistem is not None or "{name}" not in g
+    ]
+    docs = []
+    for pattern in patterns:
+        docs.extend(p for p in root.glob(pattern) if p.is_file())
+    kept = []
+    for p in docs:
+        parts = p.relative_to(root).parts
+        if any(part in ACTIVE_DOC_EXCLUDE_DIRS for part in parts):
+            continue
+        if any(x in p.name for x in ACTIVE_DOC_EXCLUDE_NAMES):
+            continue
+        kept.append(p)
+    return sorted(set(kept))

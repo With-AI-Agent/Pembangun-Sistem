@@ -22,7 +22,7 @@ Sebuah folder hasil pack disebut **siap di-upload** hanya bila keempat syarat be
 |---|---|---|
 | i | `tools/validate_repo.py` **PASS dengan 0 warning** | jalankan dari root hasil pack; baris `WARNINGS: 0` dan exit code 0 |
 | ii | Validator sistem PASS | jalankan `validate_system.py` milik sistem itu (ada di `_sistem/` sistem) dari root folder sistem; exit code 0 |
-| iii | **Tidak ada rujukan menggantung** | setiap rujukan ber-backtick berbentuk path di dokumen aktif resolve, KECUALI yang terdaftar eksplisit di `absent_refs_allowed` (bagian 5) |
+| iii | **Tidak ada rujukan menggantung** (pada dokumen aktif) | setiap rujukan ber-backtick berbentuk path **di dokumen aktif** (definisi tunggal: bagian 3b) resolve, KECUALI yang terdaftar eksplisit di `absent_refs_allowed` (bagian 5). Rujukan dari dokumen **non-aktif** tidak menggugurkan syarat ini — ia dicatat terpisah di `PAKET_REPO.md` (bagian 5) |
 | iv | `PAKET_REPO.md` menyebut **sha commit sumber** dan **sha256 tiap file** | baca berkas itu; hitung ulang sha256 kalau ragu |
 
 Keempatnya dijalankan otomatis oleh alat. Syarat i–ii dijalankan **setelah** paket ditulis; kalau salah satu merah, paket **dihapus** dan perintah keluar dengan exit code non-nol (bagian 7).
@@ -62,7 +62,9 @@ Folder sistem ikut **utuh**, termasuk fixture, folder produksi aktif, folder sis
 
 Yang ikut BUKAN inventaris inti penuh, melainkan **transitive closure dari rujukan nyata**:
 
-1. **Tingkat 0 (benih).** Pindai seluruh dokumen aktif sistem — berkas `.md` di root sistem, di folder sistem internal, folder panduan, folder generator, folder template — **dan** berkas pegangan pengguna di root yang ikut paket (`PANDUAN_PENGGUNA.md`, `PROMPT_ENTRI_UNIVERSAL.md`). Keduanya sama-sama dokumen aktif repo mandiri dan sama-sama dipindai validator, jadi rujukan `_meta/` keduanya sama-sama mengikat. Ambil setiap rujukan ber-backtick berbentuk path yang menunjuk `_meta/...`.
+1. **Tingkat 0 (benih).** Pindai **dokumen aktif** sistem + pegangan pengguna root — persis himpunan yang dikembalikan fungsi `dokumen_aktif()` di `tools/checkpoint_core.py` (definisi tunggal, bagian 3b), **dikurangi** berkas `_meta/` itu sendiri (subset `_meta/` justru yang sedang dihitung). Ambil setiap rujukan ber-backtick berbentuk path yang menunjuk `_meta/...`.
+
+   **Kenapa benih memakai definisi dokumen aktif, bukan "semua `.md` sistem":** dokumen bukti run (`ACCEPTANCE_TEST_LOG.md`) dan diskusi mentah (`DISKUSI_MENTAH*`) bukan dokumen aktif. Sebelum 8 Sep 2026 benih memindai semua `.md` sehingga **menulis bukti run ikut mengubah isi paket** — angka yang baru dicatat langsung basi. Dengan benih = dokumen aktif, menulis bukti tidak lagi menggeser subset `_meta/`. Jangan kembalikan benih ke "semua dokumen"; kalau cakupan dokumen aktif berubah, ubah definisinya (bagian 3b) — bukan menambah daftar di alat.
 2. **Perluasan.** Untuk tiap berkas `_meta/*.md` yang sudah masuk, pindai rujukannya dan tambahkan berkas `_meta/*.md` baru yang ditemukan. **Ulangi sampai fixpoint** (tidak ada tambahan baru).
 3. **Wajib.** `_meta/INDEKS_SISTEM.md` selalu ikut — `tools/validate_repo.py` membacanya sebagai sumber daftar sistem; tanpa itu validator di repo baru tidak punya objek.
 4. **Rekursi tidak berlaku untuk `_meta/_internal/`** (bagian 4).
@@ -73,11 +75,31 @@ Yang ikut BUKAN inventaris inti penuh, melainkan **transitive closure dari rujuk
 
 ---
 
+## 3b. Apa yang dihitung sebagai dokumen aktif
+
+Satu definisi, satu sumber kebenaran, dipakai oleh **validator** (`tools/validate_repo.py`, untuk memindai rujukan path) **dan** **packager** (`tools/pack_repo.py`, untuk benih subset `_meta/`): fungsi `dokumen_aktif(root, sistem)` di `tools/checkpoint_core.py`, bersama tiga konstanta di berkas yang sama — `ACTIVE_DOC_GLOBS`, `ACTIVE_DOC_EXCLUDE_DIRS`, `ACTIVE_DOC_EXCLUDE_NAMES`. Alat lain TIDAK boleh membawa salinan daftar glob sendiri; kalau cakupan berubah, ubah di `tools/checkpoint_core.py` saja.
+
+**Termasuk** (globs): `_meta/*.md` dan pegangan pengguna root (`PANDUAN_PENGGUNA.md`, `PROMPT_ENTRI_UNIVERSAL.md`) untuk semua repo; plus untuk sistem `{name}`: `{name}/*.md`, `{name}/_sistem/*.md`, `{name}/panduan/*.md`, `{name}/_generator/*.md`, `{name}/_template/*.md`.
+
+**Dikecualikan** (selalu, apa pun sistemnya):
+
+| Pengecualian | Alasan |
+|---|---|
+| Direktori `_internal/` | audit & handoff historis = referensi, bukan instruksi aktif |
+| Direktori `deck-aktif/`, `unit-aktif/`, `_produksi-aktif/` | state kerja per unit — diperiksa aturan C-01 dan alat sistemnya sendiri, bukan validator path |
+| `00_RENCANA_KERANGKA.md` | rencana kerangka = sejarah (penomoran final terdokumentasi di dalam berkas) |
+| `ACCEPTANCE_TEST_LOG.md` | catatan run uji (bukti). Menulis bukti TIDAK boleh mengubah isi paket — inilah perbaikan akar masalah yang membuat angka bukti basi |
+| `DISKUSI_MENTAH*` | diskusi mentah discovery, bukan aturan aktif |
+
+Konsekuensi yang disengaja: dokumen yang dikecualikan di atas **tetap ikut** sebagai bagian utuh folder sistem (bagian 2 — folder sistem disalin byte-per-byte), tapi ia tidak dipindai validator dan tidak menjadi benih subset `_meta/`. Rujukan path-nya ke berkas master yang tidak ikut dicatat di `PAKET_REPO.md` (bagian 5) supaya tidak menggantung tanpa jejak.
+
+---
+
 ## 4. Apa yang boleh masuk `_meta/_internal/`
 
 Default: **tidak ikut sama sekali**. `_meta/_internal/` berisi audit dan handoff historis — referensi, bukan instruksi aktif.
 
-Pengecualian tunggal: **berkas `_meta/_internal/` yang dirujuk LANGSUNG oleh dokumen sistem (tingkat 0)** ikut apa adanya. Contoh nyata: laporan audit sistem yang dipakai manifest sistem sebagai *provenance* temuan yang masih terbuka. Tanpa berkas itu, tabel temuan di manifest kehilangan sumbernya dan manifest jadi mengklaim sesuatu yang tidak bisa ditelusuri.
+Pengecualian tunggal: **berkas `_meta/_internal/` yang dirujuk LANGSUNG oleh dokumen AKTIF sistem (tingkat 0)** ikut apa adanya. Contoh nyata: laporan audit sistem yang dipakai manifest sistem sebagai *provenance* temuan yang masih terbuka. Tanpa berkas itu, tabel temuan di manifest kehilangan sumbernya dan manifest jadi mengklaim sesuatu yang tidak bisa ditelusuri. Dokumen non-aktif (bagian 3b) TIDAK menarik lampiran `_meta/_internal/` — rujukannya dicatat terpisah (bagian 5).
 
 Aturan turunannya, semuanya mengikat:
 
@@ -110,6 +132,8 @@ Jalan ketiga yang dipakai protokol ini: **daftar putih eksplisit bernama `absent
 | K4 | Artefak build/arsip master | berkas yang di master pun tidak di-commit |
 
 Rujukan ber-backtick yang **diawali `sistem-`** dan menunjuk folder tingkat-atas yang tidak ada di paket adalah kasus K1 yang paling sering; ia ditoleransi **hanya** kalau tercantum di `absent_refs_allowed`.
+
+**Rujukan dari dokumen NON-aktif.** Dokumen non-aktif (bagian 3b) ikut sebagai bagian utuh folder sistem tetapi tidak dipindai validator. Kalau dokumen semacam itu menunjuk berkas master yang tidak ikut paket, rujukannya **tidak** masuk `absent_refs_allowed` (dokumennya memang tidak dipindai) dan **tidak** menggugurkan syarat iii — ia dicatat di `PAKET_REPO.md` bagian **"Rujukan yang tidak dijamin resolve (dokumen non-aktif)"**. Ini catatan keterbukaan, bukan kelas toleransi kedua: rujukan yang muncul di dokumen AKTIF tetap lewat `absent_refs_allowed` seperti biasa, dengan semua aturannya (eksplisit, dibangkitkan, tidak boleh membusuk). Jangan melemahkan pemindaian dengan menambahkan dokumen non-aktif ke cakupan validator hanya supaya rujukannya "dilihat" — jalur yang benar adalah catatan terpisah ini.
 
 ---
 
@@ -224,6 +248,7 @@ Daftar ini normatif. Setiap butir punya alasan; kalau alasannya tidak lagi berla
 | Dokumen sejarah sesi-rekaman & dokumen uji clean-run milik master | catatan peristiwa master, bukan aturan sistem |
 | Folder distribusi hasil pack sebelumnya | keluaran, bukan sumber |
 | Arsip cadangan ringkasan di master | milik master; repo baru tidak memerlukannya untuk berfungsi |
+| Zip historis `SISTEM KERJA KONTEN FEAT LMARENA & GITHUB (revisi agent 1).zip` di root master | artefak masukan awal yang **tetap di master** dan tidak ikut paket mana pun — jangan dihapus (provenance), dan tidak pernah disalin ke hasil pack |
 
 ---
 
@@ -241,3 +266,4 @@ Daftar ini normatif. Setiap butir punya alasan; kalau alasannya tidak lagi berla
 | Tanggal | Perubahan | Alasan | Approval |
 |---|---|---|---|
 | 2026-09-07 | Dokumen dibuat (v1) | Putusan pemilik: satu perintah → satu folder repo mandiri siap upload, tanpa memisah file manual dan tanpa menulis ulang isi dokumen | Putusan pemilik 7 Sep 2026 (dinyatakan FINAL, tidak dibahas ulang). Menunggu review independen L1 |
+| 2026-09-08 | v1.1: satu definisi "dokumen aktif" (bagian 3b) dipakai validator DAN packager; benih subset `_meta/` = dokumen aktif saja (bukan semua `.md`); rujukan dokumen non-aktif dicatat terpisah (bagian 5); syarat iii dipertegas "pada dokumen aktif" | Akar masalah bukti basi: benih memindai `ACCEPTANCE_TEST_LOG.md`/`DISKUSI_MENTAH*` sehingga menulis bukti mengubah isi paket. Satu definisi menghapus drift dua daftar glob | Putusan pemilik 8 Sep 2026 (perbaikan B1/B2). Menunggu review independen L1 — tidak ada gate lain yang diklaim tertutup |

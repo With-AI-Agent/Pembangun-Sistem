@@ -61,7 +61,7 @@ W-01 pegangan ✔ (`panduan/PANDUAN_PENGGUNA.md` + `PROMPT_ENTRI_UNIVERSAL.md`);
 - [x] **Paket repo mandiri LULUS** — 7 Sep 2026, versi `0.3.6`. `tools/pack_repo.py` mode pemeriksaan hijau (0 pemblokir); hasil pack lolos validator repo (0 warning) + validator sistem di DALAM hasil pack. Protokol: `_meta/PAKET_REPO_MANDIRI.md`; bukti: `ACCEPTANCE_TEST_LOG.md` bagian "Paket repo mandiri"
 - [x] Audit P0 sudah ditutup — *K-01 s/d K-05 + M-01, lihat Log Evolusi*
 - [ ] Pilot end-to-end berhasil — belum; temuan L-04 masih terbuka.
-- [ ] Acceptance test sistem ini LULUS — **belum**. AT-KK-05 / Run 7 `0.3.4` **LULUS**; Run 5 / AT-KK-05 `0.3.3` GAGAL-metode (koreksi pasca-review); Run 6 lama void; Run 8 / AT-KK-05b `0.3.4` dijadwalkan; AT-KK-01/02/03/03b/04/06/07/08 belum diuji. Status/bukti: `ACCEPTANCE_TEST_LOG.md`.
+- [ ] Acceptance test sistem ini LULUS — **belum**. AT-KK-05 / Run 7 `0.3.4` **LULUS**; Run 5 / AT-KK-05 `0.3.3` GAGAL-metode (koreksi pasca-review); Run 6 lama void; Run 8 / AT-KK-05b `0.3.4` **LULUS**; AT-KK-01/02/03/03b/04/06/07/08 belum diuji. Status/bukti: `ACCEPTANCE_TEST_LOG.md`.
 
 ## Temuan Audit yang Masih Terbuka
 
