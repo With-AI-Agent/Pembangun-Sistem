@@ -134,3 +134,49 @@ Regresi terkunci: skenario P1–P3 di `tools/test_failure_injection.py` (lihat `
 ### Batas klaim
 
 Terbukti: paket bisa dibangkitkan, berdiri sendiri, lolos kedua validator, reproduktif byte-per-byte, dan bukti tidak lagi mengubah isi paket. Tidak terbukti di sini: upload GitHub sungguhan dan perilaku agent di repo hasil upload.
+
+---
+
+## Run 2026-09-08 — AT-15 Paket repo mandiri (`sistem-presentasi`) — menggantikan entri 0064fc1
+
+- **Tanggal:** 2026-09-08 (UTC) · **Versi sistem:** `0.4.2` (isi sistem tidak berubah) · **Branch:** `arena/01a07ff1-pembangun-sistem` (PR #23) · **Commit sumber paket:** `3058ca5bf8bf50859defeaeaf7a632e42f7dcaac` (pohon kerja bersih; koreksi W2/W5 + D1)
+- **Menggantikan entri 2026-09-08 sumber `0064fc1`:** entri itu tetap utuh di atas. Tiga angka luar (84 berkas / 19 subset / 10 absent) **sama**; yang tidak lagi berlaku sebagai angka di dalam paket: 169 rujukan dan sha256 per berkas di PAKET_REPO.md untuk dokumen `_meta` yang disunting PR #23 (dan D1). Itu **diharapkan**, bukan drift daftar berkas.
+- **Skenario:** AT-15 di `_meta/ACCEPTANCE_TESTS.md`. Paket TIDAK di-commit.
+- **Verdict angka L1–L6:** tuple di bawah. **L7 BELUM terpenuhi**. Tidak ada gate yang diklaim tertutup.
+
+### Perintah dan keluaran (HEAD `3058ca5`)
+
+```text
+$ python3 tools/pack_repo.py sistem-presentasi --check
+(a) DAFTAR FILE YANG AKAN IKUT — 84 berkas
+(b) SUBSET _meta — 18 dokumen + 1 lampiran _internal
+(c) absent_refs_allowed — 10 entri
+(d) DAFTAR PEMBLOKIR — 0
+CHECK HIJAU
+exit=0
+
+$ python3 tools/pack_repo.py sistem-presentasi --zip --out <dir-sementara>
+PACK sistem-presentasi -> <dir-sementara>
+  berkas: 84 | subset _meta: 19 | absent_refs_allowed: 10
+--- python3 tools/validate_repo.py (DI DALAM hasil pack) ---
+VALIDATION PASSED: 29 required files and Markdown invariants checked
+COVERAGE: 49 active documents scanned, 172 path references checked, 0 unresolved
+SYSTEMS CHECKED (inheritance contract): 1 registered + pilot excluded by design
+WARNINGS: 0 (warning tier, exit code unaffected)
+exit=0
+--- python3 _sistem/validate_system.py (DI DALAM sistem-presentasi/) ---
+deck ditemukan: ['presentasi-tesis-fikih-hiasan-wanita']
+SAKTI/struktur lengkap? YA
+temuan isi: 0
+HASIL: PASS
+exit=0
+PACK OK
+```
+
+Tuple lengkap HEAD: **84 / 19 / 10 / 29 wajib / 49 dokumen / 172 rujukan / 0 warning / validate_system PASS**.
+
+Pembanding base `e33dc059`: 84 / 19 / 10 / 29 / 49 / **169** / 0 / PASS. Beda vs HEAD = **+3 rujukan**. Beda vs perkiraan reviewer (172) = **0**.
+
+### Batas klaim
+
+Yang dicatat: seluruh tuple L6 pada sha di atas. Yang **tidak** berlaku lagi dari entri `0064fc1`: angka 169 rujukan dan sha256 berkas meta di berita acara paket. L7 BELUM.

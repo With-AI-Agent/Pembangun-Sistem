@@ -1308,3 +1308,56 @@ Regresi terkunci: skenario P1–P3 di `tools/test_failure_injection.py` memin pe
 ### Batas klaim
 
 Yang dibuktikan: paket bisa dibangkitkan, berdiri sendiri, lolos kedua validator, reproduktif, dan bukti tidak lagi mengubah isi paket. Yang **tidak** dibuktikan di sini: pengalaman upload ke GitHub sungguhan, dan perilaku agent pada repo hasil upload — keduanya di luar jangkauan run ini.
+
+---
+
+## Run 2026-09-08 — AT-15 Paket repo mandiri (`sistem-konten-kreator`) — menggantikan entri 0064fc1
+
+- **Tanggal:** 2026-09-08 (UTC)
+- **Versi sistem:** `0.3.6` (isi sistem tidak berubah)
+- **Branch:** `arena/01a07ff1-pembangun-sistem` (PR #23)
+- **Commit sumber paket:** `3058ca5bf8bf50859defeaeaf7a632e42f7dcaac` (pohon kerja bersih; koreksi W2/W5 + D1)
+- **Menggantikan entri 2026-09-08 sumber `0064fc1`:** entri itu tetap utuh di atas. Tiga angka luar (67 berkas / 18 subset / 6 absent) **sama**; yang tidak lagi berlaku sebagai angka di dalam paket: 241 rujukan dan sha256 per berkas di PAKET_REPO.md untuk dokumen `_meta` yang disunting PR #23 (dan D1). Itu **diharapkan**, bukan drift daftar berkas — dokumen meta yang ikut paket berubah isinya, jadi jumlah rujukan dan digest berkas itu ikut berubah.
+- **Skenario:** AT-15 di `_meta/ACCEPTANCE_TESTS.md` (protokol: `_meta/PAKET_REPO_MANDIRI.md`)
+- **Metode:** `pack_repo.py --check` dan `--zip` dijalankan pada salinan bersih base `e33dc059` dan pada HEAD kerja ini. Paket TIDAK di-commit.
+- **Verdict angka L1–L6:** tuple di bawah. **L7 BELUM terpenuhi** (draft tanpa aset). Tidak ada gate yang diklaim tertutup.
+
+### Perintah dan keluaran (HEAD `3058ca5`)
+
+```text
+$ python3 tools/pack_repo.py sistem-konten-kreator --check
+(a) DAFTAR FILE YANG AKAN IKUT — 67 berkas
+(b) SUBSET _meta — 17 dokumen + 1 lampiran _internal
+(c) absent_refs_allowed — 6 entri
+(d) DAFTAR PEMBLOKIR — 0
+CHECK HIJAU
+exit=0
+
+$ python3 tools/pack_repo.py sistem-konten-kreator --zip --out <dir-sementara>
+PACK sistem-konten-kreator -> <dir-sementara>
+  berkas: 67 | subset _meta: 18 | absent_refs_allowed: 6
+--- python3 tools/validate_repo.py (DI DALAM hasil pack) ---
+VALIDATION PASSED: 28 required files and Markdown invariants checked
+COVERAGE: 38 active documents scanned, 244 path references checked, 0 unresolved
+SYSTEMS CHECKED (inheritance contract): 1 registered + pilot excluded by design
+WARNINGS: 0 (warning tier, exit code unaffected)
+exit=0
+--- python3 _sistem/validate_system.py (DI DALAM sistem-konten-kreator/) ---
+VALIDATOR SISTEM KONTEN KREATOR
+  root sistem      : sistem-konten-kreator/
+  channel          : channel-fixture-narasi-sejarah
+  arsip naskah     : 1
+  unit produksi    : fixture-narasi-sejarah-tiga-benda-di-meja-nenek
+  temuan           : 0
+HASIL: PASS
+exit=0
+PACK OK
+```
+
+Tuple lengkap HEAD: **67 / 18 / 6 / 28 wajib / 38 dokumen / 244 rujukan / 0 warning / validate_system PASS**.
+
+Pembanding base `e33dc059` (bukan klaim drift-nol): 67 / 18 / 6 / 28 / 38 / **241** / 0 / PASS. Beda vs HEAD = **+3 rujukan** di dalam paket, sebab dokumen `_meta` yang ikut disunting PR ini. Beda vs perkiraan reviewer (244) = **0**; D1 tidak menambah token rujukan path.
+
+### Batas klaim
+
+Yang dicatat: seluruh tuple L6 pada sha di atas. Yang **tidak** berlaku lagi dari entri `0064fc1`: angka 241 rujukan dan sha256 berkas meta di berita acara paket. L7 BELUM. Upload aset tidak dicoba pada run ini.
