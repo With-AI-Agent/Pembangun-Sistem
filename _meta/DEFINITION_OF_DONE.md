@@ -13,6 +13,7 @@ Dokumen atau sistem **tidak boleh disebut selesai hanya karena file sudah dituli
 - [ ] Approval sesuai tingkat risiko sudah diberikan
 - [ ] Perubahan sudah di-commit
 - [ ] PR sudah diproses sesuai aturan
+- [ ] Penutupan sesi: PR dibuka → `tools/review_prompt.py --pr <N>` dijalankan dan keluarannya ditempel di chat (`PROTOKOL_REVIEW_INDEPENDEN.md` §"Sumber prompt")
 
 ## Sistem domain
 

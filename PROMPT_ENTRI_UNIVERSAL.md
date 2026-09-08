@@ -32,3 +32,5 @@ cukup baca yang relevan dengan apa yang aku mau kerjakan.
 ## Prompt Penutup Sesi
 
 Blok penutup (update STATUS, tutup `LOG_SESI`, cek tree, update INDEKS, handoff, ringkasan, aturan merge) ada di `PANDUAN_PENGGUNA.md` §"Prompt Penutup Sesi" — pakai itu sebelum menutup sesi.
+
+**Langkah penutup yang dilakukan agent tanpa diminta:** kalau sesi membuka PR, jalankan `python3 tools/review_prompt.py --pr <NOMOR PR>` dan tempel seluruh keluarannya sebagai pesan terakhir sesi. Prompt review tidak boleh dikarang atau disunting oleh sesi yang direview; konteks tambahan untuk reviewer masuk ke body PR. Aturannya: `_meta/PROTOKOL_REVIEW_INDEPENDEN.md` §"Sumber prompt". Pemilik bisa membangkitkan prompt yang sama sendiri — `PANDUAN_PENGGUNA.md` §"Minta Review, Tanpa Perantara".
