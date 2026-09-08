@@ -62,7 +62,50 @@ Tutup sesi ini dengan benar:
 7. Kalau aku mau merge PR: pastikan semua sudah push SEBELUM merge —
    setelah merge/close, sesi ini TIDAK BISA push lagi (fakta platform);
    kerja lanjutan harus dari sesi baru yang dibuka dari main.
+8. Kalau sesi ini membuka PR: jalankan
+   `python3 tools/review_prompt.py --pr <NOMOR PR>` dan tempel SELURUH
+   keluarannya sebagai pesan terakhirmu — jangan disunting, jangan
+   dikarang sendiri. Itu prompt review independennya
+   (`_meta/PROTOKOL_REVIEW_INDEPENDEN.md` §"Sumber prompt").
 ```
+
+---
+
+## Minta Review, Tanpa Perantara
+
+Kalau sebuah PR perlu diperiksa sesi lain, kamu **tidak perlu menunggu sesi yang mengerjakannya**
+menuliskan prompt review, dan **tidak perlu menulisnya sendiri**. Dua perintah, dijalankan dari root repo:
+
+```bash
+# 1. buka PR-nya (kalau belum dibuka sesi yang mengerjakan)
+gh pr create --base main --title "JUDUL" --body "ISI"
+
+# 2. bangkitkan prompt reviewnya — nomor PR, base sha, head sha, daftar berkas
+#    diisi otomatis dari data PR di GitHub
+python3 tools/review_prompt.py --pr NOMOR_PR
+```
+
+Salin seluruh keluaran perintah ke-2 itu ke **sesi baru** — itulah prompt reviewernya, lengkap.
+
+Tiga hal yang perlu kamu tahu:
+
+- **Prompt itu tidak boleh dikarang.** Sesi yang mengerjakan PR dilarang menulis atau menyunting prompt
+  review untuk dirinya sendiri; kalau ia merasa reviewer perlu konteks tambahan, konteks itu masuk ke
+  body PR. Aturannya di `_meta/PROTOKOL_REVIEW_INDEPENDEN.md` bagian "Sumber prompt".
+- **Sesi yang membuka PR wajib menempelkan keluaran perintah ke-2 sebagai pesan terakhirnya.** Kalau
+  sesinya keburu mati, kamu jalankan sendiri perintah yang sama — hasilnya identik.
+- **Kalau alatnya gagal, tidak ada prompt yang keluar.** Ia sengaja menolak mencetak prompt dengan sha
+  kosong; pesan gagalnya menyebut apa yang harus diperbaiki (biasanya nomor PR-nya salah).
+
+Mau lihat bentuk promptnya dulu tanpa PR sungguhan (versi berisi `<NOMOR PR>` / `<BASE SHA>` /
+`<HEAD SHA>`):
+
+```bash
+python3 tools/review_prompt.py --generic
+```
+
+Isi panduan ini sengaja tidak menyalin teks promptnya: satu-satunya salinan yang tidak pernah basi adalah
+keluaran alatnya sendiri.
 
 ---
 

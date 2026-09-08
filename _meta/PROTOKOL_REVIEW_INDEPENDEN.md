@@ -26,6 +26,17 @@ Verifikasi akhir atas pekerjaan yang berdampak permanen dilakukan oleh SESI AI L
 5. Batasan: aturan 6d di atas; larangan menyentuh branch orang; larangan mengutip jawaban selama jendela terbuka.
 6. Mekanika putusan: hijau → komentar (status+pointer) lalu merge hanya jika diizinkan; merah → jangan merge apa pun, laporkan + perintah reproduksi, PR dibiarkan OPEN, keputusan ke pemilik.
 
+## Sumber prompt (disetujui pemilik 8 Sep 2026)
+
+Alasan perubahan: **mekanisme harus bisa dipakai tanpa perantara sesi.** Sebelum ini, pemilik hanya punya prompt review kalau ada sesi perantara yang mengarangnya — artinya pihak yang direview menulis instruksi bagi pengadilnya, dan matinya satu sesi berarti tidak ada prompt sama sekali.
+
+1. **Prompt review dibangkitkan alat, bukan dikarang.** Sumber resminya tools/review_prompt.py. Semua nomor PR, base sha, head sha, dan daftar berkas berasal dari data PR di GitHub + isi pohon kerja, bukan dari narasi siapa pun.
+2. **Sesi yang membuka PR WAJIB menempel keluaran alat itu sebagai pesan terakhirnya** (python3 tools/review_prompt.py --pr <N>), utuh, tanpa disunting.
+3. **Kalau sesi mati sebelum sempat**, pemilik membangkitkannya sendiri dengan perintah yang sama — tidak perlu menunggu sesi perantara, tidak perlu menulis ulang prompt.
+4. **Larangan:** sesi yang direview TIDAK boleh mengarang, menambah, memotong, atau menyunting isi prompt review untuk dirinya sendiri. Kalau ia merasa reviewer butuh konteks tambahan, konteks itu masuk ke **body PR** (objek yang diperiksa), bukan ke prompt (instruksi pengadil).
+5. Pemilik juga tidak perlu menulis ulang prompt: versi placeholder siap tempel ada di `PANDUAN_PENGGUNA.md` §"Minta Review, Tanpa Perantara", dibangkitkan python3 tools/review_prompt.py --generic.
+6. Alat itu deterministik untuk data PR yang sama, tidak menulis berkas apa pun kecuali diminta `--out`, dan gagal keras (exit non-zero) daripada mencetak prompt dengan sha kosong.
+
 ## Penulisan hasil
 - Meta: bagian baru di `_meta/ACCEPTANCE_TESTS.md` (log review per peristiwa singkat) atau `LOG_SESI` sesi reviewer; yang substantif di log acceptance sistem terkait.
 - Sistem domain: subbagian append-only di ACCEPTANCE_TEST_LOG.md-nya ("Koreksi pasca-review independen" adalah pola yang benar).

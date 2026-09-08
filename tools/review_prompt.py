@@ -1,0 +1,517 @@
+#!/usr/bin/env python3
+"""Pembangkit PROMPT REVIEW INDEPENDEN dari data PR yang nyata.
+
+Masalah yang dipecahkan (8 Sep 2026): prompt review selama ini dikarang oleh
+sesi yang membuka PR — pihak yang direview menulis instruksi bagi pengadilnya,
+dan pemilik harus menunggu sesi perantara supaya punya prompt sama sekali.
+Alat ini memutus ketergantungan itu: SEMUA angka yang dicetak (nomor PR, base
+sha, head sha, daftar berkas) berasal dari `gh`/`git`, bukan dari narasi.
+
+Sifat yang dijaga (kontrak alat):
+- DETERMINISTIK untuk data PR yang sama: tidak ada waktu-sekarang, tidak ada
+  urutan acak, tidak ada pembacaan chat. Satu-satunya sumber adalah data PR +
+  isi pohon kerja.
+- TIDAK PERNAH MENULIS FILE kecuali diminta `--out <path>`.
+- FAIL-CLOSED: PR tidak ada / tidak bisa dibaca / sha kosong => exit != 0 dan
+  TIDAK ada prompt yang dicetak. Prompt setengah jadi lebih berbahaya daripada
+  tidak ada prompt, karena reviewer akan mengira sha kosong itu sengaja.
+- 6d (jendela uji): kalau ada `LOG_SESI_*.md` berkeadaan OPEN yang menyebut
+  jendela uji/run acceptance berjalan, bagian yang biasanya mengutip rumusan
+  acceptance test diganti pointer "SHA+baris" dan alat mencetak peringatan.
+
+Pemakaian:
+    python3 tools/review_prompt.py --pr 24
+    python3 tools/review_prompt.py --generic
+    python3 tools/review_prompt.py --pr 24 --out -        # stdout (default)
+    python3 tools/review_prompt.py --pr 24 --out /tmp/p.md
+"""
+from __future__ import annotations
+
+import argparse
+import json
+import re
+import subprocess
+import sys
+from pathlib import Path
+
+ROOT = Path(__file__).resolve().parents[1]
+
+PLACEHOLDER_PR = "<NOMOR PR>"
+PLACEHOLDER_BASE = "<BASE SHA>"
+PLACEHOLDER_HEAD = "<HEAD SHA>"
+
+# Penanda "berkas ini memuat pin regresi" — dicari di isi berkas tools/*.py.
+# Daftar penanda, bukan daftar berkas: kalau pin pindah berkas, daftar ikut
+# pindah tanpa ada yang perlu menyunting alat ini.
+PIN_MARKERS = (
+    "EXPECTED_TEMPLATE_WARNINGS",
+    "CORE_REQUIRED",
+    "SYSTEM_REQUIRED_FILES",
+    "pinned as permanent regressions",
+    "pin the exact",
+    "regresi permanen",
+)
+
+# Dokumen mekanisme yang selalu pelindung, terlepas dari isi PR.
+STATIC_GUARDED_DOCS = (
+    "_meta/PROTOKOL_REVIEW_INDEPENDEN.md",
+    "_meta/TEMPLATE_RELEASE.md",
+)
+
+# Nomor dokumen aturan sistem domain yang tidak boleh berubah diam-diam.
+GUARDED_SISTEM_PREFIXES = ("00", "05", "06")
+
+# Folder yang berisi state produksi/fixture (bukan aturan, tapi bukti hidup).
+PRODUCTION_DIR_HINTS = ("_produksi-aktif/", "deck-aktif/", "unit-aktif/")
+
+# PR yang menyentuh salah satu dari ini = PR yang mengubah alat pengadil.
+# Pengadil yang diubah tidak boleh mengeksekusi perubahan atas dirinya.
+ARBITER_PATHS = (
+    "tools/test_failure_injection.py",
+    "_meta/PROTOKOL_REVIEW_INDEPENDEN.md",
+)
+
+
+class ToolError(Exception):
+    """Kegagalan yang harus terlihat sebagai exit non-zero + pesan spesifik."""
+
+
+# --------------------------------------------------------------------------
+# Sumber data
+# --------------------------------------------------------------------------
+def _run(cmd: list[str]) -> tuple[int, str, str]:
+    try:
+        proc = subprocess.run(cmd, capture_output=True, text=True)
+    except FileNotFoundError as exc:
+        raise ToolError(f"perintah tidak tersedia: {cmd[0]} ({exc})") from exc
+    return proc.returncode, proc.stdout, proc.stderr
+
+
+def fetch_pr(number: int) -> dict:
+    """Baca data PR dari GitHub. Fail-closed: sha kosong = error, bukan prompt."""
+    fields = "number,title,baseRefName,headRefName,headRefOid,files,body,isDraft"
+    code, out, err = _run(["gh", "pr", "view", str(number), "--json", fields])
+    if code != 0:
+        raise ToolError(
+            f"PR #{number} tidak bisa dibaca dari GitHub (gh pr view keluar {code}).\n"
+            f"  keluaran gh: {(err or out).strip().splitlines()[0] if (err or out).strip() else '(kosong)'}\n"
+            "  Periksa nomor PR-nya dan bahwa `gh auth status` sehat. "
+            "Alat ini sengaja TIDAK mencetak prompt dengan sha kosong."
+        )
+    try:
+        data = json.loads(out)
+    except json.JSONDecodeError as exc:
+        raise ToolError(f"jawaban `gh pr view` bukan JSON yang sah: {exc}") from exc
+
+    # `baseRefOid` tidak tersedia di semua versi gh; base sha diambil dari API
+    # REST supaya angkanya tetap berasal dari GitHub, bukan dari tebakan lokal.
+    base_sha = fetch_base_sha(number)
+    data["baseRefOid"] = base_sha
+
+    for key in ("number", "baseRefName", "headRefName", "headRefOid", "baseRefOid"):
+        if not data.get(key):
+            raise ToolError(
+                f"data PR #{number} tidak lengkap: field `{key}` kosong. "
+                "Prompt tidak dicetak (fail-closed)."
+            )
+    if not re.fullmatch(r"[0-9a-f]{40}", str(data["headRefOid"])):
+        raise ToolError(f"head sha PR #{number} bukan sha 40-heksadesimal: {data['headRefOid']!r}")
+    if not re.fullmatch(r"[0-9a-f]{40}", str(data["baseRefOid"])):
+        raise ToolError(f"base sha PR #{number} bukan sha 40-heksadesimal: {data['baseRefOid']!r}")
+    return data
+
+
+def fetch_base_sha(number: int) -> str:
+    code, out, err = _run(
+        ["gh", "api", f"repos/{{owner}}/{{repo}}/pulls/{number}", "--jq", ".base.sha"]
+    )
+    if code != 0 or not out.strip():
+        raise ToolError(
+            f"base sha PR #{number} tidak bisa dibaca (gh api keluar {code}): "
+            f"{(err or out).strip()[:200] or '(kosong)'}"
+        )
+    return out.strip()
+
+
+def detect_pr_from_branch() -> int:
+    """Deteksi PR yang head-nya branch aktif. Tidak menebak: 0 atau >1 = gagal."""
+    code, out, _ = _run(["git", "rev-parse", "--abbrev-ref", "HEAD"])
+    branch = out.strip() if code == 0 else ""
+    if not branch.startswith("arena/"):
+        raise ToolError(
+            "tidak ada --pr dan branch aktif bukan `arena/*` "
+            f"(branch: {branch or 'tidak terbaca'}).\n"
+            "  Tulis nomornya manual: python3 tools/review_prompt.py --pr <NOMOR PR>"
+        )
+    code, out, err = _run(
+        ["gh", "pr", "list", "--state", "open", "--head", branch, "--json", "number", "--limit", "10"]
+    )
+    if code != 0:
+        raise ToolError(
+            f"gagal mencari PR untuk branch `{branch}` (gh pr list keluar {code}): "
+            f"{(err or out).strip()[:200]}\n"
+            "  Tulis nomornya manual: python3 tools/review_prompt.py --pr <NOMOR PR>"
+        )
+    try:
+        rows = json.loads(out or "[]")
+    except json.JSONDecodeError as exc:
+        raise ToolError(f"jawaban `gh pr list` bukan JSON yang sah: {exc}") from exc
+    if len(rows) != 1:
+        raise ToolError(
+            f"deteksi otomatis gagal: ditemukan {len(rows)} PR terbuka dengan head `{branch}` "
+            "(dibutuhkan tepat satu). Nomor PR TIDAK ditebak.\n"
+            "  Tulis perintah lengkapnya manual:\n"
+            "      python3 tools/review_prompt.py --pr <NOMOR PR>"
+        )
+    return int(rows[0]["number"])
+
+
+# --------------------------------------------------------------------------
+# Turunan dari pohon kerja (dihitung, tidak ditulis manual)
+# --------------------------------------------------------------------------
+def sistem_folders() -> list[str]:
+    return sorted(p.name for p in ROOT.glob("sistem-*") if p.is_dir())
+
+
+def pin_bearing_tools() -> list[str]:
+    hits = []
+    for path in sorted((ROOT / "tools").glob("*.py")):
+        try:
+            text = path.read_text(encoding="utf-8")
+        except OSError:
+            continue
+        if any(marker in text for marker in PIN_MARKERS):
+            hits.append(f"tools/{path.name}")
+    return hits
+
+
+def guarded_sistem_docs() -> list[str]:
+    out = []
+    for folder in sistem_folders():
+        sysdir = ROOT / folder / "_sistem"
+        if not sysdir.is_dir():
+            continue
+        for doc in sorted(sysdir.glob("*.md")):
+            if doc.name[:2] in GUARDED_SISTEM_PREFIXES:
+                out.append(f"{folder}/_sistem/{doc.name}")
+    return out
+
+
+def production_paths_touched(files: list[str]) -> list[str]:
+    return sorted(f for f in files if any(h in f for h in PRODUCTION_DIR_HINTS))
+
+
+def guarded_inventory(files: list[str]) -> list[tuple[str, bool, str]]:
+    """(path, disentuh_PR, alasan) — daftar dihitung, penanda dari diff."""
+    touched = set(files)
+    rows: list[tuple[str, bool, str]] = []
+    for rel in pin_bearing_tools():
+        rows.append((rel, rel in touched, "memuat pin regresi"))
+    for rel in STATIC_GUARDED_DOCS:
+        if (ROOT / rel).exists():
+            rows.append((rel, rel in touched, "dokumen mekanisme pengadil/rilis"))
+    for rel in guarded_sistem_docs():
+        rows.append((rel, rel in touched, "aturan sistem domain (00/05/06)"))
+    for rel in production_paths_touched(files):
+        rows.append((rel, True, "state produksi/fixture yang tersentuh PR"))
+    seen, uniq = set(), []
+    for row in rows:
+        if row[0] in seen:
+            continue
+        seen.add(row[0])
+        uniq.append(row)
+    return uniq
+
+
+def arbiter_touched(files: list[str]) -> list[str]:
+    touched = set(files)
+    hits = [p for p in ARBITER_PATHS if p in touched]
+    hits += [p for p in pin_bearing_tools() if p in touched and p not in hits]
+    return sorted(hits)
+
+
+def reading_order(files: list[str]) -> list[str]:
+    """Urutan baca: tetap dulu, lalu dokumen yang relevan dengan isi PR."""
+    base = [
+        "`LOG_SESI_*.md` yang masih berkeadaan `OPEN` (seluruhnya, dari yang terlama)",
+        "`_meta/00_CARA_KERJA_META.md`",
+        "`_meta/PROTOKOL_REVIEW_INDEPENDEN.md` (seluruhnya)",
+    ]
+    relevan: list[str] = []
+    for rel in files:
+        if rel.startswith("_meta/") and rel.endswith(".md"):
+            relevan.append(f"`{rel}` — disentuh PR")
+        elif rel.startswith("tools/"):
+            relevan.append(f"`{rel}` — alat yang disentuh PR (baca kodenya, jangan hanya diff-nya)")
+        elif rel.endswith(".md") and "/" in rel:
+            relevan.append(f"`{rel}` — dokumen sistem yang disentuh PR")
+        elif rel.startswith("LOG_SESI_"):
+            relevan.append(f"`{rel}` — log sesi penulis PR")
+    seen, dedup = set(), []
+    for item in relevan:
+        if item in seen:
+            continue
+        seen.add(item)
+        dedup.append(item)
+    return base + dedup
+
+
+def open_test_window() -> list[str]:
+    """LOG_SESI OPEN yang menyebut jendela uji berjalan. Kembalikan pointer."""
+    hits = []
+    pattern = re.compile(
+        r"jendela uji|jendela run|run acceptance|acceptance run|"
+        r"belum dijalankan|sedang berjalan|dijadwalkan, belum",
+        re.IGNORECASE,
+    )
+    for log in sorted(ROOT.glob("LOG_SESI_*.md")):
+        try:
+            lines = log.read_text(encoding="utf-8").splitlines()
+        except OSError:
+            continue
+        # Keadaan dibaca dari baris berlabel, bukan dari kemunculan kata "OPEN"
+        # di mana saja: banyak log CLOSED menceritakan header yang dulu OPEN.
+        keadaan = ""
+        for line in lines[:15]:
+            m = re.match(r"\s*[-*]\s*\*\*Keadaan(?:\s+Sesi)?:\*\*\s*(.+)", line)
+            if m:
+                keadaan = m.group(1)
+                break
+        if not re.match(r"\s*`?OPEN`?", keadaan):
+            continue
+        for idx, line in enumerate(lines, start=1):
+            if pattern.search(line):
+                hits.append(f"{log.name}:{idx}")
+                break
+    return hits
+
+
+def head_sha_of_worktree() -> str:
+    code, out, _ = _run(["git", "rev-parse", "HEAD"])
+    return out.strip() if code == 0 else "(tidak terbaca)"
+
+
+# --------------------------------------------------------------------------
+# Render
+# --------------------------------------------------------------------------
+def render(pr: dict | None, files: list[str], generic: bool) -> tuple[str, list[str]]:
+    if generic:
+        num, base, head = PLACEHOLDER_PR, PLACEHOLDER_BASE, PLACEHOLDER_HEAD
+        title = "<JUDUL PR>"
+        base_ref, head_ref = "<BASE REF>", "<HEAD REF>"
+        draft_note = ""
+    else:
+        assert pr is not None
+        num = f"#{pr['number']}"
+        base, head = pr["baseRefOid"], pr["headRefOid"]
+        title = pr.get("title") or "(tanpa judul)"
+        base_ref, head_ref = pr["baseRefName"], pr["headRefName"]
+        draft_note = "\n> **PR ini berstatus DRAFT** — perlakukan sebagai belum diserahkan.\n" if pr.get("isDraft") else ""
+
+    guarded = guarded_inventory(files)
+    arbiter = arbiter_touched(files)
+    windows = open_test_window()
+    pr_ref = num if num.startswith("#") else num
+    merge_num = pr["number"] if pr else PLACEHOLDER_PR
+
+    L: list[str] = []
+    a = L.append
+
+    a(f"# Prompt Review Independen — PR {pr_ref}")
+    a("")
+    a(f"> Dibangkitkan `tools/review_prompt.py` dari data PR di GitHub. Semua nomor, sha, dan daftar berkas di bawah")
+    a("> berasal dari data itu + isi pohon kerja — bukan dari narasi pihak yang direview.")
+    a(draft_note.rstrip("\n") if draft_note else "")
+    a("")
+    a("## 1. Siapa kamu")
+    a("")
+    a("Kamu **sesi review independen**. Kamu tidak mengerjakan PR ini, tidak melanjutkannya, dan tidak")
+    a("memperbaikinya. Kamu memutuskan.")
+    a("")
+    a("- Mulai **tanpa konteks** dari sesi mana pun: yang kamu percaya hanya artefak (git tree, commit, log, API).")
+    a("- **Read-only** terhadap repo dan terhadap branch orang lain: jangan commit, jangan push, jangan sunting berkas repo.")
+    a("- Salinan kerja **hanya di `/tmp`** (mis. `git clone`/`git archive` ke `/tmp/review-<nomor>`); jalankan alat di sana.")
+    a("- Klaim penulis PR = **objek pemeriksaan**, bukan bukti.")
+    a("")
+    a("## 2. Urutan baca (jangan dilewati)")
+    a("")
+    for i, item in enumerate(reading_order(files), start=1):
+        a(f"{i}. {item}")
+    a("")
+    a("## 3. Objek ter-pin")
+    a("")
+    a("| Objek | Nilai |")
+    a("|---|---|")
+    a(f"| PR | {pr_ref} — {title} |")
+    a(f"| Base ref | `{base_ref}` |")
+    a(f"| Base sha | `{base}` |")
+    a(f"| Head ref | `{head_ref}` |")
+    a(f"| Head sha | `{head}` |")
+    a(f"| Berkas berubah | {len(files)} |")
+    a("")
+    a("Semua pemeriksaan dilakukan **pada dua sha itu**, bukan pada \"main terbaru\" atau pada branch yang bergerak:")
+    a("")
+    a("```bash")
+    a(f"git diff --stat {base} {head}")
+    a(f"git diff --numstat {base} {head}")
+    a("```")
+    a("")
+    a("Berkas yang di-declare berubah oleh data PR:")
+    a("")
+    if files:
+        for rel in files:
+            a(f"- `{rel}`")
+    else:
+        a("- (data PR tidak mencantumkan berkas — itu sendiri temuan; verifikasi lewat `git diff --name-only`)")
+    a("")
+    a("## 4. Cek standar (semua wajib, semua harus bisa direproduksi)")
+    a("")
+    a("1. **Kelengkapan vs isi PR** — setiap hal yang dijanjikan body PR benar-benar ada di diff; setiap hal di diff")
+    a("   punya penjelasan di body. Selisih dua arah = temuan.")
+    a("2. **Append-only** — `git diff --numstat <base> <head>` untuk berkas log/bukti (`LOG_SESI_*.md`,")
+    a("   `ACCEPTANCE_TEST_LOG.md`, dokumen bukti): kolom delesi **harus 0**. Entri lama yang diedit/dihapus/dihaluskan")
+    a("   = **BLOCKER**, bukan catatan kecil.")
+    a("3. **Klaim luar diverifikasi lewat API** — status PR/rilis/komentar/merge dicek dengan `gh api`, bukan dibaca")
+    a("   dari body PR. Kalau body menyebut angka rilis/ID/URL, panggil API-nya sendiri.")
+    a("4. **Angka direproduksi sendiri** — setiap angka yang dikutip di bukti (jumlah skenario, jumlah warning, jumlah")
+    a("   rujukan, sha) kamu hitung ulang di salinan `/tmp` pada head sha. Angka yang tidak kamu reproduksi = belum diverifikasi.")
+    a("5. **Disiplin klaim** — tidak boleh ada gerbang/gate yang dinyatakan tertutup oleh pihak yang tidak berhak")
+    a("   menutupnya. Cari kalimat berstatus (\"LULUS\", \"DITUTUP\", \"selesai\", \"terpenuhi\") dan tanyakan: siapa yang")
+    a("   menutup, dengan bukti apa, dan apakah dia berwenang.")
+    a("6. **Skala** — perubahan apa pun di luar yang dideklarasikan body PR = temuan, sekecil apa pun dan sebaik apa pun niatnya.")
+    a("7. **Tidak terverifikasi = MERAH.** Bukan \"kemungkinan besar benar\", bukan \"tampaknya wajar\".")
+    a("")
+    a("Regresi wajib dijalankan di salinan `/tmp` pada head sha:")
+    a("")
+    a("```bash")
+    a("python3 tools/validate_repo.py          # harus PASS, 0 warning")
+    a("python3 tools/test_failure_injection.py # harus PASS; jumlah skenario = _meta/FAILURE_INJECTION_TESTS.md")
+    a("```")
+    a("")
+    a("## 5. Berkas pelindung (dihitung dari pohon + diff, bukan ditulis manual)")
+    a("")
+    a("Aturan untuk **setiap** berkas di tabel ini: kalau PR menyentuhnya **tanpa declare eksplisit di body → temuan**;")
+    a("kalau yang disentuh adalah **pin** → **JANGAN merge, laporkan ke pemilik**.")
+    a("")
+    a("| Berkas pelindung | Disentuh PR ini? | Kenapa dilindungi |")
+    a("|---|---|---|")
+    for rel, touched, reason in guarded:
+        a(f"| `{rel}` | {'**YA**' if touched else 'tidak'} | {reason} |")
+    if not guarded:
+        a("| (tidak ada berkas pelindung terdeteksi di pohon ini) | — | — |")
+    a("")
+    if not generic:
+        prod = production_paths_touched(files)
+        if prod:
+            a("State produksi/fixture yang tersentuh PR ini (perlakukan sebagai bukti hidup, bukan teks bebas):")
+            for rel in prod:
+                a(f"- `{rel}`")
+            a("")
+    a("## 6. Aturan keputusan")
+    a("")
+    a("**Semua cek hijau, tanpa satu pun BLOCKER:**")
+    a("")
+    a("```bash")
+    a(f"gh pr merge {merge_num} --merge")
+    a("```")
+    a("")
+    a("lalu jalankan ulang di `main` terbaru dan **tempel keluaran persisnya** di komentar review:")
+    a("")
+    a("```bash")
+    a("python3 tools/validate_repo.py")
+    a("python3 tools/test_failure_injection.py")
+    a("```")
+    a("")
+    a("**Ada satu saja MERAH:** jangan menggabungkan apa pun. Tulis komentar terstruktur:")
+    a("")
+    a("- **temuan** (satu kalimat, tanpa hedging) → **bukti** (perintah + keluaran + sha/baris) → **perintah perbaikan**")
+    a("  (apa yang harus diubah, oleh siapa).")
+    a("- Sebut **putaran ke berapa** review ini (maksimal 2 putaran; putaran ke-2 gagal = eskalasi ke pemilik).")
+    a("- PR dibiarkan `OPEN`.")
+    a("")
+    a("**Tidak pernah, dalam keadaan apa pun:** memperbaiki sendiri versi, wording, pin, transkrip, atau isi berkas")
+    a("penulis. Reviewer yang menambal temuannya sendiri sudah berhenti jadi reviewer.")
+    a("")
+    a("## 7. Pengecualian pengadil (baca sebelum menyentuh tombol merge)")
+    a("")
+    if arbiter:
+        a("**BERLAKU untuk PR ini.** PR ini menyentuh alat pengadil:")
+        a("")
+        for rel in arbiter:
+            a(f"- `{rel}`")
+        a("")
+        a("Karena itu: **JANGAN melakukan merge apa pun**, sekalipun semua cek hijau. Tugasmu berhenti pada")
+        a("**melaporkan**. PR yang mengubah alat pengadil tidak boleh dieksekusi oleh pengadil yang diubahnya —")
+        a("penggabungan adalah keputusan pemilik langsung.")
+    else:
+        a("PR ini **tidak** menyentuh `tools/test_failure_injection.py`, berkas pemuat pin, maupun")
+        a("`_meta/PROTOKOL_REVIEW_INDEPENDEN.md`, jadi aturan merge normal di bagian 6 berlaku.")
+        a("")
+        a("Kalau ternyata pemeriksaanmu sendiri menemukan salah satu berkas itu tersentuh (data PR bisa saja basi):")
+        a("**berhenti, jangan merge, laporkan** — pengadil tidak mengeksekusi perubahan atas dirinya sendiri.")
+    a("")
+    a("## 8. Batas publikasi (6d)")
+    a("")
+    if windows:
+        a("**Jendela uji sedang terbuka.** Rumusan acceptance test / prosedur uji sengaja TIDAK dikutip di prompt ini.")
+        a("Rujuk lewat pointer, jangan salin isinya ke komentar/log/branch mana pun:")
+        a("")
+        for ptr in windows:
+            a(f"- pointer SHA+baris: `{head}` → `{ptr}`")
+    else:
+        a("Tidak terdeteksi `LOG_SESI` berkeadaan `OPEN` yang menyebut jendela uji berjalan. Aturan 6d tetap berlaku:")
+        a("kalau kamu menemukan jendela terbuka saat membaca, ganti kutipan rumusan jawaban/kriteria dengan pointer")
+        a("SHA+baris di semua artefak yang kamu publikasikan.")
+    a("")
+    if generic:
+        a("---")
+        a("")
+        a(f"jalankan: `python3 tools/review_prompt.py --pr {PLACEHOLDER_PR}` untuk mengisi otomatis")
+        a("")
+    return "\n".join(line for line in L if line is not None), windows
+
+
+# --------------------------------------------------------------------------
+def main(argv: list[str] | None = None) -> int:
+    ap = argparse.ArgumentParser(
+        prog="review_prompt.py",
+        description="Bangkitkan prompt review independen dari data PR yang nyata.",
+    )
+    ap.add_argument("--pr", type=int, default=None, help="nomor PR")
+    ap.add_argument("--generic", action="store_true", help="cetak versi placeholder (tanpa memanggil GitHub)")
+    ap.add_argument("--out", default="-", help="'-' (default, stdout) atau path berkas")
+    args = ap.parse_args(argv)
+
+    try:
+        if args.generic:
+            if args.pr is not None:
+                raise ToolError("--generic dan --pr tidak bisa dipakai bersamaan.")
+            text, windows = render(None, [], generic=True)
+        else:
+            number = args.pr if args.pr is not None else detect_pr_from_branch()
+            if number <= 0:
+                raise ToolError(f"nomor PR tidak masuk akal: {number}")
+            data = fetch_pr(number)
+            files = [f["path"] for f in (data.get("files") or [])]
+            text, windows = render(data, files, generic=False)
+    except ToolError as exc:
+        print(f"review_prompt: GAGAL — {exc}", file=sys.stderr)
+        return 2
+
+    if args.out == "-":
+        print(text)
+    else:
+        Path(args.out).write_text(text + "\n", encoding="utf-8")
+        print(f"ditulis: {args.out}", file=sys.stderr)
+
+    if windows:
+        print(
+            "PERINGATAN: jendela uji terbuka → rumusan hasil disembunyikan "
+            f"({len(windows)} pointer SHA+baris dipakai sebagai gantinya)",
+            file=sys.stderr,
+        )
+    return 0
+
+
+if __name__ == "__main__":
+    sys.exit(main())
