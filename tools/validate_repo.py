@@ -26,22 +26,17 @@ independent review of PR #11 (findings F1–F16):
 - Review F13/F14: path-reference resolution is scoped per document (a doc
   inside a system resolves within its own system + _meta + root; master-level
   docs stay cross-system by design), and URIs are not repository paths.
-- 7 Sep 2026 (_meta/PAKET_REPO_MANDIRI.md), two additions and nothing else:
-  (i) every REGISTERED system must ship its own self-contained validator
-      (checkpoint_core.SYSTEM_REQUIRED_FILES) — a static obligation list in
-      the same style as CORE_REQUIRED; absence is an error, downgraded to a
-      warning only by the SAME `Tahap: kerangka` lifecycle that already
-      relaxes W-01..W-03 (a skeleton system has nothing to validate yet).
-  (ii) STANDALONE MODE — when `_meta/PAKET_REPO.json` exists, the obligation
-      list comes from that profile and an unresolved backticked reference is
-      an ERROR unless it is listed in the profile's `absent_refs_allowed`;
-      a listed entry that no longer matches a real unresolved reference is
-      ALSO an error (whitelist rot). The profile is data inside the pack —
-      auditable — never a branch of leniency in this file. With no profile
-      present (the master blueprint) behaviour is unchanged.
-- The validator is designed to run in THREE repos with the same source file:
-  master blueprint, clean-template extract (no systems registered -> system
-  loops must pass trivially), and a usage repo. Keep it path-relative.
+- 7 Sep 2026 (_meta/PAKET_REPO_MANDIRI.md), retained obligation:
+  every REGISTERED system must ship its own self-contained validator
+  (checkpoint_core.SYSTEM_REQUIRED_FILES) — a static obligation list in
+  the same style as CORE_REQUIRED; absence is an error, downgraded to a
+  warning only by the SAME `Tahap: kerangka` lifecycle that already
+  relaxes W-01..W-03 (a skeleton system has nothing to validate yet).
+- 8 Sep 2026: standalone-pack mode was retired by owner decision. This
+  validator no longer reads repo profiles, absent-reference whitelists, or
+  generated package metadata; it validates the master blueprint and clean
+  template extracts only. Folder deliverability is checked by
+  tools/check_selfcontained.py.
 """
 from pathlib import Path
 import re
@@ -54,31 +49,12 @@ ROOT = Path(__file__).resolve().parents[1]
 errors = []
 stage_warnings = []  # kerangka-stage relaxations (F9) — warning tier
 
-# --- Repo profile (master: None -> perilaku lama, tanpa satu pun perubahan) --
-try:
-    PROFILE = core.load_profile(ROOT)
-except core.ProfileError as exc:
-    PROFILE = None
-    errors.append(f"profil repo tidak sah: {exc}")
-
-ABSENT_ALLOWED = {}
-if PROFILE is not None:
-    try:
-        ABSENT_ALLOWED = core.profile_absent_refs(PROFILE)
-    except core.ProfileError as exc:
-        errors.append(f"profil repo tidak sah: {exc}")
-
 # --- Required files ---------------------------------------------------------
 _derived = (
     {f"_meta/{p.name}" for p in (ROOT / "_meta").glob("*.md")}
     | {f"tools/{p.name}" for p in (ROOT / "tools").glob("*.py")}
 )
-if PROFILE is None:
-    required = sorted(set(core.CORE_REQUIRED) | _derived | set(core.CORE_ROOT_FILES))
-else:
-    # Kewajiban diambil dari profil. Setiap entri yang dideklarasikan HARUS
-    # ADA — profil mempersempit DAFTAR kewajiban, bukan penegakannya.
-    required = sorted(set(core.profile_required(PROFILE)) | _derived)
+required = sorted(set(core.CORE_REQUIRED) | _derived | set(core.CORE_ROOT_FILES))
 
 for rel in required:
     if not (ROOT / rel).is_file():
@@ -168,16 +144,14 @@ for name in index_folders:
     if "W-03" not in ovr:
         if not core.unit_status_files(sys_dir):
             relaxed(f"{name}: no unit STATUS.md found — registered system must have at least one unit (W-03)")
-    # Kontrak paket repo mandiri (7 Sep 2026): sistem terdaftar wajib punya
-    # validator sendiri yang self-contained. Tanpa itu sistem tidak bisa
-    # dikeluarkan jadi repo mandiri yang tervalidasi — dan karena itu belum
-    # benar-benar self-contained. Daftar kewajibannya statis (gaya
+    # Kewajiban folder sistem: setiap sistem terdaftar wajib punya validator
+    # sendiri yang self-contained. Daftar kewajibannya statis (gaya
     # CORE_REQUIRED), bukan hasil penemuan. Sistem `Tahap: kerangka` belum
     # punya isi untuk divalidasi, jadi ia ikut pelonggaran lifecycle yang
     # sama dengan W-01..W-03 — bukan pelonggaran baru.
     for rel in core.SYSTEM_REQUIRED_FILES:
         if not (sys_dir / rel).is_file():
-            relaxed(f"{name}: missing {rel} — validator sistem wajib (kontrak paket repo mandiri)")
+            relaxed(f"{name}: missing {rel} — validator sistem wajib")
 
 # --- Deterministic checkpoint field check (C-01, generalized per M-03) -----
 # Every unit STATUS.md under any sistem-*/ dir (any layout — enumeration,
@@ -305,7 +279,6 @@ def scan_references():
     docs = active_documents()
     checked = 0
     warnings = []
-    absent_hits = set()
     for path in docs:
         rel = path.relative_to(ROOT).as_posix()
         for lineno, line in enumerate(
@@ -318,39 +291,15 @@ def scan_references():
                 checked += 1
                 if resolves(ref, rel):
                     continue
-                if PROFILE is None:
-                    warnings.append(
-                        f"WARNING reference: {rel}:{lineno}: "
-                        f"unresolved path reference `{ref}`"
-                    )
-                    continue
-                # MODE MANDIRI: menggantung = error, kecuali tercantum di
-                # absent_refs_allowed profil. Format baris ini sengaja
-                # bisa dibaca mesin — tools/pack_repo.py memakainya untuk
-                # menyusun daftar putih dari penegaknya sendiri, bukan dari
-                # tebakan paralel.
-                if ref in ABSENT_ALLOWED:
-                    absent_hits.add(ref)
-                    continue
-                errors.append(
-                    f"MANDIRI unresolved reference: {rel}:{lineno}: `{ref}` "
-                    "(tidak terdaftar di absent_refs_allowed)"
+                warnings.append(
+                    f"WARNING reference: {rel}:{lineno}: "
+                    f"unresolved path reference `{ref}`"
                 )
-    return docs, checked, warnings, absent_hits
+    return docs, checked, warnings
 
 
-ref_docs, ref_checked, ref_warnings, ref_absent_hits = scan_references()
+ref_docs, ref_checked, ref_warnings = scan_references()
 ref_warnings += stage_warnings
-
-# Anti pembusukan daftar putih: entri yang tidak lagi cocok dengan rujukan
-# nyata (dokumennya berubah, atau berkasnya sekarang ada) adalah error —
-# bukan sisa yang dimaafkan.
-for ref in sorted(set(ABSENT_ALLOWED) - ref_absent_hits):
-    errors.append(
-        f"absent_refs_allowed entri basi: `{ref}` tidak lagi cocok dengan "
-        "rujukan menggantung mana pun di repo ini — hapus entrinya atau "
-        "bangkitkan ulang paketnya"
-    )
 
 if errors:
     print("VALIDATION FAILED")
@@ -359,15 +308,15 @@ if errors:
         print(w)
     sys.exit(1)
 
-# The line below is quoted verbatim by _meta/_internal/HANDOFF_NEXT_SESSION.md
-# and by audit records on other branches. Keep the FORMAT byte-identical;
-# the count is live data and moves with the required set.
-print(f"VALIDATION PASSED: {len(required)} required files and Markdown invariants checked")
-print(
-    f"COVERAGE: {len(ref_docs)} active documents scanned, "
-    f"{ref_checked} path references checked, {len(ref_warnings)} unresolved"
-)
-print(f"SYSTEMS CHECKED (inheritance contract): {len(index_folders)} registered + pilot excluded by design")
+# Jangan cetak angka korpus/dokumen/rujukan di ringkasan: bukti PR dan log
+# harus menyebut status, bukan mengulang metrik yang mudah basi. Detail baris
+# warning tetap dicetak agar rujukan bermasalah bisa diperbaiki.
+print("VALIDATION PASSED: required files and Markdown invariants checked")
+print("COVERAGE: active documents scanned; path references checked; unresolved references are listed below")
+print("SYSTEMS CHECKED (inheritance contract): registered systems + pilot excluded by design")
 for w in ref_warnings:
     print(w)
-print(f"WARNINGS: {len(ref_warnings)} (warning tier, exit code unaffected)")
+if ref_warnings:
+    print("WARNINGS: warning tier, exit code unaffected")
+else:
+    print("WARNINGS: none")

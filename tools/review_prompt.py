@@ -40,21 +40,27 @@ PLACEHOLDER_PR = "<NOMOR PR>"
 PLACEHOLDER_BASE = "<BASE SHA>"
 PLACEHOLDER_HEAD = "<HEAD SHA>"
 
-# Penanda "berkas ini memuat pin regresi" — dicari di isi berkas tools/*.py.
-# Daftar penanda, bukan daftar berkas: kalau pin pindah berkas, daftar ikut
-# pindah tanpa ada yang perlu menyunting alat ini.
-PIN_MARKERS = (
-    "EXPECTED_TEMPLATE_WARNINGS",
-    "CORE_REQUIRED",
-    "SYSTEM_REQUIRED_FILES",
-    "pinned as permanent regressions",
-    "pin the exact",
-    "regresi permanen",
+# Pin regresi hanya dihitung bila sebuah tools/*.py benar-benar MENDEFINISIKAN
+# konstanta yang dipin. Mencari nama konstanta sebagai substring membuat alat
+# ini sendiri terlihat seolah-olah memuat pin hanya karena daftar marker ditulis
+# di sumbernya.
+PINNED_CONSTANTS = ("EXPECTED_TEMPLATE_WARNINGS", "CORE_REQUIRED", "SYSTEM_REQUIRED_FILES")
+PIN_DEFINITION_RE = re.compile(
+    r"^(?:[A-Z_]+\s*=\s*)?(?:" + "|".join(PINNED_CONSTANTS) + r")\s*=",
+    re.MULTILINE,
 )
+
+# PR yang menyentuh salah satu dari ini = PR yang mengubah alat pengadil.
+# Pengadil yang diubah tidak boleh mengeksekusi perubahan atas dirinya.
+ARBITER_PATH_REASONS = {
+    "tools/test_failure_injection.py": "alat injeksi kegagalan dan pin regresi",
+    "_meta/PROTOKOL_REVIEW_INDEPENDEN.md": "protokol review independen",
+    "tools/review_prompt.py": "pembangkit prompt pengadil",
+}
+ARBITER_PATHS = tuple(ARBITER_PATH_REASONS)
 
 # Dokumen mekanisme yang selalu pelindung, terlepas dari isi PR.
 STATIC_GUARDED_DOCS = (
-    "_meta/PROTOKOL_REVIEW_INDEPENDEN.md",
     "_meta/TEMPLATE_RELEASE.md",
 )
 
@@ -64,12 +70,6 @@ GUARDED_SISTEM_PREFIXES = ("00", "05", "06")
 # Folder yang berisi state produksi/fixture (bukan aturan, tapi bukti hidup).
 PRODUCTION_DIR_HINTS = ("_produksi-aktif/", "deck-aktif/", "unit-aktif/")
 
-# PR yang menyentuh salah satu dari ini = PR yang mengubah alat pengadil.
-# Pengadil yang diubah tidak boleh mengeksekusi perubahan atas dirinya.
-ARBITER_PATHS = (
-    "tools/test_failure_injection.py",
-    "_meta/PROTOKOL_REVIEW_INDEPENDEN.md",
-)
 
 
 class ToolError(Exception):
@@ -180,7 +180,7 @@ def pin_bearing_tools() -> list[str]:
             text = path.read_text(encoding="utf-8")
         except OSError:
             continue
-        if any(marker in text for marker in PIN_MARKERS):
+        if PIN_DEFINITION_RE.search(text):
             hits.append(f"tools/{path.name}")
     return hits
 
@@ -207,9 +207,12 @@ def guarded_inventory(files: list[str]) -> list[tuple[str, bool, str]]:
     rows: list[tuple[str, bool, str]] = []
     for rel in pin_bearing_tools():
         rows.append((rel, rel in touched, "memuat pin regresi"))
+    for rel, reason in ARBITER_PATH_REASONS.items():
+        if (ROOT / rel).exists():
+            rows.append((rel, rel in touched, reason))
     for rel in STATIC_GUARDED_DOCS:
         if (ROOT / rel).exists():
-            rows.append((rel, rel in touched, "dokumen mekanisme pengadil/rilis"))
+            rows.append((rel, rel in touched, "dokumen mekanisme rilis"))
     for rel in guarded_sistem_docs():
         rows.append((rel, rel in touched, "aturan sistem domain (00/05/06)"))
     for rel in production_paths_touched(files):
@@ -231,34 +234,46 @@ def arbiter_touched(files: list[str]) -> list[str]:
 
 
 def reading_order(files: list[str]) -> list[str]:
-    """Urutan baca: tetap dulu, lalu dokumen yang relevan dengan isi PR."""
+    """Urutan baca: tetap dulu, lalu setiap berkas PR yang perlu dibaca, tanpa kembar."""
     base = [
         "`LOG_SESI_*.md` yang masih berkeadaan `OPEN` (seluruhnya, dari yang terlama)",
         "`_meta/00_CARA_KERJA_META.md`",
         "`_meta/PROTOKOL_REVIEW_INDEPENDEN.md` (seluruhnya)",
     ]
-    relevan: list[str] = []
+    base_paths = {"_meta/00_CARA_KERJA_META.md", "_meta/PROTOKOL_REVIEW_INDEPENDEN.md"}
+    relevan: list[tuple[str, str]] = []
     for rel in files:
-        if rel.startswith("_meta/") and rel.endswith(".md"):
-            relevan.append(f"`{rel}` — disentuh PR")
-        elif rel.startswith("tools/"):
-            relevan.append(f"`{rel}` — alat yang disentuh PR (baca kodenya, jangan hanya diff-nya)")
-        elif rel.endswith(".md") and "/" in rel:
-            relevan.append(f"`{rel}` — dokumen sistem yang disentuh PR")
-        elif rel.startswith("LOG_SESI_"):
-            relevan.append(f"`{rel}` — log sesi penulis PR")
-    seen, dedup = set(), []
-    for item in relevan:
-        if item in seen:
+        if rel in base_paths:
             continue
-        seen.add(item)
+        if rel.startswith("LOG_SESI_") and rel.endswith(".md"):
+            relevan.append((rel, f"`{rel}` — log sesi penulis PR"))
+        elif rel.startswith("_meta/") and rel.endswith(".md"):
+            relevan.append((rel, f"`{rel}` — disentuh PR"))
+        elif rel.startswith("tools/"):
+            relevan.append((rel, f"`{rel}` — alat yang disentuh PR (baca kodenya, jangan hanya diff-nya)"))
+        elif rel.endswith(".md") and "/" in rel:
+            relevan.append((rel, f"`{rel}` — dokumen sistem yang disentuh PR"))
+        elif rel.endswith(".md"):
+            relevan.append((rel, f"`{rel}` — dokumen root yang disentuh PR"))
+    seen, dedup = set(), []
+    for rel, item in relevan:
+        if rel in seen:
+            continue
+        seen.add(rel)
         dedup.append(item)
     return base + dedup
 
 
-def open_test_window() -> list[str]:
-    """LOG_SESI OPEN yang menyebut jendela uji berjalan. Kembalikan pointer."""
-    hits = []
+def open_test_window(files: list[str] | None = None) -> tuple[list[str], list[str]]:
+    """LOG_SESI OPEN yang menyebut jendela uji berjalan.
+
+    Return: (blocking_pointers, writer_log_pointers). Log penulis PR sendiri
+    adalah berkas LOG_SESI yang disentuh PR; ia tetap dipointerkan, tetapi
+    tidak memicu penyembunyian rumusan acceptance.
+    """
+    blocking: list[str] = []
+    writer_hits: list[str] = []
+    writer_logs = {f for f in (files or []) if f.startswith("LOG_SESI_") and f.endswith(".md")}
     pattern = re.compile(
         r"jendela uji|jendela run|run acceptance|acceptance run|"
         r"belum dijalankan|sedang berjalan|dijadwalkan, belum",
@@ -273,7 +288,7 @@ def open_test_window() -> list[str]:
         # di mana saja: banyak log CLOSED menceritakan header yang dulu OPEN.
         keadaan = ""
         for line in lines[:15]:
-            m = re.match(r"\s*[-*]\s*\*\*Keadaan(?:\s+Sesi)?:\*\*\s*(.+)", line)
+            m = re.match(r"\s*[-*]\s*\*\*(?:Keadaan(?:\s+Sesi)?|Status):\*\*\s*(.+)", line)
             if m:
                 keadaan = m.group(1)
                 break
@@ -281,9 +296,13 @@ def open_test_window() -> list[str]:
             continue
         for idx, line in enumerate(lines, start=1):
             if pattern.search(line):
-                hits.append(f"{log.name}:{idx}")
+                ptr = f"{log.name}:{idx}"
+                if log.name in writer_logs:
+                    writer_hits.append(ptr)
+                else:
+                    blocking.append(ptr)
                 break
-    return hits
+    return blocking, writer_hits
 
 
 def head_sha_of_worktree() -> str:
@@ -310,7 +329,7 @@ def render(pr: dict | None, files: list[str], generic: bool) -> tuple[str, list[
 
     guarded = guarded_inventory(files)
     arbiter = arbiter_touched(files)
-    windows = open_test_window()
+    windows, writer_windows = open_test_window(files if not generic else [])
     pr_ref = num if num.startswith("#") else num
     merge_num = pr["number"] if pr else PLACEHOLDER_PR
 
@@ -444,8 +463,8 @@ def render(pr: dict | None, files: list[str], generic: bool) -> tuple[str, list[
         a("**melaporkan**. PR yang mengubah alat pengadil tidak boleh dieksekusi oleh pengadil yang diubahnya —")
         a("penggabungan adalah keputusan pemilik langsung.")
     else:
-        a("PR ini **tidak** menyentuh `tools/test_failure_injection.py`, berkas pemuat pin, maupun")
-        a("`_meta/PROTOKOL_REVIEW_INDEPENDEN.md`, jadi aturan merge normal di bagian 6 berlaku.")
+        a("PR ini **tidak** menyentuh alat pengadil eksplisit, berkas pemuat pin, maupun")
+        a("protokol review independen, jadi aturan merge normal di bagian 6 berlaku.")
         a("")
         a("Kalau ternyata pemeriksaanmu sendiri menemukan salah satu berkas itu tersentuh (data PR bisa saja basi):")
         a("**berhenti, jangan merge, laporkan** — pengadil tidak mengeksekusi perubahan atas dirinya sendiri.")
@@ -459,9 +478,14 @@ def render(pr: dict | None, files: list[str], generic: bool) -> tuple[str, list[
         for ptr in windows:
             a(f"- pointer SHA+baris: `{head}` → `{ptr}`")
     else:
-        a("Tidak terdeteksi `LOG_SESI` berkeadaan `OPEN` yang menyebut jendela uji berjalan. Aturan 6d tetap berlaku:")
+        a("Tidak terdeteksi `LOG_SESI` berkeadaan `OPEN` dari sesi lain yang menyebut jendela uji berjalan. Aturan 6d tetap berlaku:")
         a("kalau kamu menemukan jendela terbuka saat membaca, ganti kutipan rumusan jawaban/kriteria dengan pointer")
         a("SHA+baris di semua artefak yang kamu publikasikan.")
+    if writer_windows:
+        a("")
+        a("Pointer log penulis PR yang tidak memicu penyembunyian (tetap dibaca sebagai konteks, bukan sebagai jendela sesi lain):")
+        for ptr in writer_windows:
+            a(f"- pointer SHA+baris: `{head}` → `{ptr}`")
     a("")
     if generic:
         a("---")

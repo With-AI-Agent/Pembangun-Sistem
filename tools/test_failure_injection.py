@@ -17,12 +17,12 @@ History:
   unit STATUS, kerangka/siap-pakai lifecycle, and the template bootstrap
   self-containment assertion.
 
-Run with FI_SKIP_NESTED=1 to skip R1–R7 (used when this file is invoked
-inside a copied repo by the R scenarios themselves — prevents recursion).
+Run with FI_SKIP_NESTED=1 to skip repo-copy regressions (used when this file is
+invoked inside a copied repo by the R scenarios themselves — prevents recursion).
 """
 from pathlib import Path
 from tempfile import TemporaryDirectory
-import json
+import importlib.util
 import os
 import re
 import shutil
@@ -176,7 +176,7 @@ def regression_scenarios(base_dir: Path):
 
         # R7 (F5): template bootstrap must be self-contained — extract the
         # fresh template, run the validator there, and pin the exact
-        # normalized warning set (4 labeled master-history references; zero
+        # normalized warning set (5 labeled master-history references; zero
         # in the bootstrap doc or the user guide).
         checks.append(("R7 template build di salinan repo", run_tool(cp, "tools/build_template.py") == 0))
         z = cp / "_meta" / "_internal" / "template_clean.zip"
@@ -222,25 +222,24 @@ def regression_scenarios(base_dir: Path):
     return checks
 
 
-def pack_scenarios(base_dir: Path):
-    """P1-P3 (7-8 Sep 2026): fail-closed paket repo mandiri (tools/pack_repo.py).
 
-    Dijalankan di SALINAN repo. Klaim yang dipin di sini adalah klaim yang
-    kalau diam-diam melemah membuat paket "LULUS" tanpa isi yang benar:
-      P1 profil paket = daftar KEWAJIBAN, bukan daftar kelonggaran;
-      P2 run yang gagal TIDAK meninggalkan folder paket setengah jadi;
-      P3 daftar putih `absent_refs_allowed` tidak boleh membusuk (entri basi
-         = error, bukan sisa yang dimaafkan) — diuji-mutasi: mematikan
-         pemeriksaan anti pembusukan di validate_repo.py membuat P3 MERAH.
+def _load_review_prompt(repo: Path, module_name: str):
+    spec = importlib.util.spec_from_file_location(module_name, repo / "tools" / "review_prompt.py")
+    if spec is None or spec.loader is None:
+        raise RuntimeError("review_prompt.py tidak bisa di-load")
+    mod = importlib.util.module_from_spec(spec)
+    spec.loader.exec_module(mod)
+    return mod
+
+
+def review_prompt_scenarios(base_dir: Path):
+    """RP1-RP3 (8 Sep 2026): regresi pembangkit prompt review.
+
+    Ini uji mutasi untuk tiga cacat nyata: deteksi pin via self-match string,
+    urutan baca yang menjatuhkan Markdown root, dan jendela-uji yang dipicu
+    log penulis PR sendiri.
     """
     checks = []
-    env = {**os.environ, "FI_SKIP_NESTED": "1", "PYTHONDONTWRITEBYTECODE": "1"}
-    sistem = "sistem-konten-kreator"
-
-    def sh(cwd: Path, *args):
-        return subprocess.run([sys.executable, "-B", *args], cwd=str(cwd),
-                              capture_output=True, text=True, env=env)
-
     cp = base_dir / "repo"
     shutil.copytree(
         ROOT, cp,
@@ -248,95 +247,115 @@ def pack_scenarios(base_dir: Path):
             ".git", "backups", "template_clean", "template_clean.zip",
             "__pycache__", "dist"),
     )
+    rp = _load_review_prompt(cp, "review_prompt_regression")
 
-    # --- P1: hapus satu dokumen yang TERDAFTAR di meta_subset profil paket.
-    # Kalau kewajiban diturunkan dari "apa yang kebetulan ada" (bug F1 versi
-    # paket), penghapusan ini akan lolos diam-diam.
-    out = base_dir / "pak1"
-    ok = sh(cp, "tools/pack_repo.py", sistem, "--out", str(out)).returncode == 0
-    checks.append(("P1 pra-syarat: pack sistem-konten-kreator berhasil", ok))
-    if ok:
-        prof = json.loads((out / "_meta" / "PAKET_REPO.json").read_text(encoding="utf-8"))
-        rel = prof["meta_subset"][0]
-        (out / rel).unlink()
-        r = subprocess.run([sys.executable, "-B", "tools/validate_repo.py"],
-                           cwd=str(out), capture_output=True, text=True, env=env)
-        # Bukan cukup "gagal" — harus gagal DENGAN ALASAN kewajiban profil,
-        # supaya check ini tidak lulus lewat error lain (mis. rujukan
-        # menggantung) kalau daftar kewajiban diam-diam dilemahkan.
-        checks.append(("P1 entri profil paket dihapus dari paket -> validator paket FAIL "
-                       "dengan alasan 'missing required file'",
-                       r.returncode != 0
-                       and f"missing required file: {rel}" in r.stdout))
-    else:
-        checks.append(("P1 entri profil paket dihapus dari paket -> validator paket FAIL "
-                       "dengan alasan 'missing required file'", False))
+    fake_pr = {
+        "number": 999,
+        "baseRefOid": "1" * 40,
+        "headRefOid": "2" * 40,
+        "title": "uji mutasi review_prompt",
+        "baseRefName": "main",
+        "headRefName": "arena/uji",
+        "isDraft": False,
+    }
 
-    # --- P2: rujukan menggantung yang TIDAK bisa dikategorikan = pemblokir.
-    # `--check` harus non-zero, run sungguhan harus non-zero DAN tidak boleh
-    # meninggalkan folder paket (paket setengah jadi = bukti palsu).
-    (cp / sistem / "README.md").open("a", encoding="utf-8").write(
-        "\nRujukan uji injeksi: `panduan/BERKAS_YANG_TIDAK_ADA.md`\n")
-    rc_check = sh(cp, "tools/pack_repo.py", sistem, "--check").returncode
-    out2 = base_dir / "pak2"
-    rc_run = sh(cp, "tools/pack_repo.py", sistem, "--out", str(out2)).returncode
-    checks.append(("P2 rujukan menggantung tak terkategori -> --check FAIL", rc_check != 0))
-    checks.append(("P2 run gagal -> exit non-zero DAN folder paket tidak ditinggalkan",
-                   rc_run != 0 and not out2.exists()))
+    guarded = rp.guarded_inventory(["tools/review_prompt.py"])
+    checks.append((
+        "RP1 tools/review_prompt.py pelindung eksplisit beralasan pembangkit prompt pengadil",
+        any(row == ("tools/review_prompt.py", True, "pembangkit prompt pengadil") for row in guarded),
+    ))
+    prompt, _ = rp.render(fake_pr, ["tools/review_prompt.py"], generic=False)
+    checks.append((
+        "RP1 PR menyentuh review_prompt.py -> prompt berbunyi JANGAN merge",
+        "**BERLAKU untuk PR ini.**" in prompt and "**JANGAN melakukan merge apa pun**" in prompt,
+    ))
+    checks.append((
+        "RP1 validate_repo.py tidak dianggap memuat pin hanya karena menyebut nama konstanta",
+        "tools/validate_repo.py" not in set(rp.pin_bearing_tools()),
+    ))
 
-    # --- P3: anti pembusukan daftar putih `absent_refs_allowed`. Entri yang
-    # TIDAK lagi cocok dengan rujukan menggantung nyata wajib membuat
-    # validator paket FAIL — kalau tidak, daftar putih membusuk jadi tempat
-    # rujukan palsu berlindung dan angka bukti paket tidak lagi jujur.
-    # Diuji-mutasi: menyalin validator paket, mematikan blok pemeriksaan anti
-    # pembusukan, lalu membuktikan validator kini LOLOS — artinya kegagalan
-    # tadi memang berasal dari pemeriksaan yang dipin di sini, bukan dari
-    # error lain yang kebetulan ikut meledak.
-    out3 = base_dir / "pak3"
-    # Salinan repo SEGAR: `cp` sudah dimutasi P2 (README.md disuntik rujukan
-    # menggantung) sehingga tidak bisa dipakai untuk injeksi daftar putih.
-    cp3 = base_dir / "repo3"
-    shutil.copytree(
-        ROOT, cp3,
-        ignore=shutil.ignore_patterns(
-            ".git", "backups", "template_clean", "template_clean.zip",
-            "__pycache__", "dist"),
+    # Mutasi RP1: hapus pendaftaran eksplisit review_prompt. Tanpa baris ini,
+    # self-match string tidak boleh diam-diam menjadi alasan pelindung palsu.
+    rp_path = cp / "tools" / "review_prompt.py"
+    original = rp_path.read_text(encoding="utf-8")
+    mutated = original.replace(
+        '    "tools/review_prompt.py": "pembangkit prompt pengadil",\n',
+        '',
     )
-    ok3 = sh(cp3, "tools/pack_repo.py", sistem, "--out", str(out3)).returncode == 0
-    checks.append(("P3 pra-syarat: pack bersih untuk injeksi daftar putih", ok3))
-    if ok3:
-        prof_path = out3 / "_meta" / "PAKET_REPO.json"
-        prof = json.loads(prof_path.read_text(encoding="utf-8"))
-        ghost = "panduan/BERKAS_HANTU_P3_TIDAK_DIRUJUK.md"
-        prof.setdefault("absent_refs_allowed", []).append(
-            {"ref": ghost, "kategori": "K0", "alasan": "injeksi uji P3 (ghost)"})
-        prof_path.write_text(json.dumps(prof, indent=2, ensure_ascii=False) + "\n",
-                             encoding="utf-8")
-        r = subprocess.run([sys.executable, "-B", "tools/validate_repo.py"],
-                           cwd=str(out3), capture_output=True, text=True, env=env)
-        checks.append(("P3 entri daftar putih basi -> validator paket FAIL 'entri basi'",
-                       r.returncode != 0 and "entri basi" in r.stdout))
-        val_path = out3 / "tools" / "validate_repo.py"
-        val = val_path.read_text(encoding="utf-8")
-        marker = "for ref in sorted(set(ABSENT_ALLOWED) - ref_absent_hits):"
-        if marker not in val:
-            checks.append(("P3 diuji-mutasi: penanda blok anti pembusukan ditemukan", False))
-        else:
-            val_path.write_text(val.replace(
-                marker, "for ref in ():  # MUTASI P3: anti pembusukan dimatikan"),
-                encoding="utf-8")
-            r2 = subprocess.run([sys.executable, "-B", "tools/validate_repo.py"],
-                                cwd=str(out3), capture_output=True, text=True, env=env)
-            val_path.write_text(val, encoding="utf-8")
-            checks.append(("P3 diuji-mutasi: anti pembusukan dimatikan -> validator "
-                           "paket LOLOS (tidak ada 'entri basi')",
-                           r2.returncode == 0 and "entri basi" not in r2.stdout))
-    else:
-        checks.append(("P3 entri daftar putih basi -> validator paket FAIL 'entri basi'", False))
-        checks.append(("P3 diuji-mutasi: anti pembusukan dimatikan -> validator "
-                       "paket LOLOS (tidak ada 'entri basi')", False))
-    return checks
+    rp_path.write_text(mutated, encoding="utf-8")
+    rp_mut = _load_review_prompt(cp, "review_prompt_mut_rp1")
+    guarded_mut = rp_mut.guarded_inventory(["tools/review_prompt.py"])
+    checks.append((
+        "RP1 diuji-mutasi: hapus pendaftaran eksplisit -> alasan pembangkit hilang",
+        not any(row == ("tools/review_prompt.py", True, "pembangkit prompt pengadil") for row in guarded_mut),
+    ))
+    rp_path.write_text(original, encoding="utf-8")
+    rp = _load_review_prompt(cp, "review_prompt_regression_fresh")
 
+    files = [
+        "_meta/00_CARA_KERJA_META.md",
+        "PANDUAN_PENGGUNA.md",
+        "PROMPT_ENTRI_UNIVERSAL.md",
+        "tools/review_prompt.py",
+    ]
+    order = rp.reading_order(files)
+    joined = "\n".join(order)
+    checks.append((
+        "RP2 urutan baca memuat Markdown root tersentuh dan tidak menggandakan 00_CARA_KERJA_META",
+        "`PANDUAN_PENGGUNA.md`" in joined
+        and "`PROMPT_ENTRI_UNIVERSAL.md`" in joined
+        and joined.count("`_meta/00_CARA_KERJA_META.md`") == 1,
+    ))
+
+    # Mutasi RP2: kembalikan filter lama yang hanya menerima .md ber-slash.
+    mutated = original.replace('elif rel.endswith(".md"):', 'elif rel.endswith(".md") and "/" in rel:')
+    rp_path.write_text(mutated, encoding="utf-8")
+    rp_mut = _load_review_prompt(cp, "review_prompt_mut_rp2")
+    order_mut = "\n".join(rp_mut.reading_order(files))
+    checks.append((
+        "RP2 diuji-mutasi: filter lama menjatuhkan Markdown root",
+        "`PANDUAN_PENGGUNA.md`" not in order_mut
+        and "`PROMPT_ENTRI_UNIVERSAL.md`" not in order_mut,
+    ))
+    rp_path.write_text(original, encoding="utf-8")
+    rp = _load_review_prompt(cp, "review_prompt_regression_window")
+
+    log_root = base_dir / "logs"
+    log_root.mkdir()
+    (log_root / "LOG_SESI_OWN.md").write_text(
+        "# own\n\n- **Keadaan:** `OPEN`\n\ncatatan: jendela uji terbuka untuk PR ini\n",
+        encoding="utf-8",
+    )
+    rp.ROOT = log_root
+    blocking, writer = rp.open_test_window(["LOG_SESI_OWN.md"])
+    checks.append((
+        "RP3 log penulis PR sendiri tidak memicu penyembunyian tetapi pointer tetap ada",
+        blocking == [] and writer == ["LOG_SESI_OWN.md:5"],
+    ))
+    (log_root / "LOG_SESI_OTHER.md").write_text(
+        "# other\n\n- **Keadaan:** `OPEN`\n\ncatatan: jendela uji terbuka dari sesi lain\n",
+        encoding="utf-8",
+    )
+    blocking2, writer2 = rp.open_test_window(["LOG_SESI_OWN.md"])
+    checks.append((
+        "RP3 OPEN log sesi lain menyebut jendela -> penyembunyian tetap berlaku",
+        "LOG_SESI_OTHER.md:5" in blocking2 and "LOG_SESI_OWN.md:5" in writer2,
+    ))
+
+    # Mutasi RP3: matikan pengecualian log penulis; log sendiri kembali menjadi
+    # blocking. Ini membuktikan baris pengecualian benar-benar dijaga uji.
+    mutated = original.replace('if log.name in writer_logs:', 'if False and log.name in writer_logs:')
+    rp_path.write_text(mutated, encoding="utf-8")
+    rp_mut = _load_review_prompt(cp, "review_prompt_mut_rp3")
+    rp_mut.ROOT = log_root
+    blocking_mut, writer_mut = rp_mut.open_test_window(["LOG_SESI_OWN.md"])
+    checks.append((
+        "RP3 diuji-mutasi: pengecualian log penulis dimatikan -> log sendiri blocking",
+        "LOG_SESI_OWN.md:5" in blocking_mut and "LOG_SESI_OWN.md:5" not in writer_mut,
+    ))
+    rp_path.write_text(original, encoding="utf-8")
+
+    return checks
 
 def run():
     checks = []
@@ -498,12 +517,12 @@ def run():
             reg = regression_scenarios(Path(d))
     checks += reg
 
-    # P1–P2 paket repo mandiri (skipped when nested, same reason).
-    pak = []
+    # RP1–RP3 pembangkit prompt review (skipped when nested, same reason).
+    rp_checks = []
     if not os.environ.get("FI_SKIP_NESTED"):
         with TemporaryDirectory() as d:
-            pak = pack_scenarios(Path(d))
-    checks += pak
+            rp_checks = review_prompt_scenarios(Path(d))
+    checks += rp_checks
 
     failed = [name for name, ok in checks if not ok]
     if failed:
@@ -513,7 +532,7 @@ def run():
         raise SystemExit(1)
     print(f"FAILURE-INJECTION TESTS PASSED: {len(checks)} scenarios "
           f"({n_synth} sintetis + {len(real)} unit nyata + {len(reg)} regresi review PR-11"
-          f" + {len(pak)} paket repo mandiri)")
+          f" + {len(rp_checks)} regresi review_prompt)")
 
 
 if __name__ == "__main__":

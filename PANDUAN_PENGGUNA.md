@@ -150,34 +150,28 @@ kamu paham ke mana hasil kerja ini akan dibawa, baru kita mulai.
 ## Mengeluarkan Satu Sistem Jadi Repo Sendiri
 
 Kalau sebuah sistem sudah matang dan kamu mau memakainya di repo GitHub-nya sendiri
-(terpisah dari repo ini), kamu **tidak perlu** memilah-milah file satu per satu.
-Satu perintah, dijalankan dari root repo ini:
+(terpisah dari repo ini), yang disalin adalah folder sistem itu sendiri. Tidak ada
+ZIP, tidak ada folder dist, dan tidak ada daftar file yang harus kamu pilih manual.
 
-```bash
-# 1. lihat dulu apa yang akan ikut, tanpa menulis apa pun
-python3 tools/pack_repo.py sistem-nama-sistemnya --check
+Dari root repo master, jalankan gerbang ini:
 
-# 2. kalau baris terakhirnya CHECK HIJAU, bangkitkan folder repo mandirinya
-python3 tools/pack_repo.py sistem-nama-sistemnya
-```
+    python3 tools/check_selfcontained.py --sistem sistem-nama-sistemnya --report
 
-Hasilnya satu folder siap di-upload: folder sistemnya utuh, hanya dokumen `_meta/`
-yang benar-benar dipakai sistem itu, dua alat pemeriksa, pegangan pengguna, dan
-`PAKET_REPO.md` yang mencatat asal-usulnya + perintah verifikasinya. Isi dokumen
-tidak ditulis ulang sama sekali.
+Kalau exit 0, folder itu adalah deliverable mandiri: salin foldernya apa adanya ke
+repo tujuan. Kalau merah, keluaran alat adalah daftar kerja yang harus diperbaiki
+di dalam folder sistem. Jangan menambal hasil salinan sementara.
 
-Tiga hal yang perlu kamu tahu, sisanya urusan alatnya:
+Aturan penting:
 
-- **Kalau perintahnya gagal, foldernya memang tidak ada.** Alat ini tidak
-  meninggalkan paket setengah jadi. Pesan gagalnya menyebut apa yang harus
-  diperbaiki — perbaikannya dilakukan di repo ini, bukan di hasil pack.
-- **Hasil pack tidak di-commit ke repo ini.** Repo ini tetap satu-satunya sumber
-  kebenaran; paketnya selalu bisa dibangkitkan ulang kapan saja.
-- **Empat perintah untuk mengunggahnya ke GitHub** sudah dituliskan di dalam
-  `PAKET_REPO.md` di folder hasil — tinggal ikuti dari atas ke bawah.
+- Semua rujukan di dalam folder sistem harus relatif terhadap folder itu. Rujukan
+  berformat `sistem-nama-sistemnya/...` dari folder tersebut ke dirinya sendiri
+  salah.
+- Rujukan ber-backtick ke `_meta/...` atau `tools/...` berarti salinan berlabel
+  dari sumber itu harus ada di dalam folder sistem.
+- Riwayat/provenance boleh disebut tanpa backtick; riwayat lengkap tetap di master.
 
-Aturan lengkapnya (apa yang ikut, apa yang sengaja tidak, kenapa) ada di
-`_meta/PAKET_REPO_MANDIRI.md`.
+Aturan lengkapnya ada di `_meta/PAKET_REPO_MANDIRI.md`.
+
 
 ---
 

@@ -15,6 +15,8 @@ Setelah 1 sistem berhasil dibangun dan teruji (Sistem Konten Kreator — lihat `
 > **Setiap sistem dibangun SELF-CONTAINED karena akan dipisahkan.** (Prinsip tambahan, dinyatakan pengguna 5 Sep 2026.) Alur pakai nyata: setelah sebuah sistem jadi, pengguna **mengunduh folder sistem itu dan menjadikannya repo tersendiri yang hanya berisi sistem tersebut**, dipakai terpisah dari meta-sistem ini. Konsekuensi wajib saat membangun:
 > - Semua yang dibutuhkan sistem saat dipakai (dokumen instruksi, aturan desain/isi, skrip build, template, aset) harus berada **di dalam folder sistem itu sendiri**, tidak bergantung pada file di `_meta/` saat runtime.
 > - Rujukan ke `_meta/` boleh ada sebagai *provenance* (asal prinsip), tapi aturan yang benar-benar dipakai harus **disalin/diturunkan ke dalam folder sistem**, supaya hasil ekstraksi tetap berfungsi penuh.
+> - Sejak 8 Sep 2026, **folder sistem itu sendiri adalah deliverable**: tidak ada ZIP/dist, tidak ada pemilahan file oleh pemilik, dan tidak ada rujukan `sistem-<nama>/...` ke dirinya sendiri. Rujukan ber-backtick ke `_meta/...` atau `tools/...` berarti salinan berlabelnya wajib ada di dalam folder sistem; provenance disebut tanpa backtick.
+> - Exit 0 `python3 tools/check_selfcontained.py --sistem <nama> --report` adalah definisi mekanis bahwa folder sistem sudah mandiri.
 > - Ini TIDAK bertentangan dengan prinsip di atas: isi tetap spesifik-maksimal; self-containment hanyalah memastikan hasil yang spesifik itu bisa dibawa keluar tanpa rusak.
 
 > **Setiap sistem wajib menyertakan PEGANGAN PENGGUNA (buku pedoman) di dalam foldernya.** (Prinsip tambahan, dinyatakan pengguna 5 Sep 2026.) Standar mudahnya: **sama dengan meta-sistem ini sendiri** — pengguna cukup membuka sesi dengan **SATU prompt pembuka universal** yang sudah disiapkan, lalu agent otomatis terorientasi penuh (apa sistemnya, cara kerja, ketentuan, kondisi repo, PR menggantung) tanpa perlu ditempel manual. Bentuknya dua file di dalam folder sistem: `PROMPT_ENTRI_UNIVERSAL.md` (satu blok prompt pembuka siap tempel) + `PANDUAN_PENGGUNA.md` (pedoman lengkap: prompt pembuka + **prompt penutup sesi**, istilah awam, kalimat per situasi, cara review & merge, kebiasaan). Ikuti struktur `_meta/PANDUAN_PENGGUNA_TEMPLATE.md`. Preceden: meta-sistem sendiri (`PANDUAN_PENGGUNA.md` di root repo) dan `sistem-konten-kreator/` (`PANDUAN_PENGGUNA.md` + `PROMPT_ENTRI_UNIVERSAL.md`).
@@ -62,7 +64,8 @@ repo-utama/
 │   │                                    warisan generik utk tiap sistem di INDEKS
 │   ├── test_failure_injection.py     ← cek fail-closed checkpoint
 │   ├── backup_verify.py              ← backup esensial + uji restore byte-per-byte
-│   └── build_template.py             ← template bersih + guard kelengkapan
+│   ├── build_template.py             ← template bersih + guard kelengkapan
+│   └── check_selfcontained.py        ← gerbang folder sistem = deliverable
 │
 ├── sistem-[nama-1]/                  ← misal sistem-konten-kreator/
 │   └── (struktur & jumlah file BEDA-BEDA per sistem, ditentukan hasil
@@ -120,7 +123,7 @@ Berlaku sama seperti yang sudah terbukti penting di Sistem Konten Kreator: GitHu
 3. Cek `INDEKS_SISTEM.md` untuk tahu sistem apa saja yang ada dan statusnya.
 4. Cari `LOG_SESI_*.md` **terbaru** (root repo / folder sistem / folder unit kerja). Kalau yang terbaru berkeadaan `OPEN` → baca, laporkan keadaannya, dan konfirmasi ke pengguna sebelum lanjut — itu konteks yang tidak boleh ditanya ulang. (Langkah ini dulu hanya ada di dokumen lain; diselaraskan ke sini 5 Sep 2026, temuan M-05.)
 
-Regresi struktural tersedia sebagai alat — jalankan saat menyentuh `_meta/`/`tools/` atau menyelesaikan audit: `python3 tools/validate_repo.py` (harus PASS 0 warning), `tools/test_failure_injection.py`, `tools/backup_verify.py`, `tools/build_template.py`; `tools/checkpoint_core.py` adalah parser bersama yang diimpor validator & FI (tidak dijalankan langsung) (temuan M-07: blok struktur dulu tidak menyebut `tools/`).
+Regresi struktural tersedia sebagai alat — jalankan saat menyentuh `_meta/`/`tools/` atau menyelesaikan audit: `python3 tools/validate_repo.py` (harus PASS 0 warning), `tools/test_failure_injection.py`, `tools/backup_verify.py`, `tools/build_template.py`, dan `tools/check_selfcontained.py --semua --report` untuk status deliverable folder sistem; `tools/checkpoint_core.py` adalah parser bersama yang diimpor validator & FI (tidak dijalankan langsung) (temuan M-07: blok struktur dulu tidak menyebut `tools/`).
 
 Baru setelah itu, arahkan sesuai tujuan. Jika state tidak konsisten, gunakan `FAILURE_INJECTION_TESTS.md` sebagai aturan berhenti dan recovery:
 
@@ -230,7 +233,7 @@ Baru setelah itu, arahkan sesuai tujuan. Jika state tidak konsisten, gunakan `FA
 
 Selain dokumen instruksi aktif, setiap sistem baru wajib mewarisi mekanisme pemeriksaan, audit, evolusi, dan verifikasi output tiga lapisan dari `QUALITY_ASSURANCE_AND_EVOLUTION.md`, kecuali override eksplisit dicatat di manifest. Setiap sistem baru juga wajib memiliki manifest dan status kerja yang dapat dibaca lintas sesi. Gunakan `SYSTEM_MANIFEST_TEMPLATE.md` sebagai dasar, `DEFINITION_OF_DONE.md` untuk menentukan apakah hasil benar-benar selesai, dan `PROTOKOL_CHECKPOINT_RECOVERY.md` untuk menyimpan progres serta memulihkan sesi yang terputus.
 
-Status “selesai” tidak berarti file sudah ditulis. Status tersebut baru boleh digunakan setelah acceptance checklist terpenuhi, dependency diverifikasi, approval selesai, dan perubahan tersedia di branch/PR yang benar.
+Status “selesai” tidak berarti file sudah ditulis. Status tersebut baru boleh digunakan setelah acceptance checklist terpenuhi, dependency diverifikasi, approval selesai, dan perubahan tersedia di branch/PR yang benar. Untuk klaim folder sistem mandiri, definisi mekanisnya adalah exit 0 `python3 tools/check_selfcontained.py --sistem <nama> --report`.
 
 Dokumen audit dan draft di `_meta/_internal/` adalah referensi master, bukan instruksi kerja yang harus diikuti pada setiap sesi. Jika instruksi aktif bertentangan dengan catatan sejarah, instruksi aktif dan keputusan terbaru yang sudah disetujui menjadi acuan; konflik tetap harus dilaporkan, bukan ditebak.
 

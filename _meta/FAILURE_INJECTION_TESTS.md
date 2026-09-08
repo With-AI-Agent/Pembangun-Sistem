@@ -81,17 +81,25 @@ FI-01…FI-10 di atas adalah test perilaku AGENT. Skrip `tools/test_failure_inje
 | R5/R6 (F9) | sistem skeleton `Tahap: kerangka` tanpa artefak W-01/W-02/W-03 / kondisi sama dengan `Tahap: siap-pakai` | PASS (warning saja) / HARUS gagal |
 | R7 (F5) | build template di salinan → ekstrak → `git init` → validator | exit 0 + PERSIS 5 warning normalisasi (daftar di `TEMPLATE_RELEASE.md`, dipin di skrip) + tanpa warning di bootstrap/pegangan pengguna |
 
-**Skenario paket repo mandiri (P1–P3)** — ditambahkan 7–8 Sep 2026, dijalankan di SALINAN repo (env `FI_SKIP_NESTED=1`), 7 baris check:
+**Skenario review_prompt (RP1–RP3)** — ditambahkan 8 Sep 2026, dijalankan di SALINAN repo (env `FI_SKIP_NESTED=1`), uji mutasi untuk cacat nyata pembangkit prompt review:
 
 | Skenario | Mutasi | Ekspektasi |
 |---|---|---|
-| P1 | bangkitkan paket, lalu hapus satu berkas yang TERDAFTAR di `meta_subset` profil paket | validator DI DALAM paket HARUS gagal **dengan alasan `missing required file`** (profil = daftar kewajiban, bukan daftar kelonggaran; gagal karena alasan lain tidak dihitung lulus) |
-| P2 | sisipkan rujukan menggantung yang tidak bisa dikategorikan ke dokumen sistem, lalu jalankan `tools/pack_repo.py` | mode `--check` HARUS non-zero, DAN run sungguhan HARUS non-zero **tanpa meninggalkan folder paket** (paket setengah jadi = bukti palsu) |
-| P3 | sisipkan entri `absent_refs_allowed` yang tidak lagi cocok dengan rujukan nyata (entri basi/hantu) ke profil paket | validator DI DALAM paket HARUS gagal **dengan alasan `entri basi`** (anti pembusukan daftar putih; entri basi = rujukan palsu yang berlindung, bukan sisa yang dimaafkan) |
+| RP1 | hapus pendaftaran eksplisit `tools/review_prompt.py` sebagai alat pengadil | tabel pelindung kehilangan alasan "pembangkit prompt pengadil" dan PR yang menyentuhnya tidak lagi mendapat larangan merge; skenario harus menangkap regresi itu |
+| RP2 | kembalikan filter lama yang hanya memasukkan Markdown ber-slash | `PANDUAN_PENGGUNA.md` dan `PROMPT_ENTRI_UNIVERSAL.md` di root hilang dari urutan baca; skenario harus menangkap regresi itu dan memastikan `_meta/00_CARA_KERJA_META.md` tidak kembar |
+| RP3 | matikan pengecualian log penulis PR sendiri pada pemindai jendela-uji | log penulis PR sendiri kembali memicu penyembunyian; skenario harus menangkap regresi itu, sementara OPEN log sesi lain yang menyebut jendela tetap memicu penyembunyian |
 
-Ketiganya diuji-mutasi saat ditulis: mematikan penghapusan paket gagal membuat P2 MERAH; menurunkan daftar kewajiban profil dari "apa yang kebetulan ada" membuat P1 MERAH; mematikan blok pemeriksaan anti pembusukan di `tools/validate_repo.py` membuat P3 MERAH (validator paket LOLOS padahal entri hantu tersisa).
+**Skenario paket repo mandiri lama (P1–P3) — PENSIUN 8 Sep 2026, jangan dihapus dari catatan:**
 
-**Jumlah:** 39 skenario di master (15 sintetis + 4 unit nyata + 13 regresi + 7 paket repo mandiri), 12 di ekstrak template (0 unit nyata; tiga skenario C5, regresi R1–R7, dan paket P1–P3 tidak dijalankan bersarang karena ekstrak menjalankan smoke test tanpa skenario bersarang).
+| Skenario | Mutasi lama | Status pensiun |
+|---|---|---|
+| P1 | bangkitkan paket, lalu hapus satu berkas yang terdaftar di meta_subset profil paket | pensiun bersama packager lama; profil paket tidak lagi menjadi kontrak kewajiban |
+| P2 | sisipkan rujukan menggantung yang tidak bisa dikategorikan ke dokumen sistem, lalu jalankan packager lama | pensiun bersama packager lama; folder sistem kini dinilai langsung oleh `tools/check_selfcontained.py` |
+| P3 | sisipkan entri absent_refs_allowed yang tidak lagi cocok dengan rujukan nyata ke profil paket | pensiun bersama daftar putih yang dijaganya; aturan pembusukan daftar putih tidak relevan setelah daftar putih dicabut |
+
+Alasan pensiun P1–P3: keputusan pemilik menetapkan folder sistem sebagai deliverable. Mekanisme lama memindahkan kerja penyatuan/glue ke pemilik; folder sebagai deliverable lebih murah dipertahankan. Karena profil repo dan daftar putih rujukan-absen dicabut, skenario yang mengawasi pembusukan daftar putih ikut pensiun bersama objek yang dijaganya.
+
+**Jumlah:** 41 skenario di master (15 sintetis + 4 unit nyata + 13 regresi review PR-11 + 9 regresi review_prompt), 16 di ekstrak template (15 sintetis + 1 unit nyata benih; regresi repo-copy tidak dijalankan bersarang).
 
 
 ### AT-16/C5 — larangan angka korpus di sel Bukti
