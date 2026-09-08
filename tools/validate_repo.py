@@ -204,8 +204,9 @@ for sys_dir in sorted(ROOT.glob("sistem-*/")):
             )
 
 # --- Warning-tier path reference check (A-B3a, extended by M-01/M-03) -----
-# Scope: _meta/*.md + root pegangan + each REGISTERED system's active docs
-# (root, _sistem, panduan, _generator, _template). Deliberate exclusions:
+# Scope: ditentukan SATU definisi "dokumen aktif" di checkpoint_core
+# (ACTIVE_DOC_GLOBS + ACTIVE_DOC_EXCLUDE_DIRS + ACTIVE_DOC_EXCLUDE_NAMES +
+# dokumen_aktif()). Deliberate exclusions (sekarang hidup di satu tempat):
 #   * `_internal/` — historical audit references, not active instructions
 #     (and never shipped in the clean template, so references to it can
 #     never be an operational dependency);
@@ -213,27 +214,15 @@ for sys_dir in sorted(ROOT.glob("sistem-*/")):
 #     work state, checked by the C-01 rules and the systems' own tools;
 #   * `00_RENCANA_KERANGKA.md` — plan document kept as history; the final
 #     numbering is documented in-file ("Catatan renumbering 5 Sep");
-#   * `ACCEPTANCE_TEST_LOG.md` — test-run records citing /tmp paths.
+#   * `ACCEPTANCE_TEST_LOG.md` — test-run records (bukti run); menulis bukti
+#     tidak boleh mengubah isi paket;
+#   * `DISKUSI_MENTAH*` — diskusi mentah discovery, bukan aturan aktif.
 # SCOPED resolution (review F13): a document inside a system folder resolves
 # paths against its OWN system (+ _meta + root) — it can no longer borrow a
 # file from another system to mask a missing local dependency. Master-level
 # docs (root, _meta) stay cross-system: pointing between systems is their
 # job. URIs are not repository paths (review F14).
 ARTIFACT_PREFIXES = ("_meta/_internal/",)
-SCAN_DOC_GLOBS = [
-    "_meta/*.md",
-    "PANDUAN_PENGGUNA.md",
-    "PROMPT_ENTRI_UNIVERSAL.md",
-]
-for _name in index_folders:
-    SCAN_DOC_GLOBS += [
-        f"{_name}/*.md",
-        f"{_name}/_sistem/*.md",
-        f"{_name}/panduan/*.md",
-        f"{_name}/_generator/*.md",
-        f"{_name}/_template/*.md",
-    ]
-SCAN_DOC_EXCLUDE_NAMES = ("00_RENCANA_KERANGKA.md", "ACCEPTANCE_TEST_LOG.md", "DISKUSI_MENTAH")
 REF_RE = re.compile(r"`([^`\n]+)`")
 PATH_EXTENSIONS = (".md", ".py", ".zip", ".json")
 
@@ -267,19 +256,11 @@ def doc_roots(doc_rel):
 
 
 def active_documents():
-    """Active documents in scope, sorted for deterministic output."""
-    docs = []
-    for pattern in SCAN_DOC_GLOBS:
-        docs.extend(p for p in ROOT.glob(pattern) if p.is_file())
-    kept = []
-    for p in docs:
-        rel = p.relative_to(ROOT).as_posix()
-        if any(part in ("_internal", "deck-aktif", "unit-aktif", "_produksi-aktif") for part in p.relative_to(ROOT).parts):
-            continue
-        if any(x in p.name for x in SCAN_DOC_EXCLUDE_NAMES):
-            continue
-        kept.append(p)
-    return sorted(set(kept))
+    """Active documents in scope (single definition: checkpoint_core)."""
+    docs = set(core.dokumen_aktif(ROOT, None))
+    for _name in index_folders:
+        docs.update(core.dokumen_aktif(ROOT, _name))
+    return sorted(docs)
 
 
 def is_path_like(ref):

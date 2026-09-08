@@ -81,13 +81,14 @@ FI-01…FI-10 di atas adalah test perilaku AGENT. Skrip `tools/test_failure_inje
 | R5/R6 (F9) | sistem skeleton `Tahap: kerangka` tanpa artefak W-01/W-02/W-03 / kondisi sama dengan `Tahap: siap-pakai` | PASS (warning saja) / HARUS gagal |
 | R7 (F5) | build template di salinan → ekstrak → `git init` → validator | exit 0 + PERSIS 5 warning normalisasi (daftar di `TEMPLATE_RELEASE.md`, dipin di skrip) + tanpa warning di bootstrap/pegangan pengguna |
 
-**Skenario paket repo mandiri (P1–P2)** — ditambahkan 7 Sep 2026, dijalankan di SALINAN repo (env `FI_SKIP_NESTED=1`), 4 baris check:
+**Skenario paket repo mandiri (P1–P3)** — ditambahkan 7–8 Sep 2026, dijalankan di SALINAN repo (env `FI_SKIP_NESTED=1`), 7 baris check:
 
 | Skenario | Mutasi | Ekspektasi |
 |---|---|---|
 | P1 | bangkitkan paket, lalu hapus satu berkas yang TERDAFTAR di `meta_subset` profil paket | validator DI DALAM paket HARUS gagal **dengan alasan `missing required file`** (profil = daftar kewajiban, bukan daftar kelonggaran; gagal karena alasan lain tidak dihitung lulus) |
 | P2 | sisipkan rujukan menggantung yang tidak bisa dikategorikan ke dokumen sistem, lalu jalankan `tools/pack_repo.py` | mode `--check` HARUS non-zero, DAN run sungguhan HARUS non-zero **tanpa meninggalkan folder paket** (paket setengah jadi = bukti palsu) |
+| P3 | sisipkan entri `absent_refs_allowed` yang tidak lagi cocok dengan rujukan nyata (entri basi/hantu) ke profil paket | validator DI DALAM paket HARUS gagal **dengan alasan `entri basi`** (anti pembusukan daftar putih; entri basi = rujukan palsu yang berlindung, bukan sisa yang dimaafkan) |
 
-Keduanya diuji-mutasi saat ditulis: mematikan penghapusan paket gagal membuat P2 MERAH; menurunkan daftar kewajiban profil dari "apa yang kebetulan ada" membuat P1 MERAH.
+Ketiganya diuji-mutasi saat ditulis: mematikan penghapusan paket gagal membuat P2 MERAH; menurunkan daftar kewajiban profil dari "apa yang kebetulan ada" membuat P1 MERAH; mematikan blok pemeriksaan anti pembusukan di `tools/validate_repo.py` membuat P3 MERAH (validator paket LOLOS padahal entri hantu tersisa).
 
-**Jumlah:** 33 skenario di master (12 sintetis + 4 unit nyata + 13 regresi + 4 paket repo mandiri), 24 di ekstrak template (0 unit nyata; R4 vacuous; P1–P2 tidak dijalankan bersarang).
+**Jumlah:** 36 skenario di master (12 sintetis + 4 unit nyata + 13 regresi + 7 paket repo mandiri), 12 di ekstrak template (0 unit nyata; regresi R1–R7 dan paket P1–P3 tidak dijalankan bersarang).
