@@ -250,7 +250,11 @@ def reading_order(files: list[str]) -> list[str]:
         elif rel.startswith("_meta/") and rel.endswith(".md"):
             relevan.append((rel, f"`{rel}` — disentuh PR"))
         elif rel.startswith("tools/"):
-            relevan.append((rel, f"`{rel}` — alat yang disentuh PR (baca kodenya, jangan hanya diff-nya)"))
+            if (ROOT / rel).exists():
+                item = f"`{rel}` — alat yang disentuh PR (baca kodenya, jangan hanya diff-nya)"
+            else:
+                item = f"`{rel}` — alat yang dihapus PR (baca diff penghapusannya dan rujukan pensiunnya)"
+            relevan.append((rel, item))
         elif rel.endswith(".md") and "/" in rel:
             relevan.append((rel, f"`{rel}` — dokumen sistem yang disentuh PR"))
         elif rel.endswith(".md"):
