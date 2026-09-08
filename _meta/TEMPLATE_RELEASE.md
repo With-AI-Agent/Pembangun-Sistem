@@ -3,7 +3,7 @@
 **Tujuan:** Menentukan apa yang termasuk template bersih dan bagaimana memverifikasinya (AT-10)
 
 
-### C5 — Angka bukti harus dipin ke commit
+### C5 — Larangan angka korpus dalam bukti permanen
 
 Di dokumen permanen (terutama Log Evolusi, manifest, dan indeks), angka yang dapat berubah akibat penulisan dokumen itu sendiri **tidak boleh dikutip sebagai angka mutlak**. Jumlah `rujukan` adalah volatile karena setiap entri `LOG_SESI` dapat menambahnya. Angka tersebut dilarang dikutip sama sekali. Verdict dan angka stabil (misalnya jumlah berkas wajib) tetap wajib dicatat. `tools/validate_repo.py` menolak sel **Bukti** Log Evolusi yang menyebut `rujukan` tanpa pin `pada <sha>` (AT-16). Aturan ini lahir dari empat siklus PR #21→#24 yang mengejar angka bukti basi; ini adalah kontrol integritas, bukan gaya penulisan.
 
