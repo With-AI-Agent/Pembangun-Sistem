@@ -25,17 +25,10 @@ their own (drifting) copy of the same judgments. This module holds:
     all 9 items W-01..W-09 must be present in a system manifest; an
     'override' row only exempts the mechanical check of that item when the
     full approval trail (alasan:, dampak:, tanggal:, approval:) is present.
-  * the REPO PROFILE (7 Sep 2026, _meta/PAKET_REPO_MANDIRI.md) — a packed
-    standalone repo carries `_meta/PAKET_REPO.json` declaring which files it
-    is obliged to have and which references are knowingly absent. When the
-    profile file is ABSENT (the master blueprint) nothing below is consulted
-    and behaviour is bit-for-bit what it was before: CORE_REQUIRED governs.
-    When it is present, the obligation list comes from the profile — and
-    EVERY declared entry must exist. The profile narrows the LIST of
-    obligations; it never softens their enforcement, and the relaxations
-    live as auditable DATA inside the pack, never as a branch in this code.
+  * dokumen_aktif — the single active-document definition introduced by
+    PR #21. Validators use this for reference scanning; no repository profile
+    or standalone whitelist lives here anymore.
 """
-import json
 import re
 from pathlib import Path
 
@@ -75,6 +68,8 @@ CORE_TOOL_FILES = [
     "tools/test_failure_injection.py",
     "tools/backup_verify.py",
     "tools/build_template.py",
+    "tools/check_selfcontained.py",
+    "tools/review_prompt.py",
 ]
 CORE_REQUIRED = CORE_META_FILES + CORE_ROOT_FILES + CORE_TOOL_FILES
 
@@ -274,107 +269,25 @@ def overridden_items(text: str):
     return out
 
 
-# --- Repo profile: master vs paket repo mandiri (7 Sep 2026) ----------------
-# Protokol: _meta/PAKET_REPO_MANDIRI.md. Aturan yang tidak boleh dilunakkan:
-#   1. Profil TIDAK ADA  -> tidak satu baris pun perilaku berubah. Master
-#      memakai CORE_REQUIRED persis seperti sebelumnya.
-#   2. Profil ADA        -> kewajiban file diambil dari profil, dan SETIAP
-#      entri yang dideklarasikan HARUS ADA. File wajib yang hilang tetap FAIL
-#      berisik. Profil mempersempit DAFTAR kewajiban, bukan penegakannya.
-#   3. Kelonggaran hidup sebagai DATA di dalam pack (bisa dibaca, dibandingkan,
-#      diaudit), tidak pernah sebagai cabang di dalam kode ini.
-PROFILE_REL = "_meta/PAKET_REPO.json"
-
-PROFILE_REQUIRED_KEYS = (
-    "schema", "sistem", "versi", "sumber_commit", "tanggal",
-    "meta_subset", "tools_subset", "root_files", "absent_refs_allowed",
-)
-PROFILE_LIST_KEYS = ("meta_subset", "tools_subset", "root_files")
-
-# Kewajiban statis yang berlaku untuk SETIAP sistem terdaftar, di master
-# maupun di paket repo mandiri. Gaya daftar sama dengan CORE_REQUIRED:
-# inventaris (kewajiban), bukan hasil penemuan — file yang dihapus harus
-# gagal berisik, bukan menghilang dari himpunan kewajiban.
+# Kewajiban statis yang berlaku untuk SETIAP sistem terdaftar. Gaya daftar
+# sama dengan CORE_REQUIRED: inventaris (kewajiban), bukan hasil penemuan —
+# file yang dihapus harus gagal berisik, bukan menghilang dari himpunan
+# kewajiban.
 SYSTEM_REQUIRED_FILES = ["_sistem/validate_system.py"]
 
 
-class ProfileError(Exception):
-    """Profil ada tapi tidak bisa dipercaya. Selalu fail-loud: repo mandiri
-    tanpa profil yang sah tidak boleh divalidasi seolah-olah ia master."""
-
-
-def load_profile(root):
-    """Kembalikan dict profil, atau None kalau berkas profil tidak ada.
-
-    None = repo master = perilaku lama, tanpa pengecualian.
-    """
-    path = Path(root) / PROFILE_REL
-    if not path.is_file():
-        return None
-    try:
-        data = json.loads(path.read_text(encoding="utf-8"))
-    except (OSError, json.JSONDecodeError) as exc:
-        raise ProfileError(f"{PROFILE_REL} tidak bisa dibaca sebagai JSON: {exc}")
-    if not isinstance(data, dict):
-        raise ProfileError(f"{PROFILE_REL} harus berupa objek JSON")
-    missing = [k for k in PROFILE_REQUIRED_KEYS if k not in data]
-    if missing:
-        raise ProfileError(f"{PROFILE_REL} tidak lengkap — kunci hilang: {', '.join(missing)}")
-    for key in PROFILE_LIST_KEYS:
-        value = data[key]
-        if not isinstance(value, list) or not all(isinstance(x, str) for x in value):
-            raise ProfileError(f"{PROFILE_REL}: '{key}' harus daftar string")
-    if not isinstance(data["absent_refs_allowed"], list):
-        raise ProfileError(f"{PROFILE_REL}: 'absent_refs_allowed' harus daftar")
-    return data
-
-
-def profile_required(profile):
-    """Daftar kewajiban file yang dideklarasikan profil. Semuanya HARUS ADA."""
-    items = set()
-    for key in PROFILE_LIST_KEYS:
-        items |= set(profile[key])
-    items.add(PROFILE_REL)
-    return sorted(items)
-
-
-def profile_absent_refs(profile):
-    """Peta {ref: alasan} rujukan yang memang tidak ada di repo mandiri.
-
-    Entri boleh berupa string (hanya path) atau objek {ref, kategori, alasan}.
-    Bentuk lain = profil rusak = fail-loud.
-    """
-    out = {}
-    for item in profile["absent_refs_allowed"]:
-        if isinstance(item, str):
-            out[item] = ""
-        elif isinstance(item, dict) and isinstance(item.get("ref"), str):
-            out[item["ref"]] = item.get("alasan", "")
-        else:
-            raise ProfileError(
-                f"{PROFILE_REL}: entri absent_refs_allowed tidak sah: {item!r} "
-                "(harus string path atau objek dengan kunci 'ref')")
-    return out
-
-
 # --- Dokumen aktif — SATU definisi cakupan pemindaian (8 Sep 2026) ----------
-# SEBELUMNYA dua alat membawa salinan daftar glob sendiri yang meleset satu
-# sama lain: tools/pack_repo.py memakai ACCEPTANCE_TEST_LOG.md (bukti run)
-# sebagai benih subset `_meta/`, padahal tools/validate_repo.py
-# mengecualikannya dari pemindaian rujukan. Akibat strukturalnya: menulis
-# bukti mengubah isi paket, sehingga bukti yang baru saja ditulis langsung
-# basi (angka 86/21/31/50/145 tidak bisa direproduksi di HEAD final). Definisi
-# tunggal di bawah menghapus drift itu: validator DAN packager memakai fungsi
-# `dokumen_aktif()` yang sama. Penjelasan normatif + alasan tiap pengecualian
-# ada di `_meta/PAKET_REPO_MANDIRI.md` bagian "Apa yang dihitung sebagai
-# dokumen aktif".
+# Definisi tunggal hasil PR #21. Validator memakai fungsi `dokumen_aktif()`
+# ini untuk pemindaian rujukan path; alat self-contained memakai prinsip yang
+# sama saat menilai isi folder sistem. Tidak ada lagi profil repo, daftar putih
+# rujukan-absen, atau daftar glob salinan di alat lain.
 #
 # `{name}` pada glob diganti nama folder sistem saat `dokumen_aktif()` dipanggil
 # dengan argumen `sistem`.
 
 ACTIVE_DOC_GLOBS = [
     # Dokumen master — berlaku di semua repo (master blueprint, ekstrak
-    # template, repo paket mandiri).
+    # template, dan repo kerja yang memakai meta-sistem).
     "_meta/*.md",
     "PANDUAN_PENGGUNA.md",
     "PROMPT_ENTRI_UNIVERSAL.md",
@@ -408,8 +321,8 @@ def dokumen_aktif(root, sistem):
     sistem=None → hanya dokumen master (`_meta/*.md` + pegangan pengguna root).
     sistem=nama → dokumen master + dokumen aktif sistem `nama`.
 
-    Dipakai oleh tools/validate_repo.py (pemindaian rujukan path) DAN
-    tools/pack_repo.py (benih subset `_meta/`). Alat lain TIDAK boleh membawa
+    Dipakai oleh tools/validate_repo.py untuk pemindaian rujukan path dan
+    menjadi acuan alat self-contained. Alat lain TIDAK boleh membawa
     salinan daftar glob sendiri — kalau cakupan berubah, ubah di sini saja.
     """
     root = Path(root)

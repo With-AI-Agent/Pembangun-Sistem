@@ -12,7 +12,13 @@ Template MUST contain:
 - entry point and minimal contract
 """
 from pathlib import Path
+from tempfile import TemporaryDirectory
+import hashlib
+import os
+import re
 import shutil
+import subprocess
+import sys
 import zipfile
 
 ROOT = Path(__file__).resolve().parents[1]
@@ -60,6 +66,176 @@ MANIFEST_BANNER = (
     "     repo baru dibuat dari _meta/SYSTEM_MANIFEST_TEMPLATE.md mulai versi 0.1.0.\n"
     "     Untuk meta-sistem repo ini sendiri, catat versi release di INDEKS. -->\n"
 )
+
+
+def current_meta_version() -> str:
+    manifest = ROOT / "_meta" / "SYSTEM_MANIFEST.md"
+    if not manifest.is_file():
+        return "0.0.0"
+    m = re.search(r"^- \*\*Versi:\*\* `([^`]+)`", manifest.read_text(encoding="utf-8"), re.MULTILINE)
+    return m.group(1) if m else "0.0.0"
+
+
+def source_sha(path: Path) -> str:
+    return hashlib.sha1(path.read_bytes()).hexdigest()
+
+
+def write_seed_system() -> None:
+    """Tambahkan benih sistem generik ke TEMPLATE COPY, bukan ke master.
+
+    Benih ini sengaja self-contained sejak hari pertama: validator sistem ada
+    di dalam foldernya, ada satu STATUS unit sehat, dan ada satu contoh salinan
+    berlabel nyata dari berkas master yang memang ada.
+    """
+    name = "sistem-benih"
+    root = TEMPLATE_DIR / name
+    (root / "_sistem").mkdir(parents=True, exist_ok=True)
+    (root / "_salinan-meta").mkdir(parents=True, exist_ok=True)
+    (root / "runs" / "benih-001").mkdir(parents=True, exist_ok=True)
+
+    (root / "README.md").write_text(
+        "# Sistem Benih\n\n"
+        "Folder ini dibuat otomatis oleh build_template.py sebagai titik awal sistem baru. "
+        "Ia bukan contoh domain; isinya hanya rangka minimum agar kontrak folder mandiri bisa diuji.\n\n"
+        "## Cara pakai\n\n"
+        "- Isi identitas dan dokumen domain sesuai hasil Discovery Level-0.\n"
+        "- Jalankan `python3 _sistem/validate_system.py` dari folder ini untuk cek rangka minimum.\n"
+        "- Jalankan `python3 tools/check_selfcontained.py --sistem sistem-benih` dari root repo template untuk membuktikan folder ini dapat disalin sendiri.\n"
+        "- Mekanisme `LOG_SESI` wajib diturunkan saat sistem mulai dipakai.\n\n"
+        "## Contoh salinan berlabel\n\n"
+        "Berkas `_salinan-meta/TEMPLATE_LOG_SESI.md` adalah contoh salinan berlabel nyata "
+        "dengan sumber `_meta/TEMPLATE_LOG_SESI.md`. Jika pola ini dipakai untuk dokumen lain, "
+        "tiga baris label wajib dipertahankan.\n",
+        encoding="utf-8",
+    )
+    (root / "PROMPT_ENTRI_UNIVERSAL.md").write_text(
+        "# Prompt Entri Universal — Sistem Benih\n\n"
+        "Baca README.md, SYSTEM_MANIFEST.md, lalu tanya tujuan sesi. Jangan menulis isi domain sebelum tujuan dikonfirmasi.\n",
+        encoding="utf-8",
+    )
+    (root / "PANDUAN_PENGGUNA.md").write_text(
+        "# Panduan Pengguna — Sistem Benih\n\n"
+        "agent_instruction: IGNORE for execution — USER GUIDE ONLY\n\n"
+        "Gunakan folder ini sebagai rangka awal. Prompt pembuka ada di PROMPT_ENTRI_UNIVERSAL.md. "
+        "Prompt penutup wajib menutup LOG_SESI, memastikan commit/push, dan mencatat pekerjaan tersisa.\n",
+        encoding="utf-8",
+    )
+    (root / "SYSTEM_MANIFEST.md").write_text(
+        "# System Manifest — Sistem Benih\n\n"
+        "- **Nama sistem:** Sistem Benih\n"
+        "- **Tujuan utama:** rangka minimum sistem baru dari template bersih\n"
+        "- **Pengguna/consumer:** pemilik repo dan agent\n"
+        "- **Pemilik keputusan:** pengguna\n"
+        "- **Versi:** `0.1.0`\n"
+        "- **Tahap:** `siap-pakai`\n"
+        "- **Status:** `Seed`\n"
+        "- **Dipakai via lmarena?** Ya\n\n"
+        "## Warisan (Kontrak)\n\n"
+        "| Butir | Status (diterapkan / override) | Letak di folder sistem | Override? |\n"
+        "|---|---|---|---|\n"
+        "| W-01 pegangan | diterapkan | PROMPT_ENTRI_UNIVERSAL.md + PANDUAN_PENGGUNA.md | |\n"
+        "| W-02 LOG_SESI | diterapkan | README.md + panduan penutup | |\n"
+        "| W-03 field checkpoint STATUS | diterapkan | runs/benih-001/STATUS.md | |\n"
+        "| W-04 manifest | diterapkan | SYSTEM_MANIFEST.md | |\n"
+        "| W-05 log keputusan | diterapkan | SYSTEM_MANIFEST.md | |\n"
+        "| W-06 QA 3-lapis | diterapkan | _sistem/validate_system.py | |\n"
+        "| W-07 fakta platform | diterapkan | bagian Dipakai via lmarena | |\n"
+        "| W-08 approval bertingkat | diterapkan | keputusan pengguna sebelum isi domain | |\n"
+        "| W-09 ringkasan cadangan | diterapkan | _cadangan-claude dibuat di root template | |\n\n"
+        "## Log Keputusan\n\n"
+        "| Tanggal | Perubahan | Alasan | Approval |\n"
+        "|---|---|---|---|\n"
+        "| 2026-09-08 | Benih dibuat otomatis oleh build_template.py | Sistem baru harus membawa validator dan contoh salinan berlabel sejak lahir | Keputusan pemilik PR A |\n",
+        encoding="utf-8",
+    )
+    (root / "runs" / "benih-001" / "STATUS.md").write_text(
+        "# STATUS — benih-001\n\n"
+        "- **Status:** `in-progress`\n"
+        "- **Pekerjaan belum tersimpan:** Tidak ada\n",
+        encoding="utf-8",
+    )
+    (root / "_sistem" / "validate_system.py").write_text(
+        "#!/usr/bin/env python3\n"
+        "from pathlib import Path\n"
+        "import re\n"
+        "import sys\n\n"
+        "ROOT = Path(__file__).resolve().parents[1]\n"
+        "REQ = [\n"
+        "    'README.md', 'SYSTEM_MANIFEST.md', 'PROMPT_ENTRI_UNIVERSAL.md',\n"
+        "    'PANDUAN_PENGGUNA.md', '_sistem/validate_system.py',\n"
+        "    '_salinan-meta/TEMPLATE_LOG_SESI.md', 'runs/benih-001/STATUS.md',\n"
+        "]\n\n"
+        "def field_values(text, label):\n"
+        "    pat = re.compile(r'^[ \\t]*(?:[-*][ \\t]+)?\\*{0,2}\\s*' + re.escape(label) + r'\\s*[:：]\\s*\\*{0,2}\\s*(.*?)\\s*$', re.MULTILINE)\n"
+        "    return [m.group(1).strip().strip('`').strip() for m in pat.finditer(text)]\n\n"
+        "findings = []\n"
+        "for rel in REQ:\n"
+        "    if not (ROOT / rel).is_file():\n"
+        "        findings.append(f'berkas wajib hilang: {rel}')\n"
+        "status = ROOT / 'runs/benih-001/STATUS.md'\n"
+        "if status.is_file():\n"
+        "    vals = field_values(status.read_text(encoding='utf-8'), 'Pekerjaan belum tersimpan')\n"
+        "    if vals != ['Tidak ada']:\n"
+        "        findings.append('STATUS benih harus memuat Pekerjaan belum tersimpan: Tidak ada')\n"
+        "manifest = ROOT / 'SYSTEM_MANIFEST.md'\n"
+        "if manifest.is_file() and not field_values(manifest.read_text(encoding='utf-8'), 'Versi'):\n"
+        "    findings.append('SYSTEM_MANIFEST.md: baris Versi tidak ada')\n"
+        "print('VALIDATOR SISTEM BENIH')\n"
+        "print('  root sistem:', ROOT.name + '/')\n"
+        "print('  temuan:', len(findings))\n"
+        "for item in findings:\n"
+        "    print('  - ' + item)\n"
+        "print('HASIL: ' + ('PASS' if not findings else 'FAIL'))\n"
+        "sys.exit(0 if not findings else 1)\n",
+        encoding="utf-8",
+    )
+    os.chmod(root / "_sistem" / "validate_system.py", 0o755)
+
+    src_rel = "_meta/TEMPLATE_LOG_SESI.md"
+    src = ROOT / src_rel
+    label = (
+        f"> Salinan turunan. Sumber: {src_rel} sha {source_sha(src)} tanggal 2026-09-08 versi-meta {current_meta_version()}\n"
+        "> Perbedaan: tidak ada\n"
+        "> Pemakaian: contoh salinan berlabel nyata untuk benih sistem baru\n"
+    ).encode("utf-8")
+    (root / "_salinan-meta" / "TEMPLATE_LOG_SESI.md").write_bytes(label + src.read_bytes())
+
+
+def smoke_extract() -> bool:
+    with TemporaryDirectory() as d:
+        ex = Path(d) / "extract"
+        ex.mkdir()
+        with zipfile.ZipFile(TEMPLATE_ZIP) as zf:
+            zf.extractall(ex)
+        git = shutil.which("git")
+        if git:
+            subprocess.run([git, "init", "-q"], cwd=ex, capture_output=True)
+        commands = [
+            ("python3 tools/validate_repo.py", [sys.executable, "tools/validate_repo.py"], {}),
+            ("python3 tools/test_failure_injection.py", [sys.executable, "tools/test_failure_injection.py"], {"FI_SKIP_NESTED": "1"}),
+            ("python3 tools/check_selfcontained.py --semua", [sys.executable, "tools/check_selfcontained.py", "--semua"], {}),
+        ]
+        ok = True
+        print("--- SMOKE EXTRACT ---")
+        for label, cmd, extra_env in commands:
+            print(f"$ {label}")
+            proc = subprocess.run(
+                cmd,
+                cwd=ex,
+                capture_output=True,
+                text=True,
+                env={**os.environ, **extra_env, "PYTHONDONTWRITEBYTECODE": "1"},
+            )
+            if proc.stdout:
+                print(proc.stdout.rstrip())
+            if proc.stderr:
+                print("[stderr]")
+                print(proc.stderr.rstrip())
+            print(f"exit={proc.returncode}")
+            if proc.returncode != 0:
+                ok = False
+        print("--- SMOKE EXTRACT " + ("PASSED" if ok else "FAILED") + " ---")
+        return ok
 
 
 def build():
@@ -157,14 +333,16 @@ def build():
               + ", ".join(sorted(set(drifted))))
         return False
 
+    write_seed_system()
+
     for d in EMPTY_DIRS:
         (TEMPLATE_DIR / d).mkdir(parents=True, exist_ok=True)
         (TEMPLATE_DIR / d / ".gitkeep").write_text("", encoding="utf-8")
 
-    # Clean INDEKS_SISTEM.md to remove example systems
+    # Clean INDEKS_SISTEM.md to remove example systems and register the seed
     indeks_path = TEMPLATE_DIR / "_meta/INDEKS_SISTEM.md"
     if indeks_path.is_file():
-        # Write minimal index with no systems
+        # Write minimal index with the generated seed system
         indeks_path.write_text(
             "# Indeks Sistem\n\n"
             "### Daftar semua sistem yang ada di repo ini, dengan status dan tanggal terakhir disentuh. Dicatat MANUAL oleh agent setiap kali selesai kerja di suatu sistem — TIDAK mengandalkan pembacaan git history. Dibaca di awal sesi untuk menentukan apakah perlu menawarkan audit sebelum lanjut kerja (lihat `00_CARA_KERJA_META.md`).\n\n"
@@ -177,7 +355,7 @@ def build():
             "## Daftar Sistem\n\n"
             "| Nama Sistem | Folder | Status | Terakhir Disentuh | Catatan |\n"
             "|---|---|---|---|---|\n"
-            "| (belum ada) | | | | |\n\n"
+            "| Sistem Benih | `sistem-benih/` | Seed self-contained | 2026-09-08 | Rangka minimum; jalankan `python3 tools/check_selfcontained.py --sistem sistem-benih` setelah ekstrak |\n\n"
             "---\n\n"
             "## Legenda Status\n\n"
             "- **Kerangka dibuat, isi belum** — `00_RENCANA_KERANGKA.md` sudah ada dan di-merge, tapi dokumen-dokumen isinya belum mulai digali\n"
@@ -227,6 +405,8 @@ def build():
         print(f"TEMPLATE VERIFY FAILED: should not contain: {bad}")
         return False
     print("TEMPLATE VERIFY PASSED: no personal data, no production output, no internal audit, no domain example, no reference_only historical doc")
+    if not smoke_extract():
+        return False
     return True
 
 if __name__ == "__main__":

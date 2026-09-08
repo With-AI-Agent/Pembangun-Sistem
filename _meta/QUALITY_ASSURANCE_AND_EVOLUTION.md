@@ -195,9 +195,9 @@ Versi lama tidak boleh dihapus sebelum versi baru terbukti stabil.
 
 ---
 
-## Lapisan pengeluaran: paket repo mandiri
+## Lapisan pengeluaran: folder sistem mandiri
 
-Sebuah sistem yang tidak bisa dikeluarkan dari repo ini menjadi repo yang berdiri sendiri dan tetap lolos validasi **belum** benar-benar self-contained — protokol, definisi "siap di-upload", dan cara mengujinya ada di `_meta/PAKET_REPO_MANDIRI.md`.
+Sebuah sistem yang foldernya belum lolos `tools/check_selfcontained.py` **belum** benar-benar self-contained. Protokol, definisi folder sebagai deliverable, dan cara mengujinya ada di `_meta/PAKET_REPO_MANDIRI.md`.
 
 ---
 

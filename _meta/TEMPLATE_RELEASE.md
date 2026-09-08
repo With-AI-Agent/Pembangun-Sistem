@@ -21,7 +21,8 @@ Template **wajib** membawa (diselaraskan dengan temuan M-01/M-16 audit 5 Sep 202
 - SEMUA `_meta/*.md` top-level — daftar ini **tidak lagi manual**: `tools/build_template.py` memakai inventaris inti statis (`checkpoint_core.CORE_META_FILES`) ∪ glob folder, jadi file meta baru otomatis ikut, dan file inti yang DIHAPUS membuat BUILD GAGAL (kewajiban tak diturunkan dari keberadaan — review F1); guard rujukan aktif tetap menyangga
 - SEMUA `tools/*.py` (termasuk `checkpoint_core.py`) — tanpa validator/FI/backup/template, repo hasil ekstrak kehilangan regresi struktural dan penegakan kontrak warisan (dulu tidak ikut: cacat M-01 kelas distribusi)
 - entry point pengguna (`PANDUAN_PENGGUNA.md`) + prompt entri (`PROMPT_ENTRI_UNIVERSAL.md`)
-- indeks sistem dikosongkan (`_meta/INDEKS_SISTEM.md` dengan header + baris kosong)
+- indeks sistem disetel untuk membawa satu sistem-benih generik (`sistem-benih/`) agar repo hasil ekstrak memiliki contoh folder mandiri sejak lahir
+- sistem-benih generik berisi `_sistem/validate_system.py`, STATUS unit sehat, pegangan minimal, dan satu contoh salinan berlabel nyata dari `_meta/TEMPLATE_LOG_SESI.md`
 - manifest meta (`_meta/SYSTEM_MANIFEST.md`) sebagai referensi versi — **diberi banner otomatis** oleh builder bahwa isinya sejarah master, bukan identitas repo baru (M-16)
 - `.gitignore`, `.gitattributes`
 - folder kosong `_pegangan-kamu/` dan `_cadangan-claude/` dengan `.gitkeep`
@@ -55,10 +56,11 @@ Jika anchor transformasi tidak ketemu dan teks targetnya pun tidak ada (dokumen 
 - tidak ada `arsip-naskah`
 - tidak ada `unit-aktif`
 - **kelengkapan (M-01):** setiap `_meta/*.md` yang dirujuk dari dokumen aktif `_meta/` HARUS ikut terbawa; sumber INCLUDE yang hilang = build gagal
+- **folder mandiri (AT-17):** sistem-benih di hasil ekstrak harus lolos `tools/check_selfcontained.py --semua`
 
 Jika ada pelanggaran, build gagal.
 
-**Smoke test pasca-build (wajib setiap kali template/validator berubah):** ekstrak zip ke direktori kosong, `git init`, lalu jalankan di sana `python3 tools/validate_repo.py` dan `python3 tools/test_failure_injection.py` — keduanya harus PASS (exit 0) tanpa ada sistem terdaftar; validator di sana harus menghasilkan PERSIS 5 warning normalisasi di bawah, dan FI berjalan 24 skenario. Ini membuktikan template berdiri sendiri (diverifikasi 5 Sep 2026; diperketat pasca review PR #11; lihat `AUDIT_META_SISTEM_2026-09-05.md` Addendum 2; warning ke-5 dipin 6 Sep 2026, meta v1.4.0).
+**Smoke test pasca-build (wajib setiap kali template/validator berubah):** builder mengekstrak zip ke direktori kosong, menjalankan `git init`, lalu menjalankan `python3 tools/validate_repo.py`, `python3 tools/test_failure_injection.py`, dan `python3 tools/check_selfcontained.py --semua` di sana. Ketiganya harus PASS (exit 0). Validator di sana harus menghasilkan PERSIS 5 warning normalisasi di bawah. Ini membuktikan template berdiri sendiri sekaligus membuktikan sistem-benih lahir sebagai folder mandiri (diverifikasi ulang PR A, 8 Sep 2026).
 
 **Yang normal di repo hasil ekstrak — PERSIS 5 warning (daftar normalisasi, dipin di FI skenario R7):** semuanya rujukan historis master yang dilabeli (bukan instruksi aktif); exit code tetap 0. (Format daftar sengaja tanpa backtick pada path-nya: baris ini mendokumentasikan warning, bukan menunjuk dependensi — ia sendiri tidak boleh menjadi warning.)
 
@@ -84,7 +86,7 @@ Output:
 
 ## Status Rilis
 
-- Template bersih: built dan verified 2026-09-04 via `tools/build_template.py`; **rebuilt & re-verified 2026-09-05** (pasca review PR #11: transformasi self-containment + daftar 4 warning dipin); **re-verified 2026-09-06** (meta v1.4.0: warning normalisasi ke-5 dipin — rujukan provenance Log Evolusi v1.4.0 ke acceptance log KK)
+- Template bersih: built dan verified 2026-09-04 via `tools/build_template.py`; **rebuilt & re-verified 2026-09-05** (pasca review PR #11: transformasi self-containment + daftar 4 warning dipin); **re-verified 2026-09-06** (meta v1.4.0: warning normalisasi ke-5 dipin — rujukan provenance Log Evolusi v1.4.0 ke acceptance log KK); **re-verified 2026-09-08 PR A** (sistem-benih + validator + contoh salinan berlabel + smoke `check_selfcontained`)
 - Backup: created dan verified 2026-09-04 via `tools/backup_verify.py`; **re-verified 2026-09-05** (inventaris inti statis, 30 file)
 
 Kedua artefak disimpan di `_meta/_internal/` (bukan bagian dari template bersih itu sendiri).

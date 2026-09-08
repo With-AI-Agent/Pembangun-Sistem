@@ -42,7 +42,7 @@ Dokumen atau sistem **tidak boleh disebut selesai hanya karena file sudah dituli
 Selain checklist sistem domain, harus ada:
 
 - [ ] Pilot end-to-end berhasil
-- [ ] Sistem dapat dibangkitkan menjadi repo mandiri: `tools/pack_repo.py <sistem> --check` hijau (0 pemblokir), dan validator sistemnya (`validate_system.py` di folder sistem internal) tersedia + PASS **di dalam hasil pack** — bukan hanya di master. Aturan lengkap: `_meta/PAKET_REPO_MANDIRI.md`; skenario ujinya AT-15
+- [ ] Folder sistem adalah deliverable mandiri: `python3 tools/check_selfcontained.py --sistem <sistem> --report` exit 0. Alat menyalin hanya folder sistem, menjalankan `_sistem/validate_system.py` di salinan, menolak rujukan ke diri sendiri berprefiks folder, menolak rujukan `_meta/`/`tools/` tanpa salinan berlabel, dan menolak salinan turunan basi/tanpa label. Aturan lengkap: `_meta/PAKET_REPO_MANDIRI.md`; skenario ujinya AT-17
 - [ ] Failure mode penting sudah diuji
 - [ ] Verifikasi output diuji terhadap contoh nyata
 - [ ] Self-improvement tidak berjalan tanpa trigger dan acceptance criteria

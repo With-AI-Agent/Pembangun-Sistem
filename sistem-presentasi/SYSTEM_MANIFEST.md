@@ -113,7 +113,7 @@ Status butir `03_KONTRAK_WARISAN.md` meta v1.3.0 untuk sistem ini (disinkronkan 
 - [x] Audit terakhir tercatat — 5 Sep 2026 (otomatis: validate_system + qa_deck + install_deps, semua exit 0; **independen Sedang: 11 temuan diperbaiki di v0.3.0**)
 - [x] Ringkasan cadangan sinkron — `_cadangan-claude/RINGKASAN_sistem-presentasi.md` (root; dipindah dari `_meta/` 5 Sep 2026, AP-10)
 - [x] Pegangan pengguna tersedia di dalam folder sistem — `PANDUAN_PENGGUNA.md` + `PROMPT_ENTRI_UNIVERSAL.md` (prompt pembuka + penutup, 5 Sep 2026)
-- [x] **Paket repo mandiri LULUS** — 7 Sep 2026, versi `0.4.2`. `tools/pack_repo.py` mode pemeriksaan hijau (0 pemblokir); hasil pack lolos validator repo (0 warning) + `validate_system.py` di DALAM hasil pack. Protokol: `_meta/PAKET_REPO_MANDIRI.md`; bukti: `ACCEPTANCE_TEST_LOG.md` bagian "Paket repo mandiri"
+- [x] **Paket repo mandiri LULUS** — 7 Sep 2026, versi `0.4.2`. tools/pack_repo.py mode pemeriksaan hijau (0 pemblokir); hasil pack lolos validator repo (0 warning) + `validate_system.py` di DALAM hasil pack. Protokol: `_meta/PAKET_REPO_MANDIRI.md`; bukti: `ACCEPTANCE_TEST_LOG.md` bagian "Paket repo mandiri"
 - [x] Mekanisme log sesi diturunkan ke dalam folder sistem — `_sistem/11_LOG_SESI.md` (self-contained) + langkah 5 prompt pembuka (recovery log `OPEN`) + langkah 2 prompt penutup (menutup log `CLOSED`) + `validate_system.py` memeriksa 11 dokumen (5 Sep 2026, v0.4.0)
 
 ## Log Evolusi
