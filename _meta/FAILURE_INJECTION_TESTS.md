@@ -86,7 +86,7 @@ FI-01…FI-10 di atas adalah test perilaku AGENT. Skrip `tools/test_failure_inje
 
 | Skenario | Mutasi | Ekspektasi |
 |---|---|---|
-| SC1 | matikan pemeriksaan self-prefix | rujukan `sistem-fi-self-prefix/README.md` harus ditolak sebagai SELF-PREFIX; setelah mutasi fixture yang sama lolos |
+| SC1 | matikan pemeriksaan self-prefix | rujukan self-prefixed fixture sistem-fi-self-prefix/README.md harus ditolak sebagai SELF-PREFIX; setelah mutasi fixture yang sama lolos |
 | SC2 | matikan pemeriksaan rujukan `_meta/` atau `tools/` tanpa salinan | rujukan `tools/validate_repo.py` harus ditolak sebagai MISSING-LABELED-COPY; setelah mutasi fixture yang sama lolos |
 | SC3 | matikan pemeriksaan badan salinan terhadap sumber | salinan berlabel dengan badan berubah dan `Perbedaan: tidak ada` harus ditolak sebagai STALE-COPY; setelah mutasi fixture yang sama lolos |
 | SC4 | matikan pemeriksaan area salinan tanpa label | berkas dalam `_salinan-meta/` tanpa tiga baris label harus ditolak sebagai DERIVED-NO-LABEL; setelah mutasi fixture yang sama lolos |
