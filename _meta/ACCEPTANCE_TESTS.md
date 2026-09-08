@@ -90,7 +90,7 @@ Tes ini memvalidasi perilaku sistem, bukan hanya keberadaan file. Setiap test me
 
 **Given:** sebuah sistem domain sudah terdaftar di `INDEKS_SISTEM.md` dan hendak diberi (atau sudah memegang) status "Siap dipakai produksi". Penguji adalah sesi baru yang **tidak** ikut membangun sistem itu dan tidak diberi pengetahuan tersirat apa pun.
 **When:** penguji menjalankan prosedur di bawah, apa adanya, dari root repo master.
-**Then:** keempat kriteria LULUS di bawah terpenuhi. Satu saja tidak terpenuhi = sistem itu **belum** boleh mengklaim "Siap dipakai produksi" (`DEFINITION_OF_DONE.md`). Aturan normatifnya: `_meta/PAKET_REPO_MANDIRI.md`.
+**Then:** ketujuh kriteria LULUS di bawah terpenuhi. Satu saja tidak terpenuhi = sistem itu **belum** boleh mengklaim "Siap dipakai produksi" (`DEFINITION_OF_DONE.md`). Aturan normatifnya: `_meta/PAKET_REPO_MANDIRI.md`.
 
 **Prosedur uji (bisa diulang, tanpa pengetahuan tersirat):**
 
@@ -121,6 +121,21 @@ diff -r <root repo master>/<nama-folder-sistem> /tmp/uji-pack-1/<nama-folder-sis
 cp -r <root repo master> /tmp/uji-rusak && cd /tmp/uji-rusak
 rm <nama-folder-sistem>/_sistem/validate_system.py
 python3 tools/pack_repo.py <nama-folder-sistem> --check ; echo "exit=$?"
+
+# 7. pemindahan ke luar sandbox (L7) — self-contained.
+#    Pointer: butir 4–7 bagian "Memindahkan paket ke luar sandbox"
+#    di _meta/PAKET_REPO_MANDIRI.md. Draft tanpa aset tidak memenuhi.
+#    Pin sumber: snapshot bersih pada SHA yang dicatat di berita acara
+#    PAKET_REPO.md / entri bukti, BUKAN HEAD cabang kerja.
+#    Bangkitkan paket pada SHA itu:
+python3 tools/pack_repo.py <nama-folder-sistem> --zip
+#    Unggah ZIP packager ke DRAFT yang sudah ada (jangan membuat release
+#    baru, jangan mengganti tag):
+gh release upload <tag-paket> <berkas-zip> --repo With-Ai-Agent/Pembangun-Sistem --clobber
+#    Verifikasi state aset terunggah (jumlah aset >= 1, state=uploaded):
+gh api repos/With-Ai-Agent/Pembangun-Sistem/releases --jq '.[] | {id, tag_name, draft, assets: [.assets[] | {name, state, size}]}'
+#    Unduh ulang aset dan cocokkan sha256 dengan byte ZIP lokal.
+#    Kalimat tegas: draft tanpa aset tidak memenuhi langkah ini.
 ```
 
 **Kriteria LULUS (semuanya, tanpa penilaian rasa):**
@@ -133,7 +148,7 @@ python3 tools/pack_repo.py <nama-folder-sistem> --check ; echo "exit=$?"
 | L4 | Langkah 4 dan 5 bersih | `diff -r` langkah 4 **kosong** (`exit=0`). `diff -r` langkah 5 kosong, atau selisihnya HANYA berkas yang tercantum sebagai dikecualikan di `PAKET_REPO.md` — tidak boleh ada satu pun berkas yang **isinya** berbeda |
 | L5 | Langkah 6 merah | `exit` non-nol dan pemblokirnya menyebut validator sistem yang hilang. Uji ini gagal kalau langkah 6 justru hijau |
 | L6 | Angka bukti tidak basi | angka bukti (`berkas`, `subset _meta`, `absent_refs_allowed`, dan angka validator DI DALAM paket) diambil dari run pada **sha commit yang dicatat** di entri bukti, dan entri itu ditulis **setelah** semua perubahan isi selesai. Kalau isi paket bergeser setelah entri ditulis, tulis **ENTRI BARU** yang menggantikannya — entri lama dibiarkan apa adanya dan dirujuk sebagai "digantikan", tidak disunting diam-diam |
-| L7 | paket tersedia bagi pemilik di luar sandbox (repo mandiri ter-push ATAU aset release dengan nama paket-<sistem>-<versi>-<sha>) | URL repo privat + commit ter-push, ATAU URL release di master privat + aset ZIP terunggah dan terverifikasi; draft tanpa aset tidak memenuhi langkah ini |
+| L7 | paket tersedia bagi pemilik di luar sandbox (repo mandiri ter-push ATAU aset release dengan nama paket-<sistem>-<versi>-<sha>) | URL repo privat + commit ter-push, ATAU URL release di master privat + aset ZIP terunggah dan terverifikasi; draft tanpa aset tidak memenuhi langkah ini. Pointer: langkah 7 blok "Prosedur uji" + butir 4–7 bagian "Memindahkan paket ke luar sandbox" |
 
 **Catatan pelaksanaan:** langkah 6 dijalankan di salinan sementara. Merusak master untuk keperluan uji dilarang. Bersihkan `/tmp/uji-*` setelah selesai; hasil pack tidak pernah di-commit ke master.
 

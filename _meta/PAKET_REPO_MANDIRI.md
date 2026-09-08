@@ -263,14 +263,6 @@ Daftar ini normatif. Setiap butir punya alasan; kalau alasannya tidak lagi berla
 
 ---
 
-## Log keputusan
-
-| Tanggal | Perubahan | Alasan | Approval |
-|---|---|---|---|
-| 2026-09-07 | Dokumen dibuat (v1) | Putusan pemilik: satu perintah → satu folder repo mandiri siap upload, tanpa memisah file manual dan tanpa menulis ulang isi dokumen | Putusan pemilik 7 Sep 2026 (dinyatakan FINAL, tidak dibahas ulang). Menunggu review independen L1 |
-| 2026-09-08 | v1.1: satu definisi "dokumen aktif" (bagian 3b) dipakai validator DAN packager; benih subset `_meta/` = dokumen aktif saja (bukan semua `.md`); rujukan dokumen non-aktif dicatat terpisah (bagian 5); syarat iii dipertegas "pada dokumen aktif" | Akar masalah bukti basi: benih memindai `ACCEPTANCE_TEST_LOG.md`/`DISKUSI_MENTAH*` sehingga menulis bukti mengubah isi paket. Satu definisi menghapus drift dua daftar glob | Putusan pemilik 8 Sep 2026 (perbaikan B1/B2). Menunggu review independen L1 — tidak ada gate lain yang diklaim tertutup |
-
-
 ## Memindahkan paket ke luar sandbox
 
 Paket yang tervalidasi di sandbox belum berarti sudah tersedia bagi pemilik di luar sandbox; pemindahan adalah langkah tersendiri, bukan penutupan gate sistem.
@@ -282,3 +274,14 @@ Paket yang tervalidasi di sandbox belum berarti sudah tersedia bagi pemilik di l
 5. **Batas izin nyata — bukan bug mekanisme.** Pada sesi agent 8 Sep 2026, token GitHub App dapat membaca/menulis repo master privat, tetapi **TIDAK bisa createRepository di organisasi**: kedua perintah create privat ditolak persis `GraphQL: Resource not accessible by integration (createRepository)`. Ini batas izin token, bukan alasan mengubah packager atau meminta pemilik menyerahkan kredensial. Tidak ada repo mandiri yang berhasil dibuat oleh sesi tersebut.
 6. **Cara keluar kedua — aset release + pemilik membuat repo privat sendiri.** Hanya bila createRepository ditolak dengan penolakan integration tersebut atau 403 setara, gunakan release di master **yang telah diverifikasi privat**, satu per sistem: nama tag `paket-<sistem>-<versi>-<sha-pendek>`, target SHA sumber lengkap, judul "Paket repo mandiri <sistem> v<versi>"; catatan memuat SHA lengkap, perintah bangkit ulang pada SHA itu, jumlah berkas/subset/absent, dan hasil kedua validator. Unggah ZIP packager apa adanya dengan `gh release create`, bukan lewat commit master; tag paket tidak boleh bertabrakan dengan tag rilis versi sistem. Setelah berhasil, verifikasi aset berstatus uploaded, unduh ulang dan cocokkan SHA256, catat URL release/aset. Pemilik mengunduh, mengekstrak, membuat repo privat (atau memakai target privat yang benar-benar kosong), lalu mengikuti petunjuk Git dalam berita acara paket. Master tetap sumber kebenaran; tidak ada isi master yang dihapus karena salinannya sudah keluar.
 7. **Jangan menyamakan draft dengan pengiriman.** Fakta sesi 8 Sep 2026: pembuatan metadata draft release berhasil, tetapi unggah kedua ZIP ke uploads.github.com gagal `EOF`, termasuk percobaan ulang; tersisa dua draft dengan **0 aset**. Ini hambatan unggah yang terpisah dari penolakan createRepository; penyebab EOF belum terbukti. Jangan menyebut "tersedia sebagai aset release" sebelum aset benar-benar ada dan terverifikasi; catat status tertunda beserta URL draft dan perintah unggah ulang, lalu serahkan bukti kepada reviewer. Publikasi bukan klaim produksi: brand core kosong, pilot yang belum dijalankan, dan acceptance lain yang terbuka tetap apa adanya.
+
+Unggah aset release tidak tersedia dari lingkungan sesi (EOF ke uploads.github.com; terbukti 2 sesi × 3 metode, 8 September 2026); jalur yang terverifikasi adalah menjalankan tools/pack_repo.py di mesin pemilik.
+
+## Log keputusan
+
+| Tanggal | Perubahan | Alasan | Approval |
+|---|---|---|---|
+| 2026-09-07 | Dokumen dibuat (v1) | Putusan pemilik: satu perintah → satu folder repo mandiri siap upload, tanpa memisah file manual dan tanpa menulis ulang isi dokumen | Putusan pemilik 7 Sep 2026 (dinyatakan FINAL, tidak dibahas ulang). Menunggu review independen L1 |
+| 2026-09-08 | v1.1: satu definisi "dokumen aktif" (bagian 3b) dipakai validator DAN packager; benih subset `_meta/` = dokumen aktif saja (bukan semua `.md`); rujukan dokumen non-aktif dicatat terpisah (bagian 5); syarat iii dipertegas "pada dokumen aktif" | Akar masalah bukti basi: benih memindai `ACCEPTANCE_TEST_LOG.md`/`DISKUSI_MENTAH*` sehingga menulis bukti mengubah isi paket. Satu definisi menghapus drift dua daftar glob | Putusan pemilik 8 Sep 2026 (perbaikan B1/B2). Menunggu review independen L1 — tidak ada gate lain yang diklaim tertutup |
+| 2026-09-08 | v1.2: bagian "Memindahkan paket ke luar sandbox" (tujuh butir: pin sumber, bangkitkan dan buktikan, kebersihan arsip, push langsung bila izin, batas izin nyata, aset release sebagai cara kedua, draft bukan pengiriman) | Bagian normatif baru semula berada sesudah tabel log dan tidak punya baris keputusan (temuan F-2 review independen PR #22, komentar 5580879641) | Putusan pemilik 8 Sep 2026 (jalur pemindahan). Menunggu review independen L1 — L7 belum terpenuhi sampai aset terverifikasi ada |
+
