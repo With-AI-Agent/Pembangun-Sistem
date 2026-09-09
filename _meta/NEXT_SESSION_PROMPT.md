@@ -30,11 +30,12 @@ Sebelum melakukan perubahan apa pun, lakukan bootstrap secara berurutan:
 11. Tanyakan tujuan sesi dan jangan menulis, mengubah, commit, atau merge apa
     pun sebelum tujuan serta ruang lingkupnya jelas.
 
-Konteks kerja yang diketahui dari file, bukan dari asumsi chat:
-- baseline v1.0.0-rc1, semua gate rilis centang (behavioral, recovery, backup, template, pilot approved);
-- regression audit struktural lulus, fail-closed 4 skenario lulus, recovery nyata FI-01 s/d FI-07 lulus, backup verify lulus, template clean AT-10 lulus;
-- pilot-002 behavioral adalah bukti pertama recovery nyata;
-- platform lmarena: branch arena otomatis, tidak bisa push setelah merge/close, sesi bisa crash — lihat PLATFORM_LMARENA.md;
+Konteks kerja yang diketahui dari file, bukan dari asumsi chat (ini orientasi saja — blok ini sengaja bebas angka versi/klaim status agar tidak pernah basi; versi dan status AKTUAL selalu dibaca dari file yang disebut, bukan dari baris ini):
+- Meta-sistem berstatus `Released`; versi + gate aktual: `_meta/SYSTEM_MANIFEST.md`.
+- Sistem domain terdaftar + status + versi aktual: `_meta/INDEKS_SISTEM.md`; manifest tiap sistem di root foldernya.
+- Bukti pertama recovery nyata: pilot-002 behavioral (riwayat; jejaknya di area master-only, disebut tanpa backtick).
+- Regression struktural dijaga alat di `tools/` — jalankan sendiri untuk verifikasi, jangan percaya klaim sesi sebelumnya.
+- platform lmarena: branch `arena/` dibuat otomatis, tidak bisa push setelah merge/close, sesi bisa crash — lihat `_meta/PLATFORM_LMARENA.md`;
 - log sesi berkelanjutan (`LOG_SESI_YYYY-MM-DD.md`) wajib untuk mitigasi crash platform: append + commit + push setelah tiap pertukaran yang menghasilkan informasi baru; header "Keadaan Sesi" selalu segar; `CLOSED` di akhir sesi. Filter anti-bising WAJIB — lihat `PROTOKOL_CHECKPOINT_RECOVERY.md` bagian "Log Sesi Berkelanjutan".
 
 Aturan keselamatan:
