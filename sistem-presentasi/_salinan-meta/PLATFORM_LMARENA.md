@@ -1,4 +1,4 @@
-> Salinan turunan. Sumber: _meta/PLATFORM_LMARENA.md sha b2985f37eac2be8f1a812711751f8c0dce0f21b9 tanggal 2026-09-09 versi-meta 1.12.0
+> Salinan turunan. Sumber: _meta/PLATFORM_LMARENA.md sha 1f8aa6b9031af3c636695f9b8d099d8eb148e932 tanggal 2026-09-09 versi-meta 1.13.0
 > Perbedaan: tidak ada
 > Pemakaian: fakta platform yang dirujuk bagian Batasan Platform manifest sistem ini (butir W-07 kontrak warisan) — dibawa agar folder ini berdiri sendiri tanpa _meta/.
 # Platform lmarena — Fakta vs Policy
@@ -57,7 +57,7 @@ Policy ini dibuat **karena** fakta platform di atas, bukan aturan sembarang.
 
 ### P2 — Log sesi berkelanjutan (`LOG_SESI`)
 
-**Policy:** Setiap sesi memelihara file `LOG_SESI_YYYY-MM-DD.md` di folder scope kerja (unit, sistem, atau root repo; format `TEMPLATE_LOG_SESI.md`). Agent append + update header "Keadaan Sesi" + commit + push **segera setelah tiap pertukaran yang menghasilkan informasi baru**. Yang dicatat: keputusan/koreksi/kendala/preferensi pengguna (near-verbatim), proposal penting + dasarnya, kesepakatan & penolakan + alasan, fakta terverifikasi, state kerja, pertanyaan terbuka. Yang TIDAK dicatat: konfirmasi, basa-basi, ulang isi `STATUS.md`/Log (tunjuk path), dump chat. Akhir sesi: header ditandai `CLOSED` (atau `OPEN` + "dilanjutkan di mana"). Entry point sesi baru: cari log terbaru; yang `OPEN` wajib dibaca dan keadaannya dilaporkan + dikonfirmasi ke pengguna.
+**Policy:** Setiap sesi memelihara file `LOG_SESI_YYYY-MM-DD.md` di folder scope kerja (unit, sistem, atau folder `_log-sesi/` untuk level repo/meta; format `TEMPLATE_LOG_SESI.md`). Agent append + update header "Keadaan Sesi" + commit + push **segera setelah tiap pertukaran yang menghasilkan informasi baru**. Yang dicatat: keputusan/koreksi/kendala/preferensi pengguna (near-verbatim), proposal penting + dasarnya, kesepakatan & penolakan + alasan, fakta terverifikasi, state kerja, pertanyaan terbuka. Yang TIDAK dicatat: konfirmasi, basa-basi, ulang isi `STATUS.md`/Log (tunjuk path), dump chat. Akhir sesi: header ditandai `CLOSED` (atau `OPEN` + "dilanjutkan di mana"). Entry point sesi baru: cari log terbaru; yang `OPEN` wajib dibaca dan keadaannya dilaporkan + dikonfirmasi ke pengguna.
 
 **Alasan kausal:** Karena fakta #3 (sesi bisa crash, kadang tidak bisa dibuka lagi) dan karena agent sesi baru tidak punya akses ke chat sesi lama, maka konteks yang tidak segera jadi file **hilang permanen**. Mekanisme ini adalah pencatatan sebagai mode normal, bukan checkpoint darurat: aturan lama (checkpoint >5 giliran mendekati keputusan) diganti karena berbasis ambang+judgment — sebelum ambang tercapai, tidak ada yang tercatat, dan diskusi eksploratif tidak selalu "mendekati" keputusan.
 

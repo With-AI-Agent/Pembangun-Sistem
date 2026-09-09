@@ -165,7 +165,7 @@ Sistem ini dipakai via lmarena Agent Mode. Platform memiliki perilaku otomatis y
 
 ### Aturan Log Sesi (`LOG_SESI`) — self-contained
 
-1. **Satu file per sesi:** `LOG_SESI_YYYY-MM-DD.md` di folder scope kerja (unit kerja, akar sistem, atau root repo bila lintas sistem).
+1. **Satu file per sesi:** `LOG_SESI_YYYY-MM-DD.md` di folder scope kerja (unit kerja, akar sistem, atau folder `_log-sesi/` di root repo bila lintas sistem).
 2. **Update + commit + push segera** setelah tiap pertukaran yang menghasilkan informasi baru — bukan mekanis tiap giliran.
 3. **Header "Keadaan Sesi" selalu segar** (agent baru membaca ini dulu): di mana kita sekarang, apa yang sudah disepakati, apa yang masih terbuka, langkah berikutnya.
 4. **Yang dicatat:** keputusan/koreksi/kendala/preferensi pengguna (near-verbatim), proposal penting agent + dasarnya, kesepakatan & penolakan + alasan, fakta/hasil verifikasi sesi ini, perubahan state kerja, pertanyaan terbuka.

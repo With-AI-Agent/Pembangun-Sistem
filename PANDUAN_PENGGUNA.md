@@ -22,8 +22,8 @@ Setelah itu:
    selesai di-merge.
 3. Cek _meta/INDEKS_SISTEM.md untuk tahu sistem apa saja yang sudah ada
    dan statusnya masing-masing.
-4. Minta agent cari file `LOG_SESI_*.md` terbaru (root repo / folder sistem /
-   folder unit kerja); kalau keadaannya `OPEN`, BACA dulu dan laporkan apa yang
+4. Minta agent cari file `LOG_SESI_*.md` terbaru (folder `_log-sesi/` / folder
+   sistem / folder unit kerja); kalau keadaannya `OPEN`, BACA dulu dan laporkan apa yang
    terjadi di sesi terakhir — jangan minta aku menjelaskan ulang konteks yang
    sudah tercatat di sana.
 

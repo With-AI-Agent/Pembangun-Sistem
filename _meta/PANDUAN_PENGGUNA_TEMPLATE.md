@@ -22,7 +22,7 @@ Blok prompt siap salin. Wajib memuat instruksi ke agent:
 2. Verifikasi kondisi branch/working tree (branch aktif `arena/...` dibuat otomatis platform; jangan asumsi `main`).
 3. **Cek dan laporkan semua PR yang masih terbuka** (level repo — dari sistem/apapun, kalau multi-sistem).
 4. Cek status sistem (manifest/index) dan laporkan ringkas.
-5. **Cari `LOG_SESI_*.md` terbaru** (root repo / folder sistem / folder unit); kalau keadaannya `OPEN` → baca dan **laporkan keadaan sesi sebelumnya** — konteks itu tidak boleh ditanya ulang ke pengguna.
+5. **Cari `LOG_SESI_*.md` terbaru** (folder `_log-sesi/` / folder sistem / folder unit); kalau keadaannya `OPEN` → baca dan **laporkan keadaan sesi sebelumnya** — konteks itu tidak boleh ditanya ulang ke pengguna.
 6. Tanya tujuan sesi; berdasarkan jawaban, baca sendiri file yang relevan — tanpa perlu ditempel manual.
 7. Jangan menulis/eksekusi apa pun sebelum tujuan sesi dikonfirmasi.
 

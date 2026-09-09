@@ -38,7 +38,10 @@
 → Review independen oleh SESI LAIN wajib sebelum klaim boleh masuk main — protokol varian KK di `PROTOKOL_REVIEW_INDEPENDEN.md` (root sistem) + induk _meta/PROTOKOL_REVIEW_INDEPENDEN.md di master (provenance); varian prompt reviewer siap tempel ada di `panduan/PANDUAN_PENGGUNA.md`
 
 **Mau menjadikan sistem ini repo sendiri (terpisah dari repo master)?**
-→ Satu perintah di root repo master: `python3 tools/pack_repo.py sistem-konten-kreator --check` (lihat dulu), lalu tanpa `--check` untuk benar-benar membangkitkannya. Aturannya: _meta/PAKET_REPO_MANDIRI.md di master (provenance)
+
+    python3 tools/check_selfcontained.py --sistem sistem-konten-kreator --report
+
+Exit 0 = folder ini siap disalin apa adanya ke repo tujuan — folder = deliverable; tidak ada ZIP, tidak ada dist, tidak ada pemilihan file manual. Exit 1 = keluaran alat adalah daftar kerja di dalam folder ini (perbaiki foldernya, bukan hasil salinan sementara). Aturannya: _meta/PAKET_REPO_MANDIRI.md di master (provenance)
 
 ---
 
