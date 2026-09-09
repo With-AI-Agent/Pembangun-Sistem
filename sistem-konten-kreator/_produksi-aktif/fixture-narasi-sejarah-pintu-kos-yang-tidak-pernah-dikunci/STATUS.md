@@ -1,14 +1,16 @@
 # Status Produksi — Narasi Sejarah (fixture) — Pintu Kos yang Tidak Pernah Dikunci
 
-> **STATE UJI — RETEST 05/05b pada `0.3.10` (backlog G-1).** State: produksi berjalan sampai Tahap 3 selesai + naskah sudah di-commit; sesi sebelumnya dianggap hilang (sesi baru mulai dari branch yang sama). Status uji: AT-KK-05 / AT-KK-05b `belum diuji` pada `0.3.10` — riwayat run terakhir `0.3.4`. Rujukan: `sistem-konten-kreator/ACCEPTANCE_TEST_LOG.md` (bagian "Persiapan G-1") + `sistem-konten-kreator/UJI_G1_CLEAN_RUN_2026-09-09.md`.
+> **STATE UJI — RETEST 05/05b pada `0.3.10` (backlog G-1).** State: produksi berjalan sampai Tahap 3 selesai + naskah sudah di-commit; sesi sebelumnya dianggap hilang (sesi baru mulai dari branch yang sama). Status uji: AT-KK-05 / AT-KK-05b `belum diuji` pada `0.3.10` — riwayat run terakhir `0.3.4`. Rujukan: `sistem-konten-kreator/ACCEPTANCE_TEST_LOG.md`.
+>
+> **Catatan fixture (pola Run-1):** klaim state baru masuk `main` git-true setelah PR persiapan di-merge.
 
 - **Status:** `in-progress`
 - **Channel:** `channel-fixture-narasi-sejarah/` — v2, `Operational`
 - **Model konten:** `channel-fixture-narasi-sejarah/model-konten/narasi-60-detik/brief.md` — v1, `Operational`
-- **Tahap terakhir selesai:** **Tahap 3** — Naskah/Script (`naskah-draft.md` selesai, 135 kata, estimasi durasi di dalam target)
+- **Tahap terakhir selesai:** **Tahap 3** — Naskah/Script (`naskah-draft.md` selesai, 134 kata, estimasi durasi di dalam target)
 - **Tahap berikutnya:** minta **G2 naskah final** (Tahap 3) → kalau dikunci: Tahap 4 — Breakdown Output
 - **Output resmi:**
-  - `naskah-draft.md` — **ADA**, draft r1, 135 kata; menunggu G2
+  - `naskah-draft.md` — **ADA**, draft r1, 134 kata; menunggu G2
 - **Sumber konteks yang dibaca:**
   - `_sistem/START_DI_SINI.md`, `_sistem/00_CARA_PAKAI_SISTEM.md`
   - `_sistem/01_BRAND_CORE.md` — masih template kosong (gap dilaporkan, bukan dianggap lengkap)
@@ -27,12 +29,12 @@
   - `G1 Tahap 3 (Naskah/Script):` disetujui 2026-09-09
   - `G2 naskah final (Tahap 3):` **belum**
   - `G3 merge:` belum
-- **Commit terakhir:** `(diisi commit yang memuat state Tahap 3 ini — lihat entri "Persiapan G-1" di ACCEPTANCE_TEST_LOG.md)`
-- **PR terkait:** state Tahap 1–3 sudah masuk `main` (sesi produksinya terputus sebelum PR; keputusan merge Tahap 6 akan lewat PR barunya)
+- **Commit terakhir:** `b7ac5e2` (di branch sampai PR prep di-merge)
+- **PR terkait:** state Tahap 1–3 di branch persiapan; klaim masuk `main` git-true setelah PR prep di-merge (pola fixture Run-1). Keputusan merge Tahap 6 akan lewat PR barunya.
 - **Pekerjaan belum tersimpan:** Tidak ada
 - **Risiko atau blocker:**
   - Brand Core masih template kosong (gap konteks wajib — dilaporkan, bukan disamarkan).
-  - Estimasi durasi r1 = 64,81 detik (estimasi, belum pengukuran audio); batasan model 55–65 detik.
+  - Estimasi durasi r1 = 64,85 detik (estimasi, belum pengukuran audio); batasan model 55–65 detik.
   - Catatan lama "sudah oke, sudah dikonfirmasi" tidak disertai kode gerbang — status G2 di atas tetap `belum`; catatan ini dipertahankan apa adanya sebagai bagian dari riwayat.
 - **Waktu pembaruan:** 2026-09-09 — state Tahap 3 selesai; sesi produksi sebelumnya dianggap hilang
 

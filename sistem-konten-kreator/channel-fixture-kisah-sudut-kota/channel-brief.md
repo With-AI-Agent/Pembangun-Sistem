@@ -13,16 +13,18 @@
 - [x] **Draft** — sudah digali
 - [x] **Reviewed** — sudah dibaca lengkap, koreksi masuk
 - [x] **Approved** — isi dikunci lewat gerbang **G2** 2026-09-09
-- [x] **Merged** — masuk `main` lewat gerbang **G3** 2026-09-09
-- [x] **Operational** — sudah `Merged` dan semua dependency wajib ada (lihat Checklist Kelengkapan)
+- [x] **Merged** — masuk `main` lewat gerbang **G3** 2026-09-09 — git-true setelah PR prep di-merge (pola fixture Run-1)
+- [x] **Operational** — pengecualian terdakwa: gap warisan: indeks-karakter.md belum pernah dibuat
+
+> **Catatan fixture (pola Run-1):** klaim `Merged`/`Operational` di dokumen ini git-true setelah PR persiapan di-merge ke `main`. Sampai merge, berkas ini masih di branch.
 
 **Checklist Kelengkapan — syarat naik ke `Operational`:**
 
 - [x] Semua bagian wajib di bawah terisi (tidak ada placeholder `[...]` tersisa)
 - [x] Semua pertanyaan di checklist konsistensi (bagian 6) sudah dijawab
 - [x] Setiap elemen visual yang ditandai wajib sudah berstatus `Reference-Ready` — **tidak ada elemen visual yang ditandai wajib** untuk channel ini (lihat bagian 4), jadi tidak ada file acuan yang harus ada
-- [x] `arsip-naskah/indeks.md` dan `arsip-naskah/indeks-karakter.md` sudah dibuat (boleh kosong) — **indeks.md ada (kosong); indeks-karakter.md belum pernah dibuat** (gap warisan yang dinyatakan di header — arsip disiapkan sebelum aturan indeks karakter berlaku)
-- [x] Sudah `Merged` ke `main`
+- [ ] `arsip-naskah/indeks.md` dan `arsip-naskah/indeks-karakter.md` sudah dibuat (boleh kosong) — indeks.md ada (kosong); indeks-karakter.md belum pernah dibuat (gap warisan terdakwa, lihat header)
+- [x] Sudah `Merged` ke `main` — git-true setelah PR prep di-merge (pola fixture Run-1)
 
 **Versi:** `1` — **Terakhir diperbarui:** `2026-09-09` — **Diwarisi dari:** `_sistem/01_BRAND_CORE.md`
 
@@ -111,6 +113,6 @@ Naskah final disimpan di `arsip-naskah/` folder ini. `indeks.md` sudah dibuat (m
 
 | Tanggal | Keputusan | Alasan |
 |---|---|---|
-| 2026-09-09 | Channel Brief fixture dikunci (G2) dan di-merge (G3) | Status dokumen: `Operational`, v1 |
+| 2026-09-09 | Channel Brief fixture dikunci (G2) dan di-merge (G3) | Status dokumen: `Operational` dengan pengecualian terdakwa; klaim Merged git-true setelah PR prep di-merge (pola fixture Run-1) |
 | 2026-09-09 | Semua elemen Konsistensi Visual ditandai "tidak berlaku" | Channel faceless; tidak ada elemen visual yang mewajibkan file acuan |
 | 2026-09-09 | Gap warisan dinyatakan: indeks-karakter.md belum pernah dibuat | Arsip disiapkan sebelum aturan indeks karakter berlaku; dinyatakan apa adanya di header + bagian 9 |

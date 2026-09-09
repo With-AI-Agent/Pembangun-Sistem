@@ -2,8 +2,9 @@
 
 - **Channel:** `channel-fixture-narasi-sejarah/` (FIXTURE)
 - **Model konten:** Narasi 60 Detik (v1) — target 130–145 kata, durasi 55–65 detik
-- **Tahap:** 3 — Naskah/Script (**final untuk produksi ini**, dikunci G2; diarsipkan pada Tahap 6)
+- **Tahap:** 3 — Naskah/Script (naskah final fixture; state pra-repo — lihat metadata + `ACCEPTANCE_TEST_LOG.md` bagian Persiapan G-1)
 - **Jumlah kata VO:** **134** — dihitung dari bagian Naskah saja, berdasarkan pemisah whitespace
+- **Rencana durasi:** **64,85 detik estimasi** = 61,85 detik pada 130 kata/menit + enam jeda antarparagraf masing-masing 0,5 detik. **Belum diukur lewat rekaman/TTS**.
 - **Sumber eksternal:** tidak ada — cerita personal dummy/fiksi fixture, bukan klaim sejarah hasil riset.
 - **Karakter Tipe B:** dipakai — deskripsi lengkap menempel di bawah (lihat bagian "Karakter Tipe B" di file ini); baris indeks di `indeks-karakter.md`
 
@@ -15,11 +16,11 @@
 
 Ada satu deretan payung yang selalu basah sebelum subuh.
 
-Konon, nenek itu datang sebelum penyangkut di tembaga dingin. Tangannya menyusun bunga melati ke dalam keranjang anyam, satu per satu, tanpa pernah menghitung.
+Konon, nenek itu datang sebelum penyangkut di tembaga dingin. Tangannya menyusun bunga melati ke dalam keranjang anyam, satu per satu, tanpa menghitung.
 
 Dulu, lapaknya selalu di pojok paling gelap. Payungnya biru, sudah pudar di dua sisi. Siapa yang lewat, dia selalu tahu — bukan dari suara, tapi dari arah langkah.
 
-Kadang ada yang bertanya kenapa bunganya selalu segitu banyak. Dia tidak menjawab. Yang tersisa hanya anggukan kecil, lalu satu tangkai diletakkan di keranjang pembeli.
+Kadang ada yang bertanya kenapa bunganya selalu segitu banyak. Dia tidak menjawab. Yang tersisa hanya anggukan kecil, lalu satu tangkai diletakkan di keranjang.
 
 Sekarang lapak pojok itu kosong. Yang berdiri di sana kini penjual sate, dan payung biru itu tidak ada.
 

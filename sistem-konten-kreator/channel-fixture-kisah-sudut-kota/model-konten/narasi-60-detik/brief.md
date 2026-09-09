@@ -11,8 +11,10 @@
 - [x] **Draft**
 - [x] **Reviewed**
 - [x] **Approved** — dikunci lewat gerbang **G2** 2026-09-09
-- [x] **Merged** — masuk `main` lewat gerbang **G3** 2026-09-09
+- [x] **Merged** — masuk `main` lewat gerbang **G3** 2026-09-09 — git-true setelah PR prep di-merge (pola fixture Run-1)
 - [x] **Operational** — sudah `Merged` dan semua dependency wajib ada
+
+> **Catatan fixture (pola Run-1):** klaim `Merged`/`Operational` di dokumen ini git-true setelah PR persiapan di-merge ke `main`. Sampai merge, berkas ini masih di branch.
 
 **Checklist Kelengkapan — syarat naik ke `Operational`:**
 
@@ -21,7 +23,7 @@
 - [x] Override terhadap Channel Brief sudah dinyatakan eksplisit — tidak ada override
 - [x] Gerbang tambahan sudah dicatat — **tidak ada gerbang tambahan**; G2/G3 bawaan tetap berlaku
 - [x] Channel Brief induknya sudah berstatus `Operational`
-- [x] Sudah `Merged` ke `main`
+- [x] Sudah `Merged` ke `main` — git-true setelah PR prep di-merge (pola fixture Run-1)
 
 **Versi:** `1` — **Terakhir diperbarui:** `2026-09-09`
 
@@ -75,5 +77,5 @@ Belum ada konten — channel fixture ini baru disetup. Contoh struktur yang diha
 
 | Tanggal | Keputusan | Alasan |
 |---|---|---|
-| 2026-09-09 | Model Konten Brief fixture dikunci (G2) dan di-merge (G3) | Sesi produksi wajib membaca Model Konten Brief; tanpa itu konteks wajib tabel \"Produksi konten\" tidak lengkap |
+| 2026-09-09 | Model Konten Brief fixture dikunci (G2) dan di-merge (G3) | Klaim Merged git-true setelah PR prep di-merge (pola fixture Run-1). Sesi produksi wajib membaca Model Konten Brief; tanpa itu konteks wajib tabel \"Produksi konten\" tidak lengkap |
 | 2026-09-09 | Unit breakdown ditetapkan sebagai \"segmen narasi\", bukan \"shot\" | Format ini narasi + b-roll, bukan video bershot; menetapkan bentuk unit di depan mencegah agent mengasumsikan \"shot\" (lihat `_sistem/05_CONTENT_PRODUCTION_PIPELINE.md` Tahap 4) |
