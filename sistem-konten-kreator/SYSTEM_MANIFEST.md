@@ -3,14 +3,14 @@
 - **Tujuan:** membangun dan memproduksi konten kreator berbantuan AI dari fondasi brand sampai konten siap publish.
 - **Consumer:** operator/kreator solo dan agent kerja yang terhubung ke repository.
 - **Status:** `candidate — audit P0+P1 closed, belum divalidasi pemakaian nyata`
-- **Versi:** `0.3.6`
+- **Versi:** `0.3.7`
 - **Tahap:** siap-pakai
 - **Pemilik keputusan:** pengguna
 - **Entry point agent:** `PROMPT_ENTRI_UNIVERSAL.md` (atau bagian Prompt Pembuka Universal di `panduan/PANDUAN_PENGGUNA.md`)
 - **Entry point navigasi:** `_sistem/START_DI_SINI.md`
 - **Instruksi utama:** `_sistem/00_CARA_PAKAI_SISTEM.md`
 - **Living documents:** Brand Core, Channel Brief, Bank Konsistensi Visual, Model Konten Brief, arsip naskah
-- **Audit acuan (provenance):** `_meta/_internal/AUDIT_SISTEM_KONTEN_KREATOR_2026-09-03.md` di master blueprint — P0+P1 ditutup 4 Sep, P2 sebagian (lihat tabel temuan di bawah)
+- **Audit acuan (provenance):** _meta/_internal/AUDIT_SISTEM_KONTEN_KREATOR_2026-09-03.md di master blueprint — P0+P1 ditutup 4 Sep, P2 sebagian (lihat tabel temuan di bawah)
 - **Acceptance test:** **F7 DITUTUP 6 Sep 2026** — AT-KK-05 / Run 7 **LULUS** + AT-KK-05b / Run 8 **LULUS**, keduanya `0.3.4`. Riwayat: Run 4 **GAGAL** (`0.3.2`); Run 5 **GAGAL-metode** (`0.3.3`, koreksi pasca-review); Run 6 lama **void**. Status/bukti: `ACCEPTANCE_TEST_LOG.md` (Run 7 + Run 8).
 - **Referensi historis (bukan instruksi aktif):** `_sistem/09_AUDIT_MIGRASI_GITHUB_AGENT.md` — ditandai `agent_instruction: reference_only`, dikecualikan dari template bersih
 - **Backup/template:** belum dirilis
@@ -38,7 +38,7 @@ W-01 pegangan ✔ (`panduan/PANDUAN_PENGGUNA.md` + `PROMPT_ENTRI_UNIVERSAL.md`);
 
 ## Batasan Platform
 
-- **Dipakai via lmarena?** Ya — rujuk `_meta/PLATFORM_LMARENA.md` di repo meta
+- **Dipakai via lmarena?** Ya — rujuk `_meta/PLATFORM_LMARENA.md` di repo meta (salinan berlabelnya ikut folder ini, di _salinan-meta/)
 - **Fakta:** branch arena otomatis dibuat, tidak bisa push setelah PR merge/close (platform cabut akses), sesi bisa crash
 - **Implikasi:** checkpoint tiap tahap + **log sesi berkelanjutan** (`LOG_SESI_YYYY-MM-DD.md` — aturan ringkas self-contained di `_sistem/00_CARA_PAKAI_SISTEM.md`), karena tanpa commit sesi baru tidak bisa melanjutkan (FI-03) dan konteks sesi (keputusan, koreksi, fakta penting) hilang permanen saat crash (agent sesi baru tidak punya akses ke chat sesi lama)
 
@@ -58,14 +58,15 @@ W-01 pegangan ✔ (`panduan/PANDUAN_PENGGUNA.md` + `PROMPT_ENTRI_UNIVERSAL.md`);
 - [x] Workflow standar/custom sudah dinyatakan eksplisit — *termasuk jalur non-visual (M-04)*
 - [x] Prosedur checkpoint dan recovery diuji — **DITUTUP 6 Sep 2026 (retest selesai).** AT-KK-05 / Run 7 **LULUS** + AT-KK-05b / Run 8 **LULUS**, keduanya `0.3.4`. Riwayat retest: Run 4 **GAGAL** (`0.3.2`); Run 5 **GAGAL-metode** (`0.3.3`); Run 6 lama **void**. Historis: Run 2 + Run 3 **LULUS** (`0.3.1`). Status/bukti: `ACCEPTANCE_TEST_LOG.md`.
 
-- [x] **Paket repo mandiri LULUS** — 7 Sep 2026, versi `0.3.6`. tools/pack_repo.py mode pemeriksaan hijau (0 pemblokir); hasil pack lolos validator repo (0 warning) + validator sistem di DALAM hasil pack. Protokol: `_meta/PAKET_REPO_MANDIRI.md`; bukti: `ACCEPTANCE_TEST_LOG.md` bagian "Paket repo mandiri"
+- [x] **Folder mandiri menurut AT-17** — 9 Sep 2026, versi `0.3.7`: python3 tools/check_selfcontained.py --sistem sistem-konten-kreator --report berakhir PASS dari root repo master (validator sistem dijalankan di salinan folder yang hanya berisi folder ini). Salinan berlabel ada di direktori _salinan-meta/; bukti: `ACCEPTANCE_TEST_LOG.md` bagian "Folder mandiri AT-17".
+- [x] **Paket repo mandiri LULUS** (riwayat; mekanisme packager sudah pensiun) — 7 Sep 2026, versi `0.3.6`. tools/pack_repo.py mode pemeriksaan hijau (0 pemblokir); hasil pack lolos validator repo (0 warning) + validator sistem di DALAM hasil pack. Protokol: _meta/PAKET_REPO_MANDIRI.md di master (provenance); bukti: `ACCEPTANCE_TEST_LOG.md` bagian "Paket repo mandiri"
 - [x] Audit P0 sudah ditutup — *K-01 s/d K-05 + M-01, lihat Log Evolusi*
 - [ ] Pilot end-to-end berhasil — belum; temuan L-04 masih terbuka.
 - [ ] Acceptance test sistem ini LULUS — **belum**. AT-KK-05 / Run 7 `0.3.4` **LULUS**; Run 5 / AT-KK-05 `0.3.3` GAGAL-metode (koreksi pasca-review); Run 6 lama void; Run 8 / AT-KK-05b `0.3.4` **LULUS**; AT-KK-01/02/03/03b/04/06/07/08 belum diuji. Status/bukti: `ACCEPTANCE_TEST_LOG.md`.
 
 ## Temuan Audit yang Masih Terbuka
 
-Dari `_meta/_internal/AUDIT_SISTEM_KONTEN_KREATOR_2026-09-03.md`:
+Dari _meta/_internal/AUDIT_SISTEM_KONTEN_KREATOR_2026-09-03.md di master (provenance):
 
 | Kode | Prioritas | Status |
 |---|---|---|
@@ -106,5 +107,6 @@ Dari `_meta/_internal/AUDIT_SISTEM_KONTEN_KREATOR_2026-09-03.md`:
 | 6 Sep 2026 | **0.3.4** | Koreksi pasca-review: verdict Run 5 → GAGAL-metode; aturan 6d (`ACCEPTANCE_TESTS.md` poin 6); reset state uji Run 7; dokumen `00`/`05`/`06` tidak diubah | F7 **TERBUKA**; Run 6 lama **void**; Run 7 / AT-KK-05 + Run 8 / AT-KK-05b **dijadwalkan**, `0.3.4`. Rincian: `ACCEPTANCE_TEST_LOG.md` (koreksi pasca-review) |
 | 6 Sep 2026 | 0.3.4 | AT-KK-05 / Run 7: **LULUS** (pencatat sesi terpisah, M2); F7 **TERBUKA** (menunggu Run 8) | `ACCEPTANCE_TEST_LOG.md` Run 7 |
 | 6 Sep 2026 | 0.3.4 | AT-KK-05b / Run 8: **LULUS** (pencatat sesi terpisah, M2); **F7 DITUTUP** — Run 7 + Run 8 LULUS pada `0.3.4` | `ACCEPTANCE_TEST_LOG.md` Run 8 |
-| 6 Sep 2026 | **0.3.5** | Protokol Review Independen diwariskan dari meta v1.4.0: file baru `PROTOKOL_REVIEW_INDEPENDEN.md` (root sistem — varian KK: audit paparan di penutupan gate + materialitas dinilai reviewer; pencatatan run tidak dipegang sesi subjek (M2); 6d berlaku juga untuk reviewer selama jendela run) + rujukan di `_sistem/START_DI_SINI.md`, `QUALITY_ASSURANCE_AND_EVOLUTION.md` (level trigger KK), `ACCEPTANCE_TESTS.md` (poin 7; poin 1–6 tidak diubah), `panduan/PANDUAN_PENGGUNA.md` (varian 1-baris; blok pembuka/penutup tidak disentuh) | Alasan: dokumen protokol baru yang TIDAK mengubah aturan 00/05/06 → regresi acceptance AT-KK tidak terpicu (diff `00`/`05`/`06` = 0 baris; induk: `_meta/PROTOKOL_REVIEW_INDEPENDEN.md`) |
-| 7 Sep 2026 | **0.3.6** | Sistem menjadi **dapat dibangkitkan jadi repo mandiri**: validator sistem sendiri `_sistem/validate_system.py` (BARU, self-contained — root dihitung sendiri, tanpa impor kode luar, tidak tahu-menahu soal `_meta/` maupun `tools/`); gate baru "Paket repo mandiri LULUS"; rujukan protokol 1 baris di `QUALITY_ASSURANCE_AND_EVOLUTION.md` + 1 baris di `_sistem/START_DI_SINI.md`. Dokumen `00`/`05`/`06` **tidak diubah** → regresi AT-KK tidak terpicu | Bukti: `ACCEPTANCE_TEST_LOG.md` bagian "Paket repo mandiri" (perintah + keluaran validator DI DALAM hasil pack, keduanya PASS/0-warning). Protokol: `_meta/PAKET_REPO_MANDIRI.md`. **Menunggu review independen L1** — tidak ada gate acceptance lain yang diklaim tertutup |
+| 6 Sep 2026 | **0.3.5** | Protokol Review Independen diwariskan dari meta v1.4.0: file baru `PROTOKOL_REVIEW_INDEPENDEN.md` (root sistem — varian KK: audit paparan di penutupan gate + materialitas dinilai reviewer; pencatatan run tidak dipegang sesi subjek (M2); 6d berlaku juga untuk reviewer selama jendela run) + rujukan di `_sistem/START_DI_SINI.md`, `QUALITY_ASSURANCE_AND_EVOLUTION.md` (level trigger KK), `ACCEPTANCE_TESTS.md` (poin 7; poin 1–6 tidak diubah), `panduan/PANDUAN_PENGGUNA.md` (varian 1-baris; blok pembuka/penutup tidak disentuh) | Alasan: dokumen protokol baru yang TIDAK mengubah aturan 00/05/06 → regresi acceptance AT-KK tidak terpicu (diff `00`/`05`/`06` = 0 baris; induk: _meta/PROTOKOL_REVIEW_INDEPENDEN.md di master) |
+| 9 Sep 2026 | **0.3.7** | Folder ini menjadi **mandiri menurut AT-17**: rujukan asal-usul — termasuk protokol review independen, protokol QA, dan protokol kemandirian yang sudah punya varian sendiri di folder ini — serta area yang tidak boleh keluar dari master ditulis sebagai provenance tanpa backtick; satu dokumen master yang benar-benar dipakai saat sistem dijalankan, fakta platform (butir W-07), dibawa sebagai salinan berlabel di direktori _salinan-meta/. Dokumen `00`/`05`/`06` **tidak diubah** → regresi AT-KK tidak terpicu | Bukti: `ACCEPTANCE_TEST_LOG.md` bagian "Folder mandiri AT-17" (perintah + keluaran gerbang mandiri, PASS). **Menunggu review independen L1** — PR tanpa merge |
+| 7 Sep 2026 | **0.3.6** | Sistem menjadi **dapat dibangkitkan jadi repo mandiri**: validator sistem sendiri `_sistem/validate_system.py` (BARU, self-contained — root dihitung sendiri, tanpa impor kode luar, tidak tahu-menahu soal `_meta/` maupun `tools/`); gate baru "Paket repo mandiri LULUS"; rujukan protokol 1 baris di `QUALITY_ASSURANCE_AND_EVOLUTION.md` + 1 baris di `_sistem/START_DI_SINI.md`. Dokumen `00`/`05`/`06` **tidak diubah** → regresi AT-KK tidak terpicu | Bukti: `ACCEPTANCE_TEST_LOG.md` bagian "Paket repo mandiri" (perintah + keluaran validator DI DALAM hasil pack, keduanya PASS/0-warning). Protokol: _meta/PAKET_REPO_MANDIRI.md di master (provenance). **Menunggu review independen L1** — tidak ada gate acceptance lain yang diklaim tertutup |

@@ -1,6 +1,6 @@
 # Protokol Review Independen — Varian Sistem Konten Kreator
 
-**Protokol induk:** `_meta/PROTOKOL_REVIEW_INDEPENDEN.md` (meta v1.4.0). Dokumen ini mengemban protokol induk di sistem ini dan menambah 3 ketentuan spesifik KK. Prinsip inti, level trigger umum, anatomi prompt reviewer, mekanika putusan, dan penulisan hasil mengikuti induknya — bagian ini hanya menambah, tidak mengurangi (yang dilarang induk tetap dilarang).
+**Protokol induk:** _meta/PROTOKOL_REVIEW_INDEPENDEN.md di master (meta v1.4.0; provenance). Dokumen ini mengemban protokol induk di sistem ini dan menambah 3 ketentuan spesifik KK. Prinsip inti, level trigger umum, anatomi prompt reviewer, mekanika putusan, dan penulisan hasil mengikuti induknya — bagian ini hanya menambah, tidak mengurangi (yang dilarang induk tetap dilarang).
 
 ## Tambahan spesifik KK
 

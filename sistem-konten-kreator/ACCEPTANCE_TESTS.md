@@ -2,9 +2,9 @@
 
 ### Skenario uji **perilaku** sistem ini: apakah agent benar-benar bertindak sesuai aturan, bukan sekadar apakah filenya ada. Setiap test punya expected result yang dapat diperiksa. Kalau hasil aktual berbeda, sistem belum boleh naik status.
 
-**Protokol induk:** `_meta/ACCEPTANCE_TESTS.md` (menguji meta-sistem). Dokumen ini menguji **sistem domain konten kreator** — dua-duanya berlaku, tidak saling menggantikan.
+**Protokol induk:** _meta/ACCEPTANCE_TESTS.md di master (menguji meta-sistem; provenance). Dokumen ini menguji **sistem domain konten kreator** — dua-duanya berlaku, tidak saling menggantikan.
 
-**Asal:** temuan **L-05** di `_meta/_internal/AUDIT_SISTEM_KONTEN_KREATOR_2026-09-03.md` — audit sebelumnya sangat detail tapi belum menyediakan skenario uji dengan expected result, sehingga tidak ada cara mengulang verifikasi secara konsisten.
+**Asal:** temuan **L-05** di _meta/_internal/AUDIT_SISTEM_KONTEN_KREATOR_2026-09-03.md di master (provenance; area ini tidak boleh keluar dari master) — audit sebelumnya sangat detail tapi belum menyediakan skenario uji dengan expected result, sehingga tidak ada cara mengulang verifikasi secara konsisten.
 
 ---
 
@@ -20,7 +20,7 @@
    - **6b — Bukti lengkap tidak dibuang:** metode, kronologi paparan, klausul penilaian, kutipan respons dan alasan verdict disimpan di `ACCEPTANCE_TEST_LOG.md`. Dokumen orkestrasi hanya untuk pengguna/perancang/pencatat, bukan konteks subjek sebelum keputusan pertama ter-commit. Pointer bukan instruksi membuka bahan evaluasi sebelum fase pencatatan.
    - **6c — Cakupan:** aturan produksi generik dan state operasional yang sebenarnya (termasuk data approval per gerbang) tetap tersedia; yang dipisahkan adalah materi evaluasi run, bukan informasi yang dibutuhkan untuk bekerja. Perancang memeriksa seluruh jalur 6a sebelum run baru; pencatat memastikan hasil run tidak disalin kembali ke jalur itu sebagai narasi jawaban. Paparan jawaban sebelum keputusan berarti metode tidak bersih dan tidak boleh diklaim LULUS.
    - **6d.** Selama jendela sebuah run uji sedang berjalan, artefak baru yang dapat dibaca dari luar main (branch dan log sesi lain yang di-push, komentar PR, file yang dibuat sesi lain) TIDAK boleh memuat kutipan klausul expected result maupun narasi verdict; kewajiban ini dipikul penjadwal tes (sesi review/pencatatan), BUKAN subjek: laporan mereka baru boleh di-push atau dibuka untuk publik setelah run tersebut tercatat selesai, atau diredaksi dari kutipan klausul. Subjek tidak diwajibkan menahan diri dari ls-remote/daftar PR, karena aturan normatif itulah yang berlaku; isolasi dijalankan di sisi pembuat artefak.
-7. **Review independen (sesi lain):** penutupan gate/pengecualian (mis. F), bump versi aturan `00`/`05`/`06`, operasi riwayat, dan perubahan klaim di `SYSTEM_MANIFEST.md` diputuskan oleh SESI REVIEWER YANG BERBEDA sesuai `PROTOKOL_REVIEW_INDEPENDEN.md` (root sistem; induk `_meta/PROTOKOL_REVIEW_INDEPENDEN.md`) — reviewer memverifikasi dari artefak, tidak meng-merge tanpa izin eksplisit pemilik, dan selama jendela run berjalan terikat aturan 6d (laporan barunya boleh dipublikasikan setelah jendela tertutup atau diredaksi dari rumusan klausul).
+7. **Review independen (sesi lain):** penutupan gate/pengecualian (mis. F), bump versi aturan `00`/`05`/`06`, operasi riwayat, dan perubahan klaim di `SYSTEM_MANIFEST.md` diputuskan oleh SESI REVIEWER YANG BERBEDA sesuai `PROTOKOL_REVIEW_INDEPENDEN.md` (root sistem; induk _meta/PROTOKOL_REVIEW_INDEPENDEN.md di master — provenance) — reviewer memverifikasi dari artefak, tidak meng-merge tanpa izin eksplisit pemilik, dan selama jendela run berjalan terikat aturan 6d (laporan barunya boleh dipublikasikan setelah jendela tertutup atau diredaksi dari rumusan klausul).
 
 **Kapan wajib dijalankan ulang (regression):** setiap kali `00_CARA_PAKAI_SISTEM.md`, `05_CONTENT_PRODUCTION_PIPELINE.md`, atau `06_PROMPT_LIBRARY.md` berubah aturannya (bukan sekadar perbaikan ketik), dan sebelum sistem naik ke status `Operational`.
 
@@ -159,9 +159,9 @@
 
 | Dokumen | Menguji apa | Kapan dipakai |
 |---|---|---|
-| `_meta/ACCEPTANCE_TESTS.md` (AT-01…AT-12) | Perilaku **meta-sistem** (cara membangun sistem apa pun) | Saat mengubah meta-sistem |
+| _meta/ACCEPTANCE_TESTS.md di master (AT-01…AT-12; provenance) | Perilaku **meta-sistem** (cara membangun sistem apa pun) | Saat mengubah meta-sistem |
 | Dokumen ini (AT-KK-01…08) | Perilaku **sistem konten kreator** | Saat mengubah aturan sistem ini, dan sebelum naik `Operational` |
-| `_meta/FAILURE_INJECTION_TESTS.md` (FI-01…FI-08) | Apakah sistem **berhenti dengan aman** saat state rusak | Bersamaan dengan AT-KK-05 dan AT-KK-06 |
+| _meta/FAILURE_INJECTION_TESTS.md di master (FI-01…FI-08; provenance) | Apakah sistem **berhenti dengan aman** saat state rusak | Bersamaan dengan AT-KK-05 dan AT-KK-06 |
 
 ---
 

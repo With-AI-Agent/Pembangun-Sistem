@@ -180,3 +180,90 @@ Pembanding base `e33dc059`: 84 / 19 / 10 / 29 / 49 / **169** / 0 / PASS. Beda vs
 ### Batas klaim
 
 Yang dicatat: seluruh tuple L6 pada sha di atas. Yang **tidak** berlaku lagi dari entri `0064fc1`: angka 169 rujukan dan sha256 berkas meta di berita acara paket. L7 BELUM.
+
+
+### 2026-09-09 — Folder mandiri AT-17 (gerbang deliverable)
+
+- **Tanggal:** 9 September 2026 (UTC).
+- **Sha master (basis branch):** `5bdd28c418b56fdd7f65244fadf2cff21a5d7a1e` — tip `main`, merge PR #27.
+- **Sha commit isi kerja:** `6cf6db114a0f01aabbd11dbab48d4d6aa1d21d76` — commit yang memuat seluruh suntingan folder sistem ini. Entri bukti ini sendiri ada di commit berikutnya di atasnya: sebuah commit tidak dapat memuat sha dirinya sendiri, jadi yang berlaku sebagai rujukan adalah commit isi di atas (pola pencatatan yang sama dipakai `LOG_SESI_2026-09-07.md`).
+- **Perintah pembuktian (dijalankan dari root repo master):**
+
+```text
+python3 tools/check_selfcontained.py --sistem sistem-presentasi --report
+python3 tools/check_selfcontained.py --semua --report
+```
+
+- **Hasil:** `exit=0` pada kedua perintah, dengan baris `HASIL SISTEM: PASS` dan `HASIL AKHIR: PASS`. Keluaran persis di bawah diukur pada commit isi kerja di atas, **sebelum** entri bukti ini ditulis; ukur ulang setelah entri ini tertulis ditempel utuh di body PR (putaran 2) dan verdictnya tidak berubah — menulis bukti tidak boleh mengubah hasil gerbang.
+
+```text
+== sistem-presentasi ==
+salinan sementara: /tmp/check-selfcontained-sistem-presentasi-15r3zbtv/sistem-presentasi
+$ python3 _sistem/validate_system.py
+deck ditemukan: ['presentasi-tesis-fikih-hiasan-wanita']
+SAKTI/struktur lengkap? YA
+temuan isi: 0
+HASIL: PASS
+exit=0
+salinan berlabel ditemukan: 2
+  - _salinan-meta/PLATFORM_LMARENA.md <- _meta/PLATFORM_LMARENA.md (sha b2985f37eac2be8f1a812711751f8c0dce0f21b9; perbedaan: tidak ada)
+  - _salinan-meta/PROTOKOL_REVIEW_INDEPENDEN.md <- _meta/PROTOKOL_REVIEW_INDEPENDEN.md (sha 40422f0f7c9cd2c2a750275f6686565c2d1a240f; perbedaan: tidak ada)
+temuan: 0
+rujukan historis (tidak ditegakkan): 42
+  - 00_RENCANA_KERANGKA.md:3: `_meta/PLATFORM_LMARENA.md`
+  - 00_RENCANA_KERANGKA.md:6: `_meta/01_DISCOVERY_LEVEL_0.md`
+  - 00_RENCANA_KERANGKA.md:9: `_meta/00_CARA_KERJA_META.md`
+  - 00_RENCANA_KERANGKA.md:242: `_meta/SYSTEM_MANIFEST_TEMPLATE.md`
+  - 00_RENCANA_KERANGKA.md:308: `_meta/02_PRINSIP_UNIVERSAL.md`
+  - 00_RENCANA_KERANGKA.md:319: `_meta/02_PRINSIP_UNIVERSAL.md`
+  - 00_RENCANA_KERANGKA.md:370: `_meta/00_CARA_KERJA_META.md`
+  - 00_RENCANA_KERANGKA.md:413: `_meta/`
+  - 00_RENCANA_KERANGKA.md:430: `_meta/01_DISCOVERY_LEVEL_0.md`
+  - 00_RENCANA_KERANGKA.md:432: `_meta/SYSTEM_MANIFEST_TEMPLATE.md`
+  - 00_RENCANA_KERANGKA.md:432: `sistem-presentasi/SYSTEM_MANIFEST.md`
+  - 00_RENCANA_KERANGKA.md:438: `_meta/INDEKS_SISTEM.md`
+  - ACCEPTANCE_TEST_LOG.md:25: `_meta/ACCEPTANCE_TESTS.md`
+  - ACCEPTANCE_TEST_LOG.md:25: `_meta/PAKET_REPO_MANDIRI.md`
+  - ACCEPTANCE_TEST_LOG.md:71: `tools/test_failure_injection.py`
+  - ACCEPTANCE_TEST_LOG.md:71: `_meta/FAILURE_INJECTION_TESTS.md`
+  - ACCEPTANCE_TEST_LOG.md:82: `_meta/`
+  - ACCEPTANCE_TEST_LOG.md:82: `tools/checkpoint_core.py`
+  - ACCEPTANCE_TEST_LOG.md:83: `_meta/ACCEPTANCE_TESTS.md`
+  - ACCEPTANCE_TEST_LOG.md:83: `_meta/PAKET_REPO_MANDIRI.md`
+  - ACCEPTANCE_TEST_LOG.md:125: `_meta/FAILURE_INJECTION_TESTS.md`
+  - ACCEPTANCE_TEST_LOG.md:128: `tools/test_failure_injection.py`
+  - ACCEPTANCE_TEST_LOG.md:128: `_meta/FAILURE_INJECTION_TESTS.md`
+  - ACCEPTANCE_TEST_LOG.md:132: `_meta/_internal/CABANG_MENGGANTUNG_2026-09-04.md`
+  - ACCEPTANCE_TEST_LOG.md:132: `_meta/_internal/CABANG_MENGGANTUNG_2026-09-04.md`
+  - ACCEPTANCE_TEST_LOG.md:144: `_meta/ACCEPTANCE_TESTS.md`
+  - DISKUSI_MENTAH_DISCOVERY_LEVEL_0.md:3: `_meta/00_CARA_KERJA_META.md`
+  - DISKUSI_MENTAH_DISCOVERY_LEVEL_0.md:3: `_meta/PLATFORM_LMARENA.md`
+  - DISKUSI_MENTAH_DISCOVERY_LEVEL_0.md:6: `sistem-presentasi/`
+  - DISKUSI_MENTAH_DISCOVERY_LEVEL_0.md:14: `sistem-presentasi/`
+  - DISKUSI_MENTAH_DISCOVERY_LEVEL_0.md:18: `_meta/_internal/arsip-pilot-002-2026-09-03/`
+  - DISKUSI_MENTAH_DISCOVERY_LEVEL_0.md:18: `_meta/_internal/CABANG_MENGGANTUNG_2026-09-04.md`
+  - DISKUSI_MENTAH_DISCOVERY_LEVEL_0.md:140: `_meta/00_CARA_KERJA_META.md`
+  - DISKUSI_MENTAH_DISCOVERY_LEVEL_0.md:143: `_meta/01_DISCOVERY_LEVEL_0.md`
+  - DISKUSI_MENTAH_DISCOVERY_LEVEL_0.md:144: `_meta/SYSTEM_MANIFEST_TEMPLATE.md`
+  - DISKUSI_MENTAH_DISCOVERY_LEVEL_0.md:146: `_meta/INDEKS_SISTEM.md`
+  - _salinan-meta/PLATFORM_LMARENA.md:90: `_meta/PLATFORM_LMARENA.md`
+  - _salinan-meta/PROTOKOL_REVIEW_INDEPENDEN.md:20: `_meta/`
+  - _salinan-meta/PROTOKOL_REVIEW_INDEPENDEN.md:36: `tools/review_prompt.py`
+  - _salinan-meta/PROTOKOL_REVIEW_INDEPENDEN.md:44: `_meta/ACCEPTANCE_TESTS.md`
+  - deck-aktif/presentasi-tesis-fikih-hiasan-wanita/PEMAHAMAN_BAHAN.md:71: `_meta/_internal/AUDIT_SISTEM_PRESENTASI_2026-09-05.md`
+  - deck-aktif/presentasi-tesis-fikih-hiasan-wanita/STATUS.md:13: `_meta/_internal/AUDIT_SISTEM_PRESENTASI_2026-09-05.md`
+sebutan area: 7
+  - START_DI_SINI.md:3: `_meta/`
+  - SYSTEM_MANIFEST.md:47: `_meta/`
+  - SYSTEM_MANIFEST.md:47: `_meta/`
+  - SYSTEM_MANIFEST.md:114: `_meta/`
+  - _sistem/01_ATURAN_DESIGN_ISI_GAMBAR.md:3: `_meta/`
+  - _sistem/01_ATURAN_DESIGN_ISI_GAMBAR.md:3: `_meta/`
+  - _sistem/01_ATURAN_DESIGN_ISI_GAMBAR.md:37: `_meta/`
+HASIL SISTEM: PASS
+```
+
+- **Salinan berlabel pada run ini:** dua berkas di direktori _salinan-meta/, masing-masing memuat tiga baris label wajib — `_meta/PLATFORM_LMARENA.md` (sha sumber `b2985f37eac2be8f1a812711751f8c0dce0f21b9`) dan `_meta/PROTOKOL_REVIEW_INDEPENDEN.md` (sha sumber `40422f0f7c9cd2c2a750275f6686565c2d1a240f`). Keduanya lolos perbandingan isi byte terhadap sumbernya di master pada sha di atas, dan baris kedua label keduanya menyatakan perbedaan "tidak ada".
+- **Dijadikan provenance tanpa backtick (tidak disalin):** induk protokol QA, protokol recovery, template pegangan pengguna, prinsip universal, indeks sistem, protokol kemandirian, acceptance & failure-injection meta, validator master, serta seluruh rujukan ke area _meta/_internal/ (laporan audit) — area itu tidak boleh keluar dari master, jadi menyalinnya adalah pelanggaran.
+- **Rujukan ke diri sendiri** (bila ada pada putaran kerja ini) ditulis relatif terhadap folder sistem, bukan berprefiks nama foldernya sendiri.
+- **Batas klaim:** entri ini adalah bukti kemandirian folder menurut AT-17, bukan klaim bahwa gerbang acceptance lain tertutup; tidak ada gate sistem yang ditutup di sini, dan penggabungan PR adalah keputusan pemilik langsung.

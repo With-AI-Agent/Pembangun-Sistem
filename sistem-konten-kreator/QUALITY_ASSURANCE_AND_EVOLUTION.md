@@ -4,7 +4,7 @@
 
 - **Status:** aktif sebagai mekanisme default; sistem masih dalam remediation
 - **Pemilik keputusan:** pengguna
-- **Protokol induk (provenance — dokumen ini tetap berfungsi tanpanya):** `_meta/QUALITY_ASSURANCE_AND_EVOLUTION.md` pada master blueprint
+- **Protokol induk (provenance — dokumen ini tetap berfungsi tanpanya):** _meta/QUALITY_ASSURANCE_AND_EVOLUTION.md pada master blueprint
 - **Override:** tidak ada
 
 ## Lapisan 1 — Memeriksa sistem ini sendiri
@@ -24,7 +24,7 @@ Minimum regression check:
 
 ## Review independen (sesi lain) — level trigger KK
 
-Rujukan: `PROTOKOL_REVIEW_INDEPENDEN.md` (root sistem); protokol induk: `_meta/PROTOKOL_REVIEW_INDEPENDEN.md` (meta v1.4.0). Reviewer = sesi yang berbeda dari penulis/subjek/pencatat; memverifikasi dari artefak; tidak meng-merge tanpa izin eksplisit pemilik.
+Rujukan: `PROTOKOL_REVIEW_INDEPENDEN.md` (root sistem); protokol induk: _meta/PROTOKOL_REVIEW_INDEPENDEN.md di master (meta v1.4.0; provenance). Reviewer = sesi yang berbeda dari penulis/subjek/pencatat; memverifikasi dari artefak; tidak meng-merge tanpa izin eksplisit pemilik.
 - **L1 (WAJIB review independen):** penutupan pengecualian/gate (mis. F), bump versi aturan `00`/`05`/`06`, operasi riwayat (reset/revert/fungsi-forcing), perubahan `SYSTEM_MANIFEST.md` yang memuat klaim (DONE/versi/gate).
 - **L2 (DISARANKAN review ringkas):** mengikuti protokol induk (PR dokumentasi besar, perubahan template, sanitasi/redaksi).
 - **L3 (TIDAK perlu):** commit produksi biasa, typo, housekeeping reversibel.
@@ -65,7 +65,7 @@ Sebelum output dianggap released, agent memeriksa sesuai jenisnya:
 
 ## Pengeluaran jadi repo mandiri
 
-Sistem ini harus tetap lolos validasi ketika foldernya dikeluarkan jadi repo sendiri — protokol + cara mengujinya di `_meta/PAKET_REPO_MANDIRI.md` (repo master); di sisi sistem, alat yang menilai isinya adalah `_sistem/validate_system.py` yang ikut folder ini.
+Sistem ini harus tetap lolos validasi ketika foldernya dikeluarkan jadi repo sendiri — protokol + cara mengujinya di _meta/PAKET_REPO_MANDIRI.md (repo master; provenance); di sisi sistem, alat yang menilai isinya adalah `_sistem/validate_system.py` yang ikut folder ini.
 
 ## Status output
 
@@ -79,4 +79,4 @@ Draft → Checked → Approved → Released → Observed
 
 | Tanggal | Lapisan | Observasi | Perubahan | Alasan | Bukti | Versi | Approval | Rollback |
 |---|---|---|---|---|---|---|---|---|
-| 2026-09-04 | 1 | Dry run AT-KK-05 menemukan tabel "Konteks Wajib per Jenis Sesi" baris *Lanjut produksi yang terputus* tidak memuat langkah verifikasi output terhadap branch, dan satu-satunya rujukan ke `_meta/PROTOKOL_CHECKPOINT_RECOVERY.md` di sistem ini hanya untuk field `Pekerjaan belum tersimpan` di `STATUS_TEMPLATE.md` | Rujukan protokol recovery ditambahkan ke baris tabel itu + 4 aturan recovery mengikat di `00_CARA_PAKAI_SISTEM.md` | Agen yang patuh pada tabel bisa melewati verifikasi branch, sehingga FI-02 (output diklaim ada tapi hilang) dan FI-03 (output belum commit) tidak terdeteksi | Minimum regression check 6/7 item terverifikasi — detail di `ACCEPTANCE_TEST_LOG.md` bagian "Regression check 0.3.1". Item ke-7 (acceptance test diulang) **sengaja belum dicentang**: AT-KK-05/05b baru dry run di 0.3.0, run bersih di 0.3.1 belum dilakukan. `tools/validate_repo.py` PASS 29 file/16 dokumen/41 referensi | `0.3.1-audit-remediation` | Menunggu review PR #5 | Revert commit `002702f` + commit perbaikan ini; tidak ada data produksi yang berubah |
+| 2026-09-04 | 1 | Dry run AT-KK-05 menemukan tabel "Konteks Wajib per Jenis Sesi" baris *Lanjut produksi yang terputus* tidak memuat langkah verifikasi output terhadap branch, dan satu-satunya rujukan ke _meta/PROTOKOL_CHECKPOINT_RECOVERY.md di master hanya untuk field `Pekerjaan belum tersimpan` di `STATUS_TEMPLATE.md` | Rujukan protokol recovery ditambahkan ke baris tabel itu + 4 aturan recovery mengikat di `00_CARA_PAKAI_SISTEM.md` | Agen yang patuh pada tabel bisa melewati verifikasi branch, sehingga FI-02 (output diklaim ada tapi hilang) dan FI-03 (output belum commit) tidak terdeteksi | Minimum regression check 6/7 item terverifikasi — detail di `ACCEPTANCE_TEST_LOG.md` bagian "Regression check 0.3.1". Item ke-7 (acceptance test diulang) **sengaja belum dicentang**: AT-KK-05/05b baru dry run di 0.3.0, run bersih di 0.3.1 belum dilakukan. tools/validate_repo.py PASS 29 file/16 dokumen/41 referensi | `0.3.1-audit-remediation` | Menunggu review PR #5 | Revert commit `002702f` + commit perbaikan ini; tidak ada data produksi yang berubah |
