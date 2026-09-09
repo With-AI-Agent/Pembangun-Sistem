@@ -82,7 +82,7 @@ FI-01…FI-10 di atas adalah test perilaku AGENT. Skrip `tools/test_failure_inje
 | R7 (F5) | build template di salinan → ekstrak → `git init` → validator | exit 0 + PERSIS 5 warning normalisasi (daftar di `TEMPLATE_RELEASE.md`, dipin di skrip) + tanpa warning di bootstrap/pegangan pengguna |
 | R8 (PR A) | hapus `tools/check_selfcontained.py` dari salinan repo | validator HARUS gagal karena alat ini masuk CORE tool; penghapusan tidak boleh hilang lewat glob turunan |
 
-**Skenario check_selfcontained (SC1–SC5)** — ditambahkan 8 Sep 2026, dijalankan di SALINAN repo (env `FI_SKIP_NESTED=1`), tiap skenario memakai fixture gagal lalu memutasi pemeriksaan terkait agar fixture yang sama lolos; bila pemeriksaan dilepas dari alat, FI menjadi merah:
+**Skenario check_selfcontained (SC1–SC10)** — SC1–SC5 ditambahkan 8 Sep 2026, SC6–SC10 ditambahkan 9 Sep 2026 (PR A2: cakupan alat). Dijalankan di SALINAN repo (env `FI_SKIP_NESTED=1`); tiap skenario memakai fixture lalu memutasi pemeriksaan terkait agar perilaku yang dijaga hilang; bila pemeriksaan dilepas dari alat, FI menjadi merah. SC6–SC10 menilai PESAN yang ditawarkan alat, bukan hanya kode temuan:
 
 | Skenario | Mutasi | Ekspektasi |
 |---|---|---|
@@ -91,6 +91,11 @@ FI-01…FI-10 di atas adalah test perilaku AGENT. Skrip `tools/test_failure_inje
 | SC3 | matikan pemeriksaan badan salinan terhadap sumber | salinan berlabel dengan badan berubah dan `Perbedaan: tidak ada` harus ditolak sebagai STALE-COPY; setelah mutasi fixture yang sama lolos |
 | SC4 | matikan pemeriksaan area salinan tanpa label | berkas dalam `_salinan-meta/` tanpa tiga baris label harus ditolak sebagai DERIVED-NO-LABEL; setelah mutasi fixture yang sama lolos |
 | SC5 | matikan kewajiban baris kedua `Perbedaan:` | label tanpa baris kedua `Perbedaan:` harus ditolak sebagai LABEL-FORMAT; setelah mutasi fixture yang sama lolos |
+| SC6 | matikan penilaian area master-only pada rujukan | rujukan `_meta/_internal/…` di dokumen AKTIF harus ditolak sebagai MASTER-ONLY-REF dengan pesan "tulis sebagai provenance tanpa backtick" dan TANPA tawaran salinan berlabel; setelah mutasi alat kembali menawarkan MISSING-LABELED-COPY untuk area yang tidak boleh disalin |
+| SC7 | matikan cakupan dokumen aktif (semua berkas teks ditegakkan) | rujukan `_meta/…`/`tools/…` di ACCEPTANCE_TEST_LOG.md fixture bukan kegagalan (exit 0) dan terdaftar di bagian "rujukan historis (tidak ditegakkan)"; setelah mutasi dokumen bukti kembali ditagih salinan berlabel dan bagian historis kosong |
+| SC8 | matikan pemeriksaan salinan berlabel untuk berkas master | rujukan satu berkas `_meta/…` di dokumen AKTIF tetap MISSING-LABELED-COPY (cakupan baru tidak melonggarkan penegakan); setelah mutasi fixture yang sama lolos |
+| SC9 | matikan pengecualian bentuk direktori | rujukan berbentuk direktori (`_meta/`, `tools/`) di dokumen aktif bukan kegagalan dan terdaftar di bagian "sebutan area"; setelah mutasi penyebutan area kembali ditagih sebagai MISSING-LABELED-COPY |
+| SC10 | matikan penilaian area master-only pada sumber salinan | salinan berlabel yang bersumber dari `_meta/_internal/…` harus ditolak sebagai MASTER-ONLY-COPY dengan solusi "hapus salinannya dan tulis sebagai provenance tanpa backtick"; setelah mutasi salinan terlarang itu dianggap sah |
 
 **Skenario review_prompt (RP1–RP4)** — ditambahkan 8 Sep 2026, dijalankan di SALINAN repo (env `FI_SKIP_NESTED=1`), uji mutasi untuk cacat nyata pembangkit prompt review:
 
@@ -111,7 +116,7 @@ FI-01…FI-10 di atas adalah test perilaku AGENT. Skrip `tools/test_failure_inje
 
 Alasan pensiun P1–P3: keputusan pemilik menetapkan folder sistem sebagai deliverable. Mekanisme lama memindahkan kerja penyatuan/glue ke pemilik; folder sebagai deliverable lebih murah dipertahankan. Karena profil repo dan daftar putih rujukan-absen dicabut, skenario yang mengawasi pembusukan daftar putih ikut pensiun bersama objek yang dijaganya.
 
-**Jumlah:** 48 skenario di master (15 sintetis + 4 unit nyata + 14 regresi review PR-11 + 5 regresi check_selfcontained + 10 regresi review_prompt), 16 di ekstrak template (15 sintetis + 1 unit nyata benih; regresi repo-copy tidak dijalankan bersarang).
+**Jumlah:** 53 skenario di master (15 sintetis + 4 unit nyata + 14 regresi review PR-11 + 10 regresi check_selfcontained + 10 regresi review_prompt), 16 di ekstrak template (15 sintetis + 1 unit nyata benih; regresi repo-copy tidak dijalankan bersarang). Angka ini disalin dari baris yang dicetak `tools/test_failure_injection.py`, bukan dihitung tangan.
 
 
 ### AT-16/C5 — larangan angka korpus di sel Bukti

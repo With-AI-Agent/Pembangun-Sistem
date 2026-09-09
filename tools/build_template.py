@@ -377,30 +377,25 @@ def build():
     print(f"TEMPLATE CLEAN BUILT: {TEMPLATE_DIR}")
     print(f"TEMPLATE ZIP: {TEMPLATE_ZIP} ({TEMPLATE_ZIP.stat().st_size} bytes)")
 
-    # Verify AT-10: no internal audit, no pilot, no konten-kreator
+    # Verify AT-10: no internal audit, no pilot, no konten-kreator.
+    # Definisi "area yang tidak boleh keluar dari master" hidup di
+    # checkpoint_core.master_only_reason() — SATU definisi, dipakai juga oleh
+    # tools/check_selfcontained.py supaya tidak ada alat yang menawarkan
+    # salinan berlabel untuk path yang verifikasi ini tolak (PR A2, 9 Sep 2026).
     bad = []
     for p in TEMPLATE_DIR.rglob("*"):
         rel = p.relative_to(TEMPLATE_DIR).as_posix()
-        # _meta/_internal should not exist in template (check rel, not absolute parts)
-        if "_internal" in rel:
-            bad.append(rel)
-        if rel.startswith("sistem-konten-kreator/"):
-            bad.append(rel)
-        if rel.startswith("sistem-pilot-"):
-            bad.append(rel)
-        if "arsip-naskah" in rel:
-            bad.append(rel)
-        if "unit-aktif" in rel:
-            bad.append(rel)
-        # Historical/reference-only docs must never ship in a clean template,
-        # regardless of where they live (M-09).
+        head = ""
         if p.is_file() and p.suffix == ".md":
             try:
                 head = p.read_text(encoding="utf-8")[:400]
             except (OSError, UnicodeDecodeError):
                 head = ""
-            if "agent_instruction: reference_only" in head:
-                bad.append(f"{rel} (reference_only historical doc)")
+        reason = core.master_only_reason(rel, head)
+        if reason == core.REFERENCE_ONLY_REASON:
+            bad.append(f"{rel} (reference_only historical doc)")
+        elif reason:
+            bad.append(rel)
     if bad:
         print(f"TEMPLATE VERIFY FAILED: should not contain: {bad}")
         return False

@@ -60,6 +60,8 @@ Jika anchor transformasi tidak ketemu dan teks targetnya pun tidak ada (dokumen 
 
 Jika ada pelanggaran, build gagal.
 
+Daftar area yang tidak boleh ikut template itu SATU definisi bersama (`master_only_reason()` di tools/checkpoint_core.py), dan pemakainya ada dua: verifikasi di sini serta `tools/check_selfcontained.py`. Konsekuensinya sengaja: apa yang ditolak keluar dari master tidak boleh ditawarkan sebagai salinan berlabel di folder sistem — untuk area itu bentuk yang benar adalah provenance tanpa backtick, dan salinan yang terlanjur dibuat dari area tersebut adalah temuan yang solusinya menghapus salinan.
+
 **Smoke test pasca-build (wajib setiap kali template/validator berubah):** builder mengekstrak zip ke direktori kosong, menjalankan `git init`, lalu menjalankan `python3 tools/validate_repo.py`, `python3 tools/test_failure_injection.py`, dan `python3 tools/check_selfcontained.py --semua` di sana. Ketiganya harus PASS (exit 0). Validator di sana harus menghasilkan PERSIS 5 warning normalisasi di bawah. Ini membuktikan template berdiri sendiri sekaligus membuktikan sistem-benih lahir sebagai folder mandiri (diverifikasi ulang PR A, 8 Sep 2026).
 
 **Yang normal di repo hasil ekstrak — PERSIS 5 warning (daftar normalisasi, dipin di FI skenario R7):** semuanya rujukan historis master yang dilabeli (bukan instruksi aktif); exit code tetap 0. (Format daftar sengaja tanpa backtick pada path-nya: baris ini mendokumentasikan warning, bukan menunjuk dependensi — ia sendiri tidak boleh menjadi warning.)

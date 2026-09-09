@@ -130,13 +130,16 @@ python3 tools/check_selfcontained.py --sistem <nama-folder-sistem> --report ; ec
 
 | # | Kriteria | Bukti yang harus terlihat |
 |---|---|---|
-| L1 | Langkah 0 hijau | validator master PASS dengan `WARNINGS: 0` |
+| L1 | Langkah 0 hijau | validator master PASS dengan `WARNINGS: none` |
 | L2 | Langkah 1 menyalin hanya folder sistem dan menjalankan validator sistem di salinan | keluaran alat menampilkan perintah `python3 _sistem/validate_system.py`, baris `HASIL: PASS` dari validator sistem, dan exit 0 |
 | L3 | Tidak ada rujukan ke diri sendiri memakai prefiks folder | tidak ada temuan `[SELF-PREFIX]` |
-| L4 | Semua rujukan ber-backtick ke `_meta/...` atau `tools/...` punya salinan berlabel di dalam folder | tidak ada temuan `[MISSING-LABELED-COPY]` |
+| L4 | Semua rujukan ber-backtick ke SATU BERKAS `_meta/...` atau `tools/...` **di dokumen aktif** punya salinan berlabel di dalam folder | tidak ada temuan `[MISSING-LABELED-COPY]` |
 | L5 | Semua salinan turunan punya label wajib pada tiga baris pertama | tidak ada temuan `[DERIVED-NO-LABEL]` atau `[LABEL-FORMAT]` |
 | L6 | Salinan berlabel tidak basi terhadap master | tidak ada temuan `[STALE-COPY]` atau `[LABEL-SOURCE]`; bila ada perbedaan yang disengaja, label menyebut perbedaan dan body PR mendaftarkan kasusnya |
 | L7 | Langkah 2 membuktikan alat hanya alat master | exit 2 dan pesan menyatakan alat master harus dijalankan dari repo yang memiliki `_meta/` |
+| L8 | Cakupan penegakan = dokumen aktif, satu definisi bersama | dokumen bukti/mentah (log bukti acceptance, diskusi mentah, rencana kerangka, state kerja per unit — apa pun yang dikecualikan `dokumen_aktif()` di tools/checkpoint_core.py) tidak menghasilkan temuan; rujukannya tetap terlihat di bagian "rujukan historis (tidak ditegakkan)" pada `--report`. Alat tidak membawa daftar glob sendiri |
+| L9 | Penyebutan area bukan kegagalan | backtick berbentuk direktori (berakhir garis miring, mis. `_meta/`) tidak menghasilkan temuan; ia terdaftar di bagian "sebutan area" pada `--report` |
+| L10 | Area yang tidak boleh keluar dari master tidak ditawari salinan | tidak ada temuan yang menawarkan salinan berlabel untuk `_meta/_internal/**` atau area lain yang ditolak verifikasi template AT-10; pesannya meminta provenance tanpa backtick (`[MASTER-ONLY-REF]`), dan salinan yang terlanjur dibuat dari area itu muncul sebagai `[MASTER-ONLY-COPY]` yang solusinya menghapus salinan |
 
 **Catatan pelaksanaan:** langkah negatif dijalankan di salinan sementara. Merusak master untuk keperluan uji dilarang. Untuk PR yang hanya mengubah alat/protokol meta, sistem domain yang belum termasuk scope boleh tetap merah; keluaran merahnya wajib ditempel utuh sebagai daftar kerja PR berikutnya.
 

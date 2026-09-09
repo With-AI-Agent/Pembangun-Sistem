@@ -5,6 +5,30 @@ Alat ini berjalan di repo master. Ia menyalin HANYA folder sistem ke direktori
 sementara, menjalankan validator sistem dari salinan itu, lalu memeriksa bahwa
 rujukan operasional yang keluar folder sudah divendor sebagai salinan berlabel.
 Exit 0 dari alat ini adalah definisi mekanis "folder sistem = deliverable".
+
+Cakupan pemindaian rujukan (PR A2, 9 Sep 2026) — tiga pembedaan, semuanya
+diambil dari definisi yang sudah ada, tidak ada daftar glob salinan di sini:
+
+1. Yang DITEGAKKAN hanyalah dokumen aktif menurut SATU definisi bersama
+   `checkpoint_core.dokumen_aktif()` — definisi yang sama yang dipakai
+   validator master. Dokumen bukti dan dokumen mentah (ACCEPTANCE_TEST_LOG.md,
+   LOG_SESI*, DISKUSI_MENTAH*, dan apa pun yang sudah dikecualikan definisi
+   itu) tidak ditegakkan: menulis bukti tidak boleh mengubah hasil gerbang.
+   Rujukannya tetap terbaca — dicatat di bagian "rujukan historis (tidak
+   ditegakkan)" saat --report.
+2. Rujukan bentuk direktori (token ber-backtick yang berakhir garis miring,
+   mis. `_meta/` atau `tools/`) adalah penyebutan area, bukan janji bahwa satu
+   berkas ada — bukan kegagalan. Dicatat di bagian "sebutan area" saat --report.
+3. Rujukan ke area yang memang tidak boleh keluar dari master
+   (`checkpoint_core.master_only_reason()` — definisi yang sama dengan
+   verifikasi template AT-10) TIDAK pernah ditawari solusi salinan berlabel,
+   karena menyalinnya adalah pelanggaran. Pesannya: tulis sebagai provenance
+   tanpa backtick. Salinan yang terlanjur dibuat dari area itu = temuan
+   MASTER-ONLY-COPY (hapus salinannya).
+
+Perilaku yang ditegakkan untuk dokumen aktif tidak dilonggarkan: SELF-PREFIX,
+MISSING-LABELED-COPY berkas operasional, STALE-COPY, LABEL-SOURCE,
+DERIVED-NO-LABEL, LABEL-FORMAT (termasuk baris kedua `Perbedaan:`) tetap gagal.
 """
 from __future__ import annotations
 
@@ -63,6 +87,8 @@ class SystemResult:
     findings: list[Finding] = field(default_factory=list)
     labels: list[LabelInfo] = field(default_factory=list)
     notes: list[str] = field(default_factory=list)
+    historical_refs: list[str] = field(default_factory=list)
+    area_mentions: list[str] = field(default_factory=list)
 
     @property
     def ok(self) -> bool:
@@ -169,10 +195,34 @@ def reference_token(raw: str) -> str:
     return token.rstrip(".,;:)")
 
 
-def scan_system(system: str, copied_root: Path, findings: list[Finding]) -> list[LabelInfo]:
+def active_doc_rels(copied_root: Path, system: str) -> set[str]:
+    """Dokumen aktif di dalam folder sistem, sebagai path relatif folder itu.
+
+    SATU definisi: `checkpoint_core.dokumen_aktif()` — definisi yang sama
+    dengan validator master. Alat ini sengaja TIDAK membawa daftar glob sendiri
+    (pelajaran v1.6.0: dua daftar salinan meleset satu sama lain).
+    """
+    base = copied_root.parent
+    prefix = f"{system}/"
+    out = set()
+    for path in core.dokumen_aktif(base, system):
+        rel = path.relative_to(base).as_posix()
+        if rel.startswith(prefix):
+            out.add(rel[len(prefix):])
+    return out
+
+
+def scan_system(
+    system: str,
+    copied_root: Path,
+    findings: list[Finding],
+    historical_refs: list[str],
+    area_mentions: list[str],
+) -> list[LabelInfo]:
     labels: list[LabelInfo] = []
     labels_by_source: dict[str, list[LabelInfo]] = {}
     text_files = [p for p in sorted(copied_root.rglob("*")) if p.is_file() and is_text_file(p)]
+    active_rel = active_doc_rels(copied_root, system)
 
     for path in text_files:
         rel = path.relative_to(copied_root).as_posix()
@@ -192,6 +242,15 @@ def scan_system(system: str, copied_root: Path, findings: list[Finding]) -> list
         src_rel = info.source
         if src_rel.startswith("/") or ".." in Path(src_rel).parts:
             findings.append(Finding("LABEL-SOURCE", f"{info.rel}: sumber label tidak boleh absolut/naik direktori: {src_rel}"))
+            continue
+        forbidden = core.master_only_reason(src_rel)
+        if forbidden:
+            findings.append(
+                Finding(
+                    "MASTER-ONLY-COPY",
+                    f"{info.rel}: salinan berlabel ini bersumber dari {src_rel} ({forbidden}) yang tidak boleh keluar dari master — menyalinnya pelanggaran; hapus salinannya dan tulis sebagai provenance tanpa backtick",
+                )
+            )
             continue
         src_path = ROOT / src_rel
         if not src_path.is_file():
@@ -223,11 +282,24 @@ def scan_system(system: str, copied_root: Path, findings: list[Finding]) -> list
         text = safe_read_text(path)
         if text is None:
             continue
+        enforced = rel in active_rel
         for lineno, line in enumerate(text.splitlines(), 1):
             for match in REF_RE.finditer(line):
                 raw = match.group(1)
                 token = reference_token(raw)
                 if not token:
+                    continue
+                points_out = (
+                    token.startswith(f"{system}/")
+                    or token.startswith("_meta/")
+                    or token.startswith("tools/")
+                )
+                if not enforced:
+                    # Dokumen bukti/mentah/state unit: di luar definisi dokumen
+                    # aktif, jadi TIDAK ditegakkan — tetapi rujukannya tidak
+                    # dibuang, supaya orang berikutnya tetap bisa membacanya.
+                    if points_out:
+                        historical_refs.append(f"{rel}:{lineno}: `{raw}`")
                     continue
                 if token.startswith(f"{system}/"):
                     findings.append(
@@ -238,10 +310,21 @@ def scan_system(system: str, copied_root: Path, findings: list[Finding]) -> list
                     )
                 if token.startswith("_meta/") or token.startswith("tools/"):
                     if token.endswith("/"):
+                        # Penyebutan area, bukan janji bahwa satu berkas ada.
+                        note = core.master_only_reason(token)
+                        suffix = (
+                            f" — {note}: tidak boleh keluar dari master, sebut sebagai provenance tanpa backtick"
+                            if note
+                            else ""
+                        )
+                        area_mentions.append(f"{rel}:{lineno}: `{raw}`{suffix}")
+                        continue
+                    forbidden = core.master_only_reason(token)
+                    if forbidden:
                         findings.append(
                             Finding(
-                                "MISSING-LABELED-COPY",
-                                f"{rel}:{lineno}: rujukan `{raw}` menunjuk area master; salinan berlabel untuk direktori tidak ada di folder sistem",
+                                "MASTER-ONLY-REF",
+                                f"{rel}:{lineno}: rujukan `{raw}` menunjuk {forbidden} yang tidak boleh keluar dari master — salinan berlabel BUKAN solusinya (menyalinnya pelanggaran); tulis sebagai provenance tanpa backtick",
                             )
                         )
                         continue
@@ -288,7 +371,9 @@ def check_one(system: str, keep: bool) -> SystemResult:
     )
     if v_rc != 0:
         result.findings.append(Finding("VALIDATOR", f"validator sistem di salinan keluar {v_rc}"))
-    result.labels = scan_system(system, copied_root, result.findings)
+    result.labels = scan_system(
+        system, copied_root, result.findings, result.historical_refs, result.area_mentions
+    )
     if keep:
         result.notes.append(f"salinan dipertahankan: {copied_root}")
     return result
@@ -325,6 +410,20 @@ def render_result(result: SystemResult, report: bool) -> None:
                 print(f"- [{f.code}] {f.message}")
         else:
             print("detail: jalankan ulang dengan --report untuk daftar temuan per baris")
+    print(f"rujukan historis (tidak ditegakkan): {len(result.historical_refs)}")
+    if result.historical_refs:
+        if report:
+            for line in result.historical_refs:
+                print(f"  - {line}")
+        else:
+            print("  (dokumen di luar definisi dokumen aktif; detail: --report)")
+    print(f"sebutan area: {len(result.area_mentions)}")
+    if result.area_mentions:
+        if report:
+            for line in result.area_mentions:
+                print(f"  - {line}")
+        else:
+            print("  (rujukan berbentuk direktori = penyebutan area, bukan kegagalan; detail: --report)")
     print("HASIL SISTEM: " + ("PASS" if result.ok else "FAIL"))
     print("")
 
@@ -338,7 +437,7 @@ def main(argv: list[str] | None = None) -> int:
     group.add_argument("--sistem", help="nama folder sistem, mis. sistem-presentasi")
     group.add_argument("--semua", action="store_true", help="cek semua sistem terdaftar")
     ap.add_argument("--keep", action="store_true", help="pertahankan salinan sementara")
-    ap.add_argument("--report", action="store_true", help="cetak detail salinan berlabel dan semua temuan")
+    ap.add_argument("--report", action="store_true", help="cetak detail salinan berlabel, semua temuan, rujukan historis (tidak ditegakkan), dan sebutan area")
     args = ap.parse_args(argv)
 
     if not is_master_repo():
@@ -371,7 +470,7 @@ def main(argv: list[str] | None = None) -> int:
     print("CHECK SELF-CONTAINED — folder sistem = deliverable")
     print(f"root master: {ROOT}")
     print("mode: " + ("--semua" if args.semua else f"--sistem {args.sistem}"))
-    print("aturan: salin HANYA folder sistem; jalankan validator sistem di salinan; rujukan _meta/tools harus punya salinan berlabel; rujukan ke folder sendiri harus relatif")
+    print("aturan: salin HANYA folder sistem; jalankan validator sistem di salinan; cakupan pemindaian rujukan = dokumen aktif (satu definisi checkpoint_core.dokumen_aktif); rujukan ber-backtick ke BERKAS _meta/tools di dokumen aktif harus punya salinan berlabel; rujukan ke folder sendiri harus relatif; rujukan berbentuk direktori = sebutan area, bukan kegagalan; area yang tidak boleh keluar dari master ditulis sebagai provenance tanpa backtick, bukan disalin")
     print("")
 
     results = [check_one(system, args.keep) for system in targets]

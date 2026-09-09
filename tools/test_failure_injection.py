@@ -420,7 +420,15 @@ def _derived_label(repo: Path, src_rel: str, *, body: bytes | None = None, diff_
 
 
 def check_selfcontained_scenarios(base_dir: Path):
-    """SC1-SC5: gerbang folder mandiri wajib bergigi, termasuk mutasi alat."""
+    """SC1-SC9: gerbang folder mandiri wajib bergigi, termasuk mutasi alat.
+
+    SC1-SC5 (PR A, 8 Sep 2026): empat mode gagal + kewajiban baris kedua label.
+    SC6-SC9 (PR A2, 9 Sep 2026): tiga pembedaan CAKUPAN alat — area yang tidak
+    boleh keluar dari master diminta sebagai provenance (bukan salinan
+    berlabel), dokumen bukti tidak ditegakkan tetapi rujukannya tetap terdaftar
+    sebagai rujukan historis, dan rujukan ber-backtick ke BERKAS `_meta/...` di
+    dokumen aktif tetap gagal. SC9 menjaga pembedaan sebutan area.
+    """
     checks = []
     cp = base_dir / "repo_sc"
     shutil.copytree(
@@ -529,6 +537,148 @@ def check_selfcontained_scenarios(base_dir: Path):
         "LABEL-FORMAT",
         mutation_old,
         mutation_new,
+    ))
+
+    # --- SC6-SC9 (PR A2): cakupan alat, diuji-mutasi -------------------------
+    def scoped_scenario(label, system, setup, mutation_old, mutation_new,
+                        expect_before, expect_after):
+        """Seperti `scenario`, tetapi ekspektasi sebelum/sesudah mutasi adalah
+        predikat atas keluaran alat (bukan hanya exit code + satu kode temuan):
+        pembedaan cakupan dinilai dari pesan yang ditawarkan alat."""
+        root = _write_minimal_selfcontained_system(cp, system)
+        setup(root)
+        before = _run_check_selfcontained(cp, system)
+        # Ekspektasi perilaku dinilai DULU, sebelum penanda mutasi dicari: kalau
+        # pemeriksaannya sudah dilepas dari alat secara permanen, skenario ini
+        # harus merah karena PERILAKUNYA hilang, bukan karena teksnya berubah.
+        if not expect_before(before):
+            return (label + " — perilaku yang diharapkan tidak ada di alat", False)
+        mutated = original.replace(mutation_old, mutation_new, 1)
+        if mutated == original:
+            return (label + " — penanda mutasi tidak ditemukan", False)
+        tool_path.write_text(mutated, encoding="utf-8")
+        after = _run_check_selfcontained(cp, system)
+        tool_path.write_text(original, encoding="utf-8")
+        return (label, expect_after(after))
+
+    def setup_master_only_ref(root: Path):
+        (root / "README.md").write_text(
+            "# uji\n\nAsal prinsip ini: `_meta/_internal/HANDOFF_NEXT_SESSION.md`\n",
+            encoding="utf-8",
+        )
+
+    checks.append(scoped_scenario(
+        "SC6 rujukan area master-only di dokumen AKTIF diminta provenance tanpa backtick, BUKAN salinan berlabel",
+        "sistem-fi-master-only-ref",
+        setup_master_only_ref,
+        "                    forbidden = core.master_only_reason(token)\n"
+        "                    if forbidden:",
+        "                    forbidden = None\n"
+        "                    if forbidden:",
+        lambda before: (
+            before.returncode != 0
+            and "[MASTER-ONLY-REF]" in before.stdout
+            and "tulis sebagai provenance tanpa backtick" in before.stdout
+            and "[MISSING-LABELED-COPY]" not in before.stdout
+        ),
+        lambda after: (
+            "[MASTER-ONLY-REF]" not in after.stdout
+            and "[MISSING-LABELED-COPY]" in after.stdout
+        ),
+    ))
+
+    def setup_evidence_doc_ref(root: Path):
+        (root / "ACCEPTANCE_TEST_LOG.md").write_text(
+            "# Bukti run\n\n"
+            "Run 1: `tools/test_failure_injection.py` PASS sesuai `_meta/FAILURE_INJECTION_TESTS.md`.\n",
+            encoding="utf-8",
+        )
+
+    checks.append(scoped_scenario(
+        "SC7 rujukan _meta/ di dokumen bukti ACCEPTANCE_TEST_LOG.md bukan kegagalan dan terdaftar sebagai rujukan historis",
+        "sistem-fi-evidence-doc",
+        setup_evidence_doc_ref,
+        "        enforced = rel in active_rel",
+        "        enforced = True",
+        lambda before: (
+            before.returncode == 0
+            and "rujukan historis (tidak ditegakkan): 2" in before.stdout
+            and "ACCEPTANCE_TEST_LOG.md:3: `tools/test_failure_injection.py`" in before.stdout
+            and "ACCEPTANCE_TEST_LOG.md:3: `_meta/FAILURE_INJECTION_TESTS.md`" in before.stdout
+            and "[MISSING-LABELED-COPY]" not in before.stdout
+        ),
+        lambda after: (
+            after.returncode != 0
+            and "[MISSING-LABELED-COPY]" in after.stdout
+            and "rujukan historis (tidak ditegakkan): 0" in after.stdout
+        ),
+    ))
+
+    def setup_active_meta_file_ref(root: Path):
+        (root / "README.md").write_text(
+            "# uji\n\nAturan yang dipakai: `_meta/PAKET_REPO_MANDIRI.md`\n",
+            encoding="utf-8",
+        )
+
+    checks.append(scoped_scenario(
+        "SC8 rujukan berkas _meta/ di dokumen aktif tetap MISSING-LABELED-COPY (cakupan baru tidak melonggarkan)",
+        "sistem-fi-active-meta-file",
+        setup_active_meta_file_ref,
+        "                    if token not in labels_by_source:",
+        "                    if False and token not in labels_by_source:",
+        lambda before: (
+            before.returncode != 0
+            and "[MISSING-LABELED-COPY]" in before.stdout
+            and "_meta/PAKET_REPO_MANDIRI.md" in before.stdout
+        ),
+        lambda after: after.returncode == 0,
+    ))
+
+    def setup_area_mention(root: Path):
+        (root / "README.md").write_text(
+            "# uji\n\nPrinsip meta ada di `_meta/`, alat regresi ada di `tools/`.\n",
+            encoding="utf-8",
+        )
+
+    checks.append(scoped_scenario(
+        "SC9 rujukan berbentuk direktori di dokumen aktif = sebutan area, bukan kegagalan",
+        "sistem-fi-area-mention",
+        setup_area_mention,
+        "                    if token.endswith(\"/\"):",
+        "                    if False and token.endswith(\"/\"):",
+        lambda before: (
+            before.returncode == 0
+            and "sebutan area: 2" in before.stdout
+            and "`_meta/`" in before.stdout
+            and "[MISSING-LABELED-COPY]" not in before.stdout
+        ),
+        lambda after: (
+            after.returncode != 0
+            and "[MISSING-LABELED-COPY]" in after.stdout
+        ),
+    ))
+
+    def setup_master_only_copy(root: Path):
+        """Salinan berlabel yang SUMBERNYA di area master-only: menyalinnya
+        pelanggaran, jadi temuan — solusinya hapus salinan, bukan resinkronisasi."""
+        (root / "_salinan-meta").mkdir()
+        src_rel = "_meta/_internal/HANDOFF_NEXT_SESSION.md"
+        (root / "_salinan-meta" / "HANDOFF_NEXT_SESSION.md").write_bytes(
+            _derived_label(cp, src_rel)
+        )
+
+    checks.append(scoped_scenario(
+        "SC10 salinan berlabel dari area master-only ditolak sebagai MASTER-ONLY-COPY (hapus salinannya)",
+        "sistem-fi-master-only-copy",
+        setup_master_only_copy,
+        "        forbidden = core.master_only_reason(src_rel)",
+        "        forbidden = None",
+        lambda before: (
+            before.returncode != 0
+            and "[MASTER-ONLY-COPY]" in before.stdout
+            and "hapus salinannya dan tulis sebagai provenance tanpa backtick" in before.stdout
+        ),
+        lambda after: after.returncode == 0 and "[MASTER-ONLY-COPY]" not in after.stdout,
     ))
     return checks
 

@@ -166,8 +166,15 @@ Aturan penting:
 - Semua rujukan di dalam folder sistem harus relatif terhadap folder itu. Rujukan
   berformat `sistem-nama-sistemnya/...` dari folder tersebut ke dirinya sendiri
   salah.
-- Rujukan ber-backtick ke `_meta/...` atau `tools/...` berarti salinan berlabel
-  dari sumber itu harus ada di dalam folder sistem.
+- Rujukan ber-backtick ke satu berkas `_meta/...` atau `tools/...` di dokumen aktif
+  berarti salinan berlabel dari sumber itu harus ada di dalam folder sistem.
+- Yang dinilai alat hanya dokumen aktif. Rujukan di dokumen bukti/log tidak
+  ditagih salinan (tetapi tetap dicatat alat sebagai rujukan historis), dan
+  penyebutan area berbentuk direktori — misalnya `_meta/` dengan garis miring di
+  belakang — bukan kegagalan.
+- Area yang tidak boleh keluar dari master (audit/handoff internal dan yang
+  sejenis) tidak boleh disalin ke folder sistem: tulis sebagai provenance tanpa
+  backtick.
 - Riwayat/provenance boleh disebut tanpa backtick; riwayat lengkap tetap di master.
 
 Aturan lengkapnya ada di `_meta/PAKET_REPO_MANDIRI.md`.
