@@ -12,7 +12,7 @@ Sebelum melakukan perubahan apa pun, lakukan bootstrap secara berurutan:
    percakapan sebelumnya. Ingat fakta platform: branch arena/... dibuat otomatis oleh lmarena (bukan manual), dan setelah PR merge/close sesi tersebut tidak bisa push lagi — lihat _meta/PLATFORM_LMARENA.md.
 2. Cek PR melalui tool GitHub dengan `gh pr list --state all --limit 20` dan laporkan nomor, judul, status,
    branch, tujuan, serta apakah ada konflik atau pekerjaan yang menggantung. `--state all` WAJIB (bukan `--state open`) supaya PR dari branch aktif yang sudah MERGED/CLOSED terlihat — jika PR dari branch aktif sudah MERGED, sesi ini tidak bisa push lagi (fakta platform #2) — harus buka sesi baru dari main.
-   Cari juga `LOG_SESI_*.md` terbaru (root repo / folder sistem / folder unit);
+   Cari juga `LOG_SESI_*.md` terbaru (folder `_log-sesi/` / folder sistem / folder unit);
    kalau keadaannya `OPEN`, BACA dan laporkan keadaan sesi sebelumnya —
    itu konteks yang tidak boleh ditanya ulang.
 3. Baca `_meta/SYSTEM_MANIFEST.md`.

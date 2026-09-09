@@ -13,7 +13,7 @@ Sesi lmarena bisa crash kapan saja (error, tidak bisa lanjut, kadang tidak bisa 
 1. **Satu file per sesi:** `LOG_SESI_YYYY-MM-DD.md` (suffix `_2` kalau dua sesi sehari), di folder scope kerja:
    - kerja deck → `deck-aktif/<nama-deck>/`
    - kerja level sistem → akar folder sistem ini
-   - kerja lintas-sistem/level repo → root repo
+   - kerja lintas-sistem/level repo → folder `_log-sesi/` di root repo (bukan di root langsung)
 2. **Update + commit + push segera** setelah tiap pertukaran yang menghasilkan informasi baru — bukan mekanis tiap giliran.
 3. **Header "Keadaan Sesi" di atas file selalu segar** (agent baru membaca INI dulu, bukan seluruh kronologi): di mana kita sekarang, apa yang sudah disepakati, apa yang masih terbuka, langkah berikutnya.
 4. **Akhir sesi** (prompt penutup di `PANDUAN_PENGGUNA.md`): header diisi final → `CLOSED` (atau `OPEN` + "dilanjutkan di mana").

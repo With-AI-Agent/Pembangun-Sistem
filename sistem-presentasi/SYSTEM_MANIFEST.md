@@ -8,7 +8,7 @@
 - **Tujuan utama:** Mengubah bahan (dokumen pengguna, atau topik yang perlu diriset) menjadi berkas presentasi yang setia pada sumbernya, strukturnya berbasis bukti, tampilannya konsisten, dan prosesnya bisa dilanjutkan sesi lain
 - **Pengguna/consumer:** Pemakai = pengguna repo ini. Consumer hasil akhir = audiens presentasi (misal dosen penguji sidang skripsi)
 - **Pemilik keputusan:** Pengguna repo ini
-- **Versi:** `0.5.0`
+- **Versi:** `0.5.1`
 - **Tahap:** siap-pakai
 - **Status:** `Built & terverifikasi; teraudit 1x` — kerangka disetujui 4 Sep 2026; dokumen instruksi aktif lengkap; **merge ke main diminta pengguna 5 Sep 2026** (PR #9); **audit independen Sedang selesai 5 Sep 2026** (sesi agent baru) — 11 temuan (2×P1 skrip, 3×P2 state deck, 6×P3) **semua diperbaiki di v0.3.0**; pegangan pengguna ditambahkan (v0.3.0); **mekanisme log sesi (`LOG_SESI`) diturunkan self-contained ke `_sistem/11_LOG_SESI.md` + prompt pembuka/penutup diperbarui (v0.4.0, 5 Sep 2026)**
 - **Tanggal dibuat:** 4 September 2026 (UTC)
@@ -123,5 +123,6 @@ Status butir `03_KONTRAK_WARISAN.md` meta v1.3.0 untuk sistem ini (disinkronkan 
 
 | Tanggal | Versi | Perubahan | Bukti |
 |---|---|---|---|
+| 9 Sep 2026 | **0.5.1** | Perubahan mekanisme log sesi (permintaan pemilik 9 Sep 2026 — root repo terasa berantakan): baris aturan lokasi di _sistem/11_LOG_SESI.md — kerja lintas-sistem/level repo kini dituliskan ke folder `_log-sesi/` di root repo, bukan di root langsung. Prompt pembuka/penutup sistem ini tidak menyebut root repo sehingga tidak perlu diubah | Bukti: PR D (sesi ini) — gerbang mandiri + regresi penuh PASS. **Menunggu review independen L1** — PR tanpa merge |
 | 9 Sep 2026 | **0.5.0** | Folder ini menjadi **mandiri menurut AT-17**: rujukan ke diri sendiri ditulis relatif terhadap folder; rujukan asal-usul (protokol QA, protokol recovery, template pegangan, prinsip universal, indeks sistem, protokol kemandirian) dan area yang tidak boleh keluar dari master ditulis sebagai provenance tanpa backtick; dua dokumen master yang benar-benar dipakai saat sistem dijalankan — fakta platform (butir W-07) dan protokol review independen (dirujuk bagian review di `ACCEPTANCE_TESTS.md`) — dibawa sebagai salinan berlabel di direktori _salinan-meta/ | Bukti: `ACCEPTANCE_TEST_LOG.md` bagian "Folder mandiri AT-17" (perintah + keluaran gerbang mandiri, PASS). **Menunggu review independen L1** — PR tanpa merge |
 | 7 Sep 2026 | **0.4.2** | Sistem menjadi **dapat dibangkitkan jadi repo mandiri**: `_sistem/validate_system.py` diadaptasi seperlunya (daftar periksa disetarakan — baris Versi manifest + field checkpoint `Pekerjaan belum tersimpan` di tiap STATUS deck dan `_template/T6_STATUS.md` + baris `HASIL: PASS/FAIL`), jalur exit code dan baris keluaran lama dipertahankan; gate baru "Paket repo mandiri LULUS"; rujukan protokol 1 baris di bagian Quality & Evolution | `ACCEPTANCE_TEST_LOG.md` bagian "Paket repo mandiri" (perintah + keluaran validator DI DALAM hasil pack, keduanya PASS/0-warning). Protokol: _meta/PAKET_REPO_MANDIRI.md di master (provenance). **Menunggu review independen L1** |
