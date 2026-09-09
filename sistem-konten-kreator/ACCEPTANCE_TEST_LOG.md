@@ -1361,3 +1361,109 @@ Pembanding base `e33dc059` (bukan klaim drift-nol): 67 / 18 / 6 / 28 / 38 / **24
 ### Batas klaim
 
 Yang dicatat: seluruh tuple L6 pada sha di atas. Yang **tidak** berlaku lagi dari entri `0064fc1`: angka 241 rujukan dan sha256 berkas meta di berita acara paket. L7 BELUM. Upload aset tidak dicoba pada run ini.
+
+
+### 2026-09-09 — Folder mandiri AT-17 (gerbang deliverable)
+
+- **Tanggal:** 9 September 2026 (UTC).
+- **Sha master (basis branch):** `5bdd28c418b56fdd7f65244fadf2cff21a5d7a1e` — tip `main`, merge PR #27.
+- **Sha commit isi kerja:** `6cf6db114a0f01aabbd11dbab48d4d6aa1d21d76` — commit yang memuat seluruh suntingan folder sistem ini. Entri bukti ini sendiri ada di commit berikutnya di atasnya: sebuah commit tidak dapat memuat sha dirinya sendiri, jadi yang berlaku sebagai rujukan adalah commit isi di atas (pola pencatatan yang sama dipakai `LOG_SESI_2026-09-07.md`).
+- **Perintah pembuktian (dijalankan dari root repo master):**
+
+```text
+python3 tools/check_selfcontained.py --sistem sistem-konten-kreator --report
+python3 tools/check_selfcontained.py --semua --report
+```
+
+- **Hasil:** `exit=0` pada kedua perintah, dengan baris `HASIL SISTEM: PASS` dan `HASIL AKHIR: PASS`. Keluaran persis di bawah diukur pada commit isi kerja di atas, **sebelum** entri bukti ini ditulis; ukur ulang setelah entri ini tertulis ditempel utuh di body PR (putaran 2) dan verdictnya tidak berubah — menulis bukti tidak boleh mengubah hasil gerbang.
+
+```text
+== sistem-konten-kreator ==
+salinan sementara: /tmp/check-selfcontained-sistem-konten-kreator-0li7wgme/sistem-konten-kreator
+$ python3 _sistem/validate_system.py
+VALIDATOR SISTEM KONTEN KREATOR
+  root sistem      : sistem-konten-kreator/
+  channel          : channel-fixture-narasi-sejarah
+  arsip naskah     : 1
+  unit produksi    : fixture-narasi-sejarah-tiga-benda-di-meja-nenek
+  temuan           : 0
+HASIL: PASS
+exit=0
+salinan berlabel ditemukan: 1
+  - _salinan-meta/PLATFORM_LMARENA.md <- _meta/PLATFORM_LMARENA.md (sha b2985f37eac2be8f1a812711751f8c0dce0f21b9; perbedaan: tidak ada)
+temuan: 0
+rujukan historis (tidak ditegakkan): 62
+  - ACCEPTANCE_TEST_LOG.md:111: `_meta/FAILURE_INJECTION_TESTS.md`
+  - ACCEPTANCE_TEST_LOG.md:123: `_meta/PROTOKOL_CHECKPOINT_RECOVERY.md`
+  - ACCEPTANCE_TEST_LOG.md:127: `_meta/PROTOKOL_CHECKPOINT_RECOVERY.md`
+  - ACCEPTANCE_TEST_LOG.md:134: `tools/build_template.py`
+  - ACCEPTANCE_TEST_LOG.md:134: `_meta/PROTOKOL_CHECKPOINT_RECOVERY.md`
+  - ACCEPTANCE_TEST_LOG.md:134: `sistem-konten-kreator/`
+  - ACCEPTANCE_TEST_LOG.md:134: `_meta/PLATFORM_LMARENA.md`
+  - ACCEPTANCE_TEST_LOG.md:138: `sistem-konten-kreator/QUALITY_ASSURANCE_AND_EVOLUTION.md`
+  - ACCEPTANCE_TEST_LOG.md:159: `sistem-konten-kreator/_sistem/START_DI_SINI.md`
+  - ACCEPTANCE_TEST_LOG.md:160: `sistem-konten-kreator/_sistem/00_CARA_PAKAI_SISTEM.md`
+  - ACCEPTANCE_TEST_LOG.md:166: `sistem-konten-kreator/_produksi-aktif/fixture-narasi-sejarah-tiga-benda-di-meja-nenek/`
+  - ACCEPTANCE_TEST_LOG.md:282: `_meta/FAILURE_INJECTION_TESTS.md`
+  - ACCEPTANCE_TEST_LOG.md:352: `_meta/FAILURE_INJECTION_TESTS.md`
+  - ACCEPTANCE_TEST_LOG.md:389: `_meta/PROTOKOL_CHECKPOINT_RECOVERY.md`
+  - ACCEPTANCE_TEST_LOG.md:390: `_meta/INDEKS_SISTEM.md`
+  - ACCEPTANCE_TEST_LOG.md:508: `_meta/INDEKS_SISTEM.md`
+  - ACCEPTANCE_TEST_LOG.md:524: `sistem-konten-kreator/`
+  - ACCEPTANCE_TEST_LOG.md:547: `sistem-konten-kreator/SYSTEM_MANIFEST.md`
+  - ACCEPTANCE_TEST_LOG.md:548: `_meta/INDEKS_SISTEM.md`
+  - ACCEPTANCE_TEST_LOG.md:551: `sistem-konten-kreator/`
+  - ACCEPTANCE_TEST_LOG.md:563: `_meta/PROTOKOL_CHECKPOINT_RECOVERY.md`
+  - ACCEPTANCE_TEST_LOG.md:564: `_meta/SESSION_REPORT_TEMPLATE.md`
+  - ACCEPTANCE_TEST_LOG.md:564: `_meta/TEMPLATE_LOG_SESI.md`
+  - ACCEPTANCE_TEST_LOG.md:600: `sistem-konten-kreator/ACCEPTANCE_TEST_LOG.md`
+  - ACCEPTANCE_TEST_LOG.md:616: `sistem-konten-kreator/ACCEPTANCE_TEST_LOG.md`
+  - ACCEPTANCE_TEST_LOG.md:638: `_meta/_internal/AUDIT_SISTEM_KONTEN_KREATOR_2026-09-03.md`
+  - ACCEPTANCE_TEST_LOG.md:666: `_meta/PLATFORM_LMARENA.md`
+  - ACCEPTANCE_TEST_LOG.md:696: `_meta/_internal/AUDIT_SISTEM_KONTEN_KREATOR_2026-09-03.md`
+  - ACCEPTANCE_TEST_LOG.md:728: `_meta/PROTOKOL_CHECKPOINT_RECOVERY.md`
+  - ACCEPTANCE_TEST_LOG.md:736: `_meta/INDEKS_SISTEM.md`
+  - ACCEPTANCE_TEST_LOG.md:739: `sistem-konten-kreator/`
+  - ACCEPTANCE_TEST_LOG.md:739: `sistem-konten-kreator/ACCEPTANCE_TEST_LOG.md`
+  - ACCEPTANCE_TEST_LOG.md:739: `sistem-konten-kreator/ACCEPTANCE_TESTS.md`
+  - ACCEPTANCE_TEST_LOG.md:739: `sistem-konten-kreator/SYSTEM_MANIFEST.md`
+  - ACCEPTANCE_TEST_LOG.md:739: `sistem-konten-kreator/UJI_F7_CLEAN_RUN_2026-09-05.md`
+  - ACCEPTANCE_TEST_LOG.md:739: `sistem-konten-kreator/ACCEPTANCE_TEST_LOG.md`
+  - ACCEPTANCE_TEST_LOG.md:807: `_meta/INDEKS_SISTEM.md`
+  - ACCEPTANCE_TEST_LOG.md:965: `_meta/INDEKS_SISTEM.md`
+  - ACCEPTANCE_TEST_LOG.md:966: `_meta/PROTOKOL_CHECKPOINT_RECOVERY.md`
+  - ACCEPTANCE_TEST_LOG.md:1010: `_meta/PROTOKOL_CHECKPOINT_RECOVERY.md`
+  - ACCEPTANCE_TEST_LOG.md:1059: `sistem-konten-kreator/ACCEPTANCE_TESTS.md`
+  - ACCEPTANCE_TEST_LOG.md:1098: `_meta/INDEKS_SISTEM.md`
+  - ACCEPTANCE_TEST_LOG.md:1099: `_meta/FAILURE_INJECTION_TESTS.md`
+  - ACCEPTANCE_TEST_LOG.md:1183: `_meta/ACCEPTANCE_TESTS.md`
+  - ACCEPTANCE_TEST_LOG.md:1183: `_meta/PAKET_REPO_MANDIRI.md`
+  - ACCEPTANCE_TEST_LOG.md:1237: `tools/test_failure_injection.py`
+  - ACCEPTANCE_TEST_LOG.md:1237: `_meta/FAILURE_INJECTION_TESTS.md`
+  - ACCEPTANCE_TEST_LOG.md:1251: `_meta/`
+  - ACCEPTANCE_TEST_LOG.md:1252: `_meta/ACCEPTANCE_TESTS.md`
+  - ACCEPTANCE_TEST_LOG.md:1252: `_meta/PAKET_REPO_MANDIRI.md`
+  - ACCEPTANCE_TEST_LOG.md:1303: `_meta/FAILURE_INJECTION_TESTS.md`
+  - ACCEPTANCE_TEST_LOG.md:1306: `tools/test_failure_injection.py`
+  - ACCEPTANCE_TEST_LOG.md:1306: `_meta/FAILURE_INJECTION_TESTS.md`
+  - ACCEPTANCE_TEST_LOG.md:1321: `_meta/ACCEPTANCE_TESTS.md`
+  - ACCEPTANCE_TEST_LOG.md:1321: `_meta/PAKET_REPO_MANDIRI.md`
+  - _produksi-aktif/fixture-narasi-sejarah-tiga-benda-di-meja-nenek/STATUS.md:3: `sistem-konten-kreator/ACCEPTANCE_TEST_LOG.md`
+  - _produksi-aktif/fixture-narasi-sejarah-tiga-benda-di-meja-nenek/STATUS.md:6: `sistem-konten-kreator/channel-fixture-narasi-sejarah/`
+  - _produksi-aktif/fixture-narasi-sejarah-tiga-benda-di-meja-nenek/STATUS.md:7: `sistem-konten-kreator/channel-fixture-narasi-sejarah/model-konten/narasi-60-detik/brief.md`
+  - _produksi-aktif/fixture-narasi-sejarah-tiga-benda-di-meja-nenek/final-content.md:5: `sistem-konten-kreator/channel-fixture-narasi-sejarah/arsip-naskah/2026-09-06-tiga-benda-di-meja-nenek.md`
+  - _salinan-meta/PLATFORM_LMARENA.md:90: `_meta/PLATFORM_LMARENA.md`
+  - _sistem/validate_system.py:14: `_meta/`
+  - _sistem/validate_system.py:14: `tools/`
+sebutan area: 4
+  - SYSTEM_MANIFEST.md:112: `_meta/`
+  - SYSTEM_MANIFEST.md:112: `tools/`
+  - UJI_F7_CLEAN_RUN_2026-09-05.md:10: `_meta/_internal/arsip-review-log-2026-09-06/` — area master-only _meta/_internal/: tidak boleh keluar dari master, sebut sebagai provenance tanpa backtick
+  - UJI_F7_CLEAN_RUN_2026-09-05.md:80: `_meta/_internal/arsip-review-log-2026-09-06/` — area master-only _meta/_internal/: tidak boleh keluar dari master, sebut sebagai provenance tanpa backtick
+HASIL SISTEM: PASS
+```
+
+- **Salinan berlabel pada run ini:** satu berkas di direktori _salinan-meta/ dengan tiga baris label wajib — `_meta/PLATFORM_LMARENA.md` (sha sumber `b2985f37eac2be8f1a812711751f8c0dce0f21b9`). Ia lolos perbandingan isi byte terhadap sumbernya di master pada sha di atas, dan baris kedua labelnya menyatakan perbedaan "tidak ada".
+- **Dijadikan provenance tanpa backtick (tidak disalin):** induk protokol review independen (folder ini sudah memegang variannya sendiri di root sistem), induk protokol QA, protokol recovery, protokol kemandirian, acceptance & failure-injection meta, validator master, serta seluruh rujukan ke area _meta/_internal/ (audit acuan dan arsip review) — area itu tidak boleh keluar dari master, jadi menyalinnya adalah pelanggaran.
+- **Rujukan ke diri sendiri** (bila ada pada putaran kerja ini) ditulis relatif terhadap folder sistem, bukan berprefiks `sistem-konten-kreator/`.
+- **Batas klaim:** entri ini adalah bukti kemandirian folder menurut AT-17, bukan klaim bahwa gerbang acceptance lain tertutup; tidak ada gate sistem yang ditutup di sini, dan penggabungan PR adalah keputusan pemilik langsung.
