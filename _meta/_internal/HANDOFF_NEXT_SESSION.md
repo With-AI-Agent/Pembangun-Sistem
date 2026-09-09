@@ -54,37 +54,15 @@
 
 ## Yang sudah diverifikasi
 
-Hasil tools pada baseline `f51b163` (sebelum kerja sesi ini):
+Hasil tools pada baseline `f51b163` (sebelum kerja sesi ini) dapat diulang dengan menjalankan `python3 tools/validate_repo.py` dan `python3 tools/test_failure_injection.py` — keluaran alat tidak dikutip sebagai angka di sini; status dan peringatan dijelaskan tanpa mengutip jumlah korpus.
 
-```text
-VALIDATION PASSED: 29 required files and Markdown invariants checked
-COVERAGE: 16 active documents scanned, 40 path references checked, 4 unresolved
-WARNINGS: 4 (warning tier, exit code unaffected)
-FAILURE-INJECTION TESTS PASSED: 4 fail-closed scenarios
-```
+Peringatan pada baseline tersebut **diharapkan**: artefak yang sengaja di-gitignore tidak resolve dan muncul sebagai peringatan — status dapat diperiksa ulang dengan menjalankan validator.
 
-Keempat warning itu **diharapkan**: `_meta/_internal/backups/backup_essential.zip` dan `_meta/_internal/template_clean.zip` sengaja di-gitignore (lihat komentar di `.gitignore`), jadi rujukannya memang tidak resolve.
+Hasil tools **setelah** kerja sesi ini (PR #5) dapat diulang dengan menjalankan `python3 tools/validate_repo.py`, `python3 tools/test_failure_injection.py`, `python3 tools/build_template.py`, dan `python3 tools/backup_verify.py` — tanpa mengutip angka korpus; verdict dan perilaku alat yang menentukan.
 
-Hasil tools **setelah** kerja sesi ini (PR #5):
+Jumlah rujukan bertambah karena `INDEKS_SISTEM.md` kini merujuk `sistem-konten-kreator/ACCEPTANCE_TEST_LOG.md`, dan rujukan itu resolve. Perubahan jumlah peringatan **bukan** karena ada yang diperbaiki: artefak gitignore itu sekarang ada di workspace karena `build_template.py`/`backup_verify.py` dijalankan di sesi ini. Di clone baru yang belum menjalankan kedua tool itu, kondisinya kembali seperti baseline — dan itu tetap normal (periksa dengan menjalankan validator di clone baru).
 
-```text
-VALIDATION PASSED: 29 required files and Markdown invariants checked
-COVERAGE: 16 active documents scanned, 41 path references checked, 0 unresolved
-WARNINGS: 0 (warning tier, exit code unaffected)
-FAILURE-INJECTION TESTS PASSED: 4 fail-closed scenarios
-TEMPLATE VERIFY PASSED / TEMPLATE CLEAN BUILD PASSED
-BACKUP AND RESTORE TEST PASSED (19 files, restore OK)
-```
-
-Referensi bertambah 40 → 41 karena `INDEKS_SISTEM.md` kini merujuk `sistem-konten-kreator/ACCEPTANCE_TEST_LOG.md`, dan referensi itu resolve. Warning turun 4 → 0 **bukan** karena ada yang diperbaiki: dua artefak gitignore itu sekarang ada di workspace karena `build_template.py`/`backup_verify.py` dijalankan di sesi ini. Di clone baru yang belum menjalankan kedua tool itu, angkanya kembali 4 unresolved — dan itu tetap normal.
-
-Catatan `tools/validate_repo.py` (baris ~213): baris `VALIDATION PASSED: …` di file ini sengaja dijaga byte-identical karena dikutip oleh audit di branch lain. Angka historis pada saat handoff versi sebelumnya ditulis:
-
-```text
-VALIDATION PASSED: 27 required files and Markdown invariants checked
-COVERAGE: 15 active documents scanned, 32 path references checked, 0 unresolved
-WARNINGS: 0 (warning tier, exit code unaffected)
-```
+Catatan `tools/validate_repo.py` (baris ~213): baris `VALIDATION PASSED: …` di file ini sengaja dijaga byte-identical karena dikutip oleh audit di branch lain. Angka historis pada saat handoff versi sebelumnya ditulis — untuk melihatnya jalankan validator pada commit tersebut; nilai historis tidak dikutip di sini agar tidak menjadi angka korpus yang basi.
 
 ## Status Sistem Konten Kreator
 
