@@ -3,7 +3,7 @@
 **Level:** Mendalam (7 lensa, sesuai `QUALITY_ASSURANCE_AND_EVOLUTION.md` bagian "Lensa audit").
 **Trigger:** permintaan pemilik sesi 2026-09-09 ("lakukan mekanisme pemeriksaan dan audit meta sistem; perbaikan dan peningkatan jika memang diperlukan") + audit berkala berbasis risiko.
 **Branch:** `arena/01a08433-pembangun-sistem`, basis `main` = `f5ff602` (merge PR #29).
-**Log sesi:** `LOG_SESI_2026-09-09_3.md` (root repo).
+**Log sesi:** `_log-sesi/LOG_SESI_2026-09-09_3.md` (mula-mula di root repo; dipindah ke `_log-sesi/` via `git mv` di PR yang sama — perubahan mekanisme folder log sesi, 9 Sep 2026).
 
 ---
 
@@ -67,3 +67,17 @@
 2. Perbaikan B-1/A-1/P-1/P-2 — menunggu approval scope pemilik; kalau disetujui: 1 PR (perubahan dokumen), regresi penuh, bump versi terdampak, `review_prompt.py --pr <N>` ditempel utuh.
 3. P-3/P-4: menunggu keputusan pemilik.
 4. G-1: rangkaian kerja terpisah (clean-run AT-KK sisa) — dijadwalkan pemilik.
+
+---
+
+## Addendum — pelaksanaan pasca-approval + review putaran 1 (9 Sep 2026)
+
+Bagian atas adalah laporan audit pada saat penulisan; bagian ini mencatat pelaksanaannya. Entri lama tidak disunting kecuali koreksi pointer di baris "Log sesi" (file secara fisik pindah oleh PR yang sama).
+
+1. **P-3 (keputusan pemilik: "hapus"):** ZIP artefak root di-`git rm` di commit `8fa74d7`.
+2. **P-4 (delegasi pemilik: "menurutmu yang terbaik"):** crosstab 32 branch lama vs seluruh PR via API GitHub — **29 branch ber-PR-MERGED dihapus**; **3 branch TANPA PR dipertahankan** (arena/01a0772b "review: catat audit independen PR 16…", arena/01a0776b "Tutup sesi: … tanpa PR …", arena/01a07fc0 "…terhenti di C1") — commit tip-nya mencatat sesi berakhir tanpa PR; keputusan hapus/tetap menunggu pemilik. Catatan teknis: workspace shallow clone (main lokal = 1 commit) sehingga cek ancestry `git branch --merged` tidak valid; kriteria yang dipakai = status PR di GitHub.
+3. **Perubahan mekanisme baru (permintaan pemilik kedua, 9 Sep 2026):** folder `_log-sesi/` menggantikan root repo untuk semua `LOG_SESI_*.md` level repo/meta — 19 file dipindah via `git mv` + aturan lokasi di-update di semua dokumen yang menentukan (meta v1.13.0, KK 0.3.9 — aturan 00 lokasi saja → regresi AT-KK dideklarasikan, presentasi 0.5.1). Detail di body PR #30 dan baris Log Evolusi manifest.
+4. **Review independen putaran 1/2 (sesi lain): MERAH — 3 temuan**, semua divalidasi penulis dan dikoreksi di commit koreksi (setelah `4f06808`):
+   - **T-1:** body PR kontradiktif soal berkas pelindung (bagian mekanisme menyatakan aturan 00 KK berubah → regresi AT-KK berlaku; bagian "Yang sengaja TIDAK disentuh" menyatakan aturan 00/05/06 tidak disentuh → regresi tidak terpicu). Dikoreksi: bagian "TIDAK disentuh" ditulis ulang akurat (yang disentuh = aturan 00 KK, aturan lokasi saja; regresi AT-KK berlaku dan dideklarasikan).
+   - **T-2:** angka bukti `275 path references` di body tidak reproduktif di sha commit (aktual: 274 di `8fa74d7` maupun `4f06808`). Akar: angka itu diukur di pohon kerja SEBELUM koreksi MASTER-ONLY-REF ter-commit (rujukan ber-backtick yang kemudian dihapus). Dikoreksi: bukti "pasca-perubahan" di body kini mengutip keluaran validator yang dijalankan DI head final PR; angka intermediat tidak dikutip lagi (AT-16).
+   - **T-3:** body + artefak audit stale (H1 masih v1.12.2, path log tanpa folder, "sistem kini 0.3.8", audit file menunjuk log di root). Dikoreksi: H1/path/versi disinkronkan; baris "Log sesi" di laporan ini diperbarui ke lokasi baru + addendum ini.
