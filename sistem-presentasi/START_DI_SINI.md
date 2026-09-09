@@ -1,6 +1,6 @@
 # START DI SINI — Sistem Presentasi (mandiri)
 
-> Entry point sistem ini. Dokumen ini **self-contained**: semua yang dibutuhkan ada di folder ini, jadi folder `sistem-presentasi/` dapat diunduh dan dijadikan **repo tersendiri** tanpa `_meta/`.
+> Entry point sistem ini. Dokumen ini **self-contained**: semua yang dibutuhkan ada di folder ini, jadi folder ini dapat diunduh dan dijadikan **repo tersendiri** tanpa `_meta/`.
 
 ## Apa ini
 Sistem untuk mengubah **bahan** (dokumen pengguna / topik riset) menjadi **berkas presentasi** (default `.pptx`) yang setia pada sumber, berjejak halaman, RTL-bila-Arab, dan prosesnya bisa dilanjutkan sesi lain.
@@ -68,4 +68,4 @@ PYTHONPATH=/tmp/pptxlib python3 export_html.py
 Di lingkungan lmarena, viewer/preview TIDAK bisa unduh biner dan link web dipagari token; jalur unduh yang didukung = **GitHub** (halaman file → Download raw). Setelah dijadikan repo sendiri, gunakan mekanisme repo itu.
 
 ## Status
-**Struktur lengkap sesuai rencana kerangka** (diverifikasi `validate_system.py` exit 0, 5 Sep 2026): `_sistem/01–10`, `_generator/G1–G3`, `_template/T1–T9`, acceptance tests, validator, QA per-produksi, **pegangan pengguna** (`PANDUAN_PENGGUNA.md` + `PROMPT_ENTRI_UNIVERSAL.md`). **Audit independen Sedang selesai 5 Sep 2026** (laporan: `_meta/_internal/AUDIT_SISTEM_PRESENTASI_2026-09-05.md`; temuan P1–P3 diperbaiki di versi `0.3.0`). **Deck nyata #1 HANYA unit kerja & sumber pelajaran anti-pola — BUKAN sample/contoh** (prosesnya cacat: sesi perancangan isi & visual dilewati; lihat `PELAJARAN_DECK_01.md`). Yang inherently butuh manusia: tinjauan bahasa asli & approval gerbang (by design).
+**Struktur lengkap sesuai rencana kerangka** (diverifikasi `validate_system.py` exit 0, 5 Sep 2026): `_sistem/01–10`, `_generator/G1–G3`, `_template/T1–T9`, acceptance tests, validator, QA per-produksi, **pegangan pengguna** (`PANDUAN_PENGGUNA.md` + `PROMPT_ENTRI_UNIVERSAL.md`). **Audit independen Sedang selesai 5 Sep 2026** (laporan: _meta/_internal/AUDIT_SISTEM_PRESENTASI_2026-09-05.md di master — provenance, area ini tidak boleh keluar dari master; temuan P1–P3 diperbaiki di versi `0.3.0`). **Deck nyata #1 HANYA unit kerja & sumber pelajaran anti-pola — BUKAN sample/contoh** (prosesnya cacat: sesi perancangan isi & visual dilewati; lihat `PELAJARAN_DECK_01.md`). Yang inherently butuh manusia: tinjauan bahasa asli & approval gerbang (by design).

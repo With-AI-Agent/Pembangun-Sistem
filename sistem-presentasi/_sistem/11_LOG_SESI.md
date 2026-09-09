@@ -1,6 +1,6 @@
 # 11 — Log Sesi Berkelanjutan (LOG_SESI)
 
-> **Dokumen instruksi AKTIF & SELF-CONTAINED** (diturunkan dari `_meta/PROTOKOL_CHECKPOINT_RECOVERY.md` bagian "Log Sesi Berkelanjutan" + `_meta/TEMPLATE_LOG_SESI.md` — rujukan `_meta/` hanya provenance). Berlaku untuk SEMUA sesi di sistem ini, di scope mana pun (deck, level sistem, atau level repo).
+> **Dokumen instruksi AKTIF & SELF-CONTAINED** (diturunkan dari _meta/PROTOKOL_CHECKPOINT_RECOVERY.md bagian "Log Sesi Berkelanjutan" + _meta/TEMPLATE_LOG_SESI.md, keduanya di master — provenance; format dan aturan yang dipakai ada lengkap di dokumen ini). Berlaku untuk SEMUA sesi di sistem ini, di scope mana pun (deck, level sistem, atau level repo).
 
 ## Kenapa ada aturan ini
 
@@ -12,7 +12,7 @@ Sesi lmarena bisa crash kapan saja (error, tidak bisa lanjut, kadang tidak bisa 
 
 1. **Satu file per sesi:** `LOG_SESI_YYYY-MM-DD.md` (suffix `_2` kalau dua sesi sehari), di folder scope kerja:
    - kerja deck → `deck-aktif/<nama-deck>/`
-   - kerja level sistem → akar `sistem-presentasi/`
+   - kerja level sistem → akar folder sistem ini
    - kerja lintas-sistem/level repo → root repo
 2. **Update + commit + push segera** setelah tiap pertukaran yang menghasilkan informasi baru — bukan mekanis tiap giliran.
 3. **Header "Keadaan Sesi" di atas file selalu segar** (agent baru membaca INI dulu, bukan seluruh kronologi): di mana kita sekarang, apa yang sudah disepakati, apa yang masih terbuka, langkah berikutnya.

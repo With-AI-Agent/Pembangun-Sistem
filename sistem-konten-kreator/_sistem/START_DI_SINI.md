@@ -35,10 +35,10 @@
 → Jalankan skenario di `ACCEPTANCE_TESTS.md` (di root sistem, bukan di `_sistem/`) dan isi tabel Rekaman Hasil
 
 **Mau menutup pengecualian/gate (mis. F), menaikkan versi aturan, atau mengubah klaim di manifest (pekerjaan L1)?**
-→ Review independen oleh SESI LAIN wajib sebelum klaim boleh masuk main — protokol varian KK di `PROTOKOL_REVIEW_INDEPENDEN.md` (root sistem) + induk `_meta/PROTOKOL_REVIEW_INDEPENDEN.md`; varian prompt reviewer siap tempel ada di `panduan/PANDUAN_PENGGUNA.md`
+→ Review independen oleh SESI LAIN wajib sebelum klaim boleh masuk main — protokol varian KK di `PROTOKOL_REVIEW_INDEPENDEN.md` (root sistem) + induk _meta/PROTOKOL_REVIEW_INDEPENDEN.md di master (provenance); varian prompt reviewer siap tempel ada di `panduan/PANDUAN_PENGGUNA.md`
 
 **Mau menjadikan sistem ini repo sendiri (terpisah dari repo master)?**
-→ Satu perintah di root repo master: `python3 tools/pack_repo.py sistem-konten-kreator --check` (lihat dulu), lalu tanpa `--check` untuk benar-benar membangkitkannya. Aturannya: `_meta/PAKET_REPO_MANDIRI.md`
+→ Satu perintah di root repo master: `python3 tools/pack_repo.py sistem-konten-kreator --check` (lihat dulu), lalu tanpa `--check` untuk benar-benar membangkitkannya. Aturannya: _meta/PAKET_REPO_MANDIRI.md di master (provenance)
 
 ---
 

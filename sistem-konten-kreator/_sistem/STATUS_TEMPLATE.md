@@ -27,4 +27,4 @@
 - Perbarui file ini setelah setiap tahap yang menghasilkan dependency baru.
 - Jangan menyatakan tahap tersedia untuk sesi berikutnya sebelum output sudah tersimpan di branch.
 - Jika status atau output tidak dapat diverifikasi setelah sesi terputus, berhenti dan minta klarifikasi.
-- Field `Pekerjaan belum tersimpan`: nilai WAJIB EXACT `Tidak ada` (case-sensitive, tanpa backtick); jika ada yang belum tersimpan, isi daftar path-nya. Provenance: `_meta/PROTOKOL_CHECKPOINT_RECOVERY.md` — aturan sudah turun ke template ini; file induk tidak diperlukan.
+- Field `Pekerjaan belum tersimpan`: nilai WAJIB EXACT `Tidak ada` (case-sensitive, tanpa backtick); jika ada yang belum tersimpan, isi daftar path-nya. Provenance: _meta/PROTOKOL_CHECKPOINT_RECOVERY.md di master — aturan sudah turun ke template ini; file induk tidak diperlukan.

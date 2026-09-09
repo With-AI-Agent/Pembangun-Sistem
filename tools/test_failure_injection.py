@@ -420,14 +420,16 @@ def _derived_label(repo: Path, src_rel: str, *, body: bytes | None = None, diff_
 
 
 def check_selfcontained_scenarios(base_dir: Path):
-    """SC1-SC9: gerbang folder mandiri wajib bergigi, termasuk mutasi alat.
+    """SC1-SC10: gerbang folder mandiri wajib bergigi, termasuk mutasi alat.
 
     SC1-SC5 (PR A, 8 Sep 2026): empat mode gagal + kewajiban baris kedua label.
-    SC6-SC9 (PR A2, 9 Sep 2026): tiga pembedaan CAKUPAN alat — area yang tidak
+    SC6-SC10 (PR A2, 9 Sep 2026): tiga pembedaan CAKUPAN alat — area yang tidak
     boleh keluar dari master diminta sebagai provenance (bukan salinan
     berlabel), dokumen bukti tidak ditegakkan tetapi rujukannya tetap terdaftar
     sebagai rujukan historis, dan rujukan ber-backtick ke BERKAS `_meta/...` di
-    dokumen aktif tetap gagal. SC9 menjaga pembedaan sebutan area.
+    dokumen aktif tetap gagal. SC9 menjaga pembedaan sebutan area; SC10
+    menjaga larangan salinan berlabel dari area yang tidak boleh keluar dari
+    master.
     """
     checks = []
     cp = base_dir / "repo_sc"
@@ -539,7 +541,7 @@ def check_selfcontained_scenarios(base_dir: Path):
         mutation_new,
     ))
 
-    # --- SC6-SC9 (PR A2): cakupan alat, diuji-mutasi -------------------------
+    # --- SC6-SC10 (PR A2): cakupan alat, diuji-mutasi ------------------------
     def scoped_scenario(label, system, setup, mutation_old, mutation_new,
                         expect_before, expect_after):
         """Seperti `scenario`, tetapi ekspektasi sebelum/sesudah mutasi adalah
