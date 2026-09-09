@@ -94,3 +94,11 @@ Reviewer (sesi lain; komentar PR #30, #issuecomment-5595972078) memverifikasi ul
 **Koreksi fisik:** body PR disinkronkan via API (tanpa commit baru); baris Log Evolusi manifest v1.12.2 & v1.13.0 (baris belum rilis — pola koreksi putaran 1); addendum ini; entri log sesi; commit koreksi di atas e4ea4a1 + regresi ulang penuh pada head koreksi.
 
 **Keputusan pemilik (eskalasi):** (1) jadwalkan clean-run acceptance KK `0.3.9` di sesi terpisah — **syarat sebelum merge** (F-1); (2) merge setelah clean-run hijau — tanpa auto-merge; (3) nasib 3 branch dipertahankan (arena/01a0772b, arena/01a0776b, arena/01a07fc0) — terbuka sejak putaran 1.
+
+## Addendum 3 — keputusan pemilik (9 Sep 2026)
+
+Menyusul eskalasi hasil review putaran 2, pemilik memutuskan (chat sesi, 9 Sep 2026):
+
+1. **F-1 — Pengecualian TERCATAT** (preseden v0.3.2/PR #12; entri 5 Sep di ACCEPTANCE_TEST_LOG KK): sesi pembuat tidak memenuhi syarat sebagai subjek uji buta (sudah membaca expected result — alasan yang sama yang dipakai reviewer independen) → clean-run acceptance KK `0.3.9` (8 test belum diuji + retest AT-KK-05/05b) **dijadwalkan sebagai first task sesi berikutnya** dengan prompt subjek netral + pencatat terpisah (preseden protokol UJI_F7_CLEAN_RUN_2026-09-05.md). Merge PR #30 dilanjutkan atas keputusan pemilik; **jika clean-run menemukan kegagalan, perbaikan mengikuti** — syarat LULUS pada versi yang sama tetap berlaku.
+2. Prompt sesi baru (clean-run G-1) disiapkan dan diserahkan ke pemilik di chat.
+3. Nasib 3 branch dipertahankan (arena/01a0772b, arena/01a0776b, arena/01a07fc0) — masih menunggu keputusan pemilik.
