@@ -8,7 +8,7 @@
 
 ## Catatan fixture
 
-Arsip ini bagian dari state uji backlog G-1 (clean-run 0.3.9) — pasangan arsip untuk konten fixture yang "sudah selesai" sebelum run, lengkap dengan karakter Tipe B yang tercatat. Detail produksi (prompt asset per segmen) tidak dipertahankan: folder produksinya dihapus setelah dipakai sesuai aturan, dan asset tidak menjadi bagian arsip.
+Arsip ini bagian dari state uji backlog G-1 (clean-run 0.3.10) — pasangan arsip untuk konten fixture yang "sudah selesai" sebelum run, lengkap dengan karakter Tipe B yang tercatat. Detail produksi (prompt asset per segmen) tidak dipertahankan: folder produksinya dihapus setelah dipakai sesuai aturan, dan asset tidak menjadi bagian arsip.
 
 ## Prompt final karakter (ringkas)
 

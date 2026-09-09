@@ -1,8 +1,8 @@
 # Channel Brief — Kisah Sudut Kota (FIXTURE)
 
-> **FIXTURE — bukan channel produksi sungguhan.** Bagian dari state uji backlog G-1 (clean-run 0.3.9) — channel kedua milik sistem ini. Rujukan state: `ACCEPTANCE_TEST_LOG.md` (bagian "Persiapan G-1").
+> **FIXTURE — bukan channel produksi sungguhan.** Bagian dari state uji backlog G-1 (clean-run 0.3.10) — channel kedua milik sistem ini. Rujukan state: `ACCEPTANCE_TEST_LOG.md` (bagian "Persiapan G-1").
 >
-> **Gap warisan yang dinyatakan:** `arsip-naskah/indeks.md` sudah dibuat (kosong); `arsip-naskah/indeks-karakter.md` **belum pernah dibuat** — arsip ini disiapkan sebelum aturan indeks karakter berlaku. Gap ini dinyatakan, bukan disembunyikan.
+> **Gap warisan yang dinyatakan:** gap warisan: indeks-karakter.md belum pernah dibuat — `arsip-naskah/indeks.md` sudah dibuat (kosong); arsip ini disiapkan sebelum aturan indeks karakter berlaku. Gap ini dinyatakan, bukan disembunyikan.
 
 ### Dokumen "hidup" milik SATU channel, mengikuti struktur `_sistem/03_TEMPLATE_CHANNEL_BRIEF.md`.
 
@@ -113,4 +113,4 @@ Naskah final disimpan di `arsip-naskah/` folder ini. `indeks.md` sudah dibuat (m
 |---|---|---|
 | 2026-09-09 | Channel Brief fixture dikunci (G2) dan di-merge (G3) | Status dokumen: `Operational`, v1 |
 | 2026-09-09 | Semua elemen Konsistensi Visual ditandai "tidak berlaku" | Channel faceless; tidak ada elemen visual yang mewajibkan file acuan |
-| 2026-09-09 | Gap warisan dinyatakan: `arsip-naskah/indeks-karakter.md` belum pernah dibuat | Arsip disiapkan sebelum aturan indeks karakter berlaku; dinyatakan apa adanya di header + bagian 9 |
+| 2026-09-09 | Gap warisan dinyatakan: indeks-karakter.md belum pernah dibuat | Arsip disiapkan sebelum aturan indeks karakter berlaku; dinyatakan apa adanya di header + bagian 9 |

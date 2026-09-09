@@ -1,6 +1,6 @@
 # Status Produksi — Narasi Sejarah (fixture) — Pintu Kos yang Tidak Pernah Dikunci
 
-> **STATE UJI — RETEST 05/05b pada `0.3.9` (backlog G-1).** State: produksi berjalan sampai Tahap 3 selesai + naskah sudah di-commit; sesi sebelumnya dianggap hilang (sesi baru mulai dari branch yang sama). Status uji: AT-KK-05 / AT-KK-05b `belum diuji` pada `0.3.9` — riwayat run terakhir `0.3.4`. Rujukan: `sistem-konten-kreator/ACCEPTANCE_TEST_LOG.md` (bagian "Persiapan G-1") + `sistem-konten-kreator/UJI_G1_CLEAN_RUN_2026-09-09.md`.
+> **STATE UJI — RETEST 05/05b pada `0.3.10` (backlog G-1).** State: produksi berjalan sampai Tahap 3 selesai + naskah sudah di-commit; sesi sebelumnya dianggap hilang (sesi baru mulai dari branch yang sama). Status uji: AT-KK-05 / AT-KK-05b `belum diuji` pada `0.3.10` — riwayat run terakhir `0.3.4`. Rujukan: `sistem-konten-kreator/ACCEPTANCE_TEST_LOG.md` (bagian "Persiapan G-1") + `sistem-konten-kreator/UJI_G1_CLEAN_RUN_2026-09-09.md`.
 
 - **Status:** `in-progress`
 - **Channel:** `channel-fixture-narasi-sejarah/` — v2, `Operational`

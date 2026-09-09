@@ -1470,12 +1470,12 @@ HASIL SISTEM: PASS
 
 ---
 
-## Persiapan G-1 — clean-run acceptance 0.3.9 (9 Sep 2026)
+## Persiapan G-1 — clean-run acceptance 0.3.10 (9 Sep 2026)
 
 > **Ini bagian PERSIAPAN, bukan run dan bukan verdict.** Bagian ini mendokumentasikan state yang disiapkan untuk suite clean-run backlog G-1 (10 run: AT-KK-05/05b retest + AT-KK-01/02/03/03b/04/06/07/08) pada versi sistem `0.3.9`. Keputusan pemilik 9 Sep 2026: pengecualian TERCATAT untuk F-1 (preseden v0.3.2/PR #12) — sesi pembuat PR #30 tidak memenuhi syarat sebagai subjek uji buta; clean-run dijadwalkan dengan prompt subjek netral + pencatat terpisah. Orkestrasi lengkap (aturan, prompt siap-tempel, protokol pencatatan, state): `UJI_G1_CLEAN_RUN_2026-09-09.md` di root sistem. Run apa pun yang tercatat di bawah bagian ini adalah hasil eksekusi subjek, bukan bagian persiapan.
 
 - **Tanggal persiapan:** 9 September 2026 (UTC).
-- **Versi sistem saat persiapan:** `0.3.9` (meta `1.13.0`; basis main `3eb053e` = merge PR #30).
+- **Versi sistem:** basis main `3eb053e` (merge PR #30) = `0.3.9`; persiapan ini menaikkan KK ke **`0.3.10`** (kecualian declared gap warisan di `validate_system.py` — gerbang folder; dokumen aturan `00`/`05`/`06` tidak diubah satu baris pun) dan meta ke **`1.13.1`** (adaptasi skenario FI R4 + sinkron dokumen FI). **Suite dijalankan pada `0.3.10`.**
 - **Branch persiapan:** branch sesi perancang (lihat PR); semua commit state tercatat di PR dan diverifikasi reviewer/pemilik saat merge.
 
 ### State yang disiapkan (ringkas; detail + sha256 di `UJI_G1_CLEAN_RUN_2026-09-09.md` §4)
@@ -1490,7 +1490,7 @@ HASIL SISTEM: PASS
 
 ### Yang sengaja TIDAK dikerjakan di persiapan ini
 
-- Tidak mengubah satu baris pun dokumen aturan `00`/`05`/`06` (diff = 0 baris — diverifikasi di PR) → tidak ada bump versi KK dari persiapan; test suite dijalankan pada versi `0.3.9`.
+- Tidak mengubah satu baris pun dokumen aturan `00`/`05`/`06` kedua sistem (diff = 0 baris — diverifikasi di PR); perubahan KK `0.3.9` → `0.3.10` = state fixture + dokumen orkestrasi + satu pengecualian declared gap warisan di `validate_system.py` (gerbang folder, bukan dokumen aturan); test suite dijalankan pada versi `0.3.10`.
 - Tidak mengubah riwayat Run 1–8, tidak membuat bagian run untuk run yang belum dijalankan, tidak mengisi tabel Rekaman Hasil (hak pencatat setelah eksekusi).
 - Tidak merge PR apa pun (keputusan pemilik); branch `uji-06-branch-b` tidak pernah di-merge dari luar sesi subjeknya.
 - Tiga header status uji yang basi (RUN 7 / F7 TERBUKA / Run 8 dijadwalkan) di-SINKRON ke status tercatat (F7 DITUTUP 6 Sep 2026; Run 8 LULUS 0.3.4) di unit produksi lama + channel brief + model brief — higiene status (bukan perubahan klaim), dideklarasikan di log sesi perancang.

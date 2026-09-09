@@ -1,6 +1,6 @@
 # Model Konten Brief — Narasi 60 Detik (Channel: Kisah Sudut Kota) (FIXTURE)
 
-> **FIXTURE — bukan model konten produksi sungguhan.** Bagian dari state uji backlog G-1 (clean-run 0.3.9). Rujukan state: `ACCEPTANCE_TEST_LOG.md` (bagian "Persiapan G-1").
+> **FIXTURE — bukan model konten produksi sungguhan.** Bagian dari state uji backlog G-1 (clean-run 0.3.10). Rujukan state: `ACCEPTANCE_TEST_LOG.md` (bagian "Persiapan G-1").
 
 ### Dokumen "hidup" milik SATU model konten, dibaca BERSAMAAN dengan Channel Brief channel-nya.
 

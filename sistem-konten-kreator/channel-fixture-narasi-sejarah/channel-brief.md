@@ -2,7 +2,7 @@
 
 > **FIXTURE — bukan channel produksi sungguhan.** Bukan penutup temuan L-04.
 >
-> **Status uji:** AT-KK-05 / Run 7 **LULUS**, `0.3.4`; AT-KK-05b / Run 8 **LULUS**, `0.3.4` — **F7 DITUTUP 6 Sep 2026**. Retest `0.3.9` (backlog G-1): dijadwalkan — status/bukti: [ACCEPTANCE_TEST_LOG.md](../ACCEPTANCE_TEST_LOG.md).
+> **Status uji:** AT-KK-05 / Run 7 **LULUS**, `0.3.4`; AT-KK-05b / Run 8 **LULUS**, `0.3.4` — **F7 DITUTUP 6 Sep 2026**. Retest `0.3.10` (backlog G-1): dijadwalkan — status/bukti: [ACCEPTANCE_TEST_LOG.md](../ACCEPTANCE_TEST_LOG.md).
 
 ### Dokumen "hidup" milik SATU channel, mengikuti struktur `_sistem/03_TEMPLATE_CHANNEL_BRIEF.md`.
 

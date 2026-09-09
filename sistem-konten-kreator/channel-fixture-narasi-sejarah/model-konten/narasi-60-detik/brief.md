@@ -1,6 +1,6 @@
 # Model Konten Brief — Narasi 60 Detik (Channel: Narasi Sejarah) (FIXTURE)
 
-> **FIXTURE — bukan model konten produksi sungguhan.** Status uji: AT-KK-05 / Run 7 **LULUS** + AT-KK-05b / Run 8 **LULUS**, `0.3.4` — **F7 DITUTUP 6 Sep 2026**; Run 6 lama **void**; riwayat GAGAL/GAGAL-metode Run 4/5 tetap utuh di log. Retest `0.3.9` (backlog G-1) dijadwalkan. Rujukan: [ACCEPTANCE_TEST_LOG.md](../../../ACCEPTANCE_TEST_LOG.md).
+> **FIXTURE — bukan model konten produksi sungguhan.** Status uji: AT-KK-05 / Run 7 **LULUS** + AT-KK-05b / Run 8 **LULUS**, `0.3.4` — **F7 DITUTUP 6 Sep 2026**; Run 6 lama **void**; riwayat GAGAL/GAGAL-metode Run 4/5 tetap utuh di log. Retest `0.3.10` (backlog G-1) dijadwalkan. Rujukan: [ACCEPTANCE_TEST_LOG.md](../../../ACCEPTANCE_TEST_LOG.md).
 
 ### Dokumen "hidup" milik SATU model konten, dibaca BERSAMAAN dengan Channel Brief channel-nya.
 

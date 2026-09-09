@@ -7,7 +7,7 @@
 - **Sumber eksternal:** tidak ada — cerita personal dummy/fiksi fixture, bukan klaim sejarah hasil riset.
 - **Karakter Tipe B:** dipakai — deskripsi lengkap menempel di bawah (lihat bagian "Karakter Tipe B" di file ini); baris indeks di `indeks-karakter.md`
 
-> **FIXTURE UJI.** Naskah ini bagian dari state uji backlog G-1 (clean-run 0.3.9): arsip channel yang "sudah ada" sebelum run, supaya test yang bergantung pada data historis (karakter Tipe B yang tercatat) punya bahan nyata. Rujukan: `ACCEPTANCE_TEST_LOG.md` (bagian "Persiapan G-1").
+> **FIXTURE UJI.** Naskah ini bagian dari state uji backlog G-1 (clean-run 0.3.10): arsip channel yang "sudah ada" sebelum run, supaya test yang bergantung pada data historis (karakter Tipe B yang tercatat) punya bahan nyata. Rujukan: `ACCEPTANCE_TEST_LOG.md` (bagian "Persiapan G-1").
 
 ---
 

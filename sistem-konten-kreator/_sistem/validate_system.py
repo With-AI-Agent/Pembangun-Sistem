@@ -22,7 +22,13 @@ Yang diperiksa:
   2. dokumen instruksi `_sistem/` 00–09 + START_DI_SINI + STATUS_TEMPLATE;
   3. pegangan pengguna di `panduan/`;
   4. konsistensi arsip naskah tiap channel (`arsip-naskah/` wajib punya
-     `indeks.md` + `indeks-karakter.md`; tiap naskah arsip terdaftar di indeks);
+     `indeks.md` + `indeks-karakter.md`; tiap naskah arsip terdaftar di indeks).
+     Pengecualian declared (0.3.10): `indeks-karakter.md` yang TIDAK ADA diakui
+     hanya kalau brief channel-nya menyatakan gap eksak
+     "gap warisan: indeks-karakter.md belum pernah dibuat" — state yang
+     diantisipasi aturan 06 bagian A2 (channel baru / arsip sebelum aturan),
+     dan akan dibuat agent saat pemakaian pertama. Tanpa pernyataan itu,
+     ketiadaan tetap temuan (FAIL). `indeks.md` tidak pernah dikecualikan;
   5. tiap unit di `_produksi-aktif/*/` punya `STATUS.md` dengan field yang
      bisa di-parse (termasuk field checkpoint dengan nilai exact);
   6. `SYSTEM_MANIFEST.md` punya baris Versi.
@@ -70,6 +76,11 @@ REQ_STATUS_FIELDS = [
 
 ARSIP_INDEX_FILES = ["indeks.md", "indeks-karakter.md"]
 ARSIP_SIDECAR_SUFFIX = ("-metadata.md", "-sumber.md")
+# Pernyataan gap eksak yang boleh dituliskan di channel-brief.md. Hanya string
+# eksak (bukan semantik bebas) yang diakui, supaya pengecualian tetap
+# deterministik dan tidak bisa dipakai untuk menyembunyikan file yang terhapus
+# tanpa keputusan.
+GAP_WARISAN_MARKER = "gap warisan: indeks-karakter.md belum pernah dibuat"
 
 findings = []
 
@@ -148,10 +159,16 @@ for ch in channels:
 if channels and not arsip_dirs:
     add("ada folder channel-* tapi tidak satu pun punya arsip-naskah/ "
         "(kontrak arsip naskah + indeks karakter)")
+gap_dinyatakan = []
 for ad in sorted(arsip_dirs):
     rel_ad = os.path.relpath(ad, ROOT).replace(os.sep, "/")
     for idx in ARSIP_INDEX_FILES:
         if not os.path.isfile(os.path.join(ad, idx)):
+            if idx == "indeks-karakter.md":
+                brief_path = os.path.join(os.path.dirname(ad), "channel-brief.md")
+                if os.path.isfile(brief_path) and GAP_WARISAN_MARKER in read(brief_path):
+                    gap_dinyatakan.append("%s/%s" % (rel_ad, idx))
+                    continue
             add("arsip naskah tidak konsisten: %s/%s tidak ada" % (rel_ad, idx))
     idx_path = os.path.join(ad, "indeks.md")
     if os.path.isfile(idx_path):
@@ -221,6 +238,7 @@ print("VALIDATOR SISTEM KONTEN KREATOR")
 print("  root sistem      :", os.path.basename(ROOT) + "/")
 print("  channel          :", ", ".join(channels) if channels else "TIDAK ADA")
 print("  arsip naskah     :", len(arsip_dirs))
+print("  gap warisan      :", ", ".join(gap_dinyatakan) if gap_dinyatakan else "TIDAK ADA")
 print("  unit produksi    :", ", ".join(units) if units else "TIDAK ADA")
 print("  temuan           :", len(findings))
 for f in findings:
