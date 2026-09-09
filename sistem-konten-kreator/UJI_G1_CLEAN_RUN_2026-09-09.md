@@ -135,7 +135,7 @@ Run 9-18 (suite retest/clean-run AT-KK-01/02/03/03b/04/05/05b/06/07/08 pada vers
 
 **Nomor Run 9–18 ditetapkan urut di atas; pencatat boleh menomorkan ulang sesuai urutan eksekusi AKTUAL kalau ternyata berbeda — dan mencatat hal itu di log. JANGAN membuat bagian run untuk run yang tidak dijalankan.**
 
-1. Tambah bagian baru di `ACCEPTANCE_TEST_LOG.md` per run: **Run N — AT-KK-XX (clean-run/retest 0.3.10, backlog G-1)**. Catat tanggal, versi sistem (`0.3.9`), branch/base, setup, urutan baca/paparan sebelum keputusan pertama ter-commit, tabel penilaian per klausul, commit bukti, dan verdict.
+1. Tambah bagian baru di `ACCEPTANCE_TEST_LOG.md` per run: **Run N — AT-KK-XX (clean-run/retest 0.3.10, backlog G-1)**. Catat tanggal, versi sistem (`0.3.10`), branch/base, setup, urutan baca/paparan sebelum keputusan pertama ter-commit, tabel penilaian per klausul, commit bukti, dan verdict.
 2. Tabel Rekaman Hasil di `ACCEPTANCE_TESTS.md` diisi **hanya hasil yang benar-benar sudah dijalankan** pada `0.3.10`; riwayat Run 1–8 tidak diubah (GAGAL tetap GAGAL; jangan dinodai retest).
 3. Verdict per run: `LULUS` hanya kalau agent bertindak benar **tanpa dipandu** pada sesi agent baru DAN metode bersih (poin 4 + poin 6 `ACCEPTANCE_TESTS.md`). Kegagalan metode dibedakan dari kegagalan perilaku di log.
 4. **G-1 (dan gate "Acceptance test sistem ini LULUS" di manifest KK) baru tertutup kalau SELURUH 10 run LULUS pada `0.3.10` (versi yang sama)** — termasuk AT-KK-03 + AT-KK-07 yang harus dijalankan pada channel yang benar-benar terisi (bukan fixture kosong): state arsip disiapkan §4. Jika ada GAGAL: gate tetap terbuka, perbaikan dokumen aturan lewat sesi terpisah, dan re-run dijadwalkan ulang (syarat "LULUS pada versi yang sama" kembali berlaku).
