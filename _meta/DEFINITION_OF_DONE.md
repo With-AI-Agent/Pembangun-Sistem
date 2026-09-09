@@ -42,7 +42,7 @@ Dokumen atau sistem **tidak boleh disebut selesai hanya karena file sudah dituli
 Selain checklist sistem domain, harus ada:
 
 - [ ] Pilot end-to-end berhasil
-- [ ] Folder sistem adalah deliverable mandiri: `python3 tools/check_selfcontained.py --sistem <sistem> --report` exit 0. Alat menyalin hanya folder sistem, menjalankan `_sistem/validate_system.py` di salinan, menolak rujukan ke diri sendiri berprefiks folder, menolak rujukan `_meta/`/`tools/` tanpa salinan berlabel, dan menolak salinan turunan basi/tanpa label. Aturan lengkap: `_meta/PAKET_REPO_MANDIRI.md`; skenario ujinya AT-17
+- [ ] Folder sistem adalah deliverable mandiri: `python3 tools/check_selfcontained.py --sistem <sistem> --report` exit 0. Alat menyalin hanya folder sistem, menjalankan `_sistem/validate_system.py` di salinan, menolak rujukan ke diri sendiri berprefiks folder, menolak rujukan ke satu BERKAS `_meta/`/`tools/` tanpa salinan berlabel, dan menolak salinan turunan basi/tanpa label. Cakupan penegakannya = dokumen aktif (satu definisi bersama): dokumen bukti/mentah tidak ditegakkan tetapi rujukannya terdaftar sebagai rujukan historis, penyebutan area berbentuk direktori bukan kegagalan, dan area yang tidak boleh keluar dari master diminta sebagai provenance tanpa backtick — bukan sebagai salinan. Aturan lengkap: `_meta/PAKET_REPO_MANDIRI.md`; skenario ujinya AT-17
 - [ ] Failure mode penting sudah diuji
 - [ ] Verifikasi output diuji terhadap contoh nyata
 - [ ] Self-improvement tidak berjalan tanpa trigger dan acceptance criteria

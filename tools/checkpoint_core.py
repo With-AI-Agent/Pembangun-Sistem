@@ -28,6 +28,11 @@ their own (drifting) copy of the same judgments. This module holds:
   * dokumen_aktif — the single active-document definition introduced by
     PR #21. Validators use this for reference scanning; no repository profile
     or standalone whitelist lives here anymore.
+  * master_only_reason — the single definition of "areas that must never leave
+    the master repo" (PR A2, 9 Sep 2026). It is the SAME judgment
+    tools/build_template.py applies when it verifies a clean template (AT-10),
+    so no tool can offer a labeled copy of a path the template builder rejects:
+    copying it out would be the very violation the verification exists to stop.
 """
 import re
 from pathlib import Path
@@ -343,3 +348,50 @@ def dokumen_aktif(root, sistem):
             continue
         kept.append(p)
     return sorted(set(kept))
+
+
+# --- Area master-only — SATU definisi "tidak boleh keluar dari master" -------
+# 9 Sep 2026 (PR A2). Daftar ini adalah penilaian yang SAMA dengan verifikasi
+# template bersih di tools/build_template.py (AT-10): apa yang ditolak di sana
+# tidak pernah ikut keluar dari master, jadi tidak bisa menjadi dependensi
+# operasional folder sistem. Konsekuensinya untuk alat lain: rujukan ke area
+# ini TIDAK BOLEH ditawari solusi "salinan berlabel" — menyalinnya adalah
+# pelanggaran yang sama. Bentuk yang benar adalah provenance tanpa backtick.
+#
+# Satu definisi, dua pemakai (build_template + check_selfcontained). Jangan
+# menyalin daftarnya ke alat lain; kalau cakupan berubah, ubah di sini saja.
+
+MASTER_ONLY_PREFIXES = (
+    "_meta/_internal/",       # audit & handoff historis (juga kena substring di bawah)
+    "sistem-konten-kreator/",  # keputusan domain contoh, bukan isi template
+    "sistem-pilot-",           # fixture uji meta-sistem, bukan sistem rilis
+)
+MASTER_ONLY_SUBSTRINGS = (
+    "_internal",      # area histori master
+    "arsip-naskah",   # output produksi
+    "unit-aktif",     # state kerja per unit
+)
+REFERENCE_ONLY_MARKER = "agent_instruction: reference_only"
+REFERENCE_ONLY_REASON = "dokumen historis reference_only"
+
+
+def master_only_reason(rel, head: str = ""):
+    """Alasan `rel` tidak boleh keluar dari master, atau None bila boleh ikut.
+
+    `rel` = path relatif (berkas di template, atau sumber sebuah salinan
+    berlabel, atau token rujukan ber-backtick). `head` = 400 karakter pertama
+    isi berkas, dipakai untuk penanda dokumen historis reference_only (M-09).
+
+    Dipakai tools/build_template.py (verifikasi AT-10) dan
+    tools/check_selfcontained.py (pesan rujukan + temuan salinan terlarang).
+    """
+    p = str(rel).replace("\\", "/")
+    for prefix in MASTER_ONLY_PREFIXES:
+        if p.startswith(prefix):
+            return f"area master-only {prefix}"
+    for marker in MASTER_ONLY_SUBSTRINGS:
+        if marker in p:
+            return f"area master-only {marker}"
+    if head and REFERENCE_ONLY_MARKER in head:
+        return REFERENCE_ONLY_REASON
+    return None
