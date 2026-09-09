@@ -153,27 +153,32 @@ def regression_scenarios(base_dir: Path):
             shutil.rmtree(cp / name)
             idx.write_text(idx_backup, encoding="utf-8")
 
-        # R4 (F3): deleting a registered system's only unit STATUS must
-        # fail both validator and FI (before: coverage silently shrank).
-        target = None
+        # R4 (F3): a registered system left with ZERO unit STATUS must fail
+        # both validator and FI (before: coverage silently shrank). A system
+        # may legitimately hold several units (produksi selesai yang
+        # dipertahankan + produksi berjalan), jadi skenarionya menghapus
+        # SELURUH unit STATUS sistem target, bukan hanya yang pertama.
+        target_files = []
         for sys_dir in sorted(cp.glob("sistem-*/")):
             if sys_dir.name == core.EXACT_PILOT:
                 continue
             if sys_dir.name in core.parse_index(idx_backup)[0]:
                 files = core.unit_status_files(sys_dir)
                 if files:
-                    target = files[0]
+                    target_files = files
                     break
-        if target is None:
+        if not target_files:
             checks.append(("R4 (vacuous: tidak ada sistem terdaftar dgn unit STATUS)", True))
         else:
-            data = target.read_text(encoding="utf-8")
-            target.unlink()
+            data = [(t, t.read_text(encoding="utf-8")) for t in target_files]
+            for t, _ in data:
+                t.unlink()
             checks.append(("R4 unit STATUS terdaftar dihapus -> validator FAIL",
                            run_tool(cp, "tools/validate_repo.py") != 0))
             checks.append(("R4 unit STATUS terdaftar dihapus -> FI FAIL",
                            run_tool(cp, "tools/test_failure_injection.py") != 0))
-            target.write_text(data, encoding="utf-8")
+            for t, isi in data:
+                t.write_text(isi, encoding="utf-8")
 
         # R7 (F5): template bootstrap must be self-contained — extract the
         # fresh template, run the validator there, and pin the exact

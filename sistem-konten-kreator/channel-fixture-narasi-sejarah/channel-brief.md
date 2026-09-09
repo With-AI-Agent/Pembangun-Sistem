@@ -2,7 +2,7 @@
 
 > **FIXTURE — bukan channel produksi sungguhan.** Bukan penutup temuan L-04.
 >
-> **Status uji:** AT-KK-05 / Run 4 **GAGAL**, `0.3.2-warisan-sync`; AT-KK-05 / Run 5 **GAGAL-metode** (koreksi pasca-review 6 Sep), `0.3.3`; Run 6 lama **void**; AT-KK-05 / Run 7 **LULUS**, `0.3.4`; AT-KK-05b / Run 8 **dijadwalkan**, `0.3.4`; F7 TERBUKA. Rujukan: [ACCEPTANCE_TEST_LOG.md](../ACCEPTANCE_TEST_LOG.md).
+> **Status uji:** AT-KK-05 / Run 7 **LULUS**, `0.3.4`; AT-KK-05b / Run 8 **LULUS**, `0.3.4` — **F7 DITUTUP 6 Sep 2026**. Retest `0.3.10` (backlog G-1): dijadwalkan — status/bukti: [ACCEPTANCE_TEST_LOG.md](../ACCEPTANCE_TEST_LOG.md).
 
 ### Dokumen "hidup" milik SATU channel, mengikuti struktur `_sistem/03_TEMPLATE_CHANNEL_BRIEF.md`.
 
@@ -24,7 +24,7 @@
 - [x] `arsip-naskah/indeks.md` dan `arsip-naskah/indeks-karakter.md` sudah dibuat (boleh kosong) — keduanya ada di folder ini
 - [x] Sudah `Merged` ke `main`
 
-**Versi:** `1` — **Terakhir diperbarui:** `2026-09-04` — **Diwarisi dari:** `_sistem/01_BRAND_CORE.md`
+**Versi:** `2` — **Terakhir diperbarui:** `2026-09-09` — **Diwarisi dari:** `_sistem/01_BRAND_CORE.md`
 
 > **Catatan dependency:** `_sistem/01_BRAND_CORE.md` di repo ini **masih template kosong** (belum pernah dijalankan sesi Brand Core). Brief fixture ini karena itu tidak benar-benar mewarisi apa pun dari Brand Core. Ini dicatat sadar, bukan disembunyikan — agent yang membaca brief ini wajib melaporkan gap tersebut, bukan berpura-pura konteksnya lengkap.
 
@@ -53,7 +53,7 @@
 - **Karakteristik suara/voice:** suara dewasa, tempo lambat (± 130 kata/menit), jeda 0,5 detik tiap ganti gagasan.
 - **Hal yang HARUS ADA di setiap konten:** satu benda atau ruang konkret sebagai pintu masuk cerita; penutup yang mengembalikan penonton ke masa kini.
 - **Hal yang TIDAK BOLEH ADA:** klaim sejarah yang tidak bisa dirujuk; nama tokoh nyata; nada menggurui; clickbait yang menjanjikan sesuatu yang tidak ada di naskah.
-- **Contoh kalimat pembuka/penutup khas:** pembuka — *"Ada satu benda yang…"*; penutup — *"Sekarang benda itu sudah tidak ada. Tapi caranya mengatur hari kita, masih."*
+- **Contoh kalimat pembuka/penutup khas:** pembuka — *"Dulu, ada satu benda yang…"*; penutup — *"Sekarang benda itu sudah tidak ada. Tapi caranya mengatur hari kita, masih."*
 
 ## 4. Konsistensi Visual
 
@@ -105,7 +105,7 @@
 
 ## 9. Arsip Naskah
 
-Naskah final disimpan di `arsip-naskah/` folder ini. `indeks.md` (judul/tanggal/topik) dan `indeks-karakter.md` (karakter Tipe B) keduanya sudah dibuat dan masih kosong — channel fixture ini belum punya konten yang sampai Tahap 6.
+Naskah final disimpan di `arsip-naskah/` folder ini. `indeks.md` (judul/tanggal/topik) dan `indeks-karakter.md` (karakter Tipe B) keduanya sudah dibuat dan terisi — arsip saat ini: "Tiga Benda di Meja Nenek" (2026-09-06) dan "Penjual Bunga di Pasar Subuh" (2026-09-09); karakter Tipe B "Nenek Penjual Bunga" tercatat di `indeks-karakter.md`.
 
 ## 10. Log Keputusan Channel
 
@@ -113,3 +113,4 @@ Naskah final disimpan di `arsip-naskah/` folder ini. `indeks.md` (judul/tanggal/
 |---|---|---|
 | 2026-09-04 | Channel Brief fixture dikunci (G2) dan di-merge (G3) | Status dokumen: `Operational`, v1 |
 | 2026-09-04 | Semua elemen Konsistensi Visual ditandai "tidak berlaku" | Channel faceless; tidak ada elemen visual yang mewajibkan file acuan |
+| 2026-09-09 | Channel Brief v2 — contoh kalimat pembuka khas: "Ada satu benda yang…" → "Dulu, ada satu benda yang…" (G2+G3 tercatat) | Permintaan pemilik: pembuka perlu terasa lebih nostalgia; contoh penutup tidak berubah |

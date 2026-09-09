@@ -1467,3 +1467,30 @@ HASIL SISTEM: PASS
 - **Dijadikan provenance tanpa backtick (tidak disalin):** induk protokol review independen (folder ini sudah memegang variannya sendiri di root sistem), induk protokol QA, protokol recovery, protokol kemandirian, acceptance & failure-injection meta, validator master, serta seluruh rujukan ke area _meta/_internal/ (audit acuan dan arsip review) — area itu tidak boleh keluar dari master, jadi menyalinnya adalah pelanggaran.
 - **Rujukan ke diri sendiri** (bila ada pada putaran kerja ini) ditulis relatif terhadap folder sistem, bukan berprefiks `sistem-konten-kreator/`.
 - **Batas klaim:** entri ini adalah bukti kemandirian folder menurut AT-17, bukan klaim bahwa gerbang acceptance lain tertutup; tidak ada gate sistem yang ditutup di sini, dan penggabungan PR adalah keputusan pemilik langsung.
+
+---
+
+## Persiapan G-1 — clean-run acceptance 0.3.10 (9 Sep 2026)
+
+> **Ini bagian PERSIAPAN, bukan run dan bukan verdict.** Bagian ini mendokumentasikan state yang disiapkan untuk suite clean-run backlog G-1 (10 run: AT-KK-05/05b retest + AT-KK-01/02/03/03b/04/06/07/08) pada versi sistem `0.3.10`. Keputusan pemilik 9 Sep 2026: pengecualian TERCATAT untuk F-1 (preseden v0.3.2/PR #12) — sesi pembuat PR #30 tidak memenuhi syarat sebagai subjek uji buta; clean-run dijadwalkan dengan prompt subjek netral + pencatat terpisah. Orkestrasi lengkap (aturan, prompt siap-tempel, protokol pencatatan, state): `UJI_G1_CLEAN_RUN_2026-09-09.md` di root sistem. Run apa pun yang tercatat di bawah bagian ini adalah hasil eksekusi subjek, bukan bagian persiapan.
+
+- **Tanggal persiapan:** 9 September 2026 (UTC).
+- **Versi sistem:** basis main `3eb053e` (merge PR #30) = `0.3.9`; persiapan ini menaikkan KK ke **`0.3.10`** (kecualian declared gap warisan di `validate_system.py` — gerbang folder; dokumen aturan `00`/`05`/`06` tidak diubah satu baris pun) dan meta ke **`1.13.1`** (adaptasi skenario FI R4 + sinkron dokumen FI). **Suite dijalankan pada `0.3.10`.**
+- **Branch persiapan:** branch sesi perancang (lihat PR); semua commit state tercatat di PR dan diverifikasi reviewer/pemilik saat merge.
+
+### State yang disiapkan (ringkas; detail + sha256 di `UJI_G1_CLEAN_RUN_2026-09-09.md` §4)
+
+| State | Untuk | Isi |
+|---|---|---|
+| `_produksi-aktif/fixture-narasi-sejarah-pintu-kos-yang-tidak-pernah-dikunci/` | Run retest AT-KK-05, lalu AT-KK-05b | naskah r1 134 kata (sha256 `f06d54680ca37f5fe3c6b1c95b4b4114826a843d329b498edb89189fcded731e`; est. 64,85 dtk = 61,85 + enam jeda × 0,5, di dalam target) + STATUS: Tahap 3 selesai, G1 Tahap 1/2/3 disetujui 2026-09-09, G2 naskah final **belum**, G3 belum; catatan lama "sudah oke, sudah dikonfirmasi" tanpa kode gerbang (bagian state, bukan approval); sesi sebelumnya dianggap hilang |
+| `channel-fixture-narasi-sejarah/arsip-naskah/2026-09-09-penjual-bunga-di-pasar-subuh.md` (+ `-metadata.md`) | Run AT-KK-03 | naskah final fixture 134 kata (sha256 `7d0bad621622c3fae3aecc331d1900c777440361e3eaaded1476a1f31808862a`) dengan deskripsi karakter Tipe B "Nenek Penjual Bunga" (rambut putih dikonde rendah, selendang batik cokelat, payung biru pudar) + baris `indeks.md` + baris `indeks-karakter.md` (Status `Tipe B`); metadata = state fixture pra-repo (produksi pemroduksi tidak ada di riwayat repo) |
+| `channel-fixture-kisah-sudut-kota/` | Run AT-KK-03b (+ AT-KK-08) | channel fixture kedua: brief v1 `Operational` faceless + model narasi-60-detik v1 + `arsip-naskah/indeks.md` kosong; `arsip-naskah/indeks-karakter.md` **belum pernah dibuat** (gap warisan yang dinyatakan di brief) |
+| `channel-fixture-narasi-sejarah/channel-brief.md` v2 (sisi A) | Run AT-KK-06 | revisi contoh kalimat pembuka khas + baris Log Keputusan — masuk `main` lewat PR persiapan |
+| branch `uji-06-branch-b` (basis main `3eb053e`) | Run AT-KK-06 | sisi B: revisi tempo voice + baris Log Keputusan; di-push TANPA PR; sesi subjek AT-KK-06 bekerja di atasnya |
+
+### Yang sengaja TIDAK dikerjakan di persiapan ini
+
+- Tidak mengubah satu baris pun dokumen aturan `00`/`05`/`06` kedua sistem (diff = 0 baris — diverifikasi di PR); perubahan KK `0.3.9` → `0.3.10` = state fixture + dokumen orkestrasi + satu pengecualian declared gap warisan di `validate_system.py` (gerbang folder, bukan dokumen aturan); test suite dijalankan pada versi `0.3.10`.
+- Tidak mengubah riwayat Run 1–8, tidak membuat bagian run untuk run yang belum dijalankan, tidak mengisi tabel Rekaman Hasil (hak pencatat setelah eksekusi).
+- Tidak merge PR apa pun (keputusan pemilik); branch `uji-06-branch-b` tidak pernah di-merge dari luar sesi subjeknya.
+- Tiga header status uji yang basi (RUN 7 / F7 TERBUKA / Run 8 dijadwalkan) di-SINKRON ke status tercatat (F7 DITUTUP 6 Sep 2026; Run 8 LULUS 0.3.4) di unit produksi lama + channel brief + model brief — higiene status (bukan perubahan klaim), dideklarasikan di log sesi perancang.
