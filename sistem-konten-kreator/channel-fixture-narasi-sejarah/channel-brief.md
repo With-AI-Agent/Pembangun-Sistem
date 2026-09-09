@@ -24,7 +24,7 @@
 - [x] `arsip-naskah/indeks.md` dan `arsip-naskah/indeks-karakter.md` sudah dibuat (boleh kosong) — keduanya ada di folder ini
 - [x] Sudah `Merged` ke `main`
 
-**Versi:** `1` — **Terakhir diperbarui:** `2026-09-04` — **Diwarisi dari:** `_sistem/01_BRAND_CORE.md`
+**Versi:** `2` — **Terakhir diperbarui:** `2026-09-09` — **Diwarisi dari:** `_sistem/01_BRAND_CORE.md`
 
 > **Catatan dependency:** `_sistem/01_BRAND_CORE.md` di repo ini **masih template kosong** (belum pernah dijalankan sesi Brand Core). Brief fixture ini karena itu tidak benar-benar mewarisi apa pun dari Brand Core. Ini dicatat sadar, bukan disembunyikan — agent yang membaca brief ini wajib melaporkan gap tersebut, bukan berpura-pura konteksnya lengkap.
 
@@ -50,7 +50,7 @@
 - **Gaya bahasa:** santai tapi tertata, kalimat pendek, banyak jeda. Contoh: *"Meja itu tidak pernah pindah. Yang pindah, orang-orang yang duduk di sekitarnya."*
 - **Tone emosional dominan:** hangat & agak melankolis, tanpa mendramatisir.
 - **Kosakata/frasa khas:** "dulu", "konon", "yang tersisa", "tidak ada yang mencatat".
-- **Karakteristik suara/voice:** suara dewasa, tempo lambat (± 130 kata/menit), jeda 0,5 detik tiap ganti gagasan.
+- **Karakteristik suara/voice:** suara dewasa, tempo lambat (± 125 kata/menit), jeda 0,7 detik tiap ganti gagasan.
 - **Hal yang HARUS ADA di setiap konten:** satu benda atau ruang konkret sebagai pintu masuk cerita; penutup yang mengembalikan penonton ke masa kini.
 - **Hal yang TIDAK BOLEH ADA:** klaim sejarah yang tidak bisa dirujuk; nama tokoh nyata; nada menggurui; clickbait yang menjanjikan sesuatu yang tidak ada di naskah.
 - **Contoh kalimat pembuka/penutup khas:** pembuka — *"Ada satu benda yang…"*; penutup — *"Sekarang benda itu sudah tidak ada. Tapi caranya mengatur hari kita, masih."*
@@ -113,3 +113,4 @@ Naskah final disimpan di `arsip-naskah/` folder ini. `indeks.md` (judul/tanggal/
 |---|---|---|
 | 2026-09-04 | Channel Brief fixture dikunci (G2) dan di-merge (G3) | Status dokumen: `Operational`, v1 |
 | 2026-09-04 | Semua elemen Konsistensi Visual ditandai "tidak berlaku" | Channel faceless; tidak ada elemen visual yang mewajibkan file acuan |
+| 2026-09-09 | Channel Brief v2 — tempo voice ±130 → ±125 kata/menit; jeda 0,5 → 0,7 detik (G2+G3 tercatat) | Permintaan pemilik: jeda lebih panjang agar format 60 detik terasa lebih lapang |
