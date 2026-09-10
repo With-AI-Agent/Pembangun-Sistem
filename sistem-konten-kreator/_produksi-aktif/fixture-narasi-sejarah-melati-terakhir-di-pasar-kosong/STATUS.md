@@ -3,12 +3,12 @@
 - **Status:** `in-progress`
 - **Channel:** `channel-fixture-narasi-sejarah` (Narasi Sejarah — FIXTURE)
 - **Model konten:** `narasi-60-detik` (v1 Operational) — unit: segmen narasi, 130-145 kata, 55-65 detik
-- **Tahap terakhir selesai:** `Tahap 2 — Konsep & Angle (konsep-angle.md selesai, hook 3 varian + 4 beat + estimasi durasi 63,92 dtk)`
-- **Tahap berikutnya:** `Tahap 3 — Naskah/Script (menunggu G1 Tahap 2)`
+- **Tahap terakhir selesai:** `Tahap 3 — Naskah/Script (naskah-draft.md selesai, 131 kata, 63,46 dtk estimasi, reuse Nenek Penjual Bunga Tipe B)`
+- **Tahap berikutnya:** `Tahap 4 — Breakdown Output (menunggu G1+G2 Tahap 3)`
 - **Output resmi:**
   - `ideation.md` — **ADA**, 4 opsi, cek pengulangan vs arsip 2026-09-09, ide terpilih Opsi 1 — **G1 disetujui 2026-09-10**
-  - `konsep-angle.md` — **ADA**, hook + struktur 4 beat (benda → konteks kebiasaan → yang berubah → penutup masa kini), estimasi 132 kata / 63,92 dtk, visual b-roll 7 segmen, Persona & Voice check
-  - `naskah-draft.md` — belum
+  - `konsep-angle.md` — **ADA**, hook + struktur 4 beat (benda → konteks kebiasaan → yang berubah → penutup masa kini), estimasi 132 kata / 63,92 dtk, visual b-roll 7 segmen, Persona & Voice check — **G1 disetujui 2026-09-10**
+  - `naskah-draft.md` — **ADA**, 131 kata, 63,46 dtk estimasi, Persona & Voice check lengkap, sumber eksternal Tidak ada, reuse Nenek Penjual Bunga Tipe B — menunggu G1+G2 Tahap 3
   - `breakdown-output.md` — belum (unit segmen narasi, sesuai Model Brief)
   - `assets/` — kosong
 - **Sumber konteks yang dibaca:**
@@ -27,23 +27,26 @@
   - Reuse karakter Tipe B Nenek Penjual Bunga (rambut putih dikonde rendah, selendang batik cokelat, payung biru pudar, keranjang anyam) — bukan karakter baru
   - Judul kerja: Melati Terakhir di Pasar Kosong
   - Ide inti dari pemilik: pagi di mana dia menjual melati terakhir di sudut pasar yang mulai kosong
+  - G1 Tahap 2 disetujui 2026-09-10 — konsep-angle 4 beat disetujui
+  - Naskah 131 kata, 63,46 dtk estimasi, 7 segmen direncanakan untuk breakdown
 - **Approval yang sudah diberikan:**
   - `G1 Tahap 1 (Ideation):` **disetujui 2026-09-10** — Opsi 1 Melati Terakhir Sebagai Jam Pasar, reuse Nenek Penjual Bunga Tipe B tetap (tidak naik ke Tipe A)
-  - `G1 Tahap 2 (Konsep & Angle):` belum — menunggu persetujuan pemilik
-  - `G1 Tahap 3:` belum
-  - `G2 naskah final:` belum
+  - `G1 Tahap 2 (Konsep & Angle):` **disetujui 2026-09-10** — kerangka 4 beat + hook + estimasi durasi + visual b-roll 7 segmen
+  - `G1 Tahap 3 (Naskah/Script):` belum — menunggu persetujuan pemilik
+  - `G2 naskah final:` belum — menunggu persetujuan pemilik
   - `G1 Tahap 4:` belum
   - `G2 breakdown:` belum
   - `G1 Tahap 5:` belum
   - `G2 konten final + metadata:` belum
   - `G3 merge:` belum
-- **Commit terakhir:** belum ada commit untuk unit ini (sesi baru)
-- **PR terkait:** belum dibuka — akan dibuka setelah Tahap 1 G1 disetujui dan commit awal
+- **Commit terakhir:** `71a5eb0` — Tahap 2 Konsep & Angle
+- **PR terkait:** belum dibuka — akan dibuka setelah Tahap 3 G1+G2 atau sebagai WIP sesuai aturan
 - **Pekerjaan belum tersimpan:** Tidak ada
 - **Risiko atau blocker:**
-  - Topik serupa dengan arsip `2026-09-09-penjual-bunga-di-pasar-subuh.md` — perlu angle berbeda yang eksplisit (fokus melati terakhir + pasar mulai kosong sebagai transisi, bukan rutinitas subuh)
+  - Topik serupa dengan arsip `2026-09-09-penjual-bunga-di-pasar-subuh.md` — sudah dimitigasi dengan angle berbeda (akhir/transisi vs rutinitas) dan beat yang berubah eksplisit (melati terakhir terjual + payung dilipat sebelum tengah hari)
   - Brand Core kosong — Persona & Voice hanya dari Channel Brief, tidak ada nilai lintas-channel
   - Channel faceless — visual harus hindari wajah dikenali (aturan Channel Brief bag 5)
+  - Durasi estimasi 63,46 dtk — dalam target 55-65 dtk estimasi, belum pengukuran audio nyata
 - **Waktu pembaruan:** 2026-09-10
 
 ## Aturan
