@@ -2,8 +2,8 @@
 
 - **Channel:** `channel-fixture-narasi-sejarah/` (FIXTURE)
 - **Model konten:** Narasi 60 Detik (v1) — target 130–145 kata, durasi 55–65 detik, tempo ±130 kata/menit
-- **Revisi:** r1 — draft Tahap 3, menunggu G2 naskah final
-- **Tahap:** 3 — Naskah/Script (G1 Tahap 3 disetujui; **G2 naskah final belum**)
+- **Revisi:** r1 — **NASKAH FINAL Tahap 3 (dikunci G2, 2026-09-10)**
+- **Tahap:** 3 — Naskah/Script (G1 Tahap 3 disetujui 2026-09-09; **G2 naskah final disetujui 2026-09-10**)
 - **Jumlah kata VO:** **134** — dihitung dari bagian Naskah saja, berdasarkan pemisah whitespace
 - **Rencana durasi:** **64,85 detik estimasi** = 61,85 detik pada 130 kata/menit + enam jeda antarparagraf masing-masing 0,5 detik. **Belum diukur lewat rekaman/TTS**; jika pembacaan nyata nanti melewati batas model, laporkan dan minta keputusan revisi, jangan mengubah brief sendiri.
 - **Sumber eksternal:** tidak ada — cerita personal dummy/fiksi fixture, bukan klaim sejarah hasil riset. Detail seperti "jam sebelas" adalah detail cerita, bukan temuan faktual yang diverifikasi.
@@ -44,4 +44,4 @@ Yang berubah bukan pintunya. Yang berubah: kita tidak lagi tahu siapa yang dulu 
 ## Status produksi
 
 - G1 Tahap 3: **disetujui 2026-09-09** (naskah cukup untuk lanjut).
-- G2 naskah final: **belum** — menunggu keputusan pengguna.
+- G2 naskah final: **disetujui 2026-09-10** — naskah r1 dikunci sebagai naskah final (dengan catatan paparan entry-point yang sudah didisklorkan dan diterima pemilik sebagai catatan). Teks naskah tidak diubah sejak penguncian; perubahan isi berikutnya wajib lewat keputusan sadar + revisi gerbang.
