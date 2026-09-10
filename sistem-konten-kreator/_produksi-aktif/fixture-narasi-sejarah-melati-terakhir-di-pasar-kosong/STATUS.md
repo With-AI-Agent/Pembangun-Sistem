@@ -3,16 +3,16 @@
 - **Status:** `ready-for-review`
 - **Channel:** `channel-fixture-narasi-sejarah` (Narasi Sejarah — FIXTURE)
 - **Model konten:** `narasi-60-detik` (v1 Operational) — unit: segmen narasi, 130-145 kata, 55-65 detik
-- **Tahap terakhir selesai:** `Tahap 6 — Assembly & Publish Prep (publish-prep.md + final-content.md + langkah penutup WAJIB 1,2,2b,4 selesai, verifikasi arsip ADA)`
-- **Tahap berikutnya:** `G2 konten final + metadata dan G3 merge (PR)`
+- **Tahap terakhir selesai:** `Tahap 6 — Assembly & Publish Prep (publish-prep.md + final-content.md + langkah penutup WAJIB 1,2,2b,4 selesai, verifikasi arsip ADA, G2 disetujui, G3 ditunda)`
+- **Tahap berikutnya:** `G3 merge (PR #39) — menunggu keputusan pemilik setelah G2`
 - **Output resmi:**
   - `ideation.md` — **ADA**, 4 opsi, cek pengulangan vs arsip 2026-09-09, ide terpilih Opsi 1 — **G1 disetujui 2026-09-10**
   - `konsep-angle.md` — **ADA**, hook + struktur 4 beat, estimasi 132 kata / 63,92 dtk — **G1 disetujui 2026-09-10**
   - `naskah-draft.md` — **ADA**, 131 kata, 63,46 dtk estimasi — **G1+G2 disetujui 2026-09-10** — naskah final terkunci, sudah dipindahkan ke arsip
   - `breakdown-output.md` — **ADA**, 7 segmen narasi, b-roll netral, reuse karakter Tipe B sama persis — **G1+G2 disetujui 2026-09-10** — breakdown terkunci
   - `assets/` — **ADA**, 7 JPG + CATATAN-ASSET.md — total 1,7 MB, hash tercatat — **G1 disetujui 2026-09-10** — asset diterima
-  - `publish-prep.md` — **ADA**, 5 opsi judul (rekomendasi Opsi 1 "Melati Terakhir di Pasar yang Mulai Kosong"), caption panjang & pendek Persona & Voice, hashtag, thumbnail konsep tanpa clickbait
-  - `final-content.md` — **ADA**, assembly notes + ringkasan 7 segmen + metadata publish ringkas — ready-for-review
+  - `publish-prep.md` — **ADA**, 5 opsi judul (rekomendasi Opsi 1 "Melati Terakhir di Pasar yang Mulai Kosong"), caption panjang & pendek Persona & Voice, hashtag, thumbnail konsep tanpa clickbait — **G2 disetujui 2026-09-10**
+  - `final-content.md` — **ADA**, assembly notes + ringkasan 7 segmen + metadata publish ringkas — **G2 disetujui 2026-09-10** — ready-for-review
   - Arsip permanen (langkah penutup WAJIB):
     - `arsip-naskah/2026-09-10-melati-terakhir-di-pasar-kosong.md` — **ADA**, naskah final + karakter Tipe B reuse + jejak produksi — dipindahkan pada Tahap 6 langkah 1
     - `arsip-naskah/indeks.md` — **ADA**, entri ke-4 ditambahkan — langkah 2
@@ -33,11 +33,13 @@
 - **Sumber eksternal dipakai:** `Tidak ada` — cerita fiksi fixture, bukan klaim sejarah hasil riset
 - **Keputusan baru:**
   - Reuse karakter Tipe B Nenek Penjual Bunga (rambut putih dikonde rendah, selendang batik cokelat, payung biru pudar, keranjang anyam) — bukan karakter baru — tetap Tipe B
-  - Judul kerja: Melati Terakhir di Pasar Kosong — judul tayang resmi yang diusulkan: "Melati Terakhir di Pasar yang Mulai Kosong" (Opsi 1)
+  - Judul kerja: Melati Terakhir di Pasar Kosong — judul tayang resmi yang disetujui G2: "Melati Terakhir di Pasar yang Mulai Kosong" (Opsi 1)
   - Ide inti: pagi di mana dia menjual melati terakhir di sudut pasar yang mulai kosong — Opsi 1 Melati Terakhir Sebagai Jam Pasar
   - Naskah final 131 kata, 63,46 dtk estimasi, 7 segmen, 7 asset b-roll netral
   - Langkah penutup WAJIB 1,2,2b,4 selesai dan diverifikasi ADA di branch
-  - Syarat penghapusan folder produksi (pipeline langkah 5): langkah 1,2,2b,4 sudah dilakukan — menunggu verifikasi file arsip ada di main + konfirmasi download pemilik (G2+G3 belum, folder dipertahankan)
+  - PR #39 dibuka tanpa auto-merge — https://github.com/With-AI-Agent/Pembangun-Sistem/pull/39
+  - G2 konten final + metadata disetujui 2026-09-10 — judul resmi Opsi 1 + caption + hashtag + thumbnail konsep disetujui
+  - G3 merge ditunda — keputusan pemilik 2026-09-10 via ask_user `tunda_g3` — PR tetap OPEN, folder produksi dipertahankan sampai G3 + verifikasi arsip di main + konfirmasi download pemilik
 - **Approval yang sudah diberikan:**
   - `G1 Tahap 1 (Ideation):` **disetujui 2026-09-10** — Opsi 1 Melati Terakhir Sebagai Jam Pasar, reuse Nenek Penjual Bunga Tipe B tetap
   - `G1 Tahap 2 (Konsep & Angle):` **disetujui 2026-09-10** — kerangka 4 beat + hook + estimasi durasi + visual b-roll 7 segmen
@@ -46,17 +48,16 @@
   - `G1 Tahap 4 (Breakdown Output):` **disetujui 2026-09-10** — breakdown 7 segmen disetujui lanjut ke asset
   - `G2 breakdown:` **disetujui 2026-09-10** — breakdown 7 segmen dikunci sebagai dasar generate asset
   - `G1 Tahap 5 (Generate/Acquire Assets):` **disetujui 2026-09-10** — 7 asset b-roll netral diterima apa adanya
-  - `G2 konten final + metadata:` belum — menunggu persetujuan pemilik (judul resmi Opsi 1, caption Persona & Voice, hashtag, thumbnail konsep)
-  - `G3 merge:` belum — menunggu persetujuan pemilik setelah G2
-- **Commit terakhir:** `1967935` — Tahap 5 Assets
-- **PR terkait:** belum dibuka — akan dibuka setelah Tahap 6 G2+G3 disiapkan (sesuai mandat: akhiri dengan PR — jangan auto-merge)
+  - `G2 konten final + metadata:` **disetujui 2026-09-10** — judul resmi Opsi 1 "Melati Terakhir di Pasar yang Mulai Kosong" + caption Persona & Voice + hashtag + thumbnail konsep tanpa clickbait + final-content assembly notes + arsip naskah + indeks + indeks-karakter + metadata — semua diverifikasi ADA
+  - `G3 merge:` belum — **ditunda 2026-09-10** — keputusan pemilik via ask_user `tunda_g3` — PR #39 tetap OPEN tanpa auto-merge
+- **Commit terakhir:** `f171711` — Tahap 6 Assembly
+- **PR terkait:** PR #39 — https://github.com/With-AI-Agent/Pembangun-Sistem/pull/39 — OPEN — tanpa auto-merge — menunggu G3
 - **Pekerjaan belum tersimpan:** Tidak ada
 - **Risiko atau blocker:**
-  - Topik serupa dengan arsip 2026-09-09 — sudah dimitigasi dengan angle berbeda (akhir/transisi vs rutinitas) dan beat yang berubah eksplisit
+  - G3 ditunda — PR tetap OPEN — folder produksi dipertahankan sampai G3 + verifikasi arsip ada di main + konfirmasi download pemilik (syarat pipeline langkah 5)
   - Brand Core kosong — Persona & Voice hanya dari Channel Brief
-  - Channel faceless — visual harus hindari wajah dikenali — dipatuhi di semua asset (tidak ada wajah dikenali, tidak ada logo, tidak ada teks besar)
-  - Durasi estimasi 63,46 dtk — dalam target 55-65 dtk estimasi, belum pengukuran audio nyata — akan diverifikasi saat produksi audio/TTS nanti
-  - Folder produksi dipertahankan sampai G2+G3 disetujui dan PR merged + verifikasi arsip ada di main + konfirmasi download pemilik (syarat pipeline langkah 5)
+  - Channel faceless — visual harus hindari wajah dikenali — dipatuhi di semua asset
+  - Durasi estimasi 63,46 dtk — dalam target 55-65 dtk estimasi, belum pengukuran audio nyata
 - **Waktu pembaruan:** 2026-09-10
 
 ## Aturan
