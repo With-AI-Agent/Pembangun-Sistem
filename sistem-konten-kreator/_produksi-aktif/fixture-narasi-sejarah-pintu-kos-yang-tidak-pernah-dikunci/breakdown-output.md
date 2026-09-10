@@ -128,5 +128,5 @@
 
 ## Gerbang
 
-- **G1 Tahap 4 (breakdown sudah benar, lanjut ke Tahap 5?):** belum — diminta ke pengguna.
-- **G2 Tahap 4 (breakdown dikunci sebagai dasar generate/akuisisi asset?):** belum — diminta ke pengguna, karena akuisisi/generate memakai biaya-waktu nyata dan sulit dibatalkan setelah jalan.
+- **G1 Tahap 4 (breakdown sudah benar, lanjut ke Tahap 5?):** **DISETUJUI 2026-09-10.**
+- **G2 Tahap 4 (breakdown dikunci sebagai dasar generate/akuisisi asset?):** **DISETUJUI 2026-09-10** — breakdown b1 DIKUNCI; konten tabel/segmen tidak diubah lagi. Guardrail dari pemilik berlaku untuk Tahap 5: substitusi asset boleh sepanjang memenuhi deskripsi visual + larangan visual (bagian "Batasan akuisisi"); perubahan besar = berhenti dan laporkan.
