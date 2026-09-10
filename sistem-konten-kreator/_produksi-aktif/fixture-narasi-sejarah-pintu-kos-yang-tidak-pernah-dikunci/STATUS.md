@@ -33,7 +33,7 @@
   - `G2 naskah final (Tahap 3):` **belum**
   - `G3 merge:` belum
 - **Commit terakhir:** state produksi di `main` = `c8f60d5` (naskah masuk lewat PR prep; commit prep `b7ac5e2` terverifikasi ada di GitHub via API — object DB lokal tidak menyimpan ref branch prep, isi file sudah diverifikasi langsung di HEAD). Kerja sesi 2026-09-10 di-branch `arena/01a088cd-pembangun-sistem` (checkpoint log/recovery, commit 1 = commit yang memperbarui file ini).
-- **PR terkait:** state Tahap 1–3 di branch persiapan; klaim masuk `main` git-true setelah PR prep di-merge (pola fixture Run-1). Keputusan merge Tahap 6 akan lewat PR barunya. Sesi 2026-09-10: PR sesi ini (nomor dicatat di commit berikutnya) — tanpa auto-merge.
+- **PR terkait:** state Tahap 1–3 di branch persiapan; klaim masuk `main` git-true setelah PR prep di-merge (pola fixture Run-1). Keputusan merge Tahap 6 akan lewat PR barunya. Sesi 2026-09-10: **PR #35** (`arena/01a088cd-pembangun-sistem` → `main`) — tanpa auto-merge; G3 = belum.
 - **Pekerjaan belum tersimpan:** Tidak ada
 - **Risiko atau blocker:**
   - Brand Core masih template kosong (gap konteks wajib — dilaporkan, bukan disamarkan).
