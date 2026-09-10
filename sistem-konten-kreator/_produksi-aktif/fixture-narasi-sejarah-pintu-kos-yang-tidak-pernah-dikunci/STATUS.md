@@ -7,10 +7,11 @@
 - **Status:** `in-progress`
 - **Channel:** `channel-fixture-narasi-sejarah/` — v2, `Operational`
 - **Model konten:** `channel-fixture-narasi-sejarah/model-konten/narasi-60-detik/brief.md` — v1, `Operational`
-- **Tahap terakhir selesai:** **Tahap 3** — Naskah/Script (`naskah-draft.md` selesai, 134 kata, estimasi durasi di dalam target)
-- **Tahap berikutnya:** Tahap 4 — Breakdown Output (unit: **segmen narasi**, output `breakdown-output.md`) — G2 naskah final sudah dikunci
+- **Tahap terakhir selesai:** **Tahap 4** — Breakdown Output (`breakdown-output.md` b1 selesai: 7 segmen narasi, total estimasi 64,85 dtk, seluruh pemeriksaan terhadap batasan terkunci ✓)
+- **Tahap berikutnya:** minta **G1 + G2 Tahap 4** (breakdown benar? dikunci sebagai dasar akuisisi asset?) → kalau lolos: Tahap 5 — Generate/Acquire Assets (b-roll/stok berlisensi sesuai Model Brief)
 - **Output resmi:**
   - `naskah-draft.md` — **ADA**, draft r1, 134 kata (metode token whitespace; `wc -w` = 133 — em-dash tunggal, perbedaan metode); **DIKUNCI sebagai naskah final (G2, 2026-09-10)**. Terverifikasi ulang ada di branch 2026-09-10 (sha256 `f06d5468…731e`)
+  - `breakdown-output.md` — **ADA**, b1, 7 segmen narasi (S1–S7), kolom prompt generate & referensi diisi deskripsi b-roll sesuai override Model Brief; menunggu G1 + G2 Tahap 4
 - **Sumber konteks yang dibaca:**
   - `_sistem/START_DI_SINI.md`, `_sistem/00_CARA_PAKAI_SISTEM.md`
   - `_sistem/01_BRAND_CORE.md` — masih template kosong (gap dilaporkan, bukan dianggap lengkap)
@@ -42,7 +43,7 @@
   - Brand Core masih template kosong (gap konteks wajib — dilaporkan, bukan disamarkan).
   - Estimasi durasi r1 = 64,85 detik (estimasi, belum pengukuran audio); batasan model 55–65 detik.
   - Catatan lama "sudah oke, sudah dikonfirmasi" tidak disertai kode gerbang — status G2 di atas tetap `belum`; catatan ini dipertahankan apa adanya sebagai bagian dari riwayat.
-- **Waktu pembaruan:** 2026-09-10 — **G2 naskah final DISETUJUI pemilik** (+ keputusan paparan diterima sebagai catatan); produksi lanjut ke Tahap 4 (Breakdown Output). (Riwayat: 2026-09-10 — recovery verification ulang selesai, semua output klaim terverifikasi; 2026-09-09 — state Tahap 3 selesai; sesi produksi sebelumnya dianggap hilang)
+- **Waktu pembaruan:** 2026-09-10 — **Tahap 4 selesai** (`breakdown-output.md` b1); produksi berhenti menunggu **G1 + G2 Tahap 4**. (Riwayat: 2026-09-10 — G2 naskah final disetujui + recovery verification ulang selesai; 2026-09-09 — state Tahap 3 selesai; sesi produksi sebelumnya dianggap hilang)
 
 ## Aturan
 
