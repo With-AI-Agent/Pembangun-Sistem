@@ -3,13 +3,14 @@
 - **Status:** `in-progress`
 - **Channel:** `channel-fixture-narasi-sejarah` (Narasi Sejarah — FIXTURE)
 - **Model konten:** `narasi-60-detik` (v1 Operational) — unit: segmen narasi, 130-145 kata, 55-65 detik
-- **Tahap terakhir selesai:** `Tahap 1 — Ideation (ideation.md selesai, 4 opsi + pengecekan pengulangan + ide terpilih Opsi 1 Melati Terakhir Sebagai Jam Pasar)`
-- **Tahap berikutnya:** `Tahap 2 — Konsep & Angle (menunggu G1 Tahap 1)`
+- **Tahap terakhir selesai:** `Tahap 2 — Konsep & Angle (konsep-angle.md selesai, hook 3 varian + 4 beat + estimasi durasi 63,92 dtk)`
+- **Tahap berikutnya:** `Tahap 3 — Naskah/Script (menunggu G1 Tahap 2)`
 - **Output resmi:**
-  - `ideation.md` — **ADA**, 4 opsi, cek pengulangan vs arsip 2026-09-09, ide terpilih Opsi 1
+  - `ideation.md` — **ADA**, 4 opsi, cek pengulangan vs arsip 2026-09-09, ide terpilih Opsi 1 — **G1 disetujui 2026-09-10**
+  - `konsep-angle.md` — **ADA**, hook + struktur 4 beat (benda → konteks kebiasaan → yang berubah → penutup masa kini), estimasi 132 kata / 63,92 dtk, visual b-roll 7 segmen, Persona & Voice check
   - `naskah-draft.md` — belum
   - `breakdown-output.md` — belum (unit segmen narasi, sesuai Model Brief)
-  - `assets/` — kosong (akan berisi b-roll deskriptif, bukan generate karakter — channel faceless)
+  - `assets/` — kosong
 - **Sumber konteks yang dibaca:**
   - `_sistem/START_DI_SINI.md` ✓
   - `_sistem/00_CARA_PAKAI_SISTEM.md` ✓
@@ -27,8 +28,8 @@
   - Judul kerja: Melati Terakhir di Pasar Kosong
   - Ide inti dari pemilik: pagi di mana dia menjual melati terakhir di sudut pasar yang mulai kosong
 - **Approval yang sudah diberikan:**
-  - `G1 Tahap 1:` belum — menunggu persetujuan pemilik untuk ide terpilih
-  - `G1 Tahap 2:` belum
+  - `G1 Tahap 1 (Ideation):` **disetujui 2026-09-10** — Opsi 1 Melati Terakhir Sebagai Jam Pasar, reuse Nenek Penjual Bunga Tipe B tetap (tidak naik ke Tipe A)
+  - `G1 Tahap 2 (Konsep & Angle):` belum — menunggu persetujuan pemilik
   - `G1 Tahap 3:` belum
   - `G2 naskah final:` belum
   - `G1 Tahap 4:` belum
