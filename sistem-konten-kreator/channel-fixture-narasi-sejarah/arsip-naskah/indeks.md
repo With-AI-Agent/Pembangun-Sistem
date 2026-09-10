@@ -6,3 +6,4 @@
 |---|---|---|---|
 | Tiga Benda di Meja Nenek | 2026-09-06 | Radio tua sebagai pengatur ritme pagi; kebiasaan yang bertahan setelah radio hilang | `2026-09-06-tiga-benda-di-meja-nenek.md` |
 | Penjual Bunga di Pasar Subuh | 2026-09-09 | Nenek penjual bunga di pojok pasar subuh; kebiasaan menyusun bunga yang tetap ada setelah lapaknya kosong | `2026-09-09-penjual-bunga-di-pasar-subuh.md` |
+| Pintu Kos yang Tidak Pernah Dikunci | 2026-09-10 | Pintu kos yang tidak pernah dikunci sebagai tanda keamanan bersama; satu kunci tua yang tersisa setelah kos hilang | `2026-09-10-pintu-kos-yang-tidak-pernah-dikunci.md` |
