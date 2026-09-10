@@ -1,0 +1,53 @@
+# Status Produksi — Narasi Sejarah — Melati Terakhir di Pasar Kosong
+
+- **Status:** `in-progress`
+- **Channel:** `channel-fixture-narasi-sejarah` (Narasi Sejarah — FIXTURE)
+- **Model konten:** `narasi-60-detik` (v1 Operational) — unit: segmen narasi, 130-145 kata, 55-65 detik
+- **Tahap terakhir selesai:** `Tahap 1 — Ideation (ideation.md selesai, 4 opsi + pengecekan pengulangan + ide terpilih Opsi 1 Melati Terakhir Sebagai Jam Pasar)`
+- **Tahap berikutnya:** `Tahap 2 — Konsep & Angle (menunggu G1 Tahap 1)`
+- **Output resmi:**
+  - `ideation.md` — **ADA**, 4 opsi, cek pengulangan vs arsip 2026-09-09, ide terpilih Opsi 1
+  - `naskah-draft.md` — belum
+  - `breakdown-output.md` — belum (unit segmen narasi, sesuai Model Brief)
+  - `assets/` — kosong (akan berisi b-roll deskriptif, bukan generate karakter — channel faceless)
+- **Sumber konteks yang dibaca:**
+  - `_sistem/START_DI_SINI.md` ✓
+  - `_sistem/00_CARA_PAKAI_SISTEM.md` ✓
+  - `_sistem/01_BRAND_CORE.md` ✓ — template kosong (gap)
+  - `channel-fixture-narasi-sejarah/channel-brief.md` v2 Operational ✓
+  - `channel-fixture-narasi-sejarah/model-konten/narasi-60-detik/brief.md` v1 Operational ✓
+  - `_sistem/05_CONTENT_PRODUCTION_PIPELINE.md` ✓
+  - `_sistem/06_PROMPT_LIBRARY.md` ✓
+  - `arsip-naskah/indeks.md` ✓ — 3 entri, termasuk `2026-09-09-penjual-bunga-di-pasar-subuh.md` (topik serupa)
+  - `arsip-naskah/indeks-karakter.md` ✓ — Nenek Penjual Bunga Tipe B reuse
+  - Bank Konsistensi Visual: dilewati — tidak berlaku untuk channel ini (Channel Brief bag 4)
+- **Sumber eksternal dipakai:** `Tidak ada` — cerita fiksi fixture, bukan klaim sejarah hasil riset (sesuai Channel Brief larangan klaim tanpa rujuk)
+- **Keputusan baru:**
+  - Reuse karakter Tipe B Nenek Penjual Bunga (rambut putih dikonde rendah, selendang batik cokelat, payung biru pudar, keranjang anyam) — bukan karakter baru
+  - Judul kerja: Melati Terakhir di Pasar Kosong
+  - Ide inti dari pemilik: pagi di mana dia menjual melati terakhir di sudut pasar yang mulai kosong
+- **Approval yang sudah diberikan:**
+  - `G1 Tahap 1:` belum — menunggu persetujuan pemilik untuk ide terpilih
+  - `G1 Tahap 2:` belum
+  - `G1 Tahap 3:` belum
+  - `G2 naskah final:` belum
+  - `G1 Tahap 4:` belum
+  - `G2 breakdown:` belum
+  - `G1 Tahap 5:` belum
+  - `G2 konten final + metadata:` belum
+  - `G3 merge:` belum
+- **Commit terakhir:** belum ada commit untuk unit ini (sesi baru)
+- **PR terkait:** belum dibuka — akan dibuka setelah Tahap 1 G1 disetujui dan commit awal
+- **Pekerjaan belum tersimpan:** Tidak ada
+- **Risiko atau blocker:**
+  - Topik serupa dengan arsip `2026-09-09-penjual-bunga-di-pasar-subuh.md` — perlu angle berbeda yang eksplisit (fokus melati terakhir + pasar mulai kosong sebagai transisi, bukan rutinitas subuh)
+  - Brand Core kosong — Persona & Voice hanya dari Channel Brief, tidak ada nilai lintas-channel
+  - Channel faceless — visual harus hindari wajah dikenali (aturan Channel Brief bag 5)
+- **Waktu pembaruan:** 2026-09-10
+
+## Aturan
+
+- Perbarui file ini setelah setiap tahap yang menghasilkan dependency baru.
+- Jangan menyatakan tahap tersedia untuk sesi berikutnya sebelum output sudah tersimpan di branch.
+- Jika status atau output tidak dapat diverifikasi setelah sesi terputus, berhenti dan minta klarifikasi.
+- Field `Pekerjaan belum tersimpan`: nilai WAJIB EXACT `Tidak ada` (case-sensitive, tanpa backtick); jika ada yang belum tersimpan, isi daftar path-nya.
