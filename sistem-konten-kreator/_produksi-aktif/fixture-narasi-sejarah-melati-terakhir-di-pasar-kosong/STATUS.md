@@ -3,14 +3,14 @@
 - **Status:** `in-progress`
 - **Channel:** `channel-fixture-narasi-sejarah` (Narasi Sejarah — FIXTURE)
 - **Model konten:** `narasi-60-detik` (v1 Operational) — unit: segmen narasi, 130-145 kata, 55-65 detik
-- **Tahap terakhir selesai:** `Tahap 3 — Naskah/Script (naskah-draft.md selesai, 131 kata, 63,46 dtk estimasi, reuse Nenek Penjual Bunga Tipe B)`
-- **Tahap berikutnya:** `Tahap 4 — Breakdown Output (menunggu G1+G2 Tahap 3)`
+- **Tahap terakhir selesai:** `Tahap 4 — Breakdown Output (breakdown-output.md selesai, 7 segmen narasi, b-roll netral, reuse karakter Tipe B sama persis)`
+- **Tahap berikutnya:** `Tahap 5 — Generate/Acquire Assets (menunggu G1+G2 Tahap 3 dan G1+G2 Tahap 4)`
 - **Output resmi:**
   - `ideation.md` — **ADA**, 4 opsi, cek pengulangan vs arsip 2026-09-09, ide terpilih Opsi 1 — **G1 disetujui 2026-09-10**
-  - `konsep-angle.md` — **ADA**, hook + struktur 4 beat (benda → konteks kebiasaan → yang berubah → penutup masa kini), estimasi 132 kata / 63,92 dtk, visual b-roll 7 segmen, Persona & Voice check — **G1 disetujui 2026-09-10**
-  - `naskah-draft.md` — **ADA**, 131 kata, 63,46 dtk estimasi, Persona & Voice check lengkap, sumber eksternal Tidak ada, reuse Nenek Penjual Bunga Tipe B — menunggu G1+G2 Tahap 3
-  - `breakdown-output.md` — belum (unit segmen narasi, sesuai Model Brief)
-  - `assets/` — kosong
+  - `konsep-angle.md` — **ADA**, hook + struktur 4 beat, estimasi 132 kata / 63,92 dtk — **G1 disetujui 2026-09-10**
+  - `naskah-draft.md` — **ADA**, 131 kata, 63,46 dtk estimasi — **G1+G2 disetujui 2026-09-10** — naskah final terkunci
+  - `breakdown-output.md` — **ADA**, 7 segmen narasi (S1 Hook, S2 Detail karakter, S3 Kebiasaan menyusun, S4 Penanda waktu, S5 Pasar kosong, S6 Aksi jual & lipat payung, S7 Penutup masa kini), deskripsi visual b-roll, prompt generate per segmen, file referensi tidak ada (channel faceless), karakter Tipe B reuse sama persis — menunggu G1+G2 Tahap 4
+  - `assets/` — kosong (akan diisi 7 asset b-roll di Tahap 5)
 - **Sumber konteks yang dibaca:**
   - `_sistem/START_DI_SINI.md` ✓
   - `_sistem/00_CARA_PAKAI_SISTEM.md` ✓
@@ -32,11 +32,11 @@
 - **Approval yang sudah diberikan:**
   - `G1 Tahap 1 (Ideation):` **disetujui 2026-09-10** — Opsi 1 Melati Terakhir Sebagai Jam Pasar, reuse Nenek Penjual Bunga Tipe B tetap (tidak naik ke Tipe A)
   - `G1 Tahap 2 (Konsep & Angle):` **disetujui 2026-09-10** — kerangka 4 beat + hook + estimasi durasi + visual b-roll 7 segmen
-  - `G1 Tahap 3 (Naskah/Script):` belum — menunggu persetujuan pemilik
-  - `G2 naskah final:` belum — menunggu persetujuan pemilik
-  - `G1 Tahap 4:` belum
-  - `G2 breakdown:` belum
-  - `G1 Tahap 5:` belum
+  - `G1 Tahap 3 (Naskah/Script):` **disetujui 2026-09-10** — naskah 131 kata lanjut ke breakdown
+  - `G2 naskah final:` **disetujui 2026-09-10** — naskah final terkunci 131 kata, 63,46 dtk estimasi, sumber eksternal Tidak ada
+  - `G1 Tahap 4 (Breakdown Output):` belum — menunggu persetujuan pemilik
+  - `G2 breakdown:` belum — menunggu persetujuan pemilik
+  - `G1 Tahap 5 (Generate/Acquire Assets):` belum
   - `G2 konten final + metadata:` belum
   - `G3 merge:` belum
 - **Commit terakhir:** `71a5eb0` — Tahap 2 Konsep & Angle
