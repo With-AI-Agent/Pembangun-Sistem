@@ -1,16 +1,24 @@
 # Status Produksi — Narasi Sejarah — Melati Terakhir di Pasar Kosong
 
-- **Status:** `in-progress`
+- **Status:** `ready-for-review`
 - **Channel:** `channel-fixture-narasi-sejarah` (Narasi Sejarah — FIXTURE)
 - **Model konten:** `narasi-60-detik` (v1 Operational) — unit: segmen narasi, 130-145 kata, 55-65 detik
-- **Tahap terakhir selesai:** `Tahap 5 — Generate/Acquire Assets (7 asset JPG b-roll netral, CATATAN-ASSET.md + hash, checklist Tahap 5 lengkap)`
-- **Tahap berikutnya:** `Tahap 6 — Assembly & Publish Prep (menunggu G1 Tahap 5)`
+- **Tahap terakhir selesai:** `Tahap 6 — Assembly & Publish Prep (publish-prep.md + final-content.md + langkah penutup WAJIB 1,2,2b,4 selesai, verifikasi arsip ADA)`
+- **Tahap berikutnya:** `G2 konten final + metadata dan G3 merge (PR)`
 - **Output resmi:**
   - `ideation.md` — **ADA**, 4 opsi, cek pengulangan vs arsip 2026-09-09, ide terpilih Opsi 1 — **G1 disetujui 2026-09-10**
   - `konsep-angle.md` — **ADA**, hook + struktur 4 beat, estimasi 132 kata / 63,92 dtk — **G1 disetujui 2026-09-10**
-  - `naskah-draft.md` — **ADA**, 131 kata, 63,46 dtk estimasi — **G1+G2 disetujui 2026-09-10** — naskah final terkunci
-  - `breakdown-output.md` — **ADA**, 7 segmen narasi, b-roll netral, reuse karakter Tipe B sama persis — **G1+G2 disetujui 2026-09-10**
-  - `assets/` — **ADA**, 7 JPG + CATATAN-ASSET.md (S1 hook keranjang melati, S2 payung biru sudut gelap, S3 tangan menyusun, S4 sudut pasar melati masih ada, S5 lapak kosong satu genggam terakhir, S6 jual terakhir lipat payung, S7 sudut kosong sekarang) — total 1,7 MB, hash tercatat — menunggu G1 Tahap 5
+  - `naskah-draft.md` — **ADA**, 131 kata, 63,46 dtk estimasi — **G1+G2 disetujui 2026-09-10** — naskah final terkunci, sudah dipindahkan ke arsip
+  - `breakdown-output.md` — **ADA**, 7 segmen narasi, b-roll netral, reuse karakter Tipe B sama persis — **G1+G2 disetujui 2026-09-10** — breakdown terkunci
+  - `assets/` — **ADA**, 7 JPG + CATATAN-ASSET.md — total 1,7 MB, hash tercatat — **G1 disetujui 2026-09-10** — asset diterima
+  - `publish-prep.md` — **ADA**, 5 opsi judul (rekomendasi Opsi 1 "Melati Terakhir di Pasar yang Mulai Kosong"), caption panjang & pendek Persona & Voice, hashtag, thumbnail konsep tanpa clickbait
+  - `final-content.md` — **ADA**, assembly notes + ringkasan 7 segmen + metadata publish ringkas — ready-for-review
+  - Arsip permanen (langkah penutup WAJIB):
+    - `arsip-naskah/2026-09-10-melati-terakhir-di-pasar-kosong.md` — **ADA**, naskah final + karakter Tipe B reuse + jejak produksi — dipindahkan pada Tahap 6 langkah 1
+    - `arsip-naskah/indeks.md` — **ADA**, entri ke-4 ditambahkan — langkah 2
+    - `arsip-naskah/indeks-karakter.md` — **ADA**, konten kedua `2026-09-10-melati-terakhir-di-pasar-kosong.md` ditambahkan ke kolom Konten lain baris Nenek Penjual Bunga — langkah 2b
+    - `arsip-naskah/2026-09-10-melati-terakhir-di-pasar-kosong-metadata.md` — **ADA**, arsip ringan reproducibility — langkah 4
+    - `SUMBER.md` → `-sumber.md` — **tidak berlaku** — sumber eksternal Tidak ada — langkah 2a tidak berlaku
 - **Sumber konteks yang dibaca:**
   - `_sistem/START_DI_SINI.md` ✓
   - `_sistem/00_CARA_PAKAI_SISTEM.md` ✓
@@ -19,16 +27,17 @@
   - `channel-fixture-narasi-sejarah/model-konten/narasi-60-detik/brief.md` v1 Operational ✓
   - `_sistem/05_CONTENT_PRODUCTION_PIPELINE.md` ✓
   - `_sistem/06_PROMPT_LIBRARY.md` ✓
-  - `arsip-naskah/indeks.md` ✓ — 3 entri, termasuk `2026-09-09-penjual-bunga-di-pasar-subuh.md` (topik serupa)
-  - `arsip-naskah/indeks-karakter.md` ✓ — Nenek Penjual Bunga Tipe B reuse
+  - `arsip-naskah/indeks.md` ✓ — 3 entri → 4 entri setelah update
+  - `arsip-naskah/indeks-karakter.md` ✓ — Nenek Penjual Bunga Tipe B reuse → konten kedua ditambahkan
   - Bank Konsistensi Visual: dilewati — tidak berlaku untuk channel ini (Channel Brief bag 4)
-- **Sumber eksternal dipakai:** `Tidak ada` — cerita fiksi fixture, bukan klaim sejarah hasil riset (sesuai Channel Brief larangan klaim tanpa rujuk)
+- **Sumber eksternal dipakai:** `Tidak ada` — cerita fiksi fixture, bukan klaim sejarah hasil riset
 - **Keputusan baru:**
-  - Reuse karakter Tipe B Nenek Penjual Bunga (rambut putih dikonde rendah, selendang batik cokelat, payung biru pudar, keranjang anyam) — bukan karakter baru
-  - Judul kerja: Melati Terakhir di Pasar Kosong
-  - Ide inti dari pemilik: pagi di mana dia menjual melati terakhir di sudut pasar yang mulai kosong
-  - G1 Tahap 2 disetujui 2026-09-10 — konsep-angle 4 beat disetujui
-  - Naskah 131 kata, 63,46 dtk estimasi, 7 segmen direncanakan untuk breakdown
+  - Reuse karakter Tipe B Nenek Penjual Bunga (rambut putih dikonde rendah, selendang batik cokelat, payung biru pudar, keranjang anyam) — bukan karakter baru — tetap Tipe B
+  - Judul kerja: Melati Terakhir di Pasar Kosong — judul tayang resmi yang diusulkan: "Melati Terakhir di Pasar yang Mulai Kosong" (Opsi 1)
+  - Ide inti: pagi di mana dia menjual melati terakhir di sudut pasar yang mulai kosong — Opsi 1 Melati Terakhir Sebagai Jam Pasar
+  - Naskah final 131 kata, 63,46 dtk estimasi, 7 segmen, 7 asset b-roll netral
+  - Langkah penutup WAJIB 1,2,2b,4 selesai dan diverifikasi ADA di branch
+  - Syarat penghapusan folder produksi (pipeline langkah 5): langkah 1,2,2b,4 sudah dilakukan — menunggu verifikasi file arsip ada di main + konfirmasi download pemilik (G2+G3 belum, folder dipertahankan)
 - **Approval yang sudah diberikan:**
   - `G1 Tahap 1 (Ideation):` **disetujui 2026-09-10** — Opsi 1 Melati Terakhir Sebagai Jam Pasar, reuse Nenek Penjual Bunga Tipe B tetap
   - `G1 Tahap 2 (Konsep & Angle):` **disetujui 2026-09-10** — kerangka 4 beat + hook + estimasi durasi + visual b-roll 7 segmen
@@ -36,17 +45,18 @@
   - `G2 naskah final:` **disetujui 2026-09-10** — naskah final terkunci 131 kata, 63,46 dtk estimasi, sumber eksternal Tidak ada
   - `G1 Tahap 4 (Breakdown Output):` **disetujui 2026-09-10** — breakdown 7 segmen disetujui lanjut ke asset
   - `G2 breakdown:` **disetujui 2026-09-10** — breakdown 7 segmen dikunci sebagai dasar generate asset
-  - `G1 Tahap 5 (Generate/Acquire Assets):` belum — menunggu persetujuan pemilik (7 asset b-roll netral sudah ada)
-  - `G2 konten final + metadata:` belum
-  - `G3 merge:` belum
-- **Commit terakhir:** `71a5eb0` — Tahap 2 Konsep & Angle
-- **PR terkait:** belum dibuka — akan dibuka setelah Tahap 3 G1+G2 atau sebagai WIP sesuai aturan
+  - `G1 Tahap 5 (Generate/Acquire Assets):` **disetujui 2026-09-10** — 7 asset b-roll netral diterima apa adanya
+  - `G2 konten final + metadata:` belum — menunggu persetujuan pemilik (judul resmi Opsi 1, caption Persona & Voice, hashtag, thumbnail konsep)
+  - `G3 merge:` belum — menunggu persetujuan pemilik setelah G2
+- **Commit terakhir:** `1967935` — Tahap 5 Assets
+- **PR terkait:** belum dibuka — akan dibuka setelah Tahap 6 G2+G3 disiapkan (sesuai mandat: akhiri dengan PR — jangan auto-merge)
 - **Pekerjaan belum tersimpan:** Tidak ada
 - **Risiko atau blocker:**
-  - Topik serupa dengan arsip `2026-09-09-penjual-bunga-di-pasar-subuh.md` — sudah dimitigasi dengan angle berbeda (akhir/transisi vs rutinitas) dan beat yang berubah eksplisit (melati terakhir terjual + payung dilipat sebelum tengah hari)
-  - Brand Core kosong — Persona & Voice hanya dari Channel Brief, tidak ada nilai lintas-channel
-  - Channel faceless — visual harus hindari wajah dikenali (aturan Channel Brief bag 5)
-  - Durasi estimasi 63,46 dtk — dalam target 55-65 dtk estimasi, belum pengukuran audio nyata
+  - Topik serupa dengan arsip 2026-09-09 — sudah dimitigasi dengan angle berbeda (akhir/transisi vs rutinitas) dan beat yang berubah eksplisit
+  - Brand Core kosong — Persona & Voice hanya dari Channel Brief
+  - Channel faceless — visual harus hindari wajah dikenali — dipatuhi di semua asset (tidak ada wajah dikenali, tidak ada logo, tidak ada teks besar)
+  - Durasi estimasi 63,46 dtk — dalam target 55-65 dtk estimasi, belum pengukuran audio nyata — akan diverifikasi saat produksi audio/TTS nanti
+  - Folder produksi dipertahankan sampai G2+G3 disetujui dan PR merged + verifikasi arsip ada di main + konfirmasi download pemilik (syarat pipeline langkah 5)
 - **Waktu pembaruan:** 2026-09-10
 
 ## Aturan
