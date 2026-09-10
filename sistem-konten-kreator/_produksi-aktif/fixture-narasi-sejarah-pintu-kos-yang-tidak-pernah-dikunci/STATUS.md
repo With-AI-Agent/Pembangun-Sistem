@@ -10,7 +10,7 @@
 - **Tahap terakhir selesai:** **Tahap 3** — Naskah/Script (`naskah-draft.md` selesai, 134 kata, estimasi durasi di dalam target)
 - **Tahap berikutnya:** minta **G2 naskah final** (Tahap 3) → kalau dikunci: Tahap 4 — Breakdown Output
 - **Output resmi:**
-  - `naskah-draft.md` — **ADA**, draft r1, 134 kata; menunggu G2
+  - `naskah-draft.md` — **ADA**, draft r1, 134 kata (metode token whitespace; `wc -w` = 133 — em-dash tunggal, perbedaan metode); menunggu G2. Terverifikasi ulang ada di branch 2026-09-10 (sha256 `f06d5468…731e`)
 - **Sumber konteks yang dibaca:**
   - `_sistem/START_DI_SINI.md`, `_sistem/00_CARA_PAKAI_SISTEM.md`
   - `_sistem/01_BRAND_CORE.md` — masih template kosong (gap dilaporkan, bukan dianggap lengkap)
@@ -18,6 +18,8 @@
   - `channel-fixture-narasi-sejarah/model-konten/narasi-60-detik/brief.md` (v1)
   - `_sistem/05_CONTENT_PRODUCTION_PIPELINE.md`, `_sistem/06_PROMPT_LIBRARY.md`, `_sistem/STATUS_TEMPLATE.md`
   - `channel-fixture-narasi-sejarah/arsip-naskah/indeks.md` (cek pengulangan topik: "Tiga Benda di Meja Nenek", "Penjual Bunga di Pasar Subuh" — topik pintu kos belum pernah dibahas)
+  - `channel-fixture-narasi-sejarah/arsip-naskah/indeks-karakter.md` (dicek 2026-09-10: hanya "Nenek Penjual Bunga" dari konten lain; naskah ini tanpa karakter Tipe B — penghuni kos hanya disebut dalam VO)
+  - Bank Konsistensi Visual: dilewati 2026-09-10 — Channel Brief bagian 4 menandai semua elemen "tidak berlaku" (channel faceless); folder `konsistensi-visual/` tidak ada
 - **Sumber eksternal dipakai:** `Tidak ada`
 - **Keputusan baru:**
   - Angle: pintu kos yang tidak pernah dikunci sebagai tanda keamanan bersama, bukan cerita tentang orang-orangnya.
@@ -29,14 +31,14 @@
   - `G1 Tahap 3 (Naskah/Script):` disetujui 2026-09-09
   - `G2 naskah final (Tahap 3):` **belum**
   - `G3 merge:` belum
-- **Commit terakhir:** `b7ac5e2` (di branch sampai PR prep di-merge)
-- **PR terkait:** state Tahap 1–3 di branch persiapan; klaim masuk `main` git-true setelah PR prep di-merge (pola fixture Run-1). Keputusan merge Tahap 6 akan lewat PR barunya.
+- **Commit terakhir:** `c8f60d5` (merge PR #34 = head `main`; state Tahap 1–3). Update STATUS 2026-09-10 ikut commit di HEAD branch `arena/01a088e2-pembangun-sistem`
+- **PR terkait:** state Tahap 1–3 di branch persiapan; klaim masuk `main` git-true setelah PR prep di-merge (pola fixture Run-1). PR #35 (2026-09-10, `arena/01a088cd`) `CLOSED` tanpa merge — keputusan pemilik; isinya tidak masuk `main`. PR sesi 2026-09-10 (branch `arena/01a088e2-pembangun-sistem`) = state berhenti G2 (recovery verification + checkpoint + log) — tanpa auto-merge; nomor PR tercatat di `_log-sesi/LOG_SESI_2026-09-10.md`. Keputusan merge Tahap 6 akan lewat gerbang G3 tersendiri.
 - **Pekerjaan belum tersimpan:** Tidak ada
 - **Risiko atau blocker:**
   - Brand Core masih template kosong (gap konteks wajib — dilaporkan, bukan disamarkan).
   - Estimasi durasi r1 = 64,85 detik (estimasi, belum pengukuran audio); batasan model 55–65 detik.
   - Catatan lama "sudah oke, sudah dikonfirmasi" tidak disertai kode gerbang — status G2 di atas tetap `belum`; catatan ini dipertahankan apa adanya sebagai bagian dari riwayat.
-- **Waktu pembaruan:** 2026-09-09 — state Tahap 3 selesai; sesi produksi sebelumnya dianggap hilang
+- **Waktu pembaruan:** 2026-09-10 — recovery verification ulang (sesi `arena/01a088e2-pembangun-sistem`, 4 aturan mengikat): semua output klaim terverifikasi ada di branch; produksi tetap berhenti menunggu **G2 naskah final**. (Riwayat: 2026-09-09 — state Tahap 3 selesai; sesi produksi sebelumnya dianggap hilang)
 
 ## Aturan
 
