@@ -8,7 +8,7 @@
 - **Channel:** `channel-fixture-narasi-sejarah/` — v2, `Operational`
 - **Model konten:** `channel-fixture-narasi-sejarah/model-konten/narasi-60-detik/brief.md` — v1, `Operational`
 - **Tahap terakhir selesai:** **Tahap 5** — Generate/Acquire Assets (9 file b-roll tersimpan di `assets/`; seluruh checklist Tahap 5 + rights-check ✓ — rincian di `assets/CATATAN-ASSET.md`)
-- **Tahap berikutnya:** minta **G1 Tahap 5** (asset diterima / regenerate?) → kalau lolos: Tahap 6 — Assembly & Publish Prep (metadata publish, arsip naskah, indeks, metadata reproducibility)
+- **Tahap berikutnya:** Tahap 6 — Assembly & Publish Prep (metadata publish; arsip naskah final + indeks; metadata reproducibility) → berhenti di **G2 konten final**, lalu **G3 merge** sebagai pertanyaan terpisah
 - **Output resmi:**
   - `naskah-draft.md` — **ADA**, draft r1, 134 kata (metode token whitespace; `wc -w` = 133 — em-dash tunggal, perbedaan metode); **DIKUNCI sebagai naskah final (G2, 2026-09-10)**. Terverifikasi ulang ada di branch 2026-09-10 (sha256 `f06d5468…731e`)
   - `breakdown-output.md` — **ADA**, b1, 7 segmen narasi (S1–S7); **DIKUNCI (G1+G2, 2026-09-10)** sebagai dasar akuisisi asset Tahap 5
@@ -38,7 +38,8 @@
   - `G2 naskah final (Tahap 3):` **disetujui 2026-09-10** — naskah r1 (134 kata) dikunci sebagai naskah final; dengan catatan paparan entry-point yang sudah didisklorkan dan diterima pemilik sebagai catatan (tanpa tindakan korektif)
   - `G1 Tahap 4 (Breakdown Output):` disetujui 2026-09-10
   - `G2 breakdown (Tahap 4):` disetujui 2026-09-10 — breakdown b1 terkunci sebagai dasar akuisisi asset; guardrail substitusi tercatat di `breakdown-output.md` (bagian "Batasan akuisisi") berlaku per keputusan pemilik: substitusi boleh sepanjang memenuhi deskripsi visual + larangan visual; perubahan besar = berhenti dan laporkan
-  - `G1 Tahap 5 (Generate/Acquire Assets):` belum
+  - `G1 Tahap 5 (Generate/Acquire Assets):` disetujui 2026-09-10 — 9 asset diterima apa adanya
+  - `G1 Tahap 6 / G2 konten final (Tahap 6):` belum
   - `G3 merge:` belum
 - **Commit terakhir:** `c8f60d5` (merge PR #34 = head `main`; state Tahap 1–3). Update STATUS 2026-09-10 ikut commit di HEAD branch `arena/01a088e2-pembangun-sistem`
 - **PR terkait:** state Tahap 1–3 di branch persiapan; klaim masuk `main` git-true setelah PR prep di-merge (pola fixture Run-1). PR #35 (2026-09-10, `arena/01a088cd`) `CLOSED` tanpa merge — keputusan pemilik; isinya tidak masuk `main`. PR sesi 2026-09-10 (branch `arena/01a088e2-pembangun-sistem`) = state berhenti G2 (recovery verification + checkpoint + log) — tanpa auto-merge; nomor PR tercatat di `_log-sesi/LOG_SESI_2026-09-10.md`. Keputusan merge Tahap 6 akan lewat gerbang G3 tersendiri.
@@ -47,7 +48,7 @@
   - Brand Core masih template kosong (gap konteks wajib — dilaporkan, bukan disamarkan).
   - Estimasi durasi r1 = 64,85 detik (estimasi, belum pengukuran audio); batasan model 55–65 detik.
   - Catatan lama "sudah oke, sudah dikonfirmasi" tidak disertai kode gerbang — status G2 di atas tetap `belum`; catatan ini dipertahankan apa adanya sebagai bagian dari riwayat.
-- **Waktu pembaruan:** 2026-09-10 — **Tahap 5 selesai** (9 asset di `assets/` + `CATATAN-ASSET.md`); produksi berhenti menunggu **G1 Tahap 5**. (Riwayat: 2026-09-10 — G1+G2 Tahap 4 disetujui; Tahap 4 selesai; G2 naskah final disetujui; recovery verification ulang selesai · 2026-09-09 — state Tahap 3 selesai)
+- **Waktu pembaruan:** 2026-09-10 — **G1 Tahap 5 DISETUJUI** (9 asset diterima apa adanya); produksi lanjut ke Tahap 6. (Riwayat: 2026-09-10 — Tahap 5 selesai; G1+G2 Tahap 4 disetujui; G2 naskah final disetujui; recovery verification ulang selesai · 2026-09-09 — state Tahap 3 selesai)
 
 ## Aturan
 
