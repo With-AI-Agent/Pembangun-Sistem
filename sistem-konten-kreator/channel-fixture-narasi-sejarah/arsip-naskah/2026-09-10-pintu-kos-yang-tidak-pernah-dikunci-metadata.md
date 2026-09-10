@@ -3,7 +3,7 @@
 - **Tanggal produksi:** 2026-09-10 (PR #36, branch `arena/01a088e2-pembangun-sistem`)
 - **Model konten:** Narasi 60 Detik — Model Konten Brief **v1** (`Operational`)
 - **Versi brief:** Channel Brief **v2** (`Operational`; Brand Core `_sistem/01_BRAND_CORE.md` masih template kosong — gap tercatat sadar di brief unit)
-- **Judul tayang resmi:** menunggu pilihan pemilik di G2 Tahap 6 — opsi di `publish-prep.md` (slug arsip memakai judul kerja)
+- **Judul tayang resmi:** **"Konon, Kuncinya Selalu Tergantung di Dalam"** — opsi 2 dari `publish-prep.md`, dipilih pemilik saat G2 Tahap 6 (2026-09-10). Slug file arsip tetap judul kerja (`pintu-kos-yang-tidak-pernah-dikunci`).
 - **Gerbang produksi:** G1 Tahap 1/2/3 (2026-09-09) · G2 naskah final (2026-09-10) · G1+G2 Tahap 4 (2026-09-10) · G1 Tahap 5 (2026-09-10) · G2 konten final & G3: menyusul/tercatat di STATUS + log sesi
 
 ## Prompt final per unit visual (+ file referensi yang disertakan)

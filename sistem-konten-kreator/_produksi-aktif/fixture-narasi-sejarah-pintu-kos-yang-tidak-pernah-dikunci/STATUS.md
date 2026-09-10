@@ -7,8 +7,8 @@
 - **Status:** `in-progress`
 - **Channel:** `channel-fixture-narasi-sejarah/` — v2, `Operational`
 - **Model konten:** `channel-fixture-narasi-sejarah/model-konten/narasi-60-detik/brief.md` — v1, `Operational`
-- **Tahap terakhir selesai:** **Tahap 6 (bagian file)** — Assembly & Publish Prep: metadata publish + panduan assembly (`publish-prep.md`), naskah final diarsip ke `arsip-naskah/`, `indeks.md` diperbarui, arsip metadata reproducibility dibuat. **Folder produksi BELUM dihapus** — syaratnya pemilik download hasil dulu + verifikasi file arsip (terpisah dari gerbang ini; dilakukan setelah konfirmasi download).
-- **Tahap berikutnya:** minta **G2 konten final + metadata (Tahap 6)** termasuk pilihan judul tayang → lalu **G3 merge PR #36** sebagai pertanyaan **terpisah**. Setelah merge + pemilik download hasil: hapus folder produksi (verifikasi file arsip dulu).
+- **Tahap terakhir selesai:** **Tahap 6 (bagian file + seluruh gerbang)** — Assembly & Publish Prep: metadata publish + panduan assembly (`publish-prep.md`), naskah final diarsip ke `arsip-naskah/`, `indeks.md` diperbarui, arsip metadata reproducibility dibuat. **Produksi tuntas** menunggu merge G3. **Folder produksi BELUM dihapus** — syaratnya pemilik download hasil dulu (dilakukan di sesi terpisah setelah merge, karena token push sesi ini dicabut pasca-merge).
+- **Tahap berikutnya:** **selesai** — sisa aksi administratif pasca-merge: pemilik download hasil → sesi terpisah menghapus folder produksi (setelah verifikasi file arsip benar-benar ada di `main`).
 - **Output resmi:**
   - `naskah-draft.md` — **ADA**, draft r1, 134 kata (metode token whitespace; `wc -w` = 133 — em-dash tunggal, perbedaan metode); **DIKUNCI sebagai naskah final (G2, 2026-09-10)**. Terverifikasi ulang ada di branch 2026-09-10 (sha256 `f06d5468…731e`)
   - `breakdown-output.md` — **ADA**, b1, 7 segmen narasi (S1–S7); **DIKUNCI (G1+G2, 2026-09-10)** sebagai dasar akuisisi asset Tahap 5
@@ -33,6 +33,7 @@
   - Pengguna 2026-09-10 (keputusan b): **G2 DISETUJUI** — naskah r1 (134 kata) dikunci sebagai naskah final Tahap 3.
   - Pengguna 2026-09-10: **G1 Tahap 4 DISETUJUI** (breakdown b1 benar, lanjut Tahap 5) dan **G2 Tahap 4 DISETUJUI** (breakdown b1 DIKUNCI, tidak diubah lagi) — dengan mandat guardrail: substitusi boleh sepanjang memenuhi deskripsi visual + larangan visual; perubahan besar = berhenti dan laporkan.
   - Agent 2026-09-10 (dalam batas mandat Tahap 5): jalur akuisisi = **generate di dalam sesi** (alasan rights-check: lisensi stok web tidak bisa diverifikasi dari sesi ini; deskripsi b-roll breakdown dipakai apa adanya sebagai prompt); chaining acuan S1 (pintu) → S2/S3/S4 dan S2 (kunci+tali) → S5/S7; **S4 digenerate ulang 1×** (hasil pertama siluet menonjol, berlebihan vs deskripsi "bayangan samar … tertahan"); S2a/S5a ditambah agar seluruh elemen visual di kolom deskripsi S2/S5 tercakup.
+  - Pengguna 2026-09-10: **judul tayang resmi = opsi 2 "Konon, Kuncinya Selalu Tergantung di Dalam"** (slug arsip tetap judul kerja); **G2 konten final + metadata DISETUJUI**; **G3 merge DISETUJUI** (tiga keputusan, diminta terpisah).
 - **Approval yang sudah diberikan:**
   - `G1 Tahap 1 (Ideation):` disetujui 2026-09-09
   - `G1 Tahap 2 (Konsep & Angle):` disetujui 2026-09-09
@@ -41,8 +42,8 @@
   - `G1 Tahap 4 (Breakdown Output):` disetujui 2026-09-10
   - `G2 breakdown (Tahap 4):` disetujui 2026-09-10 — breakdown b1 terkunci sebagai dasar akuisisi asset; guardrail substitusi tercatat di `breakdown-output.md` (bagian "Batasan akuisisi") berlaku per keputusan pemilik: substitusi boleh sepanjang memenuhi deskripsi visual + larangan visual; perubahan besar = berhenti dan laporkan
   - `G1 Tahap 5 (Generate/Acquire Assets):` disetujui 2026-09-10 — 9 asset diterima apa adanya
-  - `G1 Tahap 6 / G2 konten final (Tahap 6):` belum
-  - `G3 merge:` belum
+  - `G2 konten final + metadata (Tahap 6):` disetujui 2026-09-10 — konten final (naskah r1 + 9 asset + panduan assembly) dan metadata publish dikunci; **judul tayang resmi: "Konon, Kuncinya Selalu Tergantung di Dalam"** (opsi 2, dipilih pemilik; slug arsip tetap judul kerja)
+  - `G3 merge:` disetujui 2026-09-10 — merge PR #36 ke `main` (persetujuan terpisah setelah G2)
 - **Commit terakhir:** `c8f60d5` (merge PR #34 = head `main`; state Tahap 1–3). Update STATUS 2026-09-10 ikut commit di HEAD branch `arena/01a088e2-pembangun-sistem`
 - **PR terkait:** state Tahap 1–3 di branch persiapan; klaim masuk `main` git-true setelah PR prep di-merge (pola fixture Run-1). PR #35 (2026-09-10, `arena/01a088cd`) `CLOSED` tanpa merge — keputusan pemilik; isinya tidak masuk `main`. PR sesi 2026-09-10 (branch `arena/01a088e2-pembangun-sistem`) = state berhenti G2 (recovery verification + checkpoint + log) — tanpa auto-merge; nomor PR tercatat di `_log-sesi/LOG_SESI_2026-09-10.md`. Keputusan merge Tahap 6 akan lewat gerbang G3 tersendiri.
 - **Pekerjaan belum tersimpan:** Tidak ada
@@ -50,7 +51,7 @@
   - Brand Core masih template kosong (gap konteks wajib — dilaporkan, bukan disamarkan).
   - Estimasi durasi r1 = 64,85 detik (estimasi, belum pengukuran audio); batasan model 55–65 detik.
   - Catatan lama "sudah oke, sudah dikonfirmasi" tidak disertai kode gerbang — status G2 di atas tetap `belum`; catatan ini dipertahankan apa adanya sebagai bagian dari riwayat.
-- **Waktu pembaruan:** 2026-09-10 — **Tahap 6 bagian file selesai** (publish-prep + arsip naskah final + indeks + metadata reproducibility); produksi berhenti menunggu **G2 konten final** lalu **G3 merge** (terpisah). Folder produksi belum dihapus — menunggu merge + download pemilik. (Riwayat: 2026-09-10 — G1 Tahap 5 disetujui; Tahap 5 selesai; G1+G2 Tahap 4 disetujui; G2 naskah final disetujui; recovery verification ulang selesai · 2026-09-09 — state Tahap 3 selesai)
+- **Waktu pembaruan:** 2026-09-10 — **seluruh gerbang produksi lolos** (G2 konten final + G3 merge disetujui; judul tayang resmi tercatat); produksi tuntas, PR #36 siap merge sesudah verifikasi scope diff bersih. (Riwayat: 2026-09-10 — Tahap 6 bagian file selesai; G1 Tahap 5 disetujui; Tahap 5 selesai; G1+G2 Tahap 4 disetujui; G2 naskah final disetujui; recovery verification ulang selesai · 2026-09-09 — state Tahap 3 selesai)
 
 ## Aturan
 

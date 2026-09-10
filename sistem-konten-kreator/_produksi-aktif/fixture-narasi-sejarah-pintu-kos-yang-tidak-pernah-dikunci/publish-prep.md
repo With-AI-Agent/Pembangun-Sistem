@@ -8,7 +8,7 @@
 ## 1. Opsi judul / hook text (pilih satu di G2, atau minta varian lain)
 
 1. Pintu Kos yang Tidak Pernah Dikunci
-2. Konon, Kuncinya Selalu Tergantung di Dalam
+2. **Konon, Kuncinya Selalu Tergantung di Dalam ← TERPILIH (judul tayang resmi, G2 2026-09-10)**
 3. Dulu, Pintu Terbuka Artinya Rumah Aman
 4. Satu Kunci Tua yang Tidak Lagi Pas untuk Apa Pun
 5. Yang Berubah Bukan Pintunya
@@ -49,5 +49,5 @@ Arahan penyampaian per segmen (penekanan/jeda khusus): lihat `breakdown-output.m
 
 ## Gerbang
 
-- **G2 Tahap 6 (konten final + metadata disetujui?):** belum — diminta ke pengguna (termasuk pilihan judul).
-- **G3 (merge PR ke `main`?):** belum — diajukan sebagai pertanyaan **terpisah** setelah G2, tidak otomatis.
+- **G2 Tahap 6 (konten final + metadata disetujui?):** **DISETUJUI 2026-09-10** — konten final (naskah r1 + 9 asset + panduan assembly) dan metadata publish dikunci; judul tayang resmi = opsi 2 "Konon, Kuncinya Selalu Tergantung di Dalam".
+- **G3 (merge PR ke `main`?):** **DISETUJUI 2026-09-10** — sebagai persetujuan terpisah setelah G2; merge dieksekusi sesudah verifikasi scope diff PR bersih.
