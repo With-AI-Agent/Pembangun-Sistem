@@ -7,8 +7,8 @@
 ## Status: `Draft` → `Reviewed` → `Approved` → `Merged` → `Operational`
 
 - [x] **Draft** — digali via Model Konten Discovery 2026-09-11_3 (1 putaran)
-- [ ] **Reviewed** — dibaca lengkap oleh pemilik
-- [ ] **Approved** — isi dikunci lewat gerbang **G2**
+- [x] **Reviewed** — dibaca lengkap oleh pemilik via viewer, 2026-09-11
+- [x] **Approved** — isi dikunci lewat gerbang **G2** 2026-09-11 (`setuju_g2`)
 - [ ] **Merged** — PR belum G3
 - [ ] **Operational** — menunggu Merged + Channel Brief induk Operational
 

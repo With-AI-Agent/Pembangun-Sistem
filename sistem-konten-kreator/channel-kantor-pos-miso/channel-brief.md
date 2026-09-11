@@ -110,7 +110,7 @@
 
 | Nama Model Konten | Folder | Status |
 |---|---|---|
-| Dongeng 60-90 Detik | `model-konten/dongeng-60-90/` | `Draft` — Discovery berjalan di sesi yang sama 2026-09-11_3, menyusul brief ini |
+| Dongeng 60-90 Detik | `model-konten/dongeng-60-90/` | `Approved` — G2 2026-09-11 (`setuju_g2`), menunggu Merged + induk Operational |
 
 ## 9. Arsip Naskah
 
