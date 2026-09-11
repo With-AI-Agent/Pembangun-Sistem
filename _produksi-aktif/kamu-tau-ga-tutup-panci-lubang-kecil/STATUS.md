@@ -1,0 +1,41 @@
+# Status Produksi — Kamu Tau Ga? — Kenapa Tutup Panci Ada Lubang Kecil
+
+- **Status:** `ready-for-review`
+- **Channel:** `channel-kamu-tau-ga`
+- **Model konten:** `narasi-60-detik` — Narasi 60 Detik (Alur Kustom: Tahap 0 Riset + 1-6)
+- **Tahap terakhir selesai:** `Tahap 6 Assembly & Publish Prep — selesai + G2 konten final Approved + G3 ditunda`
+- **Tahap berikutnya:** `G3 merge PR #41 — ditunda pemilik, folder produksi dipertahankan`
+- **Output resmi:**
+  - `SUMBER.md` — ada, 3 sumber terverifikasi + 1 pendukung — diarsipkan ke `2026-09-11-...-sumber.md`
+  - `ideation.md` — ada, 4 opsi angle, Opsi 1 terpilih G1 2026-09-11
+  - `konsep-angle.md` — ada, struktur fleksibel, G1 2026-09-11
+  - `naskah-draft.md` — ada, 142 kata, 58,7 detik, G1+G2 2026-09-11 — diarsipkan ke `2026-09-11-...md`
+  - `breakdown-output.md` — ada, 6 segmen narasi, 142 kata total, G1+G2 2026-09-11
+  - `assets/` — ada, 6 JPG b-roll 768x1376 9:16 ~799K + CATATAN-ASSET.md — G1 2026-09-11
+  - `publish-prep.md` — ada, 5 opsi judul (rekomendasi Opsi 1), caption panjang & pendek Persona & Voice, hashtag, thumbnail konsep tanpa clickbait
+  - `final-content.md` — ada, assembly notes 6 segmen, metadata ringkas, langkah penutup WAJIB checklist
+- **Sumber konteks yang dibaca:**
+  - `sistem-konten-kreator/channel-kamu-tau-ga/channel-brief.md` (Approved v1)
+  - `sistem-konten-kreator/channel-kamu-tau-ga/model-konten/narasi-60-detik/brief.md` (Approved v1)
+  - `sistem-konten-kreator/_sistem/05_CONTENT_PRODUCTION_PIPELINE.md`
+  - `sistem-konten-kreator/_sistem/06_PROMPT_LIBRARY.md`
+  - `sistem-konten-kreator/channel-kamu-tau-ga/arsip-naskah/indeks.md` — sudah update entri ke-1
+  - `sistem-konten-kreator/channel-kamu-tau-ga/arsip-naskah/indeks-karakter.md` — kosong format minimum (faceless)
+- **Sumber eksternal dipakai:** ada — `SUMBER.md` dibuat dan diarsipkan ke `2026-09-11-kenapa-tutup-panci-ada-lubang-kecil-sumber.md` — 3 sumber Terverifikasi
+- **Keputusan baru:** Judul final rekomendasi Opsi 1 "Kenapa Tutup Panci Ada Lubang Kecil? Bukan Hiasan" — caption Persona & Voice — thumbnail tanpa clickbait
+- **Approval yang sudah diberikan:**
+  - `G1 Tahap 0:` disetujui 2026-09-11 — riset awal selesai (3 sumber terverifikasi)
+  - `G1 Tahap 1:` disetujui 2026-09-11 — Opsi 1 terpilih (`setuju_opsi1`)
+  - `G1 Tahap 2:` disetujui 2026-09-11 — kerangka hook+konteks+penutup (`setuju_opsi1`)
+  - `G1 Tahap 3:` disetujui 2026-09-11 — naskah 142 kata siap (`setuju_g1_g2`)
+  - `G2 naskah final:` disetujui 2026-09-11 — 142 kata dikunci final (`setuju_g1_g2`)
+  - `G1 Tahap 4:` disetujui 2026-09-11 — breakdown 6 segmen siap (`setuju_g1_g2`)
+  - `G2 breakdown:` disetujui 2026-09-11 — 6 segmen dikunci (`setuju_g1_g2`)
+  - `G1 Tahap 5:` disetujui 2026-09-11 — 6 JPG b-roll diterima (`setuju_lanjut`)
+  - `G2 konten final + metadata:` disetujui 2026-09-11 — publish-prep + final-content + arsip (`setuju_g2`)
+  - `G3 merge:` ditunda 2026-09-11 — PR #41 tetap OPEN tanpa auto-merge (`tunda_g3`)
+- **Commit terakhir:** `29437ed` — Tahap 5 Generate
+- **PR terkait:** PR #41 OPEN tanpa auto-merge — https://github.com/With-AI-Agent/Pembangun-Sistem/pull/41 — Channel baru Kamu Tau Ga? + Model Narasi 60 Detik + Konten pertama tutup panci lubang kecil
+- **Pekerjaan belum tersimpan:** Tidak ada
+- **Risiko atau blocker:** Tidak ada
+- **Waktu pembaruan:** 2026-09-11
