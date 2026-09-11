@@ -63,7 +63,7 @@ Peran dalam konten ini: tokoh yang diceritakan — subjek pandangan narator; pin
 ```
 
 - Konsisten di seluruh konten: deskripsi di atas dibawa ke semua unit visual yang memunculkannya (Prompt Library A2)
-- Status indeks: sudah tercatat di `indeks-karakter.md` sebagai Tipe B (konten pertama `2026-09-09-penjual-bunga-di-pasar-subuh.md`), konten ini akan menjadi konten kedua di kolom Konten lain bila selesai (Tahap 6 langkah 2b)
+- Status indeks: sudah tercatat di `indeks-karakter.md` sebagai Tipe B (konten pertama `2026-09-09-penjual-bunga-di-pasar-subuh.md`), konten kedua `2026-09-10-melati-terakhir-di-pasar-kosong.md` sudah ditambahkan ke kolom Konten lain di Tahap 6 langkah 2b (PR #39 diff) — G2 disetujui 2026-09-10 — koreksi review PR #39 putaran 2 (dokumen ini snapshot Tahap 3, status final ada di STATUS.md + final-content.md)
 - Tidak ada karakter Tipe B baru di konten ini
 
 ## Persona & Voice Check (sebelum minta G2)
@@ -83,6 +83,6 @@ Peran dalam konten ini: tokoh yang diceritakan — subjek pandangan narator; pin
 - Visual: b-roll netral, tidak ada wajah dikenali, palet cokelat kayu/krem/hijau tua pudar + putih melati + biru pudar
 - Sumber eksternal tetap Tidak ada — tidak perlu SUMBER.md
 
-## Next
+## Next — UPDATE koreksi review PR #39 putaran 2
 
-Menunggu **G1+G2 Tahap 3** — G1 untuk lanjut ke Tahap 4 Breakdown, G2 untuk mengunci naskah final sebagai arsip permanen.
+**G1+G2 Tahap 3 disetujui 2026-09-10** — naskah 131 kata terkunci, lanjut ke Tahap 4 Breakdown (sudah selesai) — koreksi review putaran 2

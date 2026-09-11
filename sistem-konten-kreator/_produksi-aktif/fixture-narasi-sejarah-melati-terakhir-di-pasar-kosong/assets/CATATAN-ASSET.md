@@ -2,7 +2,7 @@
 
 - **Channel:** `channel-fixture-narasi-sejarah` (Narasi Sejarah — FIXTURE)
 - **Model konten:** Narasi 60 Detik v1 — unit segmen narasi
-- **Breakdown:** `breakdown-output.md` — 7 segmen — **G1+G2 disetujui 2026-09-10** (menunggu dicatat di STATUS, tapi breakdown sudah dikunci sebagai dasar generate)
+- **Breakdown:** `breakdown-output.md` — 7 segmen — **G1+G2 disetujui 2026-09-10** — tercatat di STATUS.md, breakdown sudah dikunci sebagai dasar generate — koreksi review PR #39 putaran 2
 - **Jumlah asset:** 7 file JPG (S1–S7) — b-roll netral, vertical 9:16
 - **Sumber:** Generated via image generation tool (bukan stok berhak cipta, bukan footage pihak ketiga) — sesuai Model Brief "b-roll netral + foto benda; tidak memakai reference image dari konsistensi-visual/"
 - **Karakter Tipe B reuse:** Nenek Penjual Bunga — deskripsi sama persis di S2,S3,S5,S6 — visual tetap b-roll tanpa wajah dikenali (sesuai aturan Channel Brief bag 5: hindari wajah yang bisa dikenali)
@@ -35,7 +35,7 @@
 - Palet dan gaya visual konsisten: cokelat kayu, krem, hijau tua pudar, putih melati, biru pudar — hangat sedikit pudar, tekstur film
 - Karakter Tipe B reuse: S2 sebagai acuan visual awal untuk S3,S5,S6 — deskripsi fisik sama persis, tidak drift
 - Sumber eksternal: Tidak ada — tidak perlu SUMBER.md untuk asset (asset bukan klaim faktual)
-- Next: Tahap 6 Assembly & Publish Prep — setelah G1 Tahap 5 disetujui
+- Next — UPDATE koreksi review PR #39 putaran 2: **G1 Tahap 5 disetujui 2026-09-10** — 7 asset diterima, lanjut ke Tahap 6 Assembly (sudah selesai G2 disetujui G3 ditunda) — koreksi review putaran 2
 
 ## Waktu pembuatan
 

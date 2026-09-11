@@ -83,7 +83,7 @@ Fisik: perempuan tua usia lanjut, rambut putih dikonde rendah, selendang batik c
 Peran dalam konten ini: tokoh yang diceritakan — subjek pandangan narator; pintu masuk cerita lewat benda melati
 ```
 
-- Status indeks: sudah tercatat di `indeks-karakter.md` sebagai Tipe B, konten pertama `2026-09-09-penjual-bunga-di-pasar-subuh.md`, konten kedua ini akan ditambahkan ke kolom Konten lain di Tahap 6 langkah 2b
+- Status indeks: sudah tercatat di `indeks-karakter.md` sebagai Tipe B, konten pertama `2026-09-09-penjual-bunga-di-pasar-subuh.md`, konten kedua `2026-09-10-melati-terakhir-di-pasar-kosong.md` sudah ditambahkan ke kolom Konten lain di Tahap 6 langkah 2b (PR #39 diff `indeks-karakter.md:1/1`) — G2 disetujui 2026-09-10 — koreksi review PR #39 putaran 2
 
 ---
 

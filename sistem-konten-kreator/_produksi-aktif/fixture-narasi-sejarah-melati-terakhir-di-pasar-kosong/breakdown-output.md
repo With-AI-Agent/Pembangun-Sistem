@@ -2,7 +2,7 @@
 
 - **Channel:** `channel-fixture-narasi-sejarah` (Narasi Sejarah — FIXTURE)
 - **Model konten:** Narasi 60 Detik v1 — unit: segmen narasi (bukan shot), 130-145 kata, 55-65 detik
-- **Naskah final:** `naskah-draft.md` — 131 kata, 63,46 dtk estimasi — **G1+G2 disetujui 2026-09-10** (menunggu dicatat di STATUS)
+- **Naskah final:** `naskah-draft.md` — 131 kata, 63,46 dtk estimasi — **G1+G2 disetujui 2026-09-10** — tercatat di STATUS.md — koreksi review PR #39 putaran 2
 - **Jumlah segmen:** 7 segmen narasi (S1–S7) — sesuai konsep-angle.md 4 beat
 - **Karakter Tipe B reuse:** Nenek Penjual Bunga — rambut putih dikonde rendah, selendang batik cokelat, payung biru pudar, keranjang anyam berisi melati putih — deskripsi dibawa SAMA PERSIS di semua segmen yang memunculkannya (Prompt Library A2)
 - **Gaya visual channel:** footage arsip dan foto benda sehari-hari, warna cenderung hangat dan sedikit pudar, tekstur film; palet dominan cokelat kayu, krem, hijau tua pudar + putih melati + biru pudar payung; hindari wajah dikenali, logo merek, teks besar di layar
@@ -41,7 +41,7 @@
   Hal yang harus dihindari: wajah detail yang bisa dikenali, logo merek, teks besar
   ```
 - **File referensi:** tidak ada
-- **Catatan karakter Tipe B:** deskripsi fisik SAMA PERSIS dengan arsip `2026-09-09-penjual-bunga-di-pasar-subuh.md` + naskah-draft.md bagian Karakter Tipe B — reuse, bukan karakter baru
+- **Catatan karakter Tipe B:** reuse Nenek Penjual Bunga — deskripsi mengacu ke `indeks-karakter.md` (rambut putih dikonde rendah, selendang batik cokelat, payung biru pudar, keranjang anyam di lengan) + naskah-draft.md:61 bagian Karakter Tipe B — reuse, bukan karakter baru — **koreksi review PR #39 putaran 2:** klaim sebelumnya `SAMA PERSIS dengan arsip 2026-09-09-penjual-bunga-di-pasar-subuh.md:37` salah; arsip 09:37 memuat `perempuan tua kurap … keranjang anyam berisi kain putih` tanpa `payung biru pudar`, berbeda dengan deskripsi yang dipakai di konten ini (`payung biru pudar, melati putih`); diperbaiki jadi `reuse dengan penyesuaian` — keputusan pemilik tetap Tipe B via `tetap_tipe_b`
 - **Arahan VO:** "Konon" — jeda, kalimat pendek "Rambut putih dikonde." — jeda 0,5 dtk
 
 ## S3 — Konteks Kebiasaan Menyusun (20-35 detik)
@@ -161,6 +161,6 @@ Catatan: total kata actual 131 (wc -w), estimasi 60,46 + 3 = 63,46 dtk — dalam
 - [x] Untuk konten tanpa asset visual? — TIDAK, konten ini punya asset visual b-roll, jadi Tahap 5 berlaku
 - [x] Disimpan sebagai `breakdown-output.md` di folder produksi
 
-## Next
+## Next — UPDATE koreksi review PR #39 putaran 2
 
-Menunggu **G1+G2 Tahap 4** — G1 untuk lanjut ke Tahap 5 Generate/Acquire Assets, G2 untuk mengunci breakdown sebagai dasar generate.
+**G1+G2 Tahap 4 disetujui 2026-09-10** — breakdown 7 segmen dikunci, lanjut ke Tahap 5 Assets (sudah selesai) — koreksi review putaran 2

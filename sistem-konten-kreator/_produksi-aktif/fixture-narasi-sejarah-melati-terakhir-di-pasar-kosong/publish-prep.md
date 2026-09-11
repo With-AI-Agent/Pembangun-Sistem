@@ -145,6 +145,6 @@ Dulu, pasar tutup bukan karena bel. Tapi karena melatinya habis. Satu genggam te
 2. Update `arsip-naskah/indeks.md` dengan entri baru
 2a. SUMBER.md → tidak berlaku (Tidak ada sumber eksternal)
 2b. Update `arsip-naskah/indeks-karakter.md` — tambah konten ini ke kolom Konten lain pada baris Nenek Penjual Bunga
-3. G2 lalu G3 — konten final + metadata disetujui? merge PR ke main?
+3. G2 — **disetujui 2026-09-10** — judul resmi Opsi 1 + caption + hashtag + thumbnail disetujui; G3 — **ditunda 2026-09-10** — PR #39 tetap OPEN tanpa auto-merge — koreksi review PR #39 putaran 2
 4. Buat arsip ringan reproducibility `arsip-naskah/[tanggal]-[judul]-metadata.md`
 5. Setelah download + verifikasi file arsip ada di main, folder `_produksi-aktif/...` boleh dihapus (syarat langkah 1,2,2b,4 sudah dilakukan, Agent WAJIB verifikasi file arsip benar-benar ada)

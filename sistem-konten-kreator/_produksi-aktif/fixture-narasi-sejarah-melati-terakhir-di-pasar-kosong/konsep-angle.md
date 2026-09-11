@@ -94,6 +94,6 @@
 - **Risiko menggurui:** Mitigasi — tidak ada kalimat "kita harus belajar..." — hanya observasi.
 - **Sumber eksternal:** Tidak ada — fiksi fixture. Jika nanti butuh klaim "pasar tradisional mulai kosong tahun X" → wajib SUMBER.md + 2 sumber independen — tapi tidak akan dipakai, cerita tetap personal.
 
-## Next
+## Next — UPDATE koreksi review PR #39 putaran 2
 
-Menunggu **G1 Tahap 2** — "Kerangka/angle ini dipakai?" Jika disetujui, lanjut ke Tahap 3 Naskah/Script (G1+G2).
+**G1 Tahap 2 disetujui 2026-09-10** — kerangka 4 beat + hook + 2 varian (total 3) — lanjut ke Tahap 3 (sudah selesai) — koreksi review putaran 2

@@ -42,7 +42,7 @@ Hal yang harus dihindari: wajah detail yang bisa dikenali, logo merek, teks besa
 ```
 - File referensi: tidak ada
 - File asset: `S2-payung-biru-sudut-gelap.jpg` — 230K — `a878f5d02d9161bdc0321051ef3b9d9a6c554cf38185d65108243450b0c89c96`
-- Catatan karakter Tipe B reuse: deskripsi fisik sama persis dengan arsip `2026-09-09-penjual-bunga-di-pasar-subuh.md` — "perempuan tua usia lanjut, rambut putih dikonde rendah, selendang batik cokelat digulung di bahu, payung biru pudar, keranjang anyam berisi melati putih di lengan, biasanya dilihat dari belakang/samping — wajah tidak detail"
+- Catatan karakter Tipe B reuse: deskripsi fisik mengacu ke `indeks-karakter.md` — "perempuan tua usia lanjut, rambut putih dikonde rendah, selendang batik cokelat digulung di bahu, payung biru pudar, keranjang anyam berisi melati putih di lengan, biasanya dilihat dari belakang/samping — wajah tidak detail" — **koreksi review PR #39 putaran 2:** klaim sebelumnya `sama persis dengan arsip 2026-09-09-penjual-bunga-di-pasar-subuh.md:37` salah; arsip 09:37 memuat `perempuan tua kurap … keranjang anyam berisi kain putih` tanpa `payung biru pudar`; deskripsi yang dipakai di konten ini reuse dengan penyesuaian dari indeks-karakter, bukan identik byte dengan arsip 09 — keputusan pemilik tetap Tipe B
 
 ### S3 — Kebiasaan Menyusun
 ```

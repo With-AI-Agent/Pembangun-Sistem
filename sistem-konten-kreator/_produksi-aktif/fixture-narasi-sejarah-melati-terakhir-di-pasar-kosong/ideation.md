@@ -81,6 +81,6 @@ Karakter visual: rambut putih dikonde rendah, selendang batik cokelat digulung d
 
 **Sumber eksternal:** Tidak ada — fiksi fixture, bukan klaim sejarah. Detail "pasar mulai kosong" adalah setting cerita, bukan data statistik pasar yang perlu diverifikasi.
 
-## Next
+## Next — UPDATE koreksi review PR #39 putaran 2
 
-Menunggu **G1 Tahap 1** — "Ide terpilih sudah sesuai? Lanjut atau cari ide lain?" Jika disetujui, lanjut ke Tahap 2 Konsep & Angle.
+**G1 Tahap 1 disetujui 2026-09-10** — Opsi 1 Melati Terakhir Sebagai Jam Pasar — reuse Nenek Penjual Bunga Tipe B tetap — lanjut ke Tahap 2 (sudah selesai) — koreksi review putaran 2

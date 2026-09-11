@@ -50,7 +50,7 @@
   - `G1 Tahap 5 (Generate/Acquire Assets):` **disetujui 2026-09-10** — 7 asset b-roll netral diterima apa adanya
   - `G2 konten final + metadata:` **disetujui 2026-09-10** — judul resmi Opsi 1 "Melati Terakhir di Pasar yang Mulai Kosong" + caption Persona & Voice + hashtag + thumbnail konsep tanpa clickbait + final-content assembly notes + arsip naskah + indeks + indeks-karakter + metadata — semua diverifikasi ADA
   - `G3 merge:` belum — **ditunda 2026-09-10** — keputusan pemilik via ask_user `tunda_g3` — PR #39 tetap OPEN tanpa auto-merge
-- **Commit terakhir:** `f171711` — Tahap 6 Assembly
+- **Commit terakhir:** `8fc9571` — koreksi review PR #39 putaran 1 (T-1 S2 22→20, T-3 gate stale) + sebelumnya `d8d3346` tutup LOG_SESI CLOSED G2 disetujui G3 ditunda, `f171711` Tahap 6 Assembly — koreksi review PR #39 putaran 2
 - **PR terkait:** PR #39 — https://github.com/With-AI-Agent/Pembangun-Sistem/pull/39 — OPEN — tanpa auto-merge — menunggu G3
 - **Pekerjaan belum tersimpan:** Tidak ada
 - **Risiko atau blocker:**
