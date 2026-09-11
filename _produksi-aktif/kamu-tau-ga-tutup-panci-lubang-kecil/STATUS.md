@@ -35,7 +35,7 @@
   - `G2 konten final + metadata:` disetujui 2026-09-11 — publish-prep + final-content + arsip (`setuju_g2`)
   - `G3 merge:` menunggu — akan jadi 1 PR akhir (Channel+Model+Konten) tanpa auto-merge
 - **Commit terakhir:** `29437ed` — Tahap 5 Generate
-- **PR terkait:** belum dibuat — akan dibuat setelah G2 konten final
+- **PR terkait:** PR #41 OPEN tanpa auto-merge — https://github.com/With-AI-Agent/Pembangun-Sistem/pull/41 — Channel baru Kamu Tau Ga? + Model Narasi 60 Detik + Konten pertama tutup panci lubang kecil
 - **Pekerjaan belum tersimpan:** Tidak ada
 - **Risiko atau blocker:** Tidak ada
 - **Waktu pembaruan:** 2026-09-11
