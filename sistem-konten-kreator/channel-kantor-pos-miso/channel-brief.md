@@ -16,7 +16,7 @@
 
 - [x] Semua bagian wajib di bawah terisi (tidak ada placeholder `[...]` tersisa)
 - [x] Semua pertanyaan di checklist konsistensi (bagian 4) sudah dijawab
-- [ ] Setiap elemen visual yang ditandai wajib sudah berstatus `Reference-Ready` — **belum**, 4 elemen wajib (miso, kota-kanala, props-kantor-pos-miso, palet-gaya-catok) akan dibangun via `04_CHARACTER_BUILDER_KIT.md` di sesi ini
+- [x] Setiap elemen visual yang ditandai wajib sudah berstatus `Reference-Ready` — 4 elemen (miso, kota-kanala, props-kantor-pos-miso, palet-gaya-catok) dibangun via `04_CHARACTER_BUILDER_KIT.md` 2026-09-11: 9 acuan PNG lolos audit visual, 3 regen karena temuan audit (merek/topi/teks) — detail `konsistensi-visual/CATATAN-ASSET.md`
 - [x] `arsip-naskah/indeks.md` dan `arsip-naskah/indeks-karakter.md` sudah dibuat (ada, keduanya kosong karena channel baru)
 - [ ] Sudah `Merged` ke `main`
 
@@ -129,3 +129,4 @@ Folder `arsip-naskah/` sudah dibuat bersama brief ini berisi `indeks.md` (kosong
 | 2026-09-11 | Ritme 1x/minggu; batas keras: tanpa kematian/kekerasan hewan; sedih boleh asal ending hangat | Pilihan pemilik (`1x_lembut`) |
 | 2026-09-11 | Bank Konsistensi Visual lengkap 4 elemen (miso, kota-kanala, props, palet-gaya) — Reference-Ready menyusul di sesi ini | Permintaan pemilik (`karakter_semua`) |
 | 2026-09-11 | G2 Approved — Channel Brief v1 dikunci (termasuk aturan bersuara Miso & nama Kota Kanala) | Pemilik setuju via ask_user `setuju_g2` 2026-09-11 — interpretasi "tergantung keadaan" diterima apa adanya |
+| 2026-09-11 | Bank Konsistensi Visual 4 elemen Reference-Ready (9 PNG + CATATAN-ASSET) | Tahap 2 kit selesai; 3 file diregenerasi atas temuan audit agen (teks merek, plang terbaca, topi non-identitas) — G1 aset `ikut_terbaik` pemilik |
