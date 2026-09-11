@@ -29,7 +29,7 @@
 
 ## S2 — Detail Benda & Karakter Tipe B (8-20 detik)
 
-- **Bagian naskah terkait:** "Konon, nenek itu datang sebelum lapak lain dibuka. Rambut putih dikonde. Selendang batik cokelat. Payung biru pudar di dua sisi." (22 kata)
+- **Bagian naskah terkait:** "Konon, nenek itu datang sebelum lapak lain dibuka. Rambut putih dikonde. Selendang batik cokelat. Payung biru pudar di dua sisi." (20 kata — koreksi review PR #39 putaran 1: sebelumnya tertulis 22 kata, actual wc -w = 20)
 - **Deskripsi visual:** Payung biru pudar terbuka di sudut pasar gelap, selendang batik cokelat terlihat digulung di bahu sosok dari belakang/samping (wajah tidak detail, sesuai aturan channel). Rambut putih dikonde rendah terlihat samar. Keranjang anyam di lengan.
 - **Prompt generate:**
   ```
@@ -140,15 +140,15 @@
 | Segmen | Kata | Estimasi ucapan @130 wpm | Jeda | Total |
 |---|---|---:|---:|---:|
 | S1 Hook | 17 | 7,85 dtk | 0,5 | 8,35 |
-| S2 Detail | 22 | 10,15 | 0,5 | 10,65 |
+| S2 Detail | 20 | 9,23 | 0,5 | 9,73 |
 | S3 Kebiasaan | 20 | 9,23 | 0,5 | 9,73 |
 | S4 Penanda | 10 | 4,62 | 0,5 | 5,12 |
 | S5 Pasar kosong | 23 | 10,62 | 0,5 | 11,12 |
 | S6 Aksi jual & lipat | 18 | 8,31 | 0,5 | 8,81 |
 | S7 Penutup | 23 | 10,62 | — | 10,62 |
-| **Total** | **133 → 131 actual** | **61,38 → 60,46** | **3,0 (6 jeda)** | **64,4 → 63,46** |
+| **Total** | **131** | **60,46** | **3,0 (6 jeda)** | **63,46** |
 
-Catatan: total kata actual 131 (wc -w), estimasi 60,46 + 3 = 63,46 dtk — dalam target Model Brief 55-65 dtk secara estimasi, belum pengukuran audio nyata.
+Catatan: total kata actual 131 (wc -w), estimasi 60,46 + 3 = 63,46 dtk — dalam target Model Brief 55-65 dtk secara estimasi, belum pengukuran audio nyata. Koreksi review PR #39 putaran 1: S2 sebelumnya tertulis 22 kata (total 133), actual 20 kata (total 131) — tabel ini dikoreksi; catatan lama "133 → 131 actual" dipertahankan di git history sebagai jejak, tidak dihapus.
 
 ## Checklist Tahap 4 (sesuai pipeline)
 

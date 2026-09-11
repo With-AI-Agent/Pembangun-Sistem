@@ -5,7 +5,7 @@
 - **Tanggal produksi:** 2026-09-10
 - **Branch produksi:** `arena/01a089b8-pembangun-sistem`
 - **Judul kerja:** Melati Terakhir di Pasar Kosong
-- **Judul tayang resmi yang diusulkan:** "Melati Terakhir di Pasar yang Mulai Kosong" (Opsi 1 dari 5 opsi di publish-prep.md — menunggu G2 konten final)
+- **Judul tayang resmi yang diusulkan:** "Melati Terakhir di Pasar yang Mulai Kosong" (Opsi 1 dari 5 opsi di publish-prep.md — **G2 disetujui 2026-09-10**, G3 ditunda PR #39 OPEN — koreksi review putaran 1)
 - **Naskah final:** 131 kata, 63,46 dtk estimasi (60,46 + 3 dtk jeda), wc -w = 131, tempo 130 kata/menit
 - **Topik singkat:** melati terakhir sebagai penanda waktu pasar tutup; payung biru dilipat sebelum tengah hari di sudut pasar yang mulai kosong karena pindah
 

@@ -4,10 +4,10 @@
 - **Model konten:** Narasi 60 Detik v1 — 131 kata, 63,46 dtk estimasi, 7 segmen
 - **Judul kerja:** Melati Terakhir di Pasar Kosong
 - **Judul tayang resmi yang diusulkan:** "Melati Terakhir di Pasar yang Mulai Kosong" (Opsi 1 dari publish-prep.md)
-- **Status:** `ready-for-review` — menunggu G2 konten final + metadata dan G3 merge
+- **Status:** `ready-for-review` — **G2 konten final + metadata disetujui 2026-09-10**, G3 merge ditunda (PR #39 OPEN tanpa auto-merge) — koreksi review PR #39 putaran 1
 - **Tanggal produksi:** 2026-09-10
 - **Naskah final terkunci:** `naskah-draft.md` — G1+G2 disetujui 2026-09-10 — 131 kata
-- **Breakdown terkunci:** `breakdown-output.md` — G1+G2 disetujui 2026-09-10 — 7 segmen
+- **Breakdown terkunci:** `breakdown-output.md` — G1+G2 disetujui 2026-09-10 — 7 segmen (S2 koreksi 22→20 kata, total 131)
 - **Assets:** 7 JPG b-roll — G1 disetujui 2026-09-10 — 1,7 MB — hash tercatat di CATATAN-ASSET.md
 
 ---
@@ -57,7 +57,7 @@ Tidak ada yang mencatat kapan pasar tutup.
 | Segmen | Kata | Visual | File asset |
 |---|---|---|---|
 | S1 Hook (0-8 dtk) | 17 | Close-up keranjang anyam melati putih | S1-hook-keranjang-melati.jpg |
-| S2 Detail karakter (8-20) | 22 | Payung biru pudar sudut gelap, selendang batik cokelat, rambut putih dikonde dari belakang tanpa wajah | S2-payung-biru-sudut-gelap.jpg |
+| S2 Detail karakter (8-20) | 20 | Payung biru pudar sudut gelap, selendang batik cokelat, rambut putih dikonde dari belakang tanpa wajah | S2-payung-biru-sudut-gelap.jpg |
 | S3 Kebiasaan menyusun (20-35) | 20 | Tangan tua menyusun melati satu per satu | S3-tangan-menyusun-melati.jpg |
 | S4 Penanda waktu (35-42) | 10 | Wide sudut pasar melati masih ada = pasar belum tutup | S4-sudut-pasar-melati-masih-ada.jpg |
 | S5 Pasar mulai kosong (42-52) | 23 | Deretan lapak kosong, hanya satu genggam terakhir | S5-lapak-kosong-satu-genggam-terakhir.jpg |
@@ -114,13 +114,15 @@ Peran dalam konten ini: tokoh yang diceritakan — subjek pandangan narator; pin
 - [x] Assets ada dan G1 disetujui
 - [x] Publish prep ada (judul 5 opsi, caption lengkap Persona & Voice, hashtag, thumbnail konsep tanpa clickbait)
 - [x] Final content ada (assembly notes + ringkasan)
-- [ ] Langkah penutup WAJIB 1,2,2b,4 belum dilakukan — akan dilakukan sebelum G2+G3 sesuai pipeline (pindahkan naskah final ke arsip, update indeks.md, update indeks-karakter.md, buat metadata reproducibility)
-- [ ] Verifikasi file arsip ada di branch sebelum hapus folder produksi (syarat langkah 5)
+- [x] Langkah penutup WAJIB 1,2,2b,4 selesai — G2 disetujui 2026-09-10: arsip naskah + indeks.md + indeks-karakter.md + metadata reproducibility
+- [x] Verifikasi file arsip ada di branch (PR #39 diff) — G2 disetujui, G3 ditunda PR tetap OPEN — koreksi review putaran 1
 
 ---
 
-## Next
+## Next — UPDATE koreksi review PR #39 putaran 1
 
-- Lakukan langkah penutup WAJIB 1,2,2b,4 (pindahkan naskah final ke arsip, update indeks, update indeks-karakter, buat metadata)
-- Minta G2 konten final + metadata dan G3 merge ke pemilik (dua pertanyaan terpisah)
-- Setelah G2+G3 disetujui dan PR merged, verifikasi file arsip ada di main + konfirmasi download pemilik, baru hapus folder produksi (syarat pipeline langkah 5)
+- G2 konten final + metadata disetujui 2026-09-10 via ask_user `setuju_g2` — STATUS.md + LOG_SESI sudah mencatat
+- G3 merge ditunda via `tunda_g3` — PR #39 tetap OPEN tanpa auto-merge
+- Koreksi T-1 angka S2 22→20, total tetap 131 kata (S2 dikoreksi) sudah diterapkan di breakdown + final-content
+- Koreksi T-2 body PR akan rewrite via API dengan 20 path eksplisit + inline refs
+- Koreksi T-3 status gerbang stale: final-content + metadata + arsip sudah update G2 disetujui
