@@ -3,8 +3,8 @@
 - **Status:** `ready-for-review`
 - **Channel:** `channel-kamu-tau-ga`
 - **Model konten:** `narasi-60-detik` — Narasi 60 Detik (Alur Kustom: Tahap 0 Riset + 1-6)
-- **Tahap terakhir selesai:** `Tahap 6 Assembly & Publish Prep — selesai + G2 konten final Approved`
-- **Tahap berikutnya:** `G3 merge PR akhir`
+- **Tahap terakhir selesai:** `Tahap 6 Assembly & Publish Prep — selesai + G2 konten final Approved + G3 ditunda`
+- **Tahap berikutnya:** `G3 merge PR #41 — ditunda pemilik, folder produksi dipertahankan`
 - **Output resmi:**
   - `SUMBER.md` — ada, 3 sumber terverifikasi + 1 pendukung — diarsipkan ke `2026-09-11-...-sumber.md`
   - `ideation.md` — ada, 4 opsi angle, Opsi 1 terpilih G1 2026-09-11
@@ -33,7 +33,7 @@
   - `G2 breakdown:` disetujui 2026-09-11 — 6 segmen dikunci (`setuju_g1_g2`)
   - `G1 Tahap 5:` disetujui 2026-09-11 — 6 JPG b-roll diterima (`setuju_lanjut`)
   - `G2 konten final + metadata:` disetujui 2026-09-11 — publish-prep + final-content + arsip (`setuju_g2`)
-  - `G3 merge:` menunggu — akan jadi 1 PR akhir (Channel+Model+Konten) tanpa auto-merge
+  - `G3 merge:` ditunda 2026-09-11 — PR #41 tetap OPEN tanpa auto-merge (`tunda_g3`)
 - **Commit terakhir:** `29437ed` — Tahap 5 Generate
 - **PR terkait:** PR #41 OPEN tanpa auto-merge — https://github.com/With-AI-Agent/Pembangun-Sistem/pull/41 — Channel baru Kamu Tau Ga? + Model Narasi 60 Detik + Konten pertama tutup panci lubang kecil
 - **Pekerjaan belum tersimpan:** Tidak ada
