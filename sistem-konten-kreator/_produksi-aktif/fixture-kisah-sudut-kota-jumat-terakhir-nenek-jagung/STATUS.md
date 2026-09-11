@@ -22,8 +22,8 @@
   - `G1 Tahap 4:` disetujui 2026-09-11
   - `G2 breakdown:` disetujui 2026-09-11
   - `G1 Tahap 5:` disetujui 2026-09-11
-  - `G2 konten final + metadata:` belum
-  - `G3 merge:` belum
+  - `G2 konten final + metadata:` disetujui 2026-09-11
+  - `G3 merge:` ditunda 2026-09-11 — PR #40 OPEN, tanpa auto-merge
 - **Commit terakhir:** `1e7c29a` — Tahap 6 Assembly
 - **PR terkait:** https://github.com/With-AI-Agent/Pembangun-Sistem/pull/40 — OPEN, tanpa auto-merge
 - **Pekerjaan belum tersimpan:** Tidak ada

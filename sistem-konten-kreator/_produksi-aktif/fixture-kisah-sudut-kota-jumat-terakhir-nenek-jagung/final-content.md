@@ -1,6 +1,6 @@
 # Final content — Jumat Tanpa Jagung di Sudut Stasiun
 
-**Status:** ready-for-review — menunggu G2 konten final + metadata, lalu G3 merge  
+**Status:** ready-for-review — G2 disetujui 2026-09-11, G3 ditunda  
 **Naskah:** 145 kata, G2 naskah 2026-09-11  
 **Segmen:** S1 20, S2 31, S3 28, S4 6, S5 13, S6 16, S7 31  
 **Asset:** 7 JPG 941×1672, hash di assets/CATATAN-ASSET.md  
