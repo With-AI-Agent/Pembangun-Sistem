@@ -3,8 +3,8 @@
 - **Status:** `ready-for-review`
 - **Channel:** `channel-fixture-kisah-sudut-kota` (Kisah Sudut Kota, fixture)
 - **Model konten:** Narasi 60 Detik v1 (`model-konten/narasi-60-detik/brief.md`)
-- **Tahap terakhir selesai:** Tahap 6 Assembly (G2+G3 belum)
-- **Tahap berikutnya:** G2 konten final + metadata → G3 merge PR
+- **Tahap terakhir selesai:** Tahap 6 Assembly (G2 disetujui, G3 ditunda)
+- **Tahap berikutnya:** G3 merge PR (menunggu keputusan pemilik)
 - **Output resmi:**
   - `ideation.md`
   - `konsep-angle.md`
@@ -24,7 +24,7 @@
   - `G1 Tahap 5:` disetujui 2026-09-11
   - `G2 konten final + metadata:` disetujui 2026-09-11
   - `G3 merge:` ditunda 2026-09-11 — PR #40 OPEN, tanpa auto-merge
-- **Commit terakhir:** `1e7c29a` — Tahap 6 Assembly
+- **Commit terakhir:** koreksi review PR #40 putaran 1 (T-1 Jumlah 54→55, T-2 header G2 disetujui G3 ditunda) — sha = `git rev-parse HEAD` pada branch `arena/01a08e0c-pembangun-sistem` (hindari pointer yang basi karena amend)
 - **PR terkait:** https://github.com/With-AI-Agent/Pembangun-Sistem/pull/40 — OPEN, tanpa auto-merge
 - **Pekerjaan belum tersimpan:** Tidak ada
 - **Risiko atau blocker:** Brand Core masih template kosong (gap sadar). indeks-karakter.md baru dibuat kosong. Sudut pandang channel: sudut yang bercerita, orang menempel — risiko dramatisasi “pahlawan kecil”.
