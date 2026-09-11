@@ -3,13 +3,13 @@
 - **Status:** `in-progress`
 - **Channel:** `channel-kamu-tau-ga`
 - **Model konten:** `narasi-60-detik` — Narasi 60 Detik (Alur Kustom: Tahap 0 Riset + 1-6)
-- **Tahap terakhir selesai:** `Tahap 2 Konsep & Angle — selesai (Opsi 1 terpilih)`
-- **Tahap berikutnya:** `Tahap 3 Naskah/Script`
+- **Tahap terakhir selesai:** `Tahap 3 Naskah/Script — selesai (142 kata, 58,7 detik estimasi)`
+- **Tahap berikutnya:** `Tahap 4 Breakdown Output (segmen narasi)`
 - **Output resmi:**
   - `SUMBER.md` — ada, 3 sumber terverifikasi + 1 pendukung
-  - `ideation.md` — ada, 4 opsi angle, Opsi 1 rekomendasi
-  - `konsep-angle.md` — ada, struktur fleksibel hook+konteks+penutup, 135-145 kata estimasi
-  - `naskah-draft.md` — belum
+  - `ideation.md` — ada, 4 opsi angle, Opsi 1 terpilih G1 2026-09-11
+  - `konsep-angle.md` — ada, struktur fleksibel, G1 2026-09-11
+  - `naskah-draft.md` — ada, 142 kata, 58,7 detik, Persona & Voice check, Fact-check gate lolos
   - `breakdown-output.md` — belum
   - `assets/` — belum (akan 6 JPG b-roll)
 - **Sumber konteks yang dibaca:**
@@ -22,11 +22,11 @@
 - **Sumber eksternal dipakai:** ada — `SUMBER.md` dibuat, klaim terverifikasi: 3 sumber, semua `Terverifikasi`, klaim utama: lubang kecil = steam vent untuk kontrol tekanan/uap, cegah tutup bergetar/meluap, kurangi kondensasi
 - **Keputusan baru:** Judul kerja "Kenapa Tutup Panci Ada Lubang Kecil" — dipilih dari Bank Ide Awal (tutup panci berlubang) — angle: lubang kecil bukan cacat, tapi penyelamat
 - **Approval yang sudah diberikan:**
-  - `G1 Tahap 0:` disetujui 2026-09-11 — riset awal selesai (implisit dari kelanjutan, akan konfirmasi formal di G1 Tahap 1+2)
-  - `G1 Tahap 1:` menunggu — Opsi 1 rekomendasi (lubang bukan cacat, tapi penyelamat)
-  - `G1 Tahap 2:` menunggu — kerangka hook+konteks+penutup masa kini
-  - `G1 Tahap 3:` belum
-  - `G2 naskah final:` belum
+  - `G1 Tahap 0:` disetujui 2026-09-11 — riset awal selesai (implisit, 3 sumber terverifikasi)
+  - `G1 Tahap 1:` disetujui 2026-09-11 — Opsi 1 terpilih (`setuju_opsi1`)
+  - `G1 Tahap 2:` disetujui 2026-09-11 — kerangka hook+konteks+penutup (`setuju_opsi1`)
+  - `G1 Tahap 3:` menunggu — naskah 142 kata siap review
+  - `G2 naskah final:` menunggu — fact-check lolos, menunggu kunci
   - `G1 Tahap 4:` belum
   - `G2 breakdown:` belum
   - `G1 Tahap 5:` belum
