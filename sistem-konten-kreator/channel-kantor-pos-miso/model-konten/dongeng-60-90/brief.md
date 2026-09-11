@@ -9,8 +9,8 @@
 - [x] **Draft** — digali via Model Konten Discovery 2026-09-11_3 (1 putaran)
 - [x] **Reviewed** — dibaca lengkap oleh pemilik via viewer, 2026-09-11
 - [x] **Approved** — isi dikunci lewat gerbang **G2** 2026-09-11 (`setuju_g2`)
-- [ ] **Merged** — PR belum G3
-- [ ] **Operational** — menunggu Merged + Channel Brief induk Operational
+- [x] **Merged** — PR #44 MERGED 2026-09-11 — merge commit `1a8e2df`
+- [x] **Operational** — Merged + induk `channel-kantor-pos-miso` naik Operational bersamaan 2026-09-11
 
 **Checklist Kelengkapan — syarat naik ke `Operational`:**
 
@@ -18,8 +18,8 @@
 - [x] Bentuk detail tiap tahap pipeline untuk model ini ditetapkan (unit kerja = shot/gambar ilustrasi)
 - [x] Override terhadap Channel Brief dinyatakan eksplisit (tidak ada override Persona/Voice — hanya detail eksekusi)
 - [x] Gerbang tambahan: tidak menambah; G2/G3 bawaan kerangka standar tetap utuh
-- [ ] Channel Brief induknya berstatus `Operational` — saat ini `Approved`, naik setelah PR merged + Reference-Ready
-- [ ] Sudah `Merged` ke `main`
+- [x] Channel Brief induknya berstatus `Operational`
+- [x] Sudah `Merged` ke `main`
 
 **Versi:** `1` — **Terakhir diperbarui:** `2026-09-11`
 

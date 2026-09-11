@@ -9,8 +9,8 @@
 - [x] **Draft** — digali via Channel Discovery 2026-09-11_3 (2 putaran)
 - [x] **Reviewed** — dibaca lengkap oleh pemilik via viewer, 2026-09-11
 - [x] **Approved** — isi dikunci lewat gerbang **G2** 2026-09-11 (`setuju_g2`)
-- [ ] **Merged** — PR belum G3
-- [ ] **Operational** — menunggu Merged + dependency lengkap
+- [x] **Merged** — PR #44 MERGED 2026-09-11 `gh pr merge 44 --merge` — merge commit `1a8e2df` — G3 `setuju_g3` pemilik
+- [x] **Operational** — Merged + semua checklist tercentang (4 elemen Reference-Ready, arsip indeks ada) — berlaku sejak 2026-09-11
 
 **Checklist Kelengkapan — syarat naik ke `Operational`:**
 
