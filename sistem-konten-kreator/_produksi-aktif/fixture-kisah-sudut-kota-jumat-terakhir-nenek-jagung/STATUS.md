@@ -3,14 +3,14 @@
 - **Status:** `in-progress`
 - **Channel:** `channel-fixture-kisah-sudut-kota` (Kisah Sudut Kota, fixture)
 - **Model konten:** Narasi 60 Detik v1 (`model-konten/narasi-60-detik/brief.md`)
-- **Tahap terakhir selesai:** Tahap 4 Breakdown (7 segmen; G1+G2 Tahap 4 belum)
-- **Tahap berikutnya:** G1+G2 Tahap 4 → Tahap 5 Generate
+- **Tahap terakhir selesai:** Tahap 5 Generate (7 JPG; G1 Tahap 5 belum)
+- **Tahap berikutnya:** G1 Tahap 5 → Tahap 6 Assembly
 - **Output resmi:**
   - `ideation.md`
   - `konsep-angle.md`
   - `naskah-draft.md`
   - `breakdown-output.md`
-  - `assets/` — belum
+  - `assets/` — 7 JPG + CATATAN-ASSET.md
 - **Sumber konteks yang dibaca:** `_sistem/01_BRAND_CORE.md` (template kosong), `channel-brief.md` v1 Operational, `model-konten/narasi-60-detik/brief.md` v1 Operational, `_sistem/05_CONTENT_PRODUCTION_PIPELINE.md`, `_sistem/06_PROMPT_LIBRARY.md`, `arsip-naskah/indeks.md` (kosong), `arsip-naskah/indeks-karakter.md` (baru dibuat kosong — gap warisan)
 - **Sumber eksternal dipakai:** `Tidak ada`
 - **Keputusan baru:** tidak ada perubahan dokumen terkunci
@@ -19,8 +19,9 @@
   - `G1 Tahap 2:` disetujui 2026-09-11
   - `G1 Tahap 3:` disetujui 2026-09-11
   - `G2 naskah final:` disetujui 2026-09-11
-  - `G1 Tahap 4:` belum
-  - `G2 breakdown:` belum
+  - `G1 Tahap 4:` disetujui 2026-09-11
+  - `G2 breakdown:` disetujui 2026-09-11
+  - `G1 Tahap 5:` belum
   - `G3 merge:` belum
 - **Commit terakhir:** (akan diisi setelah commit tahap ini)
 - **PR terkait:** belum
