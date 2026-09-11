@@ -1,7 +1,7 @@
 # Indeks Karakter Tipe B — Kisah Sudut Kota (FIXTURE)
 
-> Dibuat 2026-09-11 karena gap warisan: file ini belum pernah ada. Format minimum dari `_sistem/03_TEMPLATE_CHANNEL_BRIEF.md` bagian 9. Kosong sampai ada karakter Tipe B diarsipkan di Tahap 6.
+> Dibuat 2026-09-11 karena gap warisan. Entri pertama ditambahkan di Tahap 6 konten Jumat Tanpa Jagung.
 
 | Nama/sebutan | Ciri ringkas | Konten pertama | Konten lain | Status |
 |---|---|---|---|---|
-| *(belum ada)* | | | | |
+| Nenek Penjual Jagung Rebus | rambut putih keabu-abuan; ikat kepala kain merah; gerobak jagung rebus; dari belakang/samping | `2026-09-11-jumat-tanpa-jagung-di-sudut-stasiun.md` | | `Tipe B` |

@@ -1,10 +1,10 @@
 # Status Produksi — Kisah Sudut Kota — Jumat Terakhir Nenek Jagung Rebus
 
-- **Status:** `in-progress`
+- **Status:** `ready-for-review`
 - **Channel:** `channel-fixture-kisah-sudut-kota` (Kisah Sudut Kota, fixture)
 - **Model konten:** Narasi 60 Detik v1 (`model-konten/narasi-60-detik/brief.md`)
-- **Tahap terakhir selesai:** Tahap 5 Generate (7 JPG; G1 Tahap 5 belum)
-- **Tahap berikutnya:** G1 Tahap 5 → Tahap 6 Assembly
+- **Tahap terakhir selesai:** Tahap 6 Assembly (G2+G3 belum)
+- **Tahap berikutnya:** G2 konten final + metadata → G3 merge PR
 - **Output resmi:**
   - `ideation.md`
   - `konsep-angle.md`
@@ -21,7 +21,8 @@
   - `G2 naskah final:` disetujui 2026-09-11
   - `G1 Tahap 4:` disetujui 2026-09-11
   - `G2 breakdown:` disetujui 2026-09-11
-  - `G1 Tahap 5:` belum
+  - `G1 Tahap 5:` disetujui 2026-09-11
+  - `G2 konten final + metadata:` belum
   - `G3 merge:` belum
 - **Commit terakhir:** (akan diisi setelah commit tahap ini)
 - **PR terkait:** belum
