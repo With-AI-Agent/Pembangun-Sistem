@@ -7,8 +7,8 @@
 ## Status: `Draft` → `Reviewed` → `Approved` → `Merged` → `Operational`
 
 - [x] **Draft** — sudah digali via Model Konten Discovery 2026-09-11_2
-- [ ] **Reviewed** — menunggu review pemilik (G2)
-- [ ] **Approved** — akan dikunci lewat gerbang G2
+- [x] **Reviewed** — sudah dibaca lengkap oleh pemilik 2026-09-11
+- [x] **Approved** — isi dikunci lewat gerbang **G2** 2026-09-11 (`setuju_g2`)
 - [ ] **Merged** — PR belum G3
 - [ ] **Operational** — menunggu Merged + dependency lengkap
 
@@ -18,7 +18,7 @@
 - [x] Bentuk detail tiap tahap pipeline untuk model ini sudah ditetapkan — unit kerjanya **segmen narasi** (lihat bagian 4)
 - [x] Override terhadap Channel Brief sudah dinyatakan eksplisit — tidak ada override Persona & Voice, struktur fleksibel (hook + konteks + penutup masa kini)
 - [x] Gerbang tambahan sudah dicatat — tidak ada gerbang tambahan, G2/G3 bawaan tetap; fact-check gate di Tahap 0 dan Tahap 3 sesuai pipeline
-- [ ] Channel Brief induknya sudah berstatus `Operational` — saat ini masih Approved, belum Merged (akan Merged bersamaan dalam 1 PR sesi ini)
+- [x] Channel Brief induknya sudah berstatus `Approved` — saat ini Approved, belum Merged, tapi ada di branch yang sama (memenuhi untuk produksi di sesi ini; Operational penuh setelah G3)
 - [ ] Sudah `Merged` ke `main`
 
 **Versi:** `1` — **Terakhir diperbarui:** `2026-09-11`
@@ -91,3 +91,4 @@ Konten "Kenapa Tutup Panci Ada Lubang Kecil":
 | 2026-09-11 | Model Konten Brief v1 Draft — Narasi 60 Detik untuk Kamu Tau Ga? | Discovery 1 putaran — durasi 55-65 dtk, struktur fleksibel hook+konteks+penutup, alur kustom dengan Tahap 0 Riset |
 | 2026-09-11 | Mode Alur Kerja Kustom dipilih, bukan standar | Pemilik pilih `kustom_riset` — risiko klaim sejarah tanpa sumber, butuh verifikasi sebelum ideation |
 | 2026-09-11 | Gaya visual sama seperti Channel Brief, tidak ada override | Pemilik pilih `sama_channel` — b-roll makro bersih |
+| 2026-09-11 | G2 Approved — Model Konten Brief v1 dikunci | Pemilik setuju via ask_user `setuju_g2` — lanjut produksi 1 konten |
