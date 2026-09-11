@@ -105,7 +105,7 @@
 
 | Nama Model Konten | Folder | Status |
 |---|---|---|
-| Narasi 60 Detik | `model-konten/narasi-60-detik/` | `Draft` — akan dibuat setelah Channel Brief G2 |
+| Narasi 60 Detik | `model-konten/narasi-60-detik/` | `Draft` — Model Konten Brief v1 Draft 2026-09-11, menunggu G2 |
 | Narasi 2-3 Menit (rencana) | `model-konten/narasi-2-3-menit/` | `Belum dibuat` — roadmap, tidak untuk sesi ini |
 
 ## 9. Arsip Naskah
