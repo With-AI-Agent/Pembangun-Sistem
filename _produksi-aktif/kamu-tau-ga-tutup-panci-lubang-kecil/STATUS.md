@@ -3,15 +3,15 @@
 - **Status:** `in-progress`
 - **Channel:** `channel-kamu-tau-ga`
 - **Model konten:** `narasi-60-detik` — Narasi 60 Detik (Alur Kustom: Tahap 0 Riset + 1-6)
-- **Tahap terakhir selesai:** `Tahap 3 Naskah/Script — selesai (142 kata, 58,7 detik estimasi)`
-- **Tahap berikutnya:** `Tahap 4 Breakdown Output (segmen narasi)`
+- **Tahap terakhir selesai:** `Tahap 4 Breakdown Output — selesai (6 segmen, 142 kata)`
+- **Tahap berikutnya:** `Tahap 5 Generate/Acquire Assets (6 JPG b-roll 9:16)`
 - **Output resmi:**
   - `SUMBER.md` — ada, 3 sumber terverifikasi + 1 pendukung
   - `ideation.md` — ada, 4 opsi angle, Opsi 1 terpilih G1 2026-09-11
   - `konsep-angle.md` — ada, struktur fleksibel, G1 2026-09-11
-  - `naskah-draft.md` — ada, 142 kata, 58,7 detik, Persona & Voice check, Fact-check gate lolos
-  - `breakdown-output.md` — belum
-  - `assets/` — belum (akan 6 JPG b-roll)
+  - `naskah-draft.md` — ada, 142 kata, 58,7 detik, G1+G2 2026-09-11
+  - `breakdown-output.md` — ada, 6 segmen narasi, 142 kata total, visual b-roll only, tanpa reference
+  - `assets/` — belum (akan 6 JPG b-roll 9:16)
 - **Sumber konteks yang dibaca:**
   - `sistem-konten-kreator/channel-kamu-tau-ga/channel-brief.md` (Approved v1)
   - `sistem-konten-kreator/channel-kamu-tau-ga/model-konten/narasi-60-detik/brief.md` (Approved v1)
@@ -20,20 +20,20 @@
   - `sistem-konten-kreator/channel-kamu-tau-ga/arsip-naskah/indeks.md` (kosong — cek pengulangan: belum ada topik serupa)
   - `sistem-konten-kreator/channel-kamu-tau-ga/arsip-naskah/indeks-karakter.md` (kosong — faceless, tidak ada karakter)
 - **Sumber eksternal dipakai:** ada — `SUMBER.md` dibuat, klaim terverifikasi: 3 sumber, semua `Terverifikasi`, klaim utama: lubang kecil = steam vent untuk kontrol tekanan/uap, cegah tutup bergetar/meluap, kurangi kondensasi
-- **Keputusan baru:** Judul kerja "Kenapa Tutup Panci Ada Lubang Kecil" — dipilih dari Bank Ide Awal (tutup panci berlubang) — angle: lubang kecil bukan cacat, tapi penyelamat
+- **Keputusan baru:** Judul kerja "Kenapa Tutup Panci Ada Lubang Kecil" — Opsi 1 — angle lubang bukan cacat tapi penyelamat
 - **Approval yang sudah diberikan:**
-  - `G1 Tahap 0:` disetujui 2026-09-11 — riset awal selesai (implisit, 3 sumber terverifikasi)
+  - `G1 Tahap 0:` disetujui 2026-09-11 — riset awal selesai (3 sumber terverifikasi)
   - `G1 Tahap 1:` disetujui 2026-09-11 — Opsi 1 terpilih (`setuju_opsi1`)
   - `G1 Tahap 2:` disetujui 2026-09-11 — kerangka hook+konteks+penutup (`setuju_opsi1`)
-  - `G1 Tahap 3:` menunggu — naskah 142 kata siap review
-  - `G2 naskah final:` menunggu — fact-check lolos, menunggu kunci
-  - `G1 Tahap 4:` belum
-  - `G2 breakdown:` belum
+  - `G1 Tahap 3:` disetujui 2026-09-11 — naskah 142 kata siap (`setuju_g1_g2`)
+  - `G2 naskah final:` disetujui 2026-09-11 — 142 kata dikunci final (`setuju_g1_g2`)
+  - `G1 Tahap 4:` menunggu — breakdown 6 segmen siap review
+  - `G2 breakdown:` menunggu — kunci untuk generate asset
   - `G1 Tahap 5:` belum
   - `G2 konten final + metadata:` belum
   - `G3 merge:` belum
-- **Commit terakhir:** `e84bad6` — G2 Approved Model Konten
+- **Commit terakhir:** `2fb771e` — Tahap 3 Naskah
 - **PR terkait:** belum dibuat — akan jadi 1 PR akhir (Channel+Model+Konten) tanpa auto-merge
 - **Pekerjaan belum tersimpan:** Tidak ada
-- **Risiko atau blocker:** Tidak ada — klaim sudah terverifikasi 2+ sumber independen
+- **Risiko atau blocker:** Tidak ada
 - **Waktu pembaruan:** 2026-09-11
