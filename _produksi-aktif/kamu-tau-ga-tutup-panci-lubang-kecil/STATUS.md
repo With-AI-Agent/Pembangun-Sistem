@@ -3,15 +3,15 @@
 - **Status:** `in-progress`
 - **Channel:** `channel-kamu-tau-ga`
 - **Model konten:** `narasi-60-detik` — Narasi 60 Detik (Alur Kustom: Tahap 0 Riset + 1-6)
-- **Tahap terakhir selesai:** `Tahap 4 Breakdown Output — selesai (6 segmen, 142 kata)`
-- **Tahap berikutnya:** `Tahap 5 Generate/Acquire Assets (6 JPG b-roll 9:16)`
+- **Tahap terakhir selesai:** `Tahap 5 Generate/Acquire Assets — selesai (6 JPG b-roll 9:16, 799K)`
+- **Tahap berikutnya:** `Tahap 6 Assembly & Publish Prep`
 - **Output resmi:**
   - `SUMBER.md` — ada, 3 sumber terverifikasi + 1 pendukung
   - `ideation.md` — ada, 4 opsi angle, Opsi 1 terpilih G1 2026-09-11
   - `konsep-angle.md` — ada, struktur fleksibel, G1 2026-09-11
   - `naskah-draft.md` — ada, 142 kata, 58,7 detik, G1+G2 2026-09-11
-  - `breakdown-output.md` — ada, 6 segmen narasi, 142 kata total, visual b-roll only, tanpa reference
-  - `assets/` — belum (akan 6 JPG b-roll 9:16)
+  - `breakdown-output.md` — ada, 6 segmen narasi, 142 kata total, visual b-roll only, G1+G2 2026-09-11
+  - `assets/` — ada, 6 JPG b-roll 768x1376 9:16 ~799K + CATATAN-ASSET.md
 - **Sumber konteks yang dibaca:**
   - `sistem-konten-kreator/channel-kamu-tau-ga/channel-brief.md` (Approved v1)
   - `sistem-konten-kreator/channel-kamu-tau-ga/model-konten/narasi-60-detik/brief.md` (Approved v1)
@@ -27,9 +27,9 @@
   - `G1 Tahap 2:` disetujui 2026-09-11 — kerangka hook+konteks+penutup (`setuju_opsi1`)
   - `G1 Tahap 3:` disetujui 2026-09-11 — naskah 142 kata siap (`setuju_g1_g2`)
   - `G2 naskah final:` disetujui 2026-09-11 — 142 kata dikunci final (`setuju_g1_g2`)
-  - `G1 Tahap 4:` menunggu — breakdown 6 segmen siap review
-  - `G2 breakdown:` menunggu — kunci untuk generate asset
-  - `G1 Tahap 5:` belum
+  - `G1 Tahap 4:` disetujui 2026-09-11 — breakdown 6 segmen siap (`setuju_g1_g2`)
+  - `G2 breakdown:` disetujui 2026-09-11 — 6 segmen dikunci (`setuju_g1_g2`)
+  - `G1 Tahap 5:` menunggu — 6 JPG b-roll siap review
   - `G2 konten final + metadata:` belum
   - `G3 merge:` belum
 - **Commit terakhir:** `2fb771e` — Tahap 3 Naskah
