@@ -24,8 +24,8 @@
   - `G1 Tahap 5:` disetujui 2026-09-11
   - `G2 konten final + metadata:` belum
   - `G3 merge:` belum
-- **Commit terakhir:** (akan diisi setelah commit tahap ini)
-- **PR terkait:** belum
+- **Commit terakhir:** `1e7c29a` — Tahap 6 Assembly
+- **PR terkait:** https://github.com/With-AI-Agent/Pembangun-Sistem/pull/40 — OPEN, tanpa auto-merge
 - **Pekerjaan belum tersimpan:** Tidak ada
 - **Risiko atau blocker:** Brand Core masih template kosong (gap sadar). indeks-karakter.md baru dibuat kosong. Sudut pandang channel: sudut yang bercerita, orang menempel — risiko dramatisasi “pahlawan kecil”.
 - **Waktu pembaruan:** 2026-09-11
