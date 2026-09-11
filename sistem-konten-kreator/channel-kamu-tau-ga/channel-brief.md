@@ -9,8 +9,8 @@
 - [x] **Draft** — sudah digali via Channel Discovery 2026-09-11_2
 - [x] **Reviewed** — sudah dibaca lengkap oleh pemilik, 2026-09-11
 - [x] **Approved** — isi dikunci lewat gerbang **G2** 2026-09-11 (`setuju_g2`)
-- [ ] **Merged** — PR belum G3
-- [ ] **Operational** — menunggu Merged + dependency lengkap
+- [x] **Merged** — PR #41 MERGED 2026-09-11 via `gh pr merge 41 --merge` — merge commit `290ac1b` — G3 `setuju_g3` final `merge_sekarang` setelah review HIJAU
+- [x] **Operational** — sudah `Merged` dan semua dependency wajib ada (arsip indeks ada, tidak ada elemen visual wajib)
 
 **Checklist Kelengkapan — syarat naik ke `Operational`:**
 
@@ -18,7 +18,7 @@
 - [x] Semua pertanyaan di checklist konsistensi (bagian 4) sudah dijawab
 - [x] Setiap elemen visual yang ditandai wajib sudah berstatus `Reference-Ready` — tidak ada elemen visual yang ditandai wajib untuk channel ini (semua tidak berlaku — lihat bagian 4)
 - [x] `arsip-naskah/indeks.md` dan `arsip-naskah/indeks-karakter.md` sudah dibuat (keduanya ada, indeks-karakter kosong format minimum karena tanpa tokoh)
-- [ ] Sudah `Merged` ke `main`
+- [x] Sudah `Merged` ke `main` — PR #41 MERGED 2026-09-11 commit `290ac1b`
 
 **Versi:** `1` — **Terakhir diperbarui:** `2026-09-11` — **Diwarisi dari:** `_sistem/01_BRAND_CORE.md`
 
@@ -105,7 +105,7 @@
 
 | Nama Model Konten | Folder | Status |
 |---|---|---|
-| Narasi 60 Detik | `model-konten/narasi-60-detik/` | `Approved` — Model Konten Brief v1 G2 2026-09-11, menunggu G3 |
+| Narasi 60 Detik | `model-konten/narasi-60-detik/` | `Operational` — Model Konten Brief v1 G2 2026-09-11, G3 MERGED 2026-09-11 PR #41 |
 | Narasi 2-3 Menit (rencana) | `model-konten/narasi-2-3-menit/` | `Belum dibuat` — roadmap, tidak untuk sesi ini |
 
 ## 9. Arsip Naskah
@@ -120,3 +120,4 @@ Naskah final disimpan di `arsip-naskah/` folder ini. `indeks.md` (judul/tanggal/
 | 2026-09-11 | Semua elemen Konsistensi Visual ditandai "tidak berlaku" | Permintaan eksplisit pemilik + rekomendasi terbaik untuk faceless total — ciri visual cukup deskriptif di bagian 5 |
 | 2026-09-11 | Persona & Voice ditetapkan: penasaran ringan, witty, 140-150 kata/menit, hook pertanyaan 3 detik | Pilihan pemilik di Discovery putaran 1 — beda dari fixture narasi-sejarah yang hangat melankolis 130 kata/menit |
 | 2026-09-11 | G2 Approved — Channel Brief v1 dikunci | Pemilik setuju via ask_user `setuju_g2` — lanjut ke Model Konten Discovery |
+| 2026-09-11 | G3 MERGED PR #41 — Channel Brief v1 Operational | Review independen HIJAU tanpa BLOCKER, G3 `merge_sekarang` — merge commit `290ac1b` — validasi PASS |

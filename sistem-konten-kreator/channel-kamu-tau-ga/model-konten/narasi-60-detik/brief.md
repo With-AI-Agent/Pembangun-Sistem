@@ -9,8 +9,8 @@
 - [x] **Draft** — sudah digali via Model Konten Discovery 2026-09-11_2
 - [x] **Reviewed** — sudah dibaca lengkap oleh pemilik 2026-09-11
 - [x] **Approved** — isi dikunci lewat gerbang **G2** 2026-09-11 (`setuju_g2`)
-- [ ] **Merged** — PR belum G3
-- [ ] **Operational** — menunggu Merged + dependency lengkap
+- [x] **Merged** — PR #41 MERGED 2026-09-11 via `gh pr merge 41 --merge` — merge commit `290ac1b` — G3 `setuju_g3` final `merge_sekarang` setelah review HIJAU
+- [x] **Operational** — sudah `Merged` dan semua dependency wajib ada (Channel Brief Operational, unit segmen narasi ditetapkan)
 
 **Checklist Kelengkapan — syarat naik ke `Operational`:**
 
@@ -18,8 +18,8 @@
 - [x] Bentuk detail tiap tahap pipeline untuk model ini sudah ditetapkan — unit kerjanya **segmen narasi** (lihat bagian 4)
 - [x] Override terhadap Channel Brief sudah dinyatakan eksplisit — tidak ada override Persona & Voice, struktur fleksibel (hook + konteks + penutup masa kini)
 - [x] Gerbang tambahan sudah dicatat — tidak ada gerbang tambahan, G2/G3 bawaan tetap; fact-check gate di Tahap 0 dan Tahap 3 sesuai pipeline
-- [x] Channel Brief induknya sudah berstatus `Approved` — saat ini Approved, belum Merged, tapi ada di branch yang sama (memenuhi untuk produksi di sesi ini; Operational penuh setelah G3)
-- [ ] Sudah `Merged` ke `main`
+- [x] Channel Brief induknya sudah berstatus `Operational` — PR #41 MERGED 2026-09-11
+- [x] Sudah `Merged` ke `main` — PR #41 MERGED commit `290ac1b`
 
 **Versi:** `1` — **Terakhir diperbarui:** `2026-09-11`
 
@@ -92,3 +92,4 @@ Konten "Kenapa Tutup Panci Ada Lubang Kecil":
 | 2026-09-11 | Mode Alur Kerja Kustom dipilih, bukan standar | Pemilik pilih `kustom_riset` — risiko klaim sejarah tanpa sumber, butuh verifikasi sebelum ideation |
 | 2026-09-11 | Gaya visual sama seperti Channel Brief, tidak ada override | Pemilik pilih `sama_channel` — b-roll makro bersih |
 | 2026-09-11 | G2 Approved — Model Konten Brief v1 dikunci | Pemilik setuju via ask_user `setuju_g2` — lanjut produksi 1 konten |
+| 2026-09-11 | G3 MERGED PR #41 — Model Konten Brief v1 Operational | Review HIJAU tanpa BLOCKER, G3 `merge_sekarang` — merge commit `290ac1b` — validasi PASS |
