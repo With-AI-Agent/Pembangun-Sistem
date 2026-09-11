@@ -3,10 +3,12 @@
 - **Status:** `in-progress`
 - **Channel:** `channel-kamu-tau-ga`
 - **Model konten:** `narasi-60-detik` — Narasi 60 Detik (Alur Kustom: Tahap 0 Riset + 1-6)
-- **Tahap terakhir selesai:** `Tahap 0 Riset Awal & Verifikasi Fakta — selesai`
-- **Tahap berikutnya:** `Tahap 1 Ideation`
+- **Tahap terakhir selesai:** `Tahap 2 Konsep & Angle — selesai (Opsi 1 terpilih)`
+- **Tahap berikutnya:** `Tahap 3 Naskah/Script`
 - **Output resmi:**
-  - `SUMBER.md` — ada, 3 sumber terverifikasi
+  - `SUMBER.md` — ada, 3 sumber terverifikasi + 1 pendukung
+  - `ideation.md` — ada, 4 opsi angle, Opsi 1 rekomendasi
+  - `konsep-angle.md` — ada, struktur fleksibel hook+konteks+penutup, 135-145 kata estimasi
   - `naskah-draft.md` — belum
   - `breakdown-output.md` — belum
   - `assets/` — belum (akan 6 JPG b-roll)
@@ -20,9 +22,9 @@
 - **Sumber eksternal dipakai:** ada — `SUMBER.md` dibuat, klaim terverifikasi: 3 sumber, semua `Terverifikasi`, klaim utama: lubang kecil = steam vent untuk kontrol tekanan/uap, cegah tutup bergetar/meluap, kurangi kondensasi
 - **Keputusan baru:** Judul kerja "Kenapa Tutup Panci Ada Lubang Kecil" — dipilih dari Bank Ide Awal (tutup panci berlubang) — angle: lubang kecil bukan cacat, tapi penyelamat
 - **Approval yang sudah diberikan:**
-  - `G1 Tahap 0:` disetujui 2026-09-11 — riset awal selesai, lanjut Ideation
-  - `G1 Tahap 1:` belum
-  - `G1 Tahap 2:` belum
+  - `G1 Tahap 0:` disetujui 2026-09-11 — riset awal selesai (implisit dari kelanjutan, akan konfirmasi formal di G1 Tahap 1+2)
+  - `G1 Tahap 1:` menunggu — Opsi 1 rekomendasi (lubang bukan cacat, tapi penyelamat)
+  - `G1 Tahap 2:` menunggu — kerangka hook+konteks+penutup masa kini
   - `G1 Tahap 3:` belum
   - `G2 naskah final:` belum
   - `G1 Tahap 4:` belum
