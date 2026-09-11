@@ -7,8 +7,8 @@
 ## Status: `Draft` → `Reviewed` → `Approved` → `Merged` → `Operational`
 
 - [x] **Draft** — sudah digali via Channel Discovery 2026-09-11_2
-- [ ] **Reviewed** — menunggu review pemilik (G2)
-- [ ] **Approved** — akan dikunci lewat gerbang G2
+- [x] **Reviewed** — sudah dibaca lengkap oleh pemilik, 2026-09-11
+- [x] **Approved** — isi dikunci lewat gerbang **G2** 2026-09-11 (`setuju_g2`)
 - [ ] **Merged** — PR belum G3
 - [ ] **Operational** — menunggu Merged + dependency lengkap
 
@@ -17,7 +17,7 @@
 - [x] Semua bagian wajib di bawah terisi (tidak ada placeholder `[...]` tersisa)
 - [x] Semua pertanyaan di checklist konsistensi (bagian 4) sudah dijawab
 - [x] Setiap elemen visual yang ditandai wajib sudah berstatus `Reference-Ready` — tidak ada elemen visual yang ditandai wajib untuk channel ini (semua tidak berlaku — lihat bagian 4)
-- [ ] `arsip-naskah/indeks.md` dan `arsip-naskah/indeks-karakter.md` sudah dibuat (akan dibuat bersamaan dengan brief ini)
+- [x] `arsip-naskah/indeks.md` dan `arsip-naskah/indeks-karakter.md` sudah dibuat (keduanya ada, indeks-karakter kosong format minimum karena tanpa tokoh)
 - [ ] Sudah `Merged` ke `main`
 
 **Versi:** `1` — **Terakhir diperbarui:** `2026-09-11` — **Diwarisi dari:** `_sistem/01_BRAND_CORE.md`
@@ -119,3 +119,4 @@ Naskah final disimpan di `arsip-naskah/` folder ini. `indeks.md` (judul/tanggal/
 | 2026-09-11 | Channel Brief v1 Draft — channel "Kamu Tau Ga?" digali via Channel Discovery | Ide awal pemilik: sejarah benda sehari-hari, VO only, b-roll only, tanpa karakter konsisten — Discovery selesai 3 putaran |
 | 2026-09-11 | Semua elemen Konsistensi Visual ditandai "tidak berlaku" | Permintaan eksplisit pemilik + rekomendasi terbaik untuk faceless total — ciri visual cukup deskriptif di bagian 5 |
 | 2026-09-11 | Persona & Voice ditetapkan: penasaran ringan, witty, 140-150 kata/menit, hook pertanyaan 3 detik | Pilihan pemilik di Discovery putaran 1 — beda dari fixture narasi-sejarah yang hangat melankolis 130 kata/menit |
+| 2026-09-11 | G2 Approved — Channel Brief v1 dikunci | Pemilik setuju via ask_user `setuju_g2` — lanjut ke Model Konten Discovery |
