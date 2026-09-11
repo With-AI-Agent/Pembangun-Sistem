@@ -2,7 +2,7 @@
 
 ### Dibangun via `04_CHARACTER_BUILDER_KIT.md` — 2026-09-11_3. Elemen milik channel `channel-kantor-pos-miso`. Ini "kunci keluarga visual" yang membuat 100 episode terasa satu rumah.
 
-**Status:** `Draft` — Reference-Ready setelah `referensi/palet.png` + `referensi/style-sheet.png` + `referensi/contoh-negatif-3d-render.png` ada.
+**Status:** `Approved-G2` (2026-09-11 `setuju_g2`) — naik `Reference-Ready` setelah `referensi/palet.png` + `referensi/style-sheet.png` + `referensi/contoh-negatif-3d-render.png` ada.
 
 ## Jenis Elemen
 

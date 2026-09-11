@@ -2,7 +2,7 @@
 
 ### Dibangun via `04_CHARACTER_BUILDER_KIT.md` — 2026-09-11_3. Elemen milik channel `channel-kantor-pos-miso`.
 
-**Status:** `Draft` — Reference-Ready setelah `referensi/acuan-utama.png` ada (tipe acuan Props = acuan utama tunggal + sudut tambahan bila perlu).
+**Status:** `Approved-G2` (2026-09-11 `setuju_g2`) — naik `Reference-Ready` setelah `referensi/acuan-utama.png` ada (tipe acuan Props = acuan utama tunggal + sudut tambahan bila perlu).
 
 ## Jenis Elemen
 

@@ -2,7 +2,7 @@
 
 ### Dibangun via `04_CHARACTER_BUILDER_KIT.md` — 2026-09-11_3. Elemen milik channel `channel-kantor-pos-miso` (1 channel saja — tidak lintas-channel).
 
-**Status:** `Draft` — Reference-Ready setelah `referensi/acuan-utama.png` + `referensi/reference-sheet.png` benar-benar ada di folder ini.
+**Status:** `Approved-G2` (2026-09-11 `setuju_g2`) — naik `Reference-Ready` setelah `referensi/acuan-utama.png` + `referensi/reference-sheet.png` benar-benar ada di folder ini (Tahap 2 sesi ini).
 
 ## Jenis Elemen
 
