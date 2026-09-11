@@ -7,8 +7,8 @@
 ## Status: `Draft` → `Reviewed` → `Approved` → `Merged` → `Operational`
 
 - [x] **Draft** — digali via Channel Discovery 2026-09-11_3 (2 putaran)
-- [ ] **Reviewed** — sudah dibaca lengkap oleh pemilik, koreksi sudah masuk
-- [ ] **Approved** — isi dikunci lewat gerbang **G2**
+- [x] **Reviewed** — dibaca lengkap oleh pemilik via viewer, 2026-09-11
+- [x] **Approved** — isi dikunci lewat gerbang **G2** 2026-09-11 (`setuju_g2`)
 - [ ] **Merged** — PR belum G3
 - [ ] **Operational** — menunggu Merged + dependency lengkap
 
@@ -128,3 +128,4 @@ Folder `arsip-naskah/` sudah dibuat bersama brief ini berisi `indeks.md` (kosong
 | 2026-09-11 | Kebijakan tokoh: hanya Miso Tipe A; penghuni kota Tipe B per-episode | Pilihan pemilik (`miso_saja`) — produksi ringan, tetap bisa naik kelas via indeks-karakter |
 | 2026-09-11 | Ritme 1x/minggu; batas keras: tanpa kematian/kekerasan hewan; sedih boleh asal ending hangat | Pilihan pemilik (`1x_lembut`) |
 | 2026-09-11 | Bank Konsistensi Visual lengkap 4 elemen (miso, kota-kanala, props, palet-gaya) — Reference-Ready menyusul di sesi ini | Permintaan pemilik (`karakter_semua`) |
+| 2026-09-11 | G2 Approved — Channel Brief v1 dikunci (termasuk aturan bersuara Miso & nama Kota Kanala) | Pemilik setuju via ask_user `setuju_g2` 2026-09-11 — interpretasi "tergantung keadaan" diterima apa adanya |
