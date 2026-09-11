@@ -3,8 +3,8 @@
 - **Status:** `ready-for-review`
 - **Channel:** `channel-kamu-tau-ga`
 - **Model konten:** `narasi-60-detik` — Narasi 60 Detik (Alur Kustom: Tahap 0 Riset + 1-6)
-- **Tahap terakhir selesai:** `Tahap 6 Assembly & Publish Prep — selesai (publish-prep + final-content + arsip)`
-- **Tahap berikutnya:** `G2 konten final + metadata, lalu G3 merge PR`
+- **Tahap terakhir selesai:** `Tahap 6 Assembly & Publish Prep — selesai + G2 konten final Approved`
+- **Tahap berikutnya:** `G3 merge PR akhir`
 - **Output resmi:**
   - `SUMBER.md` — ada, 3 sumber terverifikasi + 1 pendukung — diarsipkan ke `2026-09-11-...-sumber.md`
   - `ideation.md` — ada, 4 opsi angle, Opsi 1 terpilih G1 2026-09-11
@@ -32,7 +32,7 @@
   - `G1 Tahap 4:` disetujui 2026-09-11 — breakdown 6 segmen siap (`setuju_g1_g2`)
   - `G2 breakdown:` disetujui 2026-09-11 — 6 segmen dikunci (`setuju_g1_g2`)
   - `G1 Tahap 5:` disetujui 2026-09-11 — 6 JPG b-roll diterima (`setuju_lanjut`)
-  - `G2 konten final + metadata:` menunggu — publish-prep + final-content + arsip siap review
+  - `G2 konten final + metadata:` disetujui 2026-09-11 — publish-prep + final-content + arsip (`setuju_g2`)
   - `G3 merge:` menunggu — akan jadi 1 PR akhir (Channel+Model+Konten) tanpa auto-merge
 - **Commit terakhir:** `29437ed` — Tahap 5 Generate
 - **PR terkait:** belum dibuat — akan dibuat setelah G2 konten final
