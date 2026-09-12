@@ -3,26 +3,27 @@
 - **Status:** `in-progress`
 - **Channel:** `channel-kantor-pos-miso` (Kantor Pos Miso)
 - **Model konten:** Dongeng 60-90 Detik v1 (`model-konten/dongeng-60-90/brief.md`)
-- **Tahap terakhir selesai:** Tahap 1 — Ideation (opsi dan rekomendasi tersimpan; G1 belum)
-- **Tahap berikutnya:** G1 Tahap 1; setelah ide disetujui, Tahap 2 — Konsep & Angle
+- **Tahap terakhir selesai:** Tahap 2 — Konsep & Angle (kerangka siap direview; G1 belum)
+- **Tahap berikutnya:** G1 Tahap 2; setelah disetujui, Tahap 3 — Naskah/Script
 - **Output resmi:**
   - `ideation.md`
-  - `konsep-angle.md` (belum dibuat)
+  - `konsep-angle.md`
   - `naskah-draft.md` (belum dibuat)
   - `breakdown-output.md` (belum dibuat)
   - `assets/` (belum dibuat)
 - **Sumber konteks yang dibaca:** `_sistem/01_BRAND_CORE.md` (template kosong; gap warisan), `channel-brief.md` v1 Operational, `model-konten/dongeng-60-90/brief.md` v1 Operational, `_sistem/05_CONTENT_PRODUCTION_PIPELINE.md`, `_sistem/06_PROMPT_LIBRARY.md`, 4 Bank Konsistensi Visual + `CATATAN-ASSET.md` (Reference-Ready), `arsip-naskah/indeks.md` (kosong), `arsip-naskah/indeks-karakter.md` (kosong)
 - **Sumber eksternal dipakai:** `Tidak ada`
-- **Keputusan baru:** Belum ada keputusan yang dikunci; rekomendasi Tahap 1 adalah Opsi 1 di `ideation.md`.
+- **Keputusan baru:** G1 Tahap 1 memilih Opsi 1 — `Surat Salah Alamat ke Rumah dengan Jendela Biru`; Tahap 2 menetapkan struktur 4-beat dan Miso tanpa dialog verbal; tidak ada perubahan dokumen terkunci.
 - **Approval yang sudah diberikan:**
-  - `G1 Tahap 1:` belum
+  - `G1 Tahap 1:` disetujui 2026-09-12 — Opsi 1 (`a1`)
+  - `G1 Tahap 2:` belum
   - `G2 naskah final:` belum
   - `G2 breakdown:` belum
   - `G1 Tahap 5:` belum
   - `G2 konten final + metadata:` belum
   - `G3 merge:` belum
-- **Commit terakhir:** commit Tahap 1 (SHA dicatat di `LOG_SESI_2026-09-12.md`)
+- **Commit terakhir:** commit Tahap 2 (SHA dicatat di `LOG_SESI_2026-09-12.md`)
 - **PR terkait:** belum dibuat
 - **Pekerjaan belum tersimpan:** Tidak ada
-- **Risiko atau blocker:** Brand Core masih template kosong (gap sadar). Karakter Tipe B belum ditetapkan; jika muncul, wajib cek indeks-karakter dan menjaga deskripsi konsisten. Tahap 2 perlu memastikan Miso tetap tanpa dialog verbal dan tidak mengubah aturan Channel Brief.
-- **Waktu pembaruan:** 2026-09-12
+- **Risiko atau blocker:** Brand Core masih template kosong (gap sadar). Karakter Tipe B belum ditetapkan; jika muncul, wajib cek indeks-karakter dan menjaga deskripsi konsisten. G1 Tahap 2 diperlukan sebelum naskah.
+- **Waktu pembaruan:** 2026-09-12 — Tahap 2 siap untuk G1
