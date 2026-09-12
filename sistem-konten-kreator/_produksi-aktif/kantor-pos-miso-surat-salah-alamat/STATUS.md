@@ -3,8 +3,8 @@
 - **Status:** `in-progress`
 - **Channel:** `channel-kantor-pos-miso` (Kantor Pos Miso)
 - **Model konten:** Dongeng 60-90 Detik v1 (`model-konten/dongeng-60-90/brief.md`)
-- **Tahap terakhir selesai:** Tahap 3 — Naskah/Script (G1 + G2 disetujui; naskah final terkunci)
-- **Tahap berikutnya:** Tahap 4 — Breakdown Output
+- **Tahap terakhir selesai:** Tahap 4 — Breakdown Output (breakdown siap direview; G1 + G2 belum)
+- **Tahap berikutnya:** G1 + G2 Tahap 4; setelah dikunci, Tahap 5 — Generate/Acquire Assets
 - **Output resmi:**
   - `ideation.md`
   - `konsep-angle.md`
@@ -22,11 +22,13 @@
   - `G1 Tahap 2:` belum
   - `G2 naskah final:` belum
   - `G2 breakdown:` belum
+  - `G1 Tahap 4:` belum
+  - `G2 breakdown:` belum
   - `G1 Tahap 5:` belum
   - `G2 konten final + metadata:` belum
   - `G3 merge:` belum
-- **Commit terakhir:** commit approval G1 + G2 Tahap 3 (SHA dicatat di `LOG_SESI_2026-09-12.md`)
+- **Commit terakhir:** commit Tahap 4 (SHA dicatat di `LOG_SESI_2026-09-12.md`)
 - **PR terkait:** belum dibuat
 - **Pekerjaan belum tersimpan:** Tidak ada
-- **Risiko atau blocker:** Brand Core masih template kosong (gap sadar). Karakter Tipe B belum ditetapkan; jika muncul, wajib cek indeks-karakter dan menjaga deskripsi konsisten. Naskah final terkunci; breakdown wajib membawa deskripsi Tipe B persis dan menyiapkan 6-8 shot dengan referensi visual.
-- **Waktu pembaruan:** 2026-09-12 — G1 + G2 Tahap 3 disetujui
+- **Risiko atau blocker:** Brand Core masih template kosong (gap sadar). Karakter Tipe B belum ditetapkan; jika muncul, wajib cek indeks-karakter dan menjaga deskripsi konsisten. G1 + G2 Tahap 3 disetujui; breakdown 7 shot tersimpan; Miso muncul 7/7 shot dan dua Tipe B dibawa konsisten.
+- **Waktu pembaruan:** 2026-09-12 — Tahap 4 siap untuk G1 + G2
