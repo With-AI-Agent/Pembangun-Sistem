@@ -3,7 +3,7 @@
 **Channel:** Kantor Pos Miso  
 **Model:** Dongeng 60-90 Detik  
 **Naskah sumber:** `naskah-draft.md` — G2 naskah final disetujui 2026-09-12  
-**Status:** breakdown siap direview; G1 + G2 breakdown belum
+**Status:** breakdown terkunci; G1 + G2 breakdown disetujui 2026-09-12
 
 ## Kontrak output
 
@@ -277,7 +277,7 @@ thick black outlines, no 3D render, no neon, no glossy digital finish.
 - [x] File referensi tercantum per shot; tidak ada kolom referensi kosong.
 - [x] Deskripsi karakter Tipe B konsisten pada semua shot yang relevan.
 - [x] Tidak ada sumber eksternal atau klaim faktual yang memerlukan `SUMBER.md`.
-- [ ] G1 breakdown — belum.
-- [ ] G2 breakdown sebagai dasar generate — belum.
+- [x] G1 breakdown — disetujui 2026-09-12.
+- [x] G2 breakdown sebagai dasar generate — disetujui 2026-09-12.
 
 **Next:** minta G1 untuk validasi struktur dan G2 untuk mengunci breakdown sebelum menghasilkan aset.
