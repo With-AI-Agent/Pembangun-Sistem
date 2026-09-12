@@ -8,27 +8,24 @@
 - **Output resmi:**
   - `ideation.md`
   - `konsep-angle.md`
-  - `naskah-draft.md` (belum dibuat)
-  - `breakdown-output.md` (belum dibuat)
+  - `naskah-draft.md`
+  - `breakdown-output.md`
   - `assets/` (belum dibuat)
 - **Sumber konteks yang dibaca:** `_sistem/01_BRAND_CORE.md` (template kosong; gap warisan), `channel-brief.md` v1 Operational, `model-konten/dongeng-60-90/brief.md` v1 Operational, `_sistem/05_CONTENT_PRODUCTION_PIPELINE.md`, `_sistem/06_PROMPT_LIBRARY.md`, 4 Bank Konsistensi Visual + `CATATAN-ASSET.md` (Reference-Ready), `arsip-naskah/indeks.md` (kosong), `arsip-naskah/indeks-karakter.md` (kosong)
 - **Sumber eksternal dipakai:** `Tidak ada`
-- **Keputusan baru:** - **Keputusan baru:** 185 kata; dua karakter Tipe B baru dideskripsikan di `naskah-draft.md` setelah `indeks-karakter.md` dicek kosong; tidak ada perubahan dokumen terkunci.
+- **Keputusan baru:** 185 kata; dua karakter Tipe B baru dideskripsikan di `naskah-draft.md` setelah `indeks-karakter.md` dicek kosong; struktur breakdown 7 shot; Miso muncul 7/7 shot; tidak ada perubahan dokumen terkunci.
 - **Approval yang sudah diberikan:**
   - `G1 Tahap 1:` disetujui 2026-09-12 — Opsi 1 (`a1`)
   - `G1 Tahap 2:` disetujui 2026-09-12 — kerangka dipakai untuk lanjut ke Tahap 3
   - `G1 Tahap 3:` disetujui 2026-09-12
   - `G2 naskah final:` disetujui 2026-09-12
-  - `G1 Tahap 2:` belum
-  - `G2 naskah final:` belum
-  - `G2 breakdown:` belum
   - `G1 Tahap 4:` belum
   - `G2 breakdown:` belum
   - `G1 Tahap 5:` belum
   - `G2 konten final + metadata:` belum
   - `G3 merge:` belum
-- **Commit terakhir:** commit Tahap 4 (SHA dicatat di `LOG_SESI_2026-09-12.md`)
+- **Commit terakhir:** koreksi STATUS setelah Tahap 4 (SHA dicatat di `LOG_SESI_2026-09-12.md`)
 - **PR terkait:** belum dibuat
 - **Pekerjaan belum tersimpan:** Tidak ada
-- **Risiko atau blocker:** Brand Core masih template kosong (gap sadar). Karakter Tipe B belum ditetapkan; jika muncul, wajib cek indeks-karakter dan menjaga deskripsi konsisten. G1 + G2 Tahap 3 disetujui; breakdown 7 shot tersimpan; Miso muncul 7/7 shot dan dua Tipe B dibawa konsisten.
-- **Waktu pembaruan:** 2026-09-12 — Tahap 4 siap untuk G1 + G2
+- **Risiko atau blocker:** Brand Core masih template kosong (gap sadar). Saat generate, deskripsi dua Tipe B harus dipakai persis; Miso dan referensi bank wajib dipakai pada setiap shot yang relevan.
+- **Waktu pembaruan:** 2026-09-12 — koreksi administratif STATUS; Tahap 4 tetap siap untuk G1 + G2
