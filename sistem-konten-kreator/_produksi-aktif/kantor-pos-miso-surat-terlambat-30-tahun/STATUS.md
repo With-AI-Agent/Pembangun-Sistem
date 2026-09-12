@@ -3,8 +3,8 @@
 - **Status:** `in-progress`
 - **Channel:** `channel-kantor-pos-miso` (Kantor Pos Miso)
 - **Model konten:** Dongeng 60-90 Detik v1 (`model-konten/dongeng-60-90/brief.md`)
-- **Tahap terakhir selesai:** Tahap 4 — Breakdown Output (breakdown siap direview; G1 + G2 belum)
-- **Tahap berikutnya:** G1 + G2 Tahap 4; setelah dikunci, Tahap 5 — Generate/Acquire Assets
+- **Tahap terakhir selesai:** Tahap 4 — Breakdown Output (G1 + G2 disetujui; breakdown terkunci)
+- **Tahap berikutnya:** Tahap 5 — Generate/Acquire Assets
 - **Output resmi:**
   - `ideation.md`
   - `konsep-angle.md`
@@ -19,8 +19,8 @@
   - `G1 Tahap 2:` disetujui 2026-09-12 — kerangka dipakai untuk lanjut ke Tahap 3
   - `G1 Tahap 3:` disetujui 2026-09-12
   - `G2 naskah final:` disetujui 2026-09-12
-  - `G1 Tahap 4:` belum
-  - `G2 breakdown:` belum
+  - `G1 Tahap 4:` disetujui 2026-09-12
+  - `G2 breakdown:` disetujui 2026-09-12
   - `G1 Tahap 5:` belum
   - `G2 konten final + metadata:` belum
   - `G3 merge:` belum
@@ -28,4 +28,4 @@
 - **PR terkait:** belum dibuat
 - **Pekerjaan belum tersimpan:** Tidak ada
 - **Risiko atau blocker:** Brand Core masih template kosong (gap sadar). Episode B berada di batas atas durasi; saat generate, deskripsi Tipe B harus dipakai persis dan Miso/reference bank wajib dipakai pada setiap shot yang relevan.
-- **Waktu pembaruan:** 2026-09-12 — koreksi administratif STATUS; Tahap 4 tetap siap untuk G1 + G2
+- **Waktu pembaruan:** 2026-09-12 — G1 + G2 Tahap 4 disetujui; generate aset dimulai
