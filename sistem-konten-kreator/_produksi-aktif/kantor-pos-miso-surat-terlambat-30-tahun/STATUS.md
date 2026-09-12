@@ -13,7 +13,7 @@
   - `assets/` (belum dibuat)
 - **Sumber konteks yang dibaca:** `_sistem/01_BRAND_CORE.md` (template kosong; gap warisan), `channel-brief.md` v1 Operational, `model-konten/dongeng-60-90/brief.md` v1 Operational, `_sistem/05_CONTENT_PRODUCTION_PIPELINE.md`, `_sistem/06_PROMPT_LIBRARY.md`, 4 Bank Konsistensi Visual + `CATATAN-ASSET.md` (Reference-Ready), `arsip-naskah/indeks.md` (kosong), `arsip-naskah/indeks-karakter.md` (kosong)
 - **Sumber eksternal dipakai:** `Tidak ada`
-- **Keputusan baru:** Belum ada keputusan yang dikunci; rekomendasi Tahap 1 adalah Opsi 1 di `ideation.md`.
+- **Keputusan baru:** G1 Tahap 1 memilih Opsi 1 — `Surat yang Terlambat Tiga Puluh Tahun`; tidak ada perubahan dokumen terkunci.
 - **Approval yang sudah diberikan:**
   - `G1 Tahap 1:` belum
   - `G2 naskah final:` belum

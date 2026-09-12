@@ -24,5 +24,5 @@
 - **Commit terakhir:** commit Tahap 1 (SHA dicatat di `LOG_SESI_2026-09-12.md`)
 - **PR terkait:** belum dibuat
 - **Pekerjaan belum tersimpan:** Tidak ada
-- **Risiko atau blocker:** Brand Core masih template kosong (gap sadar). Karakter Tipe B belum ditetapkan; jika muncul, wajib cek indeks-karakter dan menjaga deskripsi konsisten. Opsi 1 membutuhkan keputusan eksplisit sebelum Tahap 2.
+- **Risiko atau blocker:** Brand Core masih template kosong (gap sadar). Karakter Tipe B belum ditetapkan; jika muncul, wajib cek indeks-karakter dan menjaga deskripsi konsisten. Tahap 2 perlu memastikan Miso tetap tanpa dialog verbal dan tidak mengubah aturan Channel Brief.
 - **Waktu pembaruan:** 2026-09-12
