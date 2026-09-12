@@ -1,0 +1,28 @@
+# Status Produksi — Kantor Pos Miso — Surat yang Terlambat 30 Tahun
+
+- **Status:** `in-progress`
+- **Channel:** `channel-kantor-pos-miso` (Kantor Pos Miso)
+- **Model konten:** Dongeng 60-90 Detik v1 (`model-konten/dongeng-60-90/brief.md`)
+- **Tahap terakhir selesai:** Tahap 1 — Ideation (opsi dan rekomendasi tersimpan; G1 belum)
+- **Tahap berikutnya:** G1 Tahap 1; setelah ide disetujui, Tahap 2 — Konsep & Angle
+- **Output resmi:**
+  - `ideation.md`
+  - `konsep-angle.md` (belum dibuat)
+  - `naskah-draft.md` (belum dibuat)
+  - `breakdown-output.md` (belum dibuat)
+  - `assets/` (belum dibuat)
+- **Sumber konteks yang dibaca:** `_sistem/01_BRAND_CORE.md` (template kosong; gap warisan), `channel-brief.md` v1 Operational, `model-konten/dongeng-60-90/brief.md` v1 Operational, `_sistem/05_CONTENT_PRODUCTION_PIPELINE.md`, `_sistem/06_PROMPT_LIBRARY.md`, 4 Bank Konsistensi Visual + `CATATAN-ASSET.md` (Reference-Ready), `arsip-naskah/indeks.md` (kosong), `arsip-naskah/indeks-karakter.md` (kosong)
+- **Sumber eksternal dipakai:** `Tidak ada`
+- **Keputusan baru:** Belum ada keputusan yang dikunci; rekomendasi Tahap 1 adalah Opsi 1 di `ideation.md`.
+- **Approval yang sudah diberikan:**
+  - `G1 Tahap 1:` belum
+  - `G2 naskah final:` belum
+  - `G2 breakdown:` belum
+  - `G1 Tahap 5:` belum
+  - `G2 konten final + metadata:` belum
+  - `G3 merge:` belum
+- **Commit terakhir:** commit Tahap 1 (SHA dicatat di `LOG_SESI_2026-09-12.md`)
+- **PR terkait:** belum dibuat
+- **Pekerjaan belum tersimpan:** Tidak ada
+- **Risiko atau blocker:** Brand Core masih template kosong (gap sadar). Karakter Tipe B belum ditetapkan; jika muncul, wajib cek indeks-karakter dan menjaga deskripsi konsisten. Opsi 1 membutuhkan keputusan eksplisit sebelum Tahap 2.
+- **Waktu pembaruan:** 2026-09-12
