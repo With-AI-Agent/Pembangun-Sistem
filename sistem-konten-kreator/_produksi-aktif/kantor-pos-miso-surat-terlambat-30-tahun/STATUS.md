@@ -28,4 +28,4 @@
 - **PR terkait:** belum dibuat
 - **Pekerjaan belum tersimpan:** Tidak ada
 - **Risiko atau blocker:** Brand Core masih template kosong (gap sadar). Lima aset masih tertunda karena batas generate gambar per giliran. B-S4 v1 ditolak karena pseudo-teks dan sudah diregenerasi; crop portrait B-S4 tetap perlu audit framing.
-- **Waktu pembaruan:** 2026-09-13 — Tahap 5 parsial; menunggu aset lengkap; generate aset dimulai
+- **Waktu pembaruan:** 2026-09-13 — Tahap 5 parsial; menunggu aset lengkap dan G1

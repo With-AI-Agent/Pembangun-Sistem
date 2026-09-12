@@ -28,4 +28,4 @@
 - **PR terkait:** belum dibuat
 - **Pekerjaan belum tersimpan:** Tidak ada
 - **Risiko atau blocker:** Brand Core masih template kosong (gap sadar). A-S6 framing portrait memotong sebagian tubuh Miso di tepi kanan; perlu diperbaiki atau disetujui ulang sebelum G1. Batas generate gambar per giliran tercapai sebelum Episode B selesai.
-- **Waktu pembaruan:** 2026-09-13 — Tahap 5 parsial; menunggu aset lengkap; generate aset dimulai
+- **Waktu pembaruan:** 2026-09-13 — Tahap 5 parsial; menunggu aset lengkap dan G1
