@@ -18,7 +18,7 @@
 - [x] Semua pertanyaan di checklist konsistensi (bagian 4) sudah dijawab
 - [x] Setiap elemen visual yang ditandai wajib sudah berstatus `Reference-Ready` — 4 elemen (miso, kota-kanala, props-kantor-pos-miso, palet-gaya-catok) dibangun via `04_CHARACTER_BUILDER_KIT.md` 2026-09-11: 9 acuan PNG lolos audit visual, 3 regen karena temuan audit (merek/topi/teks) — detail `konsistensi-visual/CATATAN-ASSET.md`
 - [x] `arsip-naskah/indeks.md` dan `arsip-naskah/indeks-karakter.md` sudah dibuat (ada, keduanya kosong karena channel baru)
-- [ ] Sudah `Merged` ke `main`
+- [x] Sudah `Merged` ke `main` — PR #46 MERGED 2026-09-13 — merge commit `225516b`
 
 **Versi:** `1` — **Terakhir diperbarui:** `2026-09-11` — **Diwarisi dari:** `_sistem/01_BRAND_CORE.md`
 
