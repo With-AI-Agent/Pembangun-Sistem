@@ -158,11 +158,21 @@ def regression_scenarios(base_dir: Path):
         # may legitimately hold several units (produksi selesai yang
         # dipertahankan + produksi berjalan), jadi skenarionya menghapus
         # SELURUH unit STATUS sistem target, bukan hanya yang pertama.
+        # Sistem Tahap: kerangka DILEWATI (11 Sep 2026, temuan PR sistem-klinik):
+        # untuk mereka kehadiran unit sengaja berperingkat warning (aturan Tahap
+        # di 03_KONTRAK_WARISAN), jadi menghapus unitnya tidak boleh dan tidak
+        # akan membuat validator FAIL — menguji fail-closed di sistem yang
+        # check-nya memang longgar = hasil positif-palsu terbalik (R4 merah
+        # padahal sistemnya benar). Fail-closed diuji pada sistem siap-pakai.
         target_files = []
         for sys_dir in sorted(cp.glob("sistem-*/")):
             if sys_dir.name == core.EXACT_PILOT:
                 continue
             if sys_dir.name in core.parse_index(idx_backup)[0]:
+                manifest = sys_dir / "SYSTEM_MANIFEST.md"
+                if manifest.is_file() and core.manifest_tahap(
+                        manifest.read_text(encoding="utf-8")) == "kerangka":
+                    continue
                 files = core.unit_status_files(sys_dir)
                 if files:
                     target_files = files
