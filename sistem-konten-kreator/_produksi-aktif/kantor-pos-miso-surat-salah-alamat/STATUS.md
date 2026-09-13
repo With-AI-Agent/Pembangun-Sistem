@@ -3,8 +3,8 @@
 - **Status:** `ready-for-review`
 - **Channel:** `channel-kantor-pos-miso` (Kantor Pos Miso)
 - **Model konten:** Dongeng 60-90 Detik v1 (`model-konten/dongeng-60-90/brief.md`)
-- **Tahap terakhir selesai:** Tahap 6 — Assembly & Publish Prep (G2 final disetujui; PR belum dibuat)
-- **Tahap berikutnya:** Siapkan PR; setelah PR tersedia, minta G3 merge
+- **Tahap terakhir selesai:** Tahap 6 — Assembly & Publish Prep (G2 final disetujui; PR #46 dibuat)
+- **Tahap berikutnya:** G3 merge PR #46
 - **Output resmi:**
   - `publish-prep.md`
   - `final-content.md`
@@ -26,8 +26,8 @@
   - `G1 Tahap 5:` disetujui 2026-09-13 — aset diterima
   - `G2 konten final + metadata:` disetujui 2026-09-13
   - `G3 merge:` belum
-- **Commit terakhir:** commit approval G2 final (SHA dicatat di `LOG_SESI_2026-09-12.md`)
-- **PR terkait:** akan dibuat setelah commit approval G2 dipush
+- **Commit terakhir:** commit pencatatan PR #46 (SHA dicatat di `LOG_SESI_2026-09-12.md`)
+- **PR terkait:** https://github.com/With-AI-Agent/Pembangun-Sistem/pull/46 — OPEN, tanpa auto-merge
 - **Pekerjaan belum tersimpan:** Tidak ada
-- **Risiko atau blocker:** Brand Core masih template kosong (gap sadar). VO dan assembly video aktual dibuat pemilik di luar repo. G2 final disetujui; PR masih perlu dibuat dan G3 merge belum diminta.
-- **Waktu pembaruan:** 2026-09-13 — G2 final disetujui; menunggu PR/G3
+- **Risiko atau blocker:** Brand Core masih template kosong (gap sadar). VO dan assembly video aktual dibuat pemilik di luar repo. G2 final disetujui; PR #46 OPEN; G3 merge belum diminta.
+- **Waktu pembaruan:** 2026-09-13 — PR #46 OPEN; menunggu G3
