@@ -1,9 +1,9 @@
 # Status Pembangunan — Sistem Klinik (unit meta sistem ini)
 
-- **Status:** `kerangka-menunggu-review`
+- **Status:** `isi-dalam-pembangunan`
 - **Sistem:** Sistem Klinik (Klinik Sistem) — lihat SYSTEM_MANIFEST.md dan 00_RENCANA_KERANGKA.md di folder ini
-- **Tahap terakhir selesai:** rencana kerangka + manifest + skeleton ditulis di branch `arena/01a08f2c-pembangun-sistem` (2026-09-11); review independen 2 putaran tuntas; koreksi pemilik K-9/K-10 masuk 2026-09-13
-- **Tahap berikutnya:** review menyeluruh pemilik atas 00_RENCANA_KERANGKA.md di PR → merge → bangun 01_ALUR_RUN.md (satu dokumen penuh dulu, baru berikutnya)
+- **Tahap terakhir selesai:** PR #43 merged `a4331f8` (13 Sep 2026 07:09 WIB); draf penuh `_sistem/01_ALUR_RUN.md` ditulis sesi `arena/01a0981c` (2026-09-13) — validator sistem PASS, tanpa rujukan ber-backtick ke master
+- **Tahap berikutnya:** review + koreksi 01_ALUR_RUN oleh pemilik → lanjut `03_KEBIJAKAN_LEBUR.md` (urutan Langkah 2 rencana kerangka)
 - **Pekerjaan belum tersimpan:** Tidak ada
-- **Waktu pembaruan:** 2026-09-13 — menunggu merge pemilik atas PR #43
-- **Risiko aktif:** nama sistem dan pembagian mode masih bisa dikoreksi lewat review PR ini (belum ada yang terlanjur merujuknya kecuali INDEKS + folder)
+- **Waktu pembaruan:** 2026-09-13 — draf 01_ALUR_RUN selesai, menunggu review pemilik
+- **Risiko aktif:** rekonsiliasi urutan E/F/G-Final/peleburan di 01 (diagram rencana vs aturan gerbang eksplisit "G-Final sebelum peleburan+PR") perlu persetujuan pemilik; baris "Unit kerja utama" di manifest belum menyebut Tahap F — sync kecil menyusul bila disetujui
