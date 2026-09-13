@@ -1,5 +1,4 @@
-> **DOKUMEN TURUNAN - JANGAN DIEDIT**
-> Asal: Sistem Klinik v0.1.1 | Kompilasi: 2026-09-13
+> Sumber: _sistem/04_KONTRAK_TANAMAN.md sha 94901472d033522a7adc0cfb79c3bab7f4d3989e tanggal 2026-09-13 versi-kit 0.1.1
 
 # Kontrak Tanaman (Sistem Klinik)
 

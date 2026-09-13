@@ -5,5 +5,5 @@
 - **Tahap terakhir selesai:** Pembangunan `06_RITME_KIT.md` beserta perakitan `kit/` pertama dan `_fixture/sistem-kecil-sakit/`. Dokumen 05 sudah disetujui.
 - **Tahap berikutnya:** Meminta approval pemilik untuk dokumen 06 dan hasil kit, sebelum sesi ini selesai dan dilanjutkan ke PR meta Bagian B.
 - **Pekerjaan belum tersimpan:** Tidak ada
-- **Waktu pembaruan:** 2026-09-13_2 — draf 06 dan kit diserahkan untuk review.
+- **Waktu pembaruan:** 2026-09-13 — draf 06 dan kit dirakit.
 - **Risiko aktif:** tidak ada yang terbuka — rekonsiliasi urutan sudah disetujui; review isi 01 & 03 masih bisa menghasilkan koreksi (normal, itu gunanya gerbang)

@@ -9,7 +9,7 @@
 - **Pengguna/consumer:** pemilik repo ini sendiri; tidak ada audiens eksternal
 - **Pemilik keputusan:** pemilik repo (semua gerbang Besar + merge di repo target adalah haknya)
 - **Versi:** `0.1.1`
-- **Tahap:** sedang dibangun — ubah ke `siap-pakai` saat sistem siap dipakai (cek W-01/W-02/W-03 kembali ketat; lihat _meta/03_KONTRAK_WARISAN.md bagian "Tahap pembangunan" — provenance)
+- **Tahap:** kerangka — ubah ke `siap-pakai` saat sistem siap dipakai (cek W-01/W-02/W-03 kembali ketat; lihat _meta/03_KONTRAK_WARISAN.md bagian "Tahap pembangunan" — provenance)
 - **Status:** `Sedang dibangun` — PR rencana kerangka dan PR #47 (dokumen 01, 03) sudah di-merge ke main, melanjutkan pembangunan sesuai Langkah 3 urutan rencana
 - **Tanggal dibuat:** 11 September 2026 (UTC)
 - **Audit terakhir:** belum ada (sistem baru; audit pertama terjadwal setelah dokumen inti + kit pertama jadi — lihat 00_RENCANA_KERANGKA.md bagian "Langkah setelah rencana merge")

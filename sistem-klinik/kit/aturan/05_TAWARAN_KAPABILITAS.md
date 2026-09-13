@@ -1,5 +1,4 @@
-> **DOKUMEN TURUNAN - JANGAN DIEDIT**
-> Asal: Sistem Klinik v0.1.1 | Kompilasi: 2026-09-13
+> Sumber: _sistem/05_TAWARAN_KAPABILITAS.md sha af33785bc9580dec17cc611aaa68b461c3f64adf tanggal 2026-09-13 versi-kit 0.1.1
 
 # Mekanisme Tawaran Kapabilitas Eksternal
 
@@ -33,7 +32,7 @@ Di bawah tabel, agent **wajib** menyertakan satu pertanyaan terbuka:
 Agent tidak boleh berasumsi "install" berarti `npm install -g` atau mengubah OS, karena batasan platform.
 
 - **Pada lmarena (Agent Mode):**
-  Platform direset setiap sesi baru. Oleh karena itu, *install* berarti **mengunduh dan menyimpan skrip/binary vendor ke dalam repo git target** (contoh: di `tools/vendor/` atau `_vendor/`). Dependensi harus terikat dengan repo (terlokalisasi), bukan terinstal di environment OS.
+  Platform direset setiap sesi baru. Oleh karena itu, *install* berarti **mengunduh dan menyimpan skrip/binary vendor ke dalam repo git target** (contoh: di folder alat target). Dependensi harus terikat dengan repo (terlokalisasi), bukan terinstal di environment OS.
 - **Pada Claude Code / Antigravity:**
   Install biasanya berarti memodifikasi `.claude.json` atau meregistrasikan *MCP tool / bash script* lokal di konfigurasi folder.
 

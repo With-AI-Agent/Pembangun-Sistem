@@ -19,8 +19,11 @@ def main():
     elif readme_file.exists():
         status_content = readme_file.read_text()
         
-    if not re.search(r'STATUS.*\b(aktif|dalam-pembangunan|rusak)\b', status_content, re.IGNORECASE):
-        errors.append("W-03: Field STATUS (aktif/dalam-pembangunan/rusak) tidak ditemukan di STATUS.md atau README.md")
+    match = re.search(r'STATUS.*\b(aktif|dalam-pembangunan|rusak)\b', status_content, re.IGNORECASE)
+    if not match:
+        errors.append("W-03: Field STATUS tidak ditemukan di STATUS.md atau README.md")
+    elif match.group(1).lower() == "rusak":
+        errors.append("W-03: Field STATUS menunjukkan 'rusak'")
 
     if errors:
         print("VALIDATION FAILED (TARGET):")

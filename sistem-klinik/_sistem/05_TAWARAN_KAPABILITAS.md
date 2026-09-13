@@ -30,7 +30,7 @@ Di bawah tabel, agent **wajib** menyertakan satu pertanyaan terbuka:
 Agent tidak boleh berasumsi "install" berarti `npm install -g` atau mengubah OS, karena batasan platform.
 
 - **Pada lmarena (Agent Mode):**
-  Platform direset setiap sesi baru. Oleh karena itu, *install* berarti **mengunduh dan menyimpan skrip/binary vendor ke dalam repo git target** (contoh: di `tools/vendor/` atau `_vendor/`). Dependensi harus terikat dengan repo (terlokalisasi), bukan terinstal di environment OS.
+  Platform direset setiap sesi baru. Oleh karena itu, *install* berarti **mengunduh dan menyimpan skrip/binary vendor ke dalam repo git target** (contoh: di folder alat target). Dependensi harus terikat dengan repo (terlokalisasi), bukan terinstal di environment OS.
 - **Pada Claude Code / Antigravity:**
   Install biasanya berarti memodifikasi `.claude.json` atau meregistrasikan *MCP tool / bash script* lokal di konfigurasi folder.
 

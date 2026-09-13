@@ -14,8 +14,8 @@
 ## Daftar Cacat (Katalog)
 
 ### C-01: Kebocoran Ketergantungan Eksternal (Self-Containment Broken)
-- **Gejala:** Sistem atau folder kit memiliki instruksi, aturan, atau alat yang bergantung pada file di luar foldernya (misalnya merujuk file di `_meta/` dengan *backtick* tanpa menyediakannya di dalam sistem itu sendiri).
-- **Cara Periksa (Diagnosis):** Cari pola rujukan absolut atau *backtick* ke luar folder sistem (misal `grep "\`_meta/"` atau `grep "\`tools/"`). Jalankan skrip uji kemandirian (jika tersedia).
+- **Gejala:** Sistem atau folder kit memiliki instruksi, aturan, atau alat yang bergantung pada file di luar foldernya (misalnya merujuk file di _meta/ dengan *backtick* tanpa menyediakannya di dalam sistem itu sendiri).
+- **Cara Periksa (Diagnosis):** Cari pola rujukan absolut atau *backtick* ke luar folder sistem (misal `grep "_meta/"` atau `grep "tools/"`). Jalankan skrip uji kemandirian (jika tersedia).
 - **Pola Perbaikan (Resep):** Salin file/aturan eksternal yang dirujuk ke dalam folder sistem, tandai sebagai turunan berlabel versi. Ubah rujukan asli menjadi provenance historis tanpa *backtick*.
 - **Bukti / Risiko:** Sistem akan rusak dan tidak bisa dioperasikan saat diunduh (extracted) sebagai repo mandiri yang terpisah dari induknya.
 
