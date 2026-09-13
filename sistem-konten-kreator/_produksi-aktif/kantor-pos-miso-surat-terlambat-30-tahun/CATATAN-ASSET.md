@@ -25,4 +25,4 @@
 
 ## Status G1 Tahap 5
 
-Belum diminta. G1 akan diajukan setelah pemilik meninjau paket aset lengkap ini; G1 berlaku untuk menerima/regenerate aset, bukan G2 final atau G3 merge.
+G1 disetujui 2026-09-13; seluruh aset diterima. G1 berlaku untuk menerima/regenerate aset, bukan G2 final atau G3 merge.

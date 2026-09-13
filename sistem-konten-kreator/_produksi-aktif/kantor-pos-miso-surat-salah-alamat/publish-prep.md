@@ -2,7 +2,7 @@
 
 **Channel:** Kantor Pos Miso  
 **Model:** Dongeng 60-90 Detik v1  
-**Status:** `ready-for-review` — G2 final belum, G3 belum  
+**Status:** `ready-for-review` — G2 final disetujui 2026-09-13, G3 belum  
 **Naskah:** `185 kata`; arsip final tersedia di `channel-kantor-pos-miso/arsip-naskah/2026-09-13-surat-salah-alamat-ke-rumah-jendela-biru.md`  
 
 ## 1. Opsi judul
@@ -51,5 +51,5 @@ Miso memegang amplop di depan jendela biru yang tertutup tanaman rambat; ekspres
 - [x] `indeks-karakter.md` diperbarui untuk Tipe B.
 - [x] Metadata reproduksi dibuat.
 - [x] Semua 7 asset tersedia dan G1 Tahap 5 disetujui.
-- [ ] G2 konten final + metadata — belum.
+- [x] G2 konten final + metadata — disetujui 2026-09-13.
 - [ ] G3 merge — belum.

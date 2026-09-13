@@ -1,6 +1,6 @@
 # Final Content — Surat Salah Alamat ke Rumah dengan Jendela Biru
 
-**Status:** ready-for-review — G1 Tahap 5 disetujui 2026-09-13; G2 final belum; G3 belum  
+**Status:** ready-for-review — G1 Tahap 5 disetujui 2026-09-13; G2 final disetujui 2026-09-13; G3 belum  
 **Judul rekomendasi:** Surat Salah Alamat ke Rumah Biru  
 **Naskah:** 185 kata  
 **Durasi target:** sekitar 85–89 detik pada 130 kpm dengan jeda sangat selektif  
