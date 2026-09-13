@@ -8,9 +8,9 @@
 - **Tujuan utama:** satu folder kit disalin ke repo sistem target + satu prompt → agent mengaudit terhadap katalog cacat, menanam mekanisme yang hilang, meng-upgrade, memverifikasi, mencatat rekam klinik, memanen temuan untuk evolusi kit (Tahap F), lalu kit melebur dan hilang — target terlihat normal tapi terukur lebih baik; dapat diulang kapan saja dan idempoten
 - **Pengguna/consumer:** pemilik repo ini sendiri; tidak ada audiens eksternal
 - **Pemilik keputusan:** pemilik repo (semua gerbang Besar + merge di repo target adalah haknya)
-- **Versi:** `0.1.0`
-- **Tahap:** kerangka — ubah ke `siap-pakai` saat sistem siap dipakai (cek W-01/W-02/W-03 kembali ketat; lihat _meta/03_KONTRAK_WARISAN.md bagian "Tahap pembangunan" — provenance)
-- **Status:** `Proposed` — rencana kerangka menunggu review menyeluruh pemilik di PR pembuka sistem ini
+- **Versi:** `0.1.1`
+- **Tahap:** sedang dibangun — ubah ke `siap-pakai` saat sistem siap dipakai (cek W-01/W-02/W-03 kembali ketat; lihat _meta/03_KONTRAK_WARISAN.md bagian "Tahap pembangunan" — provenance)
+- **Status:** `Sedang dibangun` — PR rencana kerangka dan PR #47 (dokumen 01, 03) sudah di-merge ke main, melanjutkan pembangunan sesuai Langkah 3 urutan rencana
 - **Tanggal dibuat:** 11 September 2026 (UTC)
 - **Audit terakhir:** belum ada (sistem baru; audit pertama terjadwal setelah dokumen inti + kit pertama jadi — lihat 00_RENCANA_KERANGKA.md bagian "Langkah setelah rencana merge")
 - **Quality protocol (versi sistem ini — self-contained):** trigger audit, level default, dan prosedur rollback dirinci di bagian "Quality & Evolution" manifest ini; verifikasi output oleh ACCEPTANCE_TESTS.md (dibangun saat dokumen jadi; memakai `_fixture/`). Induk: _meta/QUALITY_ASSURANCE_AND_EVOLUTION.md di master = provenance saja (sistem harus tetap berfungsi penuh bila foldernya diunduh standalone)
@@ -26,7 +26,7 @@
 ## Dokumen Navigasi
 
 - **Entry point:** START_DI_SINI.md (dibangun setelah rencana merge; sementara: baca 00_RENCANA_KERANGKA.md dulu)
-- **Dokumen instruksi aktif:** belum dibangun — rencana lengkap + fungsi tiap dokumen ada di 00_RENCANA_KERANGKA.md bagian "Rencana Dokumen"
+- **Dokumen instruksi aktif:** `_sistem/01_ALUR_RUN.md` dan `_sistem/03_KEBIJAKAN_LEBUR.md` sudah dibangun (dokumen lainnya: 02, 04, 05, 06 sedang dibangun sesuai urutan)
 - **Living documents:** 02_KATALOG_CACAT (menyusul dibuat) — daftar hidup; dokumen ini; STATUS.md
 - **Log keputusan:** tabel Log Keputusan di bawah (dokumen hidup lain membawa tabelnya masing-masing saat dibangun — W-05)
 - **Ringkasan cadangan:** belum ada — _cadangan-claude/RINGKASAN_sistem-klinik.md dibuat saat struktur stabil (W-09, status "menyusul" tercatat resmi di sini)
@@ -87,7 +87,7 @@ Status butir 03_KONTRAK_WARISAN.md (provenance) untuk sistem ini — salinan bag
 
 - [ ] Semua dokumen wajib tersedia (menyusul — baru boleh dicentang di tahap siap-pakai)
 - [ ] Semua dependency valid
-- [x] Status dan versi sudah diperbarui (0.1.0 / Proposed — 11 Sep 2026)
+- [x] Status dan versi sudah diperbarui (0.1.1 / Sedang dibangun — pasca-merge PR #47)
 - [ ] Approval yang diperlukan sudah ada (review menyeluruh rencana kerangka oleh pemilik = gerbang merge PR ini)
 - [ ] Audit terakhir tercatat
 - [ ] Ringkasan cadangan sinkron (menyusul — W-09)
