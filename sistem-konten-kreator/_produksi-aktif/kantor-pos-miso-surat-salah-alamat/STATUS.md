@@ -1,0 +1,33 @@
+# Status Produksi — Kantor Pos Miso — Surat Salah Alamat
+
+- **Status:** `ready-for-review`
+- **Channel:** `channel-kantor-pos-miso` (Kantor Pos Miso)
+- **Model konten:** Dongeng 60-90 Detik v1 (`model-konten/dongeng-60-90/brief.md`)
+- **Tahap terakhir selesai:** Tahap 6 — Assembly & Publish Prep (G2 final disetujui; PR #46 dibuat)
+- **Tahap berikutnya:** G3 merge PR #46
+- **Output resmi:**
+  - `publish-prep.md`
+  - `final-content.md`
+  - `breakdown-output.md`
+  - `assets/` — 7/7 aset diterima G1
+  - `channel-kantor-pos-miso/arsip-naskah/2026-09-13-surat-salah-alamat-ke-rumah-jendela-biru.md`
+  - `channel-kantor-pos-miso/arsip-naskah/2026-09-13-surat-salah-alamat-ke-rumah-jendela-biru-metadata.md`
+  - `channel-kantor-pos-miso/arsip-naskah/indeks.md` dan `indeks-karakter.md`
+- **Sumber konteks yang dibaca:** `_sistem/01_BRAND_CORE.md` (template kosong; gap warisan), `channel-brief.md` v1 Operational, `model-konten/dongeng-60-90/brief.md` v1 Operational, `_sistem/05_CONTENT_PRODUCTION_PIPELINE.md`, `_sistem/06_PROMPT_LIBRARY.md`, 4 Bank Konsistensi Visual + `CATATAN-ASSET.md` (Reference-Ready), `arsip-naskah/indeks.md` (kosong), `arsip-naskah/indeks-karakter.md` (kosong)
+- **Sumber eksternal dipakai:** `Tidak ada`
+- **Keputusan baru:** Stage 6 menyiapkan judul rekomendasi `Surat Salah Alamat ke Rumah Biru`, caption, hashtag, konsep thumbnail, assembly manifest, arsip naskah, metadata reproduksi, dan indeks Tipe B; G2 konten final + metadata menyetujui paket ini; tidak ada perubahan dokumen terkunci.
+- **Approval yang sudah diberikan:**
+  - `G1 Tahap 1:` disetujui 2026-09-12 — Opsi 1 (`a1`)
+  - `G1 Tahap 2:` disetujui 2026-09-12 — kerangka dipakai untuk lanjut ke Tahap 3
+  - `G1 Tahap 3:` disetujui 2026-09-12
+  - `G2 naskah final:` disetujui 2026-09-12
+  - `G1 Tahap 4:` disetujui 2026-09-12
+  - `G2 breakdown:` disetujui 2026-09-12
+  - `G1 Tahap 5:` disetujui 2026-09-13 — aset diterima
+  - `G2 konten final + metadata:` disetujui 2026-09-13
+  - `G3 merge:` belum
+- **Commit terakhir:** commit pencatatan PR #46 (SHA dicatat di `LOG_SESI_2026-09-12.md`)
+- **PR terkait:** https://github.com/With-AI-Agent/Pembangun-Sistem/pull/46 — OPEN, tanpa auto-merge
+- **Pekerjaan belum tersimpan:** Tidak ada
+- **Risiko atau blocker:** Brand Core masih template kosong (gap sadar). VO dan assembly video aktual dibuat pemilik di luar repo. G2 final disetujui; PR #46 OPEN; G3 merge belum diminta.
+- **Waktu pembaruan:** 2026-09-13 — PR #46 OPEN; menunggu G3

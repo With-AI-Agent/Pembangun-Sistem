@@ -2,5 +2,6 @@
 
 | Nama/sebutan | Ciri ringkas | Konten pertama | Konten lain | Status |
 |---|---|---|---|---|
-
-*(Kosong — belum ada Tipe B. Miso adalah Tipe A, datanya di `konsistensi-visual/miso/`, tidak dicatat di sini. Diperbarui setiap konten final yang memakai Tipe B — lihat `06_PROMPT_LIBRARY.md` bagian A2 langkah 5.)*
+| Penghuni Rumah No. 18 | Perempuan dewasa bertubuh kecil; rambut hitam pendek dengan satu jepit kuningan; kardigan hijau kusam; gerak hati-hati dan senyum mudah muncul. | `2026-09-13-surat-salah-alamat-ke-rumah-jendela-biru.md` | — | Aktif — Tipe B |
+| Penerima di Rumah No. 81 | Perempuan dewasa; rambut kelabu panjang dikepang sederhana; blus krem; wajah tenang yang menyimpan ragu sebelum tersenyum. | `2026-09-13-surat-salah-alamat-ke-rumah-jendela-biru.md` | — | Aktif — Tipe B |
+| Pemilik Toko Roti | Perempuan dewasa; rambut cokelat tua dikepang longgar; celemek krem dengan sisa tepung; tangan cekatan; senyum muncul setelah mengenali surat. | `2026-09-13-surat-yang-terlambat-tiga-puluh-tahun.md` | — | Aktif — Tipe B |
