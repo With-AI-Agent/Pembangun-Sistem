@@ -3,17 +3,17 @@
 - **Status:** `in-progress`
 - **Channel:** `channel-kantor-pos-miso` (Kantor Pos Miso)
 - **Model konten:** Dongeng 60-90 Detik v1 (`model-konten/dongeng-60-90/brief.md`)
-- **Tahap terakhir selesai:** Tahap 5 — Generate/Acquire Assets (parsial: 7/7 aset tersimpan; G1 belum)
-- **Tahap berikutnya:** Selesaikan audit framing/regenerate bila perlu, lalu G1 Tahap 5.
+- **Tahap terakhir selesai:** Tahap 5 — Generate/Acquire Assets (selesai; G1 belum)
+- **Tahap berikutnya:** G1 Tahap 5; setelah aset diterima, Tahap 6 — Assembly & Publish Prep
 - **Output resmi:**
   - `ideation.md`
   - `konsep-angle.md`
   - `naskah-draft.md`
   - `breakdown-output.md`
-  - `assets/` — 7/7 aset tersimpan; sisanya mengikuti STATUS
+  - `assets/` — 7/7 aset tersimpan
 - **Sumber konteks yang dibaca:** `_sistem/01_BRAND_CORE.md` (template kosong; gap warisan), `channel-brief.md` v1 Operational, `model-konten/dongeng-60-90/brief.md` v1 Operational, `_sistem/05_CONTENT_PRODUCTION_PIPELINE.md`, `_sistem/06_PROMPT_LIBRARY.md`, 4 Bank Konsistensi Visual + `CATATAN-ASSET.md` (Reference-Ready), `arsip-naskah/indeks.md` (kosong), `arsip-naskah/indeks-karakter.md` (kosong)
 - **Sumber eksternal dipakai:** `Tidak ada`
-- **Keputusan baru:** 185 kata; dua karakter Tipe B baru dideskripsikan di `naskah-draft.md` setelah `indeks-karakter.md` dicek kosong; struktur breakdown 7 shot; Miso muncul 7/7 shot; 7 aset tersimpan; B-S4 v1 tidak dipakai; tidak ada perubahan dokumen terkunci.
+- **Keputusan baru:** 185 kata; dua karakter Tipe B; breakdown 7 shot; Miso 7/7; seluruh 7 aset tersimpan dan A-S6 sudah diregenerasi untuk framing portrait yang lebih baik.
 - **Approval yang sudah diberikan:**
   - `G1 Tahap 1:` disetujui 2026-09-12 — Opsi 1 (`a1`)
   - `G1 Tahap 2:` disetujui 2026-09-12 — kerangka dipakai untuk lanjut ke Tahap 3
@@ -24,8 +24,8 @@
   - `G1 Tahap 5:` belum
   - `G2 konten final + metadata:` belum
   - `G3 merge:` belum
-- **Commit terakhir:** koreksi STATUS setelah Tahap 4 (SHA dicatat di `LOG_SESI_2026-09-12.md`)
+- **Commit terakhir:** commit Tahap 5 selesai (SHA dicatat di `LOG_SESI_2026-09-12.md`)
 - **PR terkait:** belum dibuat
 - **Pekerjaan belum tersimpan:** Tidak ada
-- **Risiko atau blocker:** Brand Core masih template kosong (gap sadar). A-S6 framing portrait memotong sebagian tubuh Miso di tepi kanan; perlu diperbaiki atau disetujui ulang sebelum G1. Batas generate gambar per giliran tercapai sebelum Episode B selesai.
-- **Waktu pembaruan:** 2026-09-13 — Tahap 5 parsial; menunggu aset lengkap dan G1
+- **Risiko atau blocker:** Brand Core masih template kosong (gap sadar). Tidak ada aset tertunda. Tetap perlu G1 Tahap 5 sebelum menganggap paket aset diterima.
+- **Waktu pembaruan:** 2026-09-13 — Tahap 5 selesai; menunggu G1
