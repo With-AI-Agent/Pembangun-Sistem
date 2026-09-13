@@ -3,8 +3,8 @@
 - **Status:** `in-progress`
 - **Channel:** `channel-kantor-pos-miso` (Kantor Pos Miso)
 - **Model konten:** Dongeng 60-90 Detik v1 (`model-konten/dongeng-60-90/brief.md`)
-- **Tahap terakhir selesai:** Tahap 5 — Generate/Acquire Assets (selesai; G1 belum)
-- **Tahap berikutnya:** G1 Tahap 5; setelah aset diterima, Tahap 6 — Assembly & Publish Prep
+- **Tahap terakhir selesai:** Tahap 5 — Generate/Acquire Assets (G1 disetujui; aset diterima)
+- **Tahap berikutnya:** Tahap 6 — Assembly & Publish Prep
 - **Output resmi:**
   - `ideation.md`
   - `konsep-angle.md`
@@ -21,11 +21,11 @@
   - `G2 naskah final:` disetujui 2026-09-12
   - `G1 Tahap 4:` disetujui 2026-09-12
   - `G2 breakdown:` disetujui 2026-09-12
-  - `G1 Tahap 5:` belum
+  - `G1 Tahap 5:` disetujui 2026-09-13 — aset diterima
   - `G2 konten final + metadata:` belum
   - `G3 merge:` belum
-- **Commit terakhir:** commit Tahap 5 selesai (SHA dicatat di `LOG_SESI_2026-09-12.md`)
+- **Commit terakhir:** commit approval G1 Tahap 5 (SHA dicatat di `LOG_SESI_2026-09-12.md`)
 - **PR terkait:** belum dibuat
 - **Pekerjaan belum tersimpan:** Tidak ada
-- **Risiko atau blocker:** Brand Core masih template kosong (gap sadar). Tidak ada aset tertunda. Episode B tetap berada pada batas atas durasi; G1 Tahap 5 belum diberikan.
-- **Waktu pembaruan:** 2026-09-13 — Tahap 5 selesai; menunggu G1
+- **Risiko atau blocker:** Brand Core masih template kosong (gap sadar). Tidak ada aset tertunda. Episode B tetap berada pada batas atas durasi; pertahankan tempo VO 125-130 kpm.
+- **Waktu pembaruan:** 2026-09-13 — G1 Tahap 5 disetujui
