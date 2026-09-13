@@ -1,9 +1,9 @@
-# Naskah Draft/Final — Surat yang Terlambat Tiga Puluh Tahun
+# Naskah Final — Surat yang Terlambat Tiga Puluh Tahun
 
 **Channel:** Kantor Pos Miso  
 **Model:** Dongeng 60-90 Detik  
 **Input:** `konsep-angle.md`, G1 Tahap 2 disetujui 2026-09-12  
-**Status:** salinan kerja dari naskah final — G1 + G2 Tahap 3 disetujui 2026-09-12
+**Status:** naskah final — G1 + G2 Tahap 3 disetujui 2026-09-12
 
 ## Pengecekan karakter Tipe B
 
