@@ -45,7 +45,7 @@ Tutup sesi ini:
 
 Klinik Sistem = tempat perawatan untuk sistem-sistemMU yang hidup di repo terpisah — mau dia lahir sebelum meta ini matang (banyak cacat warisan) atau sesudahnya (pingin ditingkatkan/diksa ulang): yang dinilai keadaannya, bukan umurnya. Ada dua cara datang:
 - **Rawat jalan (suntikan)** — kamu salin folder kit/ dari sini ke repo target (di workspace, bukan ke git), kirim satu prompt dari kit itu, dan agent di sana mengaudit + menanam yang hilang + meleburkan dirinya. Targetmu terlihat normal saja, cuma lebih sehat. Ini mode default.
-- **Rawat inap (bengkel)** — copy sistem target "menginap" sementara di sistem-klinik/_bengkel/ (hanya di branch kerja, tidak pernah masuk main), untuk rombakan besar yang butuh alat-alat meta. Selesai, dia pulang; PR-nya tinggal jadi catatan.
+- **Rawat inap (bengkel)** — copy sistem target "menginap" sementara di sistem-klinik/_bengkel/ (hanya di branch kerja, tidak pernah masuk main), untuk rombakan besar yang butuh alat-alat meta. Selesai, dia pulang; PR-nya tinggal jadi catatan. Salinannya seadanya — hanya yang dibedah menginap, aset besar tidak ikut; branch-nya dihapus setelah pemulangan (hygiene anti-bengkak, K-9).
 
 Kapan-kapan mau kontrol ulang: salin kit/ terbaru, jalankan lagi — kit membaca rekam klinik dulu, jadi tidak menanam dua hal yang sama dua kali; sistem yang sudah sehat cuma kena jalur "kontrol + upgrade".
 Dan klinik ini sendiri hidup: setiap run berakhir dengan TAHAP PANEN — cacat baru & ide perbaikan yang ditemukan di targetmu dilaporkan balik, dan kalau kamu setujui, masuk ke kit versi berikutnya.
@@ -55,6 +55,7 @@ Dan klinik ini sendiri hidup: setiap run berakhir dengan TAHAP PANEN — cacat b
 | Kamu mau run ke sistem target | Agent MUST mulai dari diagnosis + rencana (G-Rencana); tidak ada sentuhan sebelum kamu setuju rencananya |
 | Agent mau menimpa/menghapus file target | WAJIB izin per-item; diam-diam overwrite tidak sah |
 | Agent menemukan alat/skill yang mungkin berguna (UI, PPT, OCR, dll.) | DIA MENAWARKAN + hasil risetnya; kamu boleh bilang tidak; penolakan dicatat, tidak ditawari ulang tanpa alasan baru |
+| Agent butuh keputusan kamu (banyak persetujuan per-item) | TANYANYA DIBORONG, bukan dicicil (K-10): daftar bernomor maks ±5 per pesan, tiap tawaran skill/plugin dijelaskan fungsi/tujuan/alasan + risiko + alternatif, dan SELALU ada slot terakhir "mau mengusulkan yang belum ada di daftar?" — kamu jawab sekali, agent kerjakan sekali sampai checkpoint berikutnya |
 | Run selesai | Rekam klinik ditulis + cap versi kit; folder kit hilang dari git target; PR terbuka TANPA auto-merge; merge = kamu |
 | Sesi crash | Sesi baru cari LOG_SESI terbaru → lanjut; itulah kenapa commit tiap tahap itu fisik, bukan birokrasi |
 
