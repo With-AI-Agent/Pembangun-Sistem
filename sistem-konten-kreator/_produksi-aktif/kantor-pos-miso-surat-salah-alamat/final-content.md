@@ -2,8 +2,8 @@
 
 **Status:** ready-for-review — G1 Tahap 5 disetujui 2026-09-13; G2 final disetujui 2026-09-13; G3 belum  
 **Judul rekomendasi:** Surat Salah Alamat ke Rumah Biru  
-**Naskah:** 185 kata  
-**Durasi target:** sekitar 85–89 detik pada 130 kpm dengan jeda sangat selektif  
+**Naskah:** 177 kata
+**Durasi target:** sekitar 82–89 detik pada 120–130 kpm; target produksi 125–130 kpm
 **Unit:** 7 still images portrait + VO narator tunggal + musik ambient opsional  
 **Miso:** Miso muncul pada A-S1 sampai A-S7 (7/7)  
 **Karakter Tipe B:** dua Tipe B: Penghuni Rumah No. 18; Penerima di Rumah No. 81  
@@ -28,5 +28,5 @@
 ## Gerbang
 
 - [x] G1 Tahap 5 — disetujui 2026-09-13.
-- [ ] G2 konten final + metadata — menunggu review pemilik.
+- [x] G2 konten final + metadata — disetujui 2026-09-13.
 - [ ] G3 merge PR — belum diminta.

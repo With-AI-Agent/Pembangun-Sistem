@@ -3,11 +3,11 @@
 **Tanggal produksi:** 2026-09-13  
 **Model konten:** Dongeng 60-90 Detik v1  
 **Versi brief:** Channel Brief v1 Operational; Model Konten Brief v1 Operational  
-**Status:** siap direview bersama konten; G2 final belum
+**Status:** siap direview bersama konten; G2 final disetujui 2026-09-13
 
 ## Prompt final
 
-Prompt final yang benar-benar dipakai per unit tersimpan di `sistem-konten-kreator/_produksi-aktif/kantor-pos-miso-surat-terlambat-30-tahun/breakdown-output.md`, pada blok `Prompt generate final` Shot 1–7. Anchor yang dirujuk dan disertakan saat generate: Miso `acuan-utama.png` + `reference-sheet.png`; Kota Kanala `sudut-eksterior-kantor-pos.png`, `sudut-interior-lobby.png`, `sudut-jalan-senja.png`; props `acuan-utama.png`; palet `palet.png` + `style-sheet.png`.
+Prompt final yang benar-benar dipakai per unit tersimpan di `sistem-konten-kreator/_produksi-aktif/kantor-pos-miso-surat-terlambat-30-tahun/breakdown-output.md`, pada blok `Prompt generate final` Shot 1–7. Anchor yang dirujuk dan disertakan saat generate: Miso `acuan-utama.png` + `reference-sheet.png`; Kota Kanala `sudut-eksterior-kantor-pos.png`, `sudut-interior-lobby.png`, `sudut-jalan-senja.png`; props `acuan-utama.png`. Palet warna dan negative universal diterapkan dalam prompt final; `style-sheet.png` tercantum sebagai referensi wajib pada B-S5 sesuai `breakdown-output.md`.
 
 Semua prompt menambahkan detail shot, arahan pose/ekspresi, larangan teks/logo/merek, dan mempertahankan gaya picture-book watercolor/gouache.
 

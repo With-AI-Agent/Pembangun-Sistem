@@ -1,6 +1,6 @@
 # Catatan Aset — kantor-pos-miso-surat-salah-alamat
 
-**Tahap:** 5 — Generate/Acquire Assets (selesai; menunggu G1)  
+**Tahap:** 5 — Generate/Acquire Assets (selesai; G1 diterima 2026-09-13)
 **Tanggal:** 2026-09-13 lokal  
 **Sumber:** prompt + referensi dari `breakdown-output.md`; hasil generator diaudit dan dinormalisasi ke portrait 9:16 `768×1365` menggunakan ImageMagick.
 

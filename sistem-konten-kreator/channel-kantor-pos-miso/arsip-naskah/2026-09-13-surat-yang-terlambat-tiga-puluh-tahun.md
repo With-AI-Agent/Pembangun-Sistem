@@ -16,7 +16,7 @@
 
 ## Naskah VO
 
-**Jumlah kata VO:** 176 kata — estimasi 81-88 detik pada 120-130 kpm.  
+**Jumlah kata VO:** 183 kata — estimasi 84-92 detik pada 120-130 kpm; target tempo produksi 125-130 kpm agar tetap 85-88 detik.
 **Dialog Miso:** tidak ada; hanya tindakan dan ekspresi.
 
 Di Kota Kanala, ada surat yang datang setelah penunggunya berhenti menghitung hari.
@@ -40,10 +40,10 @@ Tidak semua surat tiba tepat waktu. Di Kota Kanala, selalu ada hari ketika sebua
 - [x] Kota Kanala dan ending hangat hadir.
 - [x] Tidak ada kematian, kekerasan hewan, horror, atau clickbait.
 - [x] Tiga puluh tahun adalah fakta internal dunia fiksi; tidak memakai sumber eksternal; `SUMBER.md` tidak diperlukan.
-- [ ] G1 naskah — belum.
-- [ ] G2 naskah final — belum.
+- [x] G1 naskah — disetujui 2026-09-12.
+- [x] G2 naskah final — disetujui 2026-09-12.
 
-**Next:** minta G1 untuk kelayakan lanjut dan G2 untuk mengunci naskah final sebelum breakdown.
+**Next:** naskah terkunci; breakdown dan arsip memakai versi ini sebagai sumber final.
 
 
 ---

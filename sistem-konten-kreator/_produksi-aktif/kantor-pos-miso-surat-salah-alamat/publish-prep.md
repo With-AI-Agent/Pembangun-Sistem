@@ -3,7 +3,7 @@
 **Channel:** Kantor Pos Miso  
 **Model:** Dongeng 60-90 Detik v1  
 **Status:** `ready-for-review` — G2 final disetujui 2026-09-13, G3 belum  
-**Naskah:** `185 kata`; arsip final tersedia di `channel-kantor-pos-miso/arsip-naskah/2026-09-13-surat-salah-alamat-ke-rumah-jendela-biru.md`  
+**Naskah:** `177 kata`; arsip final tersedia di `channel-kantor-pos-miso/arsip-naskah/2026-09-13-surat-salah-alamat-ke-rumah-jendela-biru.md`
 
 ## 1. Opsi judul
 

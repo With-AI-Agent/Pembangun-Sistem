@@ -21,7 +21,7 @@
 
 ## Naskah VO
 
-**Jumlah kata VO:** 185 kata — estimasi 85-93 detik pada 120-130 kpm; berada di batas atas format dan perlu dibaca dengan jeda hemat.  
+**Jumlah kata VO:** 177 kata — estimasi 82-89 detik pada 120-130 kpm; target tempo produksi 125-130 kpm.
 **Dialog Miso:** tidak ada; hanya tindakan dan ekspresi.
 
 Di Kota Kanala, ada surat yang salah alamat—tetapi tidak salah menemukan seseorang.
@@ -43,10 +43,10 @@ Kadang, surat tidak salah alamat. Ia hanya perlu seseorang yang mau mengantarnya
 - [x] Kota Kanala dan ending hangat hadir.
 - [x] Tidak ada kematian, kekerasan hewan, horror, atau clickbait.
 - [x] Tidak memakai klaim faktual/sumber eksternal; `SUMBER.md` tidak diperlukan.
-- [ ] G1 naskah — belum.
-- [ ] G2 naskah final — belum.
+- [x] G1 naskah — disetujui 2026-09-12.
+- [x] G2 naskah final — disetujui 2026-09-12.
 
-**Next:** minta G1 untuk kelayakan lanjut dan G2 untuk mengunci naskah final sebelum breakdown.
+**Next:** naskah terkunci; breakdown dan arsip memakai versi ini sebagai sumber final.
 
 
 ---

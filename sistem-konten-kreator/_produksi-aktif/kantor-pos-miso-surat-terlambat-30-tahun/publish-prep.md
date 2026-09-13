@@ -3,7 +3,7 @@
 **Channel:** Kantor Pos Miso  
 **Model:** Dongeng 60-90 Detik v1  
 **Status:** `ready-for-review` — G2 final disetujui 2026-09-13, G3 belum  
-**Naskah:** `190 kata`; arsip final tersedia di `channel-kantor-pos-miso/arsip-naskah/2026-09-13-surat-yang-terlambat-tiga-puluh-tahun.md`  
+**Naskah:** `183 kata`; arsip final tersedia di `channel-kantor-pos-miso/arsip-naskah/2026-09-13-surat-yang-terlambat-tiga-puluh-tahun.md`
 
 ## 1. Opsi judul
 

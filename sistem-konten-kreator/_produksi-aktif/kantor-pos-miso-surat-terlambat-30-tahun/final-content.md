@@ -2,8 +2,8 @@
 
 **Status:** ready-for-review — G1 Tahap 5 disetujui 2026-09-13; G2 final disetujui 2026-09-13; G3 belum  
 **Judul rekomendasi:** Surat yang Terlambat 30 Tahun  
-**Naskah:** 190 kata  
-**Durasi target:** sekitar 88–90 detik pada 130 kpm; tanpa jeda kosong tambahan  
+**Naskah:** 183 kata
+**Durasi target:** sekitar 85–88 detik pada 125–130 kpm; tempo produksi wajib dijaga dalam rentang itu
 **Unit:** 7 still images portrait + VO narator tunggal + musik ambient opsional  
 **Miso:** Miso muncul pada B-S1, B-S2, B-S3, B-S4, B-S6, dan B-S7 (6/7; B-S5 insert tanpa Miso)  
 **Karakter Tipe B:** satu Tipe B: Pemilik Toko Roti  
@@ -28,5 +28,5 @@
 ## Gerbang
 
 - [x] G1 Tahap 5 — disetujui 2026-09-13.
-- [ ] G2 konten final + metadata — menunggu review pemilik.
+- [x] G2 konten final + metadata — disetujui 2026-09-13.
 - [ ] G3 merge PR — belum diminta.
