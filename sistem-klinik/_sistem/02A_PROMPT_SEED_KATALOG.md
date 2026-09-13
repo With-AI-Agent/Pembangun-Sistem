@@ -13,12 +13,15 @@ Tugasmu:
      - **Nama Cacat**
      - **Gejala (Symptom)** (apa yang terlihat oleh pengguna atau agent)
      - **Cara Periksa (Diagnosis)** (cara pasti memvalidasi keberadaan cacat ini)
-     - **Pola Perbaikan (Tindakan)** (langkah perbaikannya)
-     - **Risiko jika dibiarkan** (mengapa ini penting)
+     - **Pola Perbaikan (Resep/Tindakan)** (langkah perbaikannya)
+     - **Bukti / Risiko** (mengapa ini penting, atau bukti nyata dampak cacat ini)
    - Log Keputusan di bagian bawah (W-05).
 
 **Aturan Promosi Cacat Baru (dimasukkan dalam dokumen):**
-Setiap kali Sistem Klinik berjalan (run nyata) dan menemukan cacat bentuk baru yang belum ada di katalog, cacat tersebut WAJIB dipanen (Tahap F Panen) dan diusulkan masuk ke katalog ini (lewat PR ke master klinik).
+Setiap kali Sistem Klinik berjalan (run nyata) dan menemukan cacat bentuk baru, cacat tersebut WAJIB dipanen (Tahap F Panen) ke katalog ini (lewat PR ke master klinik). Syarat masuk katalog:
+1. **Sumber = Temuan Run Nyata** (bukan sekadar teori).
+2. **Cek Duplikat:** Harus dipastikan cacat/pola tersebut belum ada di katalog saat ini.
+3. **Format Terkunci:** Cacat baru harus ditulis menggunakan field yang identik (Nama, Gejala, Cara Periksa, Pola Perbaikan, Bukti/Risiko).
 
 **Contoh Cacat (sebagai inspirasi, kembangkan jadi formal):**
 - Referensi eksternal bocor (backtick ke luar folder sistem).
