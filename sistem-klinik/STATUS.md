@@ -1,9 +1,9 @@
 # Status Pembangunan — Sistem Klinik (unit meta sistem ini)
 
-- **Status:** `kerangka-menunggu-review`
+- **Status:** `isi-dalam-pembangunan`
 - **Sistem:** Sistem Klinik (Klinik Sistem) — lihat SYSTEM_MANIFEST.md dan 00_RENCANA_KERANGKA.md di folder ini
-- **Tahap terakhir selesai:** rencana kerangka + manifest + skeleton ditulis di branch `arena/01a08f2c-pembangun-sistem` (2026-09-11); review independen 2 putaran tuntas; koreksi pemilik K-9/K-10 masuk 2026-09-13
-- **Tahap berikutnya:** review menyeluruh pemilik atas 00_RENCANA_KERANGKA.md di PR → merge → bangun 01_ALUR_RUN.md (satu dokumen penuh dulu, baru berikutnya)
+- **Tahap terakhir selesai:** PR #43 merged `a4331f8` (13 Sep 2026 07:09 WIB); draf penuh `_sistem/01_ALUR_RUN.md` + `_sistem/03_KEBIJAKAN_LEBUR.md` ditulis sesi `arena/01a0981c` (2026-09-13); rekonsiliasi urutan E→F→G-Final→peleburan disetujui pemilik; manifest sinkron (baris unit + Log Keputusan) — validator sistem PASS
+- **Tahap berikutnya:** review independen L1 atas PR draf 01+03 → koreksi (bila ada) dieksekusi sesi ini selama belum merge → merge pemilik → kerja lanjutan (prompt 02A seed katalog → 04A → 05A → 06 + kit pertama) di SESI BARU dari main
 - **Pekerjaan belum tersimpan:** Tidak ada
-- **Waktu pembaruan:** 2026-09-13 — menunggu merge pemilik atas PR #43
-- **Risiko aktif:** nama sistem dan pembagian mode masih bisa dikoreksi lewat review PR ini (belum ada yang terlanjur merujuknya kecuali INDEKS + folder)
+- **Waktu pembaruan:** 2026-09-13 — draf 01+03 + manifest tersinkron di-PR untuk review independen; sesi ditutup menunggu verdict
+- **Risiko aktif:** tidak ada yang terbuka — rekonsiliasi urutan sudah disetujui; review isi 01 & 03 masih bisa menghasilkan koreksi (normal, itu gunanya gerbang)
