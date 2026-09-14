@@ -1,9 +1,9 @@
 # Status Pembangunan — Sistem Klinik (unit meta sistem ini)
 
-- **Status:** `siap-pakai` (flip 14 Sep 2026 atas delegasi pemilik — Log Keputusan manifest)
+- **Status:** `siap-pakai` (dipertahankan via keputusan pemilik 14 Sep pasca-review; ratifikasi akhir = review independen putaran 2 pada PR #51)
 - **Sistem:** Sistem Klinik (Klinik Sistem) — lihat SYSTEM_MANIFEST.md dan 00_RENCANA_KERANGKA.md di folder ini
-- **Tahap terakhir selesai:** Langkah 1–7 rencana tuntas: dokumen inti 01–06 + kit v0.1.2 terakit; `START_DI_SINI.md`; acceptance test pertama lulus (AT-KL-01 run 1–3 + AT-KL-02; bukti `ACCEPTANCE_TEST_LOG.md`); temuan AT-KL-02 diperbaiki (aturan anti-kit-usang, 01 §1.3 + Tahap A.4); audit matkangan pra-run hijau (validator meta + gerbang mandiri + alat kit)
-- **Tahap berikutnya:** (1) review & merge PR penutup sesi ini oleh pemilik; (2) PR meta Bagian B (tanam tawaran kapabilitas ke alur meta — bukan syarat pakai); (3) run pertama di dunia nyata (bengkel/suntik) — dari sesi baru yang dibuka dari main pasca-merge; (4) RINGKASAN cadangan W-09 (Langkah 10)
+- **Tahap terakhir selesai:** respons review independen putaran 1 PR #51 (verdict MERAH — 7 temuan + 1 tak terverifikasi, SEMUA diterima): §1.3 diisi sungguhan (edit pertama hilang karena kesalahan proses — transparan di log), stamp kit disinkron 6/6 `versi-kit 0.1.2`, bukti AT dikoreksi append-only (angka volatil dicabut, deviasi W-09 dideklarasikan), pegangan final (klausa era kerangka dihapus dari PANDUAN/PROMPT_ENTRI/bengkel README), INDEKS disinkron dengan flip, kejujuran audit diperbaiki (checklist audit di-un-tick)
+- **Tahap berikutnya:** review independen putaran 2 atas PR #51 (maks 2 putaran) → merge oleh pemilik → sesi baru dari main → PR meta Bagian B dan/atau run pertama (bengkel/suntik) — clean-run penuh menyatu dengan run pertama (keputusan pemilik 14 Sep)
 - **Pekerjaan belum tersimpan:** Tidak ada
-- **Waktu pembaruan:** 2026-09-14 — Langkah 7 tuntas; Tahap di-flip ke siap-pakai; PR penutup dibuka
-- **Risiko aktif:** tidak ada.
+- **Waktu pembaruan:** 2026-09-14 — perbaikan seluruh temuan review putaran 1 ter-push; menunggu putaran 2
+- **Risiko aktif:** run perilaku (AT-KL-01 Run 1/2, AT-KL-02) belum diverifikasi pihak luar — dinyatakan jujur di ACCEPTANCE_TEST_LOG (Koreksi pasca-review) dan ditangani keputusan pemilik 14 Sep
