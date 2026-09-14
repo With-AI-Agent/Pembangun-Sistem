@@ -12,7 +12,7 @@
 - **Tahap:** siap-pakai — cek W-01/W-02/W-03 kembali ketat sudah dilakukan 14 Sep (validator ketat hijau; lihat _meta/03_KONTRAK_WARISAN.md bagian "Tahap pembangunan" — provenance)
 - **Status:** `Siap dipakai` — seluruh Langkah 1–7 rencana selesai (dokumen 01–06 + kit terakit + START_DI_SINI + acceptance test lulus, bukti ACCEPTANCE_TEST_LOG.md); flip Tahap atas delegasi pemilik 14 Sep (Log Keputusan); K-11 (14 Sep UTC/15 Sep WIB): panggung BENGKEL dihapus — rawat inap kini = alur standar meta di folder sistem target + aturan klinik, kit eksklusif suntik; versi 0.2.0. Menyusul (bukan syarat pakai): PR housekeeping "folder output sistem" (keputusan 15 Sep WIB — sesi berikutnya, struktur `sistem/`, nama folder tidak berubah), PR meta Bagian B, RINGKASAN cadangan (W-09, Langkah 10), run pertama.
 - **Tanggal dibuat:** 11 September 2026 (UTC)
-- **Audit terakhir:** 14 September 2026 — audit matkangan pra-run + acceptance test pertama (AT-KL-01/02); CATATAN JUJUR: audit itu berjalan SEBELUM perubahan aturan inti 01 di PR ini → trigger audit (c) kini terpicu dan audit susulan dijadwalkan (keputusan pemilik 14 Sep: cukup perbaikan artefak + verifikasi putaran 2; clean-run penuh menyatu dengan run pertama)
+- **Audit terakhir:** 14 Sep UTC/15 Sep WIB 2026 — audit trigger (c) pasca-K-11 + re-run acceptance penuh (AT-KL-01/02 di-re-run + AT-KL-03 baru; bukti lengkap append di ACCEPTANCE_TEST_LOG.md) + regresi meta penuh (validate_repo, FI 58 skenario, backup_verify, build_template, check_selfcontained --semua). Audit matkangan pra-run 14 Sep (WIB) tetap berdiri sebagai audit pertama; CATATAN JUJUR: run perilaku re-run dijalankan penulis perubahan — verifikasi pihak luar = review independen PR ini + run pertama nyata (pola F-8, keputusan pemilik 14 Sep)
 - **Quality protocol (versi sistem ini — self-contained):** trigger audit, level default, dan prosedur rollback dirinci di bagian "Quality & Evolution" manifest ini; verifikasi output oleh ACCEPTANCE_TESTS.md (dibangun saat dokumen jadi; memakai `_fixture/`). Induk: _meta/QUALITY_ASSURANCE_AND_EVOLUTION.md di master = provenance saja (sistem harus tetap berfungsi penuh bila foldernya diunduh standalone)
 
 ## Bentuk Sistem
@@ -30,7 +30,7 @@
 - **Living documents:** 02_KATALOG_CACAT — daftar hidup; dokumen ini; STATUS.md
 - **Log keputusan:** tabel Log Keputusan di bawah (dokumen hidup lain membawa tabelnya masing-masing saat dibangun — W-05)
 - **Ringkasan cadangan:** belum ada — _cadangan-claude/RINGKASAN_sistem-klinik.md dibuat saat struktur stabil (W-09, status "menyusul" tercatat resmi di sini)
-- **Laporan audit:** belum ada sebagai dokumen tersendiri — bukti audit matkangan 14 Sep: ACCEPTANCE_TEST_LOG.md + entri log sesi 2026-09-14; audit susulan pasca-perubahan aturan 01 menyusul (trigger (c), lihat field "Audit terakhir")
+- **Laporan audit:** audit trigger (c) pasca-K-11 JALAN 15 Sep WIB — bukti berbasis eksekusi: ACCEPTANCE_TEST_LOG.md (bagian "Audit trigger (c) + re-run acceptance pasca-K-11") + LOG_SESI_2026-09-14_3; SEBAGAI DOKUMEN tersendiri tetap belum ada (dinyatakan, bukan disembunyikan)
 - **Pegangan pengguna:** `PANDUAN_PENGGUNA.md` + `PROMPT_ENTRI_UNIVERSAL.md` di dalam folder sistem ini — final 14 Sep saat flip siap-pakai: prompt pembuka kini menunjuk START_DI_SINI.md sebagai entry point wajib (klausa kondisional era kerangka dihapus identik di kedua berkas)
 
 ## Prinsip
@@ -89,7 +89,7 @@ Status butir 03_KONTRAK_WARISAN.md (provenance) untuk sistem ini — salinan bag
 - [x] Semua dependency valid (akses sesi agent di repo target + riset kapabilitas dinyatakan sebagai kebutuhan, bukan asumsi terbukti — dinyatakan jujur di Dependency)
 - [x] Status dan versi sudah diperbarui (0.2.0 / Siap dipakai — flip atas delegasi pemilik 14 Sep; K-11 + naik versi 14 Sep UTC/15 Sep WIB)
 - [x] Approval yang diperlukan sudah ada (review menyeluruh rencana = merge PR #43; Langkah 7 = mandat pemilik 14 Sep; flip+ratifikasi = delegasi eksplisit 14 Sep, ratifikasi akhir di gerbang merge PR ini)
-- [ ] Audit terakhir tercatat — catatan matkangan 14 Sep ada (ACCEPTANCE_TEST_LOG + log sesi), tetapi laporan audit formal belum ada dan audit susulan pasca-perubahan aturan 01 (trigger (c)) belum dijalankan — jujur belum tercentang
+- [x] Audit terakhir tercatat — audit trigger (c) pasca-K-11 dijalankan 15 Sep WIB: re-run AT-KL-01/02 + AT-KL-03 baru + regresi meta penuh (bukti ACCEPTANCE_TEST_LOG bagian "Audit trigger (c) + re-run acceptance pasca-K-11"); laporan audit formal sebagai dokumen tersendiri: belum ada (dinyatakan di bagian Dokumen Navigasi)
 - [ ] Ringkasan cadangan sinkron (menyusul — W-09, Langkah 10 rencana; tercatat sadar, bukan kelalaian)
 - [x] Pegangan pengguna tersedia di dalam folder sistem (prompt pembuka + prompt penutup) — dua file root ada sejak kerangka; prompt pembuka terbukti bekerja (sesi 14 Sep dibuka dengannya)
 
