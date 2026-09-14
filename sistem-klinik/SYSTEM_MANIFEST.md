@@ -25,7 +25,7 @@
 
 ## Dokumen Navigasi
 
-- **Entry point:** START_DI_SINI.md (dibangun setelah rencana merge; sementara: baca 00_RENCANA_KERANGKA.md dulu)
+- **Entry point:** `START_DI_SINI.md` (selesai dibangun 14 Sep — urutan baca per jenis sesi: pembangunan / siap-run suntik / run bengkel / audit kit / review PR)
 - **Dokumen instruksi aktif:** `_sistem/01_ALUR_RUN.md` dan `_sistem/03_KEBIJAKAN_LEBUR.md` sudah dibangun (dokumen lainnya: 02, 04, 05, 06 juga sudah dibangun).
 - **Living documents:** 02_KATALOG_CACAT — daftar hidup; dokumen ini; STATUS.md
 - **Log keputusan:** tabel Log Keputusan di bawah (dokumen hidup lain membawa tabelnya masing-masing saat dibangun — W-05)
@@ -104,4 +104,5 @@ Status butir 03_KONTRAK_WARISAN.md (provenance) untuk sistem ini — salinan bag
 | 2026-09-13 | K-10 model tanya approval: borongan ≤±5 butir/pesan + penjelasan fungsi/tujuan/alasan per tawaran + slot usulan pemilik; jawaban dicatat persis | Permintaan eksplisit pemilik 13 Sep 2026 — bahan gali wajib 01_ALUR_RUN dan 05_TAWARAN_KAPABILITAS (tabel K + Titik Penguncian rencana) |
 | 2026-09-13 | Baris "Unit kerja utama" disinkron: menyebut F Panen + urutan kanonik E→F→[G-Final]→Peleburan | Rekonsiliasi diagram-vs-gerbang rencana disetujui pemilik 13 Sep (ask_user: setuju + sync_sekarang); sumber: 01_ALUR_RUN bagian 2 + Log Keputusannya |
 | 2026-09-11 | Target diperluas jadi tanpa-umur (K-7): sistem pra-meta maupun pasca-meta semuanya boleh disuntik | Pemilik menyatakan sendiri saat review rencana: "target tuh sebenarnya bukan hanya sistem lama, tapi juga bisa aja sistem yang baru yang dibuat setelah meta sistem ditingkatkan" — sasaran = keadaan, bukan umur; tidak perlu aturan baru, idempotensi (rekam klinik + cap versi) sudah melayani sistem yang lahir lengkap |
+| 2026-09-14 | Langkah 7 rencana dikerjakan: START_DI_SINI.md lahir; acceptance test pertama dijalankan di fixture; temuan pre-audit AT-KL-02 diperbaiki (aturan anti-kit-usang di 01 §1.3 + Tahap A.4) → versi naik 0.1.1→0.1.2 | Mandat pemilik 14 Sep: "pastiin dulu sistem kliniknya udh matang" → tuntaskan Langkah 7 dulu; perbaikan aturan = hasil acceptance test sungguhan, bukan rencana awal (detail di ACCEPTANCE_TEST_LOG.md) |
 | 2026-09-11 | Prinsip hidup ditalangkan sebagai mekanisme (K-8): Tahap F Panen wajib per run + ritme rilis kit lewat PR + cap versi = deteksi basi | Pemilik: "sistem klinik ini juga kayanya perlu dibuat hidup dalam artian terus berkembang" — agent setuju dengan syarat: hidup lewat gerbang (nihil-panen sah, diam tidak sah), bukan lewat mood; selaras Prinsip 6 QA & Evolusi |

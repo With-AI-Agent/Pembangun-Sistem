@@ -17,6 +17,7 @@ from pathlib import Path
 SYS_DIR = Path(__file__).resolve().parent.parent
 
 REQUIRED = [
+    "START_DI_SINI.md",
     "SYSTEM_MANIFEST.md",
     "00_RENCANA_KERANGKA.md",
     "PANDUAN_PENGGUNA.md",
