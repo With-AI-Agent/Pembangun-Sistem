@@ -9,8 +9,8 @@
 - [x] **Draft** — draf pertama selesai 2026-09-14
 - [x] **Reviewed** — direview lengkap oleh pengguna 2026-09-14
 - [x] **Approved** — dikunci lewat gerbang **G2** 2026-09-14
-- [ ] **Merged** — belum masuk `main`; menunggu gerbang **G3**
-- [ ] **Operational** — belum; status ini baru boleh ditetapkan setelah G2, G3, dan seluruh dependency terpenuhi
+- [x] **Merged** — masuk `main` lewat PR #52 pada 2026-09-14 (merge commit `2d39eea`)
+- [x] **Operational** — sudah `Merged` dan seluruh dependency terpenuhi (2026-09-14)
 
 **Checklist Kelengkapan — syarat naik ke `Operational`:**
 
@@ -19,7 +19,7 @@
 - [x] Override terhadap Channel Brief sudah dinyatakan eksplisit: tidak ada override persona/voice; model menambah alur riset dan aturan sumber
 - [x] Gerbang tambahan sudah dicatat — G1 riset dan G1 pemilihan kandidat ide; G2/G3 bawaan tetap berlaku
 - [x] Channel Brief induknya sudah berstatus `Operational`
-- [ ] Sudah `Merged` ke `main`
+- [x] Sudah `Merged` ke `main` (PR #52, merge commit `2d39eea`, 2026-09-14)
 
 **Versi:** `1` — **Terakhir diperbarui:** `2026-09-14`
 
