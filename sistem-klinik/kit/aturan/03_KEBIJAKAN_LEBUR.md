@@ -1,9 +1,9 @@
-> Sumber: _sistem/03_KEBIJAKAN_LEBUR.md sha 8dfa96ff0880074983c22b1d715a912d965cfad9 tanggal 2026-09-14 versi-kit 0.1.2
+> Sumber: _sistem/03_KEBIJAKAN_LEBUR.md sha eddb723f126b1c13c6ca8b808dd2f90ddb041bf6 tanggal 2026-09-14 versi-kit 0.2.0
 
 # 03 — Kebijakan Lebur (Aturan Tanam Permanen)
 
 > Enam aturan yang mengatur SETIAP byte yang ditulis ke repo target selama run — supaya hasil klinik "terlihat normal tapi terukur lebih baik", bukan terlihat seperti dijajah. Nama "lebur": kit datang, bekerja, lalu melebur ke dalam target tanpa meninggalkan badan asing.
-> Sumber keputusan: 00_RENCANA_KERANGKA.md (jangkar konsistensi #2, di-merge PR #43 `a4331f8`) + Discovery Level-0 11 Sep 2026. Dipakai oleh Tahap C dan tahap verifikasinya di 01_ALUR_RUN §6–§7; berlaku penuh juga di panggung bengkel.
+> Sumber keputusan: 00_RENCANA_KERANGKA.md (jangkar konsistensi #2, di-merge PR #43 `a4331f8`) + Discovery Level-0 11 Sep 2026. Dipakai oleh Tahap C dan tahap verifikasinya di 01_ALUR_RUN §6–§7; berlaku penuh juga di panggung rawat inap (K-11).
 > Provenance prinsip: dokumen meta di folder induk repo ini — aturan yang benar-benar dipakai saat run SELURUHNYA di dokumen ini dan turunannya di kit (folder sistem harus berfungsi penuh saat dibawa keluar).
 > **Status berlaku:** menstandarkan desain; run nyata baru sah setelah kit dirakit (06_RITME_KIT) dan Tahap manifest = `siap-pakai`.
 
@@ -83,7 +83,7 @@ MAU MENANAM SESUATU KE TARGET
 
 ## Aturan 4 — Kit tidak pernah masuk git target
 
-**Aturan.** Folder kit dan seluruh berkas kerja sementara TIDAK PERNAH di-commit/branch/PR ke repo target — bukan di commit "sementara", bukan di branch "biar aman". Selama run: entri ignore kerja (`.gitignore` lokal target atau padanannya) + disiplin staging; diverifikasi ulang saat peleburan (`git status` bersih dari kit). Di bengkel: salinan tamu hanya hidup di branch kerja meta, tidak pernah ke main.
+**Aturan.** Folder kit dan seluruh berkas kerja sementara TIDAK PERNAH di-commit/branch/PR ke repo target — bukan di commit "sementara", bukan di branch "biar aman". Selama run: entri ignore kerja (`.gitignore` lokal target atau padanannya) + disiplin staging; diverifikasi ulang saat peleburan (`git status` bersih dari kit). Di rawat inap: aturan ini tidak berlaku secara literal karena TIDAK ADA salinan kit (master dibaca di tempatnya — K-11); yang masuk git adalah perubahan tertanam + rekam, mengikuti alur standar meta (branch → PR → merge oleh pemilik, tanpa auto-merge).
 
 **Yang sah sebagai "aman saat crash":** commit HASIL ke branch kerja + log run berkelanjutan (01 §6.7) + rekam — bukan meng-commit kit.
 
@@ -96,7 +96,7 @@ MAU MENANAM SESUATU KE TARGET
 
 ## Aturan 5 — Istilah klinik tidak menular
 
-**Aturan.** Kosakata klinik — run, kit, suntik, bengkel, rekam klinik, panen, kontrak tanaman, lebur, G-Rencana/G-Final — tidak dipakai di dokumen harian target. KECUALI target sudah punya istilah serupa: punya target yang menang.
+**Aturan.** Kosakata klinik — run, kit, suntik, rawat inap, rekam klinik, panen, kontrak tanaman, lebur, G-Rencana/G-Final — tidak dipakai di dokumen harian target. KECUALI target sudah punya istilah serupa: punya target yang menang.
 
 **Pengecualian sempit:** REKAM-KLINIK sendiri boleh memakai istilah klinik minimal (cap versi kit, dsb.) — dia artefak milik klinik yang memang tinggal di target; tapi bentuk/namanya tetap ikut konvensi target bila target punya padanan (Aturan 3). Nama yang ditanam untuk artefak baru dipilih dari kosakata target, bukan kosakata klinik.
 
@@ -140,3 +140,4 @@ Gagal satu cek = kembali ke Tahap C untuk artefak itu (01 §7). Semua lolos → 
 | 2026-09-13 | Dokumen ditulis (urutan Langkah 2 rencana; pasangan 01_ALUR_RUN) | Ditetapkan 00_RENCANA_KERANGKA.md "Langkah setelah rencana merge"; keenam aturan sudah diputuskan di Discovery (jangkar konsistensi #2 + ide mentah kekhawatiran istilah) — dokumen [ATURAN], bukan [GENERATOR] |
 | 2026-09-13 | Aturan 2 & 4 dinyatakan absolut; konflik dgn konvensi target = berhenti fail-closed, bukan pengecualian | Tanpa ini, satu "konvensi aneh" bisa dipakai membuka lubang overwrite/commit-kit; jalur sahnya tetap ada (borongan K-10), bukan jalur diam-diam |
 | 2026-09-13 | Urutan konvensi bila target belum punya: tanaman run sebelumnya → template kit sebagai usulan bertanda | Menutup celah "target kosong konvensi" yang belum dijawab rencana; tetap memegang prinsip konvensi-target-menang dengan fallback yang bisa dikoreksi pemilik |
+| 2026-09-14 UTC / 15 Sep WIB | Sinkron K-11: header (panggung), Aturan 4 (bengkel → rawat inap: tidak ada salinan kit di panggung in-repo), Aturan 6 (kosakata: "bengkel" → "rawat inap") | Panggung bengkel dihapus — rawat inap kini alur standar meta; "kit tidak pernah di-git" tetap absolut untuk suntik, dan untuk rawat inap dinyatakan secara literal (tanpa salin kit) agar tidak ada keambiguhan |

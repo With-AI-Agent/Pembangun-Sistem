@@ -54,6 +54,7 @@
 | 2026-09-14 | Bukti pertama AT-KL-01 (3 run) + AT-KL-02 dicatat; metode sandbox didokumentasikan | Langkah 7 rencana: acceptance test pertama di fixture (suntik-2x idempoten) — syarat sebelum run nyata sah |
 | 2026-09-14 | AT-KL-02 menangkap cacat aturan → diperbaiki 01 §1.3/Tahap A.4 + kit v0.1.2 | Bukti bahwa katalog+uji bekerja: uji menemukan yang belum dipenuhi aturan, aturan diperbaiki, uji ulang lulus |
 | 2026-09-14 | Koreksi pasca-review putaran 1 PR #51 (MERAH): angka korpus volatil dicabut dari bukti (baris "Verifikasi struktural" di atas), deviasi W-09 Run 1 dideklarasikan resmi, stamp kit disinkron 6/6 `versi-kit 0.1.2` | Review independen putaran 1: F-2 (angka 297 tidak terreproduksi — salah sejak ditulis), F-7 (deviasi W-09 tak dideklarasikan), F-3 (5/6 stamp masih 0.1.1), F-8 (run perilaku tak terverifikasi reviewer) — semuanya diterima; bukti yang sah = exit code + keberadaan struktur, bukan angka korpus (C-04/C5) |
+| 2026-09-14 UTC / 15 Sep WIB | Re-run penuh AT-KL-01/02 + AT-KL-03 baru (varian rawat inap K-11) + regresi meta penuh — bukti di atas; deviasi W-09 + "penulis perubahan sebagai pelaksana" dideklarasikan | K-11 mengubah aturan inti 01 → trigger audit (c) terpicu; AT-KL-03 wajib ada supaya varian panggung baru terbukti mekanis seperti yang lama; satu temuan proses (rujukan backtick memecah R7 template) tertangkap & diperbaiki dalam sesi yang sama |
 
 ## Koreksi pasca-review independen — putaran 1 PR #51 (2026-09-14)
 
@@ -64,3 +65,52 @@ Reviewer putaran 1 memutuskan MERAH dengan 7 temuan + 1 hal tak terverifikasi. S
 3. **(F-1) Klaim "§1.3 diperbaiki" sempat tidak benar — kini benar.** Edit §1.3 yang pertama (14 Sep) hilang karena dua suntingan paralel ke berkas yang sama (yang kedua menimpa yang pertama); reviewer menangkapnya lewat byte-diff baris 41. Kalimat anti-kit-usang kini BENAR-BENAR ada di §1.3 (judul butir kini "Idempoten dan anti-kit-usang"), diverifikasi token tak ambigu + daftar hunk. Konsekuensi: master 01 berubah lagi pasca-koreksi → stamp `kit/aturan/01` memakai sha baru; sha `bc8bb6a0…` yang dikutip di bukti run di atas adalah kit yang benar pada saat run dijalankan (rekam historis, tidak diubah).
 4. **(F-3) Stamp kit disinkron.** Keenam `kit/aturan/*.md` kini ber-stamp `versi-kit 0.1.2` dengan sha cocok 6/6 terhadap master — tidak ada lagi kit yang menyatakan versi lebih tua dari `kit/VERSI.txt`/manifest (syarat fail-closed 06_RITME_KIT §2).
 5. **(F-8) Status verifikasi run perilaku, atas keputusan pemilik:** Run 1 (tanam+lebur), Run 2 (idempoten), dan AT-KL-02 (fail-closed) dijalankan di sandbox penulis dan tidak memiliki artefak yang bisa diperiksa reviewer di head sha — klaim LULUS-nya tidak diratifikasi reviewer. Pemilik memutuskan 14 Sep: cukup perbaikan artefak + verifikasi ulang putaran 2; clean-run penuh oleh sesi netral menyatu dengan run pertama di dunia nyata (yang bergerbang G-Rencana + G-Final). Semantik detektor (Run 3) sudah direproduksi reviewer sendiri di /tmp — bagian itu terverifikasi.
+
+## Audit trigger (c) + re-run acceptance pasca-K-11 — 2026-09-14 UTC / 15 Sep WIB (sesi arena/01a0a216-pembangun-sistem)
+
+**Konteks:** perubahan aturan inti 01 (K-11: panggung bengkel dihapus, rawat inap = alur standar meta, kit eksklusif suntik) → trigger audit (c) terpicu + AT-KL-03 lahir. Seluruh skenario AT-KL di-re-run pada head kerja sesi ini (bukan di-klaim dari bukti 14 Sep di atas — bukti itu historis dan tidak diubah).
+
+### Metode eksekusi (jujur)
+
+- Sandbox `/tmp/atkl-k11/` — fixture asli di repo tidak disentuh; kit TIDAK pernah masuk git di semua sandbox (entri ignore kerja pada AT-KL-01, dihapus saat peleburan; pada AT-KL-03 tidak ada entri ignore sama sekali karena tidak ada kit).
+- Target sandbox di-`git init` lokal tanpa remote — langkah "PR terbuka" disimulasikan: AT-KL-01 = commit peleburan lokal (padanan PR target); AT-KL-03 = artefak `PR-DESKRIPSI-SIMULASI.md` (padanan PR meta normal). Di run nyata langkah PR berlaku penuh.
+- G-Rencana & G-Final run uji: mandat pemilik sesi ini (borongan 2 gerbang — arah K-11 + scope; "audit penuh + AT-KL-03" dipilih eksplisit).
+- **Deklarasi deviasi (pola F-7):** (a) W-09 dikecualikan di kedua fixture — dasar: 04 butir W-09 bentuk sederhana ("tidak wajib jika repo bisa diberikan utuh dalam satu konteks"); target = 2 berkas; pengecualian tercatat di manifest + REKAM target. (b) Run perilaku dijalankan penulis perubahan (bukan pihak netral) — verifikasi pihak luar tetap pada review independen PR ini + run pertama nyata; dinyatakan jujur, bukan disembunyikan.
+
+### AT-KL-01 (re-run, kit v0.2.0) — SEMUA LULUS
+
+| Run | Langkah kunci | Hasil |
+|---|---|---|
+| 1 (suntik penuh) | detektor sebelum tanam | `VALIDATION FAILED (TARGET): W-03: Field STATUS tidak ditemukan...` **exit 1** (merah sesuai harapan) |
+| 1 | tanam: EXTEND README (Prompt Pembuka, STATUS SISTEM + field deterministik `**Pekerjaan belum tersimpan:** Tidak ada`, Cara Pengujian QA, Fakta Platform, Titik Persetujuan) + CREATE LOG_SESI.md, SYSTEM_MANIFEST.md (mini + tabel Log Keputusan), REKAM-KLINIK.md (cap `0.2.0`, status "LULUS (suntik)") — nol overwrite | commit "tindakan" terbentuk |
+| 1 | verifikasi: `validate_target.py` | `VALIDATION PASSED (TARGET)` **exit 0**; `python3 app.py` **exit 0**; grep penanda struktur: `## Prompt Pembuka`, field deterministik, `lmarena`, `Tidak ada auto-merge`, baris tabel `\| Tanggal \| Perubahan \| Alasan \|` — semua ketemu (struktur, bukan angka — C-04) |
+| 1 | peleburan: `rm -rf kit` + bersihkan `.gitignore` kerja | `git status` **kosong** (exit 0); `git ls-files`: .gitignore, LOG_SESI.md, README.md, REKAM-KLINIK.md, SYSTEM_MANIFEST.md, app.py — **nol berkas kit** |
+| 2 (idempoten) | rekam dibaca duluan (cap 0.2.0 = kit 0.2.0 → tidak ada tawaran naik versi); diagnosis ulang: detektor **exit 0**, seluruh penanda terverifikasi TERPASANG; rencana kosong | `git commit` menolak: **"nothing to commit, working tree clean"** — bukti nol perubahan |
+| 3 (detektor merah) | STATUS di-`rusak` paksa | `VALIDATION FAILED (TARGET): W-03: Field STATUS menunjukkan 'rusak'` **exit 1** (pesan tepat); README dipulihkan, tree bersih |
+
+### AT-KL-02 (re-run, kit basi fail-closed — hanya panggung suntik) — LULUS
+
+- Kit PALSU dirakit dari kit v0.2.0: `VERSI.txt` → `0.1.1`, semua stamp `kit/aturan/*` → `versi-kit 0.1.1`.
+- Target fix01 (rekam cap `0.2.0` dari Run 1): per aturan 01 §1.3 + Tahap A.4 — kit 0.1.1 **lebih tua** dari cap rekam 0.2.0 → **BERHENTI fail-closed**: Tahap B ditolak, tuntutan sinkron/naikkan kit dulu.
+- Bukti nol byte ke target: `git status` sebelum keputusan = hanya `?? kit/` (tak pernah masuk git); sesudah keputusan = **sama** (nol perubahan target).
+
+### AT-KL-03 (BARU — varian rawat inap K-11) — SEMUA LULUS
+
+| Run | Langkah kunci | Hasil |
+|---|---|---|
+| 1 | sandbox fix03: salinan fixture, `git init` — **tanpa kit** (bukti: `test -e kit` = tidak ada); master dibaca in-place dari `_sistem/` repo | — |
+| 1 | detektor (alat portabel stdlib-only dari repo, cwd=sandbox) sebelum tanam | `W-03: Field STATUS tidak ditemukan` **exit 1** |
+| 1 | tanam (bentuk identik AT-KL-01 — butir 1.6: artefak dua panggung identik): EXTEND README + CREATE LOG_SESI.md, SYSTEM_MANIFEST.md, REKAM-KLINIK.md (cap `0.2.0`, status "LULUS (rawat inap)") + `PR-DESKRIPSI-SIMULASI.md` | commit "tindakan (rawat inap)" |
+| 1 | **Bukti NOL JEJAK KIT:** (1) tidak ada folder `kit/`; (2) `grep -r "Sumber: _sistem"` = nihil (tanpa stamp turunan); (3) tidak ada `.gitignore` kerja; (4) `git ls-files \| grep -i kit` = nihil | semua ✓ |
+| 1 | verifikasi | detektor `VALIDATION PASSED (TARGET)` **exit 0**; `app.py` **exit 0**; penanda `TANPA auto-merge — merge = keputusan pemilik` + "sistem TETAP di repo sebagai warga kelas satu" ada di PR simulasi |
+| 2 (idempoten) | rekam dibaca duluan (cap 0.2.0 = versi berjalan 0.2.0 → tidak ada tawaran naik versi); seluruh penanda terverifikasi TERPASANG | `git commit` menolak **"nothing to commit, working tree clean"** — nol perubahan; tetap tanpa jejak kit |
+
+### Verifikasi struktural (status kembalian alat — tanpa angka korpus, C-04)
+
+- `python3 _sistem/validate_system.py` → **PASS**
+- `python3 tools/validate_repo.py` → **PASS, WARNINGS: none**
+- `python3 tools/test_failure_injection.py` → **PASSED** (58 skenario — termasuk R7 template bersih: satu temuan proses terjadi & diperbaiki sesi ini: rujukan entry point rawat inap di 3 berkas meta sempat ber-backtick → menambah warning tak terduga di template bersih → dikoreksi ke provenance tanpa backtick; FI hijau kembali. Terdiri dari: 15 sintetis + 9 unit nyata + 14 regresi review PR-11 + 10 regresi check_selfcontained + 10 regresi review_prompt)
+- `python3 tools/backup_verify.py` → **BACKUP AND RESTORE TEST PASSED** (byte-per-byte)
+- `python3 tools/build_template.py` → **TEMPLATE CLEAN BUILD PASSED**
+- `python3 tools/check_selfcontained.py --semua --report` → **HASIL AKHIR: PASS** (semua sistem; rujukan historis tidak ditegakkan — wajar)
+- Sinkron master→kit: 6/6 `kit/aturan/*` stamp `versi-kit 0.2.0` dengan sha = blob master aktual; `kit/VERSI.txt` = `0.2.0` = field Versi manifest.

@@ -8,7 +8,7 @@ Kamu sekarang bertindak sebagai Agent Klinik yang menumpang di repo target ini. 
 - `SYSTEM_MANIFEST.md` dan `STATUS.md` dari target untuk tahu konteks sistem.
 
 **2. Mode Pekerjaan**
-Secara default, ini adalah **Rawat-Jalan** (operasi non-destruktif, suntik ringan). Jika disuruh masuk `_bengkel/`, patuhi aturan isolasi bengkel.
+Ini adalah **Rawat-Jalan** (operasi non-destruktif, suntik ringan) di repo target. Kit HANYA untuk panggung suntik: panggung Rawat-Inap TIDAK dijalankan dari kit — ia berjalan di repo meta dengan alur standarnya (aturan: `kit/aturan/01_ALUR_RUN.md` §1.2 dan §12).
 
 **3. Tindakan**
 - Bandingkan bentuk repo ini dengan Aturan Tanaman (`kit/aturan/04_KONTRAK_TANAMAN.md`) dan Katalog Cacat (`kit/aturan/02_KATALOG_CACAT.md`).

@@ -1,8 +1,8 @@
-> Sumber: _sistem/01_ALUR_RUN.md sha faf35e2c9418fdb7ddb14a3874cf21e825a125b8 tanggal 2026-09-14 versi-kit 0.1.2
+> Sumber: _sistem/01_ALUR_RUN.md sha ef3efa7abb0e9bf971a681c6e1646c4439016842 tanggal 2026-09-14 versi-kit 0.2.0
 
 # 01 — Alur Run (Siklus Kunjungan Klinik)
 
-> Aturan inti Sistem Klinik: SATU RUN = SATU KUNJUNGAN ke SATU sistem target, dengan tahapan yang sama setiap kali, dua gerbang Besar yang tidak bisa ditawar, dan dua panggung (suntik = default, bengkel = pengecualian) yang menghasilkan artefak identik.
+> Aturan inti Sistem Klinik: SATU RUN = SATU KUNJUNGAN ke SATU sistem target, dengan tahapan yang sama setiap kali, dua gerbang Besar yang tidak bisa ditawar, dan dua panggung (suntik = target di repo eksternal; rawat inap = folder sistem target di repo meta ini — K-11) yang menghasilkan artefak identik.
 > Sumber keputusan: 00_RENCANA_KERANGKA.md di folder ini (di-merge via PR #43, commit `a4331f8`, 13 Sep 2026) + Discovery Level-0 11 Sep 2026 + koreksi pemilik K-9/K-10 13 Sep 2026. Provenance prinsip: dokumen-dokumen meta di folder induk repo ini — aturan yang benar-benar dipakai saat run adalah SELURUHNYA di dokumen ini dan turunannya di kit (folder sistem harus tetap berfungsi penuh saat dibawa keluar).
 > **Status berlaku:** dokumen ini menstandarkan desain run. RUN NYATA baru sah setelah kit pertama dirakit (06_RITME_KIT) dan Tahap di manifest naik ke `siap-pakai`. Fail-closed: bila kit tidak ada, tidak ada run — lapor, jangan improvisasi.
 
@@ -37,13 +37,13 @@
   | Panggung | Di mana agent kerja | Kapan dipilih | Jejak di repo meta |
   |---|---|---|---|
   | **Rawat jalan (suntik) — DEFAULT** | repo TARGET | hampir selalu | NOL byte — kit tidak pernah di-commit ke mana pun; histori hidup di git & PR target |
-  | **Rawat inap (bengkel) — PENGECUALIAN** | repo META, target menginap | rombakan struktural berat yang butuh alat/arsip meta, atau target sedang kecil | salinan tamu hidup HANYA di branch kerja; PR hanya mengangkut laporan |
+  | **Rawat inap — folder sistem target di repo meta (K-11)** | repo META, di folder sistem target itu sendiri | pemilik meletakkan folder sistem di repo meta (rombakan berat, diksa ulang, atau target memang mau tinggal di meta) | PR normal di-merge ke `main` oleh pemilik; sistem TETAP di repo sebagai warga kelas satu (terdaftar INDEKS_SISTEM); penghapusan = keputusan sadar pemilik |
 
-  Suntik adalah default karena tidak menaruh apa pun di repo meta. Bengkel pengecualian ber-kuota: branch yang di-push tetap menempati store repo selama branch/PR hidup (K-9) — makanya salinannya seadanya, aset tidak ikut, dan branch dihapus setelah pemulangan.
+  Suntik adalah default karena tidak menaruh apa pun di repo meta. Rawat inap (K-11) berjalan sebagai ALUR STANDAR META: targetnya bukan "salinan tamu" melainkan folder sistem di repo ini — PR di-merge ke `main` seperti biasa, sistemnya tinggal sebagai warga kelas satu (terdaftar di INDEKS_SISTEM), dan penghapusannya adalah keputusan sadar pemilik yang dicatat di log. Lokasinya mengikuti konvensi folder sistem repo ini — dibaca dari INDEKS_SISTEM, tidak di-hardcode di aturan ini.
 - **1.3 Idempoten dan anti-kit-usang.** Run SELALU dibuka dengan membaca REKAM-KLINIK target (atau padanannya — butir 4.2) SEBELUM audit apa pun: yang sudah terpasang diverifikasi, bukan ditanam dua kali; yang pernah DITOLAK pemilik tidak ditawari ulang tanpa alasan baru; bila cap versi di rekam lebih tua dari versi kit saat ini, tawaran "naik ke vX" WAJIB masuk rencana (pemilik boleh menolak; penolakan dicatat). Sebaliknya — bila versi kit yang dibawa LEBIH TUA dari cap di rekam (kit usang; rekam direkam kit lebih baru), BERHENTI fail-closed: dilarang merawat dengan kit yang lebih tua dari yang pernah merawat target; wajib sinkron/naikkan kit lebih dulu (06_RITME_KIT §2) sebelum Tahap B dilanjutkan, dan kejadian itu dicatat di rekam.
 - **1.4 Katalog Cacat = satu-satunya tolok ukur.** Diagnosis tidak menebak dari feeling: setiap butir katalog diperiksa satu per satu dengan cara periksa yang tertulis di katalog itu (02_KATALOG_CACAT). Temuan yang tidak ada di katalog tetap sah — dia jadi kandidat panen (Tahap F) dan, setelah disetujui, butir katalog baru.
 - **1.5 Tidak ada mode "agent percaya diri lanjut".** Dua gerbang (G-Rencana, G-Final) + per-item untuk overwrite dan install kapabilitas; semuanya dijawab pemilik. Kecil yang boleh jalan tanpa jeda dibatasi eksplisit di butir 6.4.
-- **1.6 Format rekam dua panggung identik.** Laporan diagnosis, rencana, catatan tindakan, dan verifikasi memakai format yang sama apa pun panggungnya — supaya hasil bengkel dievaluasi dengan mata yang sama dengan hasil suntik.
+- **1.6 Format rekam dua panggung identik.** Laporan diagnosis, rencana, catatan tindakan, dan verifikasi memakai format yang sama apa pun panggungnya — supaya hasil rawat inap dievaluasi dengan mata yang sama dengan hasil suntik.
 - **1.7 Satu run, satu target.** Tidak ada kerja multi-repo paralel di satu run. Target kedua = run kedua.
 
 ## 2. Peta Siklus
@@ -58,7 +58,7 @@ E  CATATAN            REKAM-KLINIK ditulis ke target + cap versi kit (draft fina
 F  PANEN              cacat baru / celah aturan / ide kit → usulan balik ke meta
    ── G-FINAL (Besar — pemilik: isi perubahan + verifikasi + panen + izin peleburan) ──
    PELEBURAN &        kit hilang dari target; PR target tanpa auto-merge
-   PENYERAHAN         (bengkel: pulangkan + PR meta di-close/merge laporan + hapus branch)
+   PENYERAHAN         (rawat inap: PR meta normal → merge oleh pemilik; sistem tetap di repo)
 ```
 
 **Urutan E–F–G-Final–Peleburan (rekonsiliasi yang dilaporkan):** tabel Titik Penguncian rencana dan jangkar konsistensi #5 menyatakan eksplisit G-Final berada **sebelum peleburan kit + PR**; diagram ringkas di rencana menaruh peleburan lebih awal. Aturan gerbang eksplisit yang menang: rekam klinik (E) dan usulan panen (F) harus SUDAH ADA saat pemilik menilai G-Final, dan kit baru hilang SETELAH disetujui — supaya koreksi G-Final masih bisa dieksekusi tanpa merakit ulang. Catat di Log Keputusan butir 16.
@@ -72,7 +72,7 @@ Tujuan: tahu DI MANA dan KADALUARSA target, sebelum memeriksa apa pun. Read-only
 3. **Baca REKAM-KLINIK (idempotensi):** versi kit terakhir yang pernah merawat, tanggal run, item yang pernah DITOLAK pemilik + alasannya, rollback yang pernah terjadi. Bila target belum pernah dirawat → rekam belum ada; catat "kunjungan pertama".
 4. **Cap vs versi kit:** bila cap di rekam < versi kit saat ini → tandai "tawaran naik versi" sebagai item wajib rencana (butir 1.3). Bila cap di rekam > versi kit yang dibawa (kit usang) → berhenti fail-closed (butir 1.3): wajib sinkron kit dulu, Tahap B tidak dilanjutkan dengan kit lebih tua dari yang pernah merawat.
 5. **Konvensi target:** bahasa dokumen, gaya penamaan berkas, struktur folder, ada-tidaknya padanan lokal untuk rekam/log/status — ini yang menentukan bentuk artefak tanaman (Kebijakan Lebur: konvensi target menang).
-6. (Bengkel saja) **Estimasi ukuran + daftar exclude:** aset besar (gambar/video/data) TIDAK ikut menginap; daftarnya ditulis di laporan diagnosis (K-9).
+6. (Rawat inap saja) **Lingkup folder tamu:** folder tamu diperlakukan utuh — tidak ada pembatasan ukuran/aset (K-11: alur standar meta, bukan salinan tamu ber-kuota). Bila ada aset sangat besar dan pemilik tidak menghendakinya termasuk dalam run → panggung suntik dipakai (kit ke repo eksternal); keputusan + alasannya dicatat di laporan diagnosis.
 
 Hasil tahap: blok "Keadaan Target" di laporan diagnosis (format 4.5).
 
@@ -102,10 +102,10 @@ Bila pemeriksaan tidak bisa dilakukan (target tidak bisa dibaca, kit rusak, reka
 ### 4.5 Format LAPORAN DIAGNOSIS
 
 ```markdown
-# LAPORAN DIAGNOSIS — <nama target> (run <tanggal>, kit v<versi>, panggung <suntik/bengkel>)
+# LAPORAN DIAGNOSIS — <nama target> (run <tanggal>, kit v<versi> [suntik] / master in-place [rawat inap], panggung <suntik/rawat inap>)
 
 ## 1. Keadaan Target (hasil Tahap A)
-[identitas, keadaan pemakaian, konvensi, (bengkel) ukuran + daftar exclude]
+[identitas, keadaan pemakaian, konvensi, (rawat inap) lingkup folder tamu]
 
 ## 2. Bacaan REKAM-KLINIK
 [run terakhir, versi, item ditolak + alasan, rollback; atau "kunjungan pertama"]
@@ -122,8 +122,8 @@ Bila pemeriksaan tidak bisa dilakukan (target tidak bisa dibaca, kit rusak, reka
 ## 6. Peluang Kapabilitas (arah — tawaran lengkap di borongan)
 [kebutuhan → arah solusi]
 
-## 7. (Bengkel) Exclude & Estimasi Ukuran
-[daftar aset yang tidak menginap + alasan]
+## 7. (Rawat inap) Catatan Folder Tamu
+[lingkup folder tamu; keputusan aset besar bila ada + alasannya]
 
 ## 8. Tidak Bisa Diverifikasi
 [apa yang tidak terperiksa dan kenapa — WAJIB diisi "tidak ada" bila lengkap]
@@ -189,7 +189,7 @@ Rekam ini adalah memori jangka panjang target — run berikutnya membacanya PERT
 
 Panen wajib di SETIAP run — ini mekanisme evolusi kit (K-8), bukan niat.
 
-- **Yang dipanen:** cacat baru yang belum ada di katalog (diberi nama + gejala + cara periksa + pola perbaikan + risiko), celah aturan kit yang ketahuan saat run, ide perbaikan kit/alur, kemampuan bengkel yang terbukti perlu dipromosikan portabel masuk kit.
+- **Yang dipanen:** cacat baru yang belum ada di katalog (diberi nama + gejala + cara periksa + pola perbaikan + risiko), celah aturan kit yang ketahuan saat run, ide perbaikan kit/alur, kemampuan yang hanya rawat inap (di repo meta) yang mampu layani dan terbukti perlu dipromosikan portabel masuk kit.
 - **Nihil panen adalah nilai sah** — asal DITULIS eksplisit: "nihil, karena <alasan>". Diam tanpa laporan tidak sah.
 - Panen TIDAK mengangkut konten target — yang mengalir balik ke meta hanya temuan dan usulan, netral-domain (nama target boleh disebut sebagai sumber di laporan, isi privat target tidak ikut).
 - Keputusan atas panen ikut G-Final (satu gerbang, dua objek keputusan).
@@ -210,24 +210,25 @@ Panen wajib di SETIAP run — ini mekanisme evolusi kit (K-8), bukan niat.
 3. Panen yang disetujui → PR terpisah ke sistem-klinik di repo meta (ke katalog/kit sesuai jenisnya) — bisa jalan di sesi meta sendiri; catat tautannya di rekam run.
 4. Checklist akhir = bagian 15.
 
-### 11.2 Bengkel (rawat inap)
+### 11.2 Rawat inap (folder sistem target di repo ini — K-11)
 
-1. **Pemulangan hasil:** patch/download-workspace diserahkan ke pemilik untuk diterapkan ke repo target asli (bengkel TIDAK pernah push ke repo target langsung dari meta).
-2. **PR meta di-close** setelah pemulangan — KECUALI ada bagian yang memang jadi milik meta (laporan ke `_arsir-run/`, temuan untuk katalog): PR itu hanya berisi berkas laporan, boleh di-merge pemilik.
-3. **Hygiene pasca-pemulangan (K-9):** salinan tamu dihapus dari `_bengkel/<nama>/`; branch kerja DIHAPUS — keputusan sadar pemilik, dicatat, bukan diam-diam; PR tetap tinggal sebagai catatan permanen run.
-4. Kebijakan Lebur berlaku penuh di bengkel: apa pun yang ditanam ke tamu ikut konvensi tamu; overwrite tetap per-item.
-5. Branch yatim (sesi mati sebelum pemulangan): dilaporkan, TIDAK dihapus diam-diam.
+1. **Tidak ada "pemulangan"** — hasil sudah berada di repo ini, di folder sistem target itu sendiri. PR meta NORMAL dibuka: memuat perubahan tertanam + rekam klinik + STATUS target + sinkron INDEKS_SISTEM; deskripsi lengkap (apa, gerbang yang sudah dilewati, item ditolak); **TANPA auto-merge — merge = keputusan pemilik penuh.**
+2. Panen yang disetujui → PR terpisah ke sistem-klinik di repo meta (ke katalog/kit sesuai jenisnya) — sama persis dengan suntik; tautannya dicatat di rekam run.
+3. **Status pasca-run (K-11):** sistem TETAP di repo sebagai warga kelas satu — terdaftar/diperbarui di INDEKS_SISTEM; alur meta normal dapat terus berkerja padanya. Penghapusan folder = keputusan sadar pemilik, dicatat di log — tidak pernah diam-diam.
+4. Kebijakan Lebur berlaku penuh: apa pun yang ditanam ke target ikut konvensi target; overwrite tetap per-item.
+5. Branch yatim (sesi mati sebelum merge): pola standar meta — dilaporkan, TIDAK dihapus diam-diam.
 
 ## 12. Adaptasi Dua Panggung
 
-| Aspek | Suntik (default) | Bengkel (pengecualian) |
+| Aspek | Suntik (default) | Rawat inap (di repo ini — K-11) |
 |---|---|---|
-| Lokasi kerja | repo target, workspace sendiri | repo meta, `_bengkel/<nama>/` — hidup hanya di branch kerja |
-| Akses alat berat meta | tidak ada — hanya alat portabel kit | penuh (tools & arsip meta boleh dipakai ke salinan tamu) |
-| Yang masuk git | perubahan tertanam + rekam klinik → PR target | HANYA berkas laporan → PR meta (close/merge-laporan); salinan tamu TIDAK pernah ke main |
-| Merge/di-discharge | pemilik merge PR target | pemilik close PR meta setelah pemulangan (+ hapus branch, keputusan sadar) |
-| Pemulangan hasil | langsung di tempat (repo target) | patch / download-workspace → diterapkan pemilik ke repo target |
-| Kapan dipilih | hampir selalu | rombakan berat butuh alat meta; atau target kecil; kuota-bijaksana (K-9) |
+| Lokasi kerja | repo target, workspace sendiri | repo meta, di folder sistem target itu sendiri |
+| Akses alat berat meta | tidak ada — hanya alat portabel kit | penuh (sistem ada di repo ini — tools & arsip meta boleh dipakai) |
+| Aturan yang dibaca | turunan kit (salinan berlabel + stamp) | MASTER `_sistem/01–06` di tempatnya (tanpa salin/stamp/peleburan) |
+| Yang masuk git | perubahan tertanam + rekam klinik → PR target | perubahan tertanam + rekam klinik → PR meta normal (merge ke `main` oleh pemilik) |
+| Merge/di-discharge | pemilik merge PR target | pemilik merge PR meta (sistem tetap di repo sebagai warga kelas satu) |
+| Pemulangan hasil | langsung di tempat (repo target) | tidak ada — hasil sudah di repo |
+| Kapan dipilih | hampir selalu | pemilik meletakkan folder di repo (rombakan berat / diksa / tinggal di meta) |
 | Format artefak | identik dua panggung (butir 1.6) | identik dua panggung (butir 1.6) |
 
 Tahap A–F sama persis di kedua panggung; yang berbeda hanya mekanisme penempatan kerja dan penyerahan di atas.
@@ -253,10 +254,10 @@ Laporan berhenti selalu memuat: di tahap apa, apa yang sudah aman (ter-commit/te
 **Tiga fakta platform (kausal — "tidak bisa", bukan "jangan"):**
 
 1. **Branch kerja otomatis.** Sesi di repo target (maupun meta) bekerja di branch `arena/...` yang dibuat otomatis — `main` tidak tersentuh sampai merge. Run selalu memverifikasi branch aktif di awal, tidak pernah mengasumsikan `main`.
-2. **Push dicabut setelah merge/close.** Setelah PR di-merge atau di-close, sesi TIDAK BISA push lagi. Konsekuensi run: SEMUA commit + rekam + PR harus selesai SEBELUM pemilik me-merge; hasil bengkel dipulangkan sebelum PR di-close; setelah merge, kerja lanjutan = sesi baru dari main (file pasca-merge terjebak di sesi — workaround satu-satunya: download workspace).
+2. **Push dicabut setelah merge/close.** Setelah PR di-merge atau di-close, sesi TIDAK BISA push lagi. Konsekuensi run: SEMUA commit + rekam + PR harus selesai SEBELUM pemilik me-merge (rawat inap: PR-nya di-merge sebelum akses push hilang); setelah merge, kerja lanjutan = sesi baru dari main (file pasca-merge terjebak di sesi — workaround satu-satunya: download workspace).
 3. **Sesi bisa crash kapan saja.** Karena itu log run berkelanjutan (6.7) + REKAM-KLINIK (E) + STATUS deterministik bukan pelengkap — mereka adalah mekanisme pemulihan yang menjadikan run bisa dilanjutkan sesi lain tanpa menanya ulang. Mekanisme inilah barang tanam utama klinik ke target (Kontrak Tanaman); sistem klinik menerapkannya pada dirinya sendiri lebih dulu.
 
-**Implikasi khusus bengkel:** salinan tamu hanya ada di branch (fakta 1); PR meta di-close pasca-pemulangan sebelum akses push hilang (fakta 2); log run di meta mengikuti aturan 10_LOG_SESI.md folder ini (fakta 3).
+**Implikasi khusus rawat inap:** folder tamu hidup di branch kerja sampai merge (fakta 1); SEMUA commit + rekam + PR harus selesai SEBELUM pemilik me-merge, karena setelah merge sesi tidak bisa push lagi (fakta 2); log run di meta mengikuti aturan 10_LOG_SESI.md folder ini (fakta 3).
 
 ## 15. Definisi Selesai 1 Run
 
@@ -264,8 +265,8 @@ Satu run dianggap SELESAI hanya bila SEMUA lolos:
 
 - [ ] Semua item rencana yang disetujui terpasang dan terverifikasi (keluaran verifikasi tercatat, bukan klaim);
 - [ ] REKAM-KLINIK tertulis di target dengan cap versi kit + daftar keputusan (termasuk yang ditolak);
-- [ ] Folder kit hilang dari git target (suntik) — atau salinan tamu dihapus + branch dihapus pasca-pemulangan (bengkel);
-- [ ] PR target terbuka TANPA auto-merge (suntik) — atau patch diserahkan + PR meta di-close/merge-laporan (bengkel);
+- [ ] Folder kit hilang dari git target (suntik) — atau sistem target sudah ter-merge ke `main` + terdaftar di INDEKS_SISTEM (rawat inap, K-11);
+- [ ] PR target terbuka TANPA auto-merge (suntik) — atau PR meta terbuka TANPA auto-merge (rawat inap, K-11) — merge = hak pemilik;
 - [ ] Panen dilaporkan (termasuk "nihil, karena …");
 - [ ] Merge/discharge dilakukan pemilik — tanpa kecuali.
 
@@ -280,3 +281,4 @@ Tidak ada status "selesai" sebelum checklist ini lolos. Run yang berhenti di ten
 | 2026-09-13 | G-Rencana = satu rangkaian borongan bernomor K-10 yang selesai sebelum eksekusi; item baru di C diborong susulan sekali jalan | Sintesis K-3 (dua gerbang + per-item) dan K-10 (anti bertele-tele, anti 10-sekaligus): borongan bergelombang ≤±5 butir, tanpa cicil-tanya di tengah run |
 | 2026-09-14 | Butir 1.3 + Tahap A langkah 4 dilengkapi arah sebaliknya: kit yang dibawa LEBIH TUA dari cap rekam → berhenti fail-closed, wajib sinkron kit dulu | Hasil pre-audit acceptance AT-KL-02 (Langkah 7): aturan lama hanya mengatur cap < kit (naik versi); arah kit < cap belum tertulis — tanpa kalimat ini agent bisa menurunkan versi perawatan target tanpa aturan yang melarang |
 | 2026-09-14 | Koreksi pasca-review putaran 1 PR #51: kalimat anti-kit-usang KINI BENAR-BENAR ada di §1.3 (edit pertama 14 Sep hilang karena kesalahan proses — dua edit paralel ke berkas ini, tulisan kedua menimpa yang pertama; terdeteksi reviewer lewat byte-diff); seluruh enam stamp `kit/aturan/*` disinkron `versi-kit 0.1.2` | Review independen putaran 1 MERAH (temuan F-1 klaim≠artefak, F-3 stamp basi); diterima pemilik + dijalankan penulis; verifikasi pakai token tak ambigu + daftar hunk, bukan token yang muncul di teks lama |
+| 2026-09-14 UTC / 15 Sep WIB | K-11: panggung BENGKEL (staging `_bengkel/`) DIHAPUS — rawat inap kini = folder sistem target di repo meta + alur standar meta (branch→PR→merge ke main, tanpa auto-merge) dijalankan dengan aturan klinik; rawat inap membaca MASTER di tempatnya (tanpa salin kit/stamp/peleburan); §1.2, 1.6, 2, 3(6), 4.5, 11.2, 12, 14, 15 disinkron; status pasca-run: sistem tetap di repo sebagai warga kelas satu (INDEKS), hapus = keputusan sadar pemilik | Ratifikasi eksplisit pemilik setelah analisis agent (delegasi "ikut yang terbaik" TIDAK dipakai untuk butir arsitektur ini — pemilik menjawab "aku setuju" setelah membaca). Argumen inti: alur bengkel khusus (tak pernah merge, pulang via patch, hapus branch, kuota K-9) belum pernah dijalankan bahkan sekali, bertentangan norma meta, dan menambah risiko crash-recovery; alur standar meta terbukti puluhan PR dan merge-nya sendiri jalur recovery. Supersede: K-1 (bagian "bengkel pengecualian") + konsekuensi panggung K-9. Versi naik 0.1.2 → 0.2.0 |

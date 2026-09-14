@@ -1,7 +1,7 @@
 # START DI SINI — Sistem Klinik
 
 > Entry point sistem ini. Sesi agent yang bekerja pada folder sistem ini mulai dari sini — SETELAH entry point tingkat repo selesai (laporan awal sesuai template laporan sesi, cek PR menggantung, cek INDEKS_SISTEM, cek LOG_SESI terbaru; aturannya di dokumen cara-kerja repo induk — provenance tanpa backtick: _meta/00_CARA_KERJA_META.md).
-> Sistem ini "klinik" untuk sistem-sistem milik pemilik: 1 run = 1 kunjungan perawatan ke 1 sistem target. Dua panggung: SUNTIK (rawat jalan, default — agent bekerja di repo target) dan BENGKEL (rawat inap, pengecualian — salinan target menginap di repo meta).
+> Sistem ini "klinik" untuk sistem-sistem milik pemilik: 1 run = 1 kunjungan perawatan ke 1 sistem target. Dua panggung (K-11): SUNTIK (rawat jalan — target di repo eksternal, kit disalin ke sana) dan RAWAT INAP (target = folder sistem di repo meta ini — alur standar meta + aturan klinik; sistemnya tinggal di repo sebagai warga kelas satu).
 
 ## Peta baca minimum (semua jenis sesi)
 
@@ -27,10 +27,13 @@ Run suntik terjadi di REPO TARGET, bukan di folder ini. Yang dikerjakan di meta 
 4. Gerbang yang menghentikan: G-Rencana (sebelum menyentuh target), G-Final (sebelum peleburan/PR), overwrite & install kapabilitas selalu per-item diborong (K-10). Merge = pemilik.
 5. Setelah run: **Tahap F Panen wajib** — temuan cacat/celah aturan dilaporkan balik ke folder ini (usulan entri `02_KATALOG_CACAT.md` atau perbaikan aturan; boleh nihil, diam tidak sah).
 
-## Jenis sesi 3 — Menjalankan run BENGKEL (rawat inap)
+## Jenis sesi 3 — Menjalankan run RAWAT INAP (target = folder sistem di repo ini, K-11)
 
-1. Baca `_bengkel/README.md` dulu — aturan menginap: salinan hidup HANYA di branch kerja, TIDAK pernah merge ke main repo meta, hygiene ukuran K-9 (yang dibedah saja, aset di-exclude), pemulangan via patch/download, PR berisi laporan lalu di-close, branch dihapus (keputusan sadar pemilik).
-2. Sisanya sama dengan suntik — ikuti `_sistem/01_ALUR_RUN.md` §12 (adaptasi dua panggung).
+1. **Prasyarat:** pemilik telah meletakkan folder sistem target di repo ini — lokasinya mengikuti konvensi folder sistem repo ini; **satu-satunya sumber path-nya adalah indeks sistem repo ini (provenance: area meta, berkas INDEKS_SISTEM — tidak disalin ke folder sistem ini agar tidak menjadi dokumen kembar yang basi). Jangan menebak/hardcode.** Bila foldernya belum ada, BERHENTI dan tanya pemilik.
+2. Orientasi: baca manifest / STATUS / LOG_SESI terbaru folder target dulu. Lalu baca `_sistem/01_ALUR_RUN.md` PENUH — inilah aturan run. Panggung rawat inap membaca **MASTER di tempatnya** — tidak ada salinan kit, tidak ada stamp, tidak ada peleburan kit (kit eksklusif suntik; §1.2 + §12).
+3. **Tanya pemilik apa yang mau dilakukan** — audit menyeluruh / perbaiki X / upgrade Y — SEBELUM menyentuh apa pun. G-Rencana berlaku utuh: diagnosis + rencana disetujui pemilik sebelum satu byte pun ditulis (Tahap B read-only).
+4. Tahap A–F, dua gerbang, borongan K-10, REKAM-KLINIK + cap versi kit — identik dengan suntik (adaptasi dua panggung §12; format laporan diagnosis §4.5, bagian 7 = catatan folder tamu).
+5. **PR = PR meta normal** (perubahan tertanam + rekam + STATUS target + sinkron INDEKS) — TANPA auto-merge; merge = keputusan pemilik. Pasca-run: sistem TETAP di repo sebagai warga kelas satu (terdaftar INDEKS_SISTEM); penghapusan folder = keputusan sadar pemilik, dicatat di log — tidak pernah diam-diam.
 
 ## Jenis sesi 4 — Audit / evolusi kit
 
@@ -54,3 +57,4 @@ Ikuti bagian "Prompt Penutup" di `PROMPT_ENTRI_UNIVERSAL.md`: STATUS.md disegark
 | Tanggal | Perubahan | Alasan |
 |---|---|---|
 | 2026-09-14 | Berkas dibuat (Langkah 7 rencana kerangka) | Rencana menetapkan entry point per jenis sesi (bangun / run suntik / run bengkel / audit); sebelumnya navigasi sementara lewat 00_RENCANA_KERANGKA + PROMPT_ENTRI_UNIVERSAL |
+| 2026-09-14 UTC / 15 Sep WIB | Jenis sesi 3 ditulis ulang: BENGKEL (staging `_bengkel/`) → RAWAT INAP (folder sistem target di repo ini; alur standar meta + aturan klinik; master dibaca di tempatnya; PR normal → merge pemilik; sistem tetap warga kelas satu) + header dua panggung disinkron | K-11 — ratifikasi eksplisit pemilik; interaksi yang dikehendaki: pemilik meletakkan folder + tempel prompt universal → agent orientasi lalu MENANYA apa yang mau dilakukan sebelum menyentuh apa pun |

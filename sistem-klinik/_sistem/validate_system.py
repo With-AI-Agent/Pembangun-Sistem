@@ -24,7 +24,6 @@ REQUIRED = [
     "PROMPT_ENTRI_UNIVERSAL.md",
     "STATUS.md",
     "10_LOG_SESI.md",
-    "_bengkel/README.md",
 ]
 
 def check_file_exists(errs):

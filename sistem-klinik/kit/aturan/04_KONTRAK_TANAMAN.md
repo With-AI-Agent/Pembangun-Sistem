@@ -1,4 +1,4 @@
-> Sumber: _sistem/04_KONTRAK_TANAMAN.md sha 85fd4fd6bc7460e36c2e5a8dc965b4b6487d3b5c tanggal 2026-09-14 versi-kit 0.1.2
+> Sumber: _sistem/04_KONTRAK_TANAMAN.md sha 85fd4fd6bc7460e36c2e5a8dc965b4b6487d3b5c tanggal 2026-09-14 versi-kit 0.2.0
 
 # Kontrak Tanaman (Sistem Klinik)
 
