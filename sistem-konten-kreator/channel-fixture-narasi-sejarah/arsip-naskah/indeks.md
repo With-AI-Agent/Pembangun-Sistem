@@ -8,3 +8,4 @@
 | Penjual Bunga di Pasar Subuh | 2026-09-09 | Nenek penjual bunga di pojok pasar subuh; kebiasaan menyusun bunga yang tetap ada setelah lapaknya kosong | `2026-09-09-penjual-bunga-di-pasar-subuh.md` |
 | Pintu Kos yang Tidak Pernah Dikunci | 2026-09-10 | Pintu kos yang tidak pernah dikunci sebagai tanda keamanan bersama; satu kunci tua yang tersisa setelah kos hilang | `2026-09-10-pintu-kos-yang-tidak-pernah-dikunci.md` |
 | Melati Terakhir di Pasar Kosong | 2026-09-10 | Melati terakhir sebagai penanda waktu pasar tutup; payung biru dilipat sebelum tengah hari di sudut pasar yang mulai kosong karena pindah | `2026-09-10-melati-terakhir-di-pasar-kosong.md` |
+| Cap Pos di Amplop | 2026-09-14 | Lingkaran tinta cap pos yang membawa dua waktu (waktu dikirim dan waktu dibaca); ketidakhadiran jejak tanggal ketika pesan tiba di detik yang sama | `2026-09-14-cap-pos-di-amplop.md` |

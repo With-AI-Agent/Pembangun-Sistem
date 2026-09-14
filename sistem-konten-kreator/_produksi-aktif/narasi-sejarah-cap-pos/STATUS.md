@@ -1,55 +1,52 @@
 # Status Produksi — Narasi Sejarah — Cap Pos (judul kerja)
 
 - **Status:** `in-progress`
-- **Channel:** `channel-fixture-narasi-sejarah/` (FIXTURE)
-- **Model konten:** `Narasi Riset 60 Detik` v1 (brief Operational pasca PR #52)
-- **Tahap terakhir selesai:** Pipeline standar Tahap 5 — Generate/Acquire Assets: 7 still frame b-roll dihasilkan. Segmen 02, 03, 04, 05, 07 sudah layak pakai (tidak ada teks/logo/wajah terbaca); segmen 01 masih ada fragmen huruf di cap (akan diretry); segmen 06 masih berupa iPhone-styled phone (notch khas, dikenali) — akan diretry. Menunggu G1 Tahap 5 setelah aset final.
-- **Tahap berikutnya:** Retry segmen 01 dan 06 → G1 Tahap 5 (aset diterima/ada yang direvisi) → Tahap 6 Assembly & Publish Prep (metadata, arsip naskah, pindah ke arsip-naskah/, hapus folder produksi)
-- **Output resmi (yang sudah ada di branch):**
-  - `tema.md`
-  - `riset.md`
-  - `SUMBER.md`
-  - `peta-fakta.md`
-  - `ideation.md`
-  - `konsep-angle.md`
-  - `naskah-draft.md`
-  - `breakdown-output.md`
-  - (belum) `assets/` (7 segmen b-roll akan digenerate)
+- **Channel:** `sistem-konten-kreator/channel-fixture-narasi-sejarah/` (FIXTURE)
+- **Model konten:** `sistem-konten-kreator/channel-fixture-narasi-sejarah/model-konten/narasi-riset-60-detik/brief.md` — v1, `Operational` (pasca PR #52)
+- **Tahap terakhir selesai:** Pipeline standar Tahap 5 — Generate/Acquire Assets; 7 still frame b-roll final diterima pada G1 Tahap 5 2026-09-14 (termasuk retry segmen 01 dan 06 dengan catatan accepted limitation). Tahap 6 sedang berjalan: naskah, SUMBER, dan metadata arsip sudah ditulis; naskah+SUMBER sudah disalin ke arsip; indeks.md sudah ditambah; menunggu G2 Tahap 6 dan G3.
+- **Tahap berikutnya:** G2 final + metadata (paket konten final disetujui isinya) → PR produksi → G3 merge. Folder produksi **dipertahankan** mengikuti preseden fixture sebelumnya; penghapusan menunggu instruksi pengguna (setelah unduh hasil) sesuai Tahap 6 langkah 5.
+- **Output resmi:**
+  - `tema.md` — **ADA**
+  - `riset.md` — **ADA**
+  - `SUMBER.md` — **ADA**
+  - `peta-fakta.md` — **ADA**
+  - `ideation.md` — **ADA**
+  - `konsep-angle.md` — **ADA**
+  - `naskah-draft.md` — **ADA**, naskah final r1 (G2 terkunci 2026-09-14), 130 kata
+  - `breakdown-output.md` — **ADA**, 7 segmen narasi (G1+G2 terkunci 2026-09-14)
+  - `assets/` — **ADA**, 7 still frame PNG vertikal (G1 Tahap 5 diterima 2026-09-14)
+  - `publish-metadata.md` — **ADA**, opsi judul, caption, hashtag, konsep thumbnail
 - **Sumber konteks yang dibaca:**
-  - `_sistem/START_DI_SINI.md`
-  - `_sistem/00_CARA_PAKAI_SISTEM.md`
-  - `_sistem/01_BRAND_CORE.md` (template kosong, gap dicatat)
-  - `_sistem/05_CONTENT_PRODUCTION_PIPELINE.md`
-  - `_sistem/06_PROMPT_LIBRARY.md`
-  - `_sistem/STATUS_TEMPLATE.md`
+  - `_sistem/START_DI_SINI.md`, `_sistem/00_CARA_PAKAI_SISTEM.md`
+  - `_sistem/01_BRAND_CORE.md` — masih template kosong (gap dicatat sadar di Channel Brief)
+  - `_sistem/05_CONTENT_PRODUCTION_PIPELINE.md`, `_sistem/06_PROMPT_LIBRARY.md`, `_sistem/STATUS_TEMPLATE.md`
   - `channel-fixture-narasi-sejarah/channel-brief.md` (v2, Operational)
-  - `channel-fixture-narasi-sejarah/model-konten/narasi-riset-60-detik/brief.md` (v1, Merged+Operational pasca PR #52)
+  - `channel-fixture-narasi-sejarah/model-konten/narasi-riset-60-detik/brief.md` (v1, Operational pasca PR #52)
   - `channel-fixture-narasi-sejarah/model-konten/narasi-60-detik/brief.md` (v1, Operational)
-  - `channel-fixture-narasi-sejarah/arsip-naskah/indeks.md` (4 konten)
-  - `channel-fixture-narasi-sejarah/arsip-naskah/indeks-karakter.md` (1 karakter: Nenek Penjual Bunga, Tipe B)
-  - `arsip-naskah/2026-09-06-tiga-benda-di-meja-nenek.md` + metadata (contoh naskah dan format)
-  - Channel Brief dan model `Narasi 60 Detik` (fixture) sebagai acuan format
-- **Sumber eksternal dipakai:** Ada — `SUMBER.md` dibuat dengan 17 entri (S1–S17), dengan status verifikasi yang dipetakan di `peta-fakta.md`. Klaim kunci punya ≥2 sumber independen; klaim pengalaman generik diturunkan bahasanya.
+  - `channel-fixture-narasi-sejarah/arsip-naskah/indeks.md` (5 konten dengan naskah ini)
+  - `channel-fixture-narasi-sejarah/arsip-naskah/indeks-karakter.md` (1 karakter Tipe B: Nenek Penjual Bunga — konten ini tidak memakainya)
+  - `arsip-naskah/2026-09-06-tiga-benda-di-meja-nenek.md` + `-metadata.md` (contoh format)
+  - Bank Konsistensi Visual — tidak ada elemen acuan (channel faceless)
+- **Sumber eksternal dipakai:** Ada — `SUMBER.md` dibuat dengan 17 entri (S1–S17); peta-fakta.md memetakan 7 klaim dengan status verifikasi; klaim pengalaman generik (F4, F5) diturunkan bahasanya sesuai aturan model. SUMBER sudah diarsipkan ke `arsip-naskah/2026-09-14-cap-pos-di-amplop-sumber.md`.
 - **Keputusan baru:**
-  - Tema terpilih: "Cap pos (stempel pos) di amplop surat" (dipilih agent dengan persetujuan implisit pengguna "terserah, pilih yang terbaik").
-  - Tindak lanjut pasca-merge PR #52: brief `Narasi Riset 60 Detik` ditandai Merged+Operational dan di-commit (commit `67fc118`).
-  - G1 Paket Riset dan G1 Pemilihan Ide **disetujui 2026-09-14**. Kandidat 3 "Tanggal yang sampai lebih dulu daripada orangnya" dipilih sebagai ide produksi.
+  - Tema "cap pos (stempel pos) di amplop surat" dipilih agent dengan wewenang "terserah kamu, pilih yang terbaik".
+  - Kandidat ide 3 ("Tanggal yang sampai lebih dulu daripada orangnya") dipilih sebagai ide produksi (G1 Pemilihan Ide 2026-09-14).
+  - Micro-revisi naskah r0→r1 atas koreksi akurasi cap pos (tanggal *dikirim*, bukan tanggal ditulis; "waktu kata-kata itu ditulis" → "waktu dikirim") + penambahan 2 kata kecil untuk mempertahankan jumlah kata 130.
+  - Aset segmen 01 dan 03 memiliki accepted limitation (pseudo-glyph buram pada cap yang tidak bisa dibaca sebagai kata apapun; batas kemampuan model gambar setelah 3x retry segmen 01).
+  - Unit produksi aktif folder lain (fixture lama, miso/kantor-pos) adalah peninggalan produksi fixture terdahulu yang tidak dihapus; tidak disentuh dalam sesi ini.
 - **Approval yang sudah diberikan:**
   - `G1 Paket Riset:` disetujui 2026-09-14
   - `G1 Pemilihan Ide:` disetujui 2026-09-14 (Kandidat 3)
   - `G1 Tahap 2 (Konsep & Angle):` disetujui 2026-09-14
   - `G1 Tahap 3 (Naskah cukup untuk lanjut):` disetujui 2026-09-14
-  - `G2 naskah final (terkunci sebagai naskah final):` disetujui 2026-09-14 (setelah micro-revisi r1: akurasi cap tanggal pengiriman)
-  - `G1 Tahap 4 (Breakdown cukup untuk lanjut):` belum
-  - `G2 breakdown terkunci (dasar generate asset):` belum
-  - `G2 naskah final:` belum
-  - `G1 Tahap 4 (Breakdown):` belum
-  - `G2 breakdown terkunci:` belum
-  - `G1 Tahap 5 (Assets):` belum (konten kemungkinan besar tidak generate gambar penuh di sesi ini; akan disesuaikan)
+  - `G2 naskah final:` disetujui 2026-09-14 (r1 pasca micro-revisi)
+  - `G1 Tahap 4 (Breakdown cukup untuk lanjut):` disetujui 2026-09-14
+  - `G2 breakdown terkunci:` disetujui 2026-09-14
+  - `G1 Tahap 5 (Assets diterima):` disetujui 2026-09-14 (termasuk accepted limitation segmen 01/03)
   - `G2 final + metadata:` belum
   - `G3 merge:` belum
-- **Commit terakhir:** `67fc118` ("Pasca-merge PR #52: tandai model Narasi Riset 60 Detik sebagai Merged+Operational; buka LOG_SESI produksi")
-- **PR terkait:** Belum ada — PR akan dibuat di akhir sesi produksi
+- **Commit terakhir:** `b320274` ("Produksi cap pos: Tahap 5 — 7 b-roll digenerate; segmen 01+06 perlu retry…") dan `6d40f83` (catatan LOG_SESI); selanjutnya commit Tahap 6.
+- **PR terkait:** Belum ada — PR akan dibuat pada akhir Tahap 6
 - **Pekerjaan belum tersimpan:** Tidak ada
-- **Risiko atau blocker:** Tidak ada. Brand Core masih template kosong (gap dicatat di Channel Brief; produksi fixture tetap berjalan seperti 4 konten arsip sebelumnya).
+- **Risiko atau blocker:** Tidak ada. Brand Core masih template kosong (gap dicatat di Channel Brief; produksi fixture tetap berjalan).
 - **Waktu pembaruan:** 2026-09-14
