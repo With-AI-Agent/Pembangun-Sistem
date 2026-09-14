@@ -7,9 +7,9 @@
 ## Status: `Draft` → `Reviewed` → `Approved` → `Merged` → `Operational`
 
 - [x] **Draft** — draf pertama selesai 2026-09-14
-- [ ] **Reviewed** — belum
-- [ ] **Approved** — belum dikunci lewat gerbang **G2**
-- [ ] **Merged** — belum masuk `main` lewat gerbang **G3**
+- [x] **Reviewed** — direview lengkap oleh pengguna 2026-09-14
+- [x] **Approved** — dikunci lewat gerbang **G2** 2026-09-14
+- [ ] **Merged** — belum masuk `main`; menunggu gerbang **G3**
 - [ ] **Operational** — belum; status ini baru boleh ditetapkan setelah G2, G3, dan seluruh dependency terpenuhi
 
 **Checklist Kelengkapan — syarat naik ke `Operational`:**
