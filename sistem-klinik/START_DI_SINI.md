@@ -29,7 +29,7 @@ Run suntik terjadi di REPO TARGET, bukan di folder ini. Yang dikerjakan di meta 
 
 ## Jenis sesi 3 — Menjalankan run RAWAT INAP (target = folder sistem di repo ini, K-11)
 
-1. **Prasyarat:** pemilik telah meletakkan folder sistem target di repo ini — lokasinya mengikuti konvensi folder sistem repo ini, **dibaca dari `_meta/INDEKS_SISTEM.md` (single source of truth path) — jangan menebak/hardcode**. Bila foldernya belum ada, BERHENTI dan tanya pemilik.
+1. **Prasyarat:** pemilik telah meletakkan folder sistem target di repo ini — lokasinya mengikuti konvensi folder sistem repo ini; **satu-satunya sumber path-nya adalah indeks sistem repo ini (provenance: area meta, berkas INDEKS_SISTEM — tidak disalin ke folder sistem ini agar tidak menjadi dokumen kembar yang basi). Jangan menebak/hardcode.** Bila foldernya belum ada, BERHENTI dan tanya pemilik.
 2. Orientasi: baca manifest / STATUS / LOG_SESI terbaru folder target dulu. Lalu baca `_sistem/01_ALUR_RUN.md` PENUH — inilah aturan run. Panggung rawat inap membaca **MASTER di tempatnya** — tidak ada salinan kit, tidak ada stamp, tidak ada peleburan kit (kit eksklusif suntik; §1.2 + §12).
 3. **Tanya pemilik apa yang mau dilakukan** — audit menyeluruh / perbaiki X / upgrade Y — SEBELUM menyentuh apa pun. G-Rencana berlaku utuh: diagnosis + rencana disetujui pemilik sebelum satu byte pun ditulis (Tahap B read-only).
 4. Tahap A–F, dua gerbang, borongan K-10, REKAM-KLINIK + cap versi kit — identik dengan suntik (adaptasi dua panggung §12; format laporan diagnosis §4.5, bagian 7 = catatan folder tamu).

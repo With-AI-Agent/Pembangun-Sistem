@@ -134,7 +134,7 @@ kit/
 | Lokasi | Fungsi | Tanda |
 |---|---|---|
 | `_fixture/sistem-kecil-sakit/` | mini-sistem dummy TANPA mekanisme (rekaan cacat dari katalog) untuk acceptance test kit end-to-end: suntik → harus menanam + melebur + rekam; suntik dua kali → harus idempoten; rusak sengaja field STATUS → detektor harus merah; AT-KL-03: varian rawat inap (master in-place di salinan fixture /tmp, artefak identik) | [TEMPLATE] (dibangun saat `01`–`04` selesai; AT-KL-03 ditambahkan 14 Sep UTC/15 Sep WIB, K-11) |
-| Pangkalan rawat inap (K-11) | folder sistem target di repo meta — TIDAK ada staging khusus (staging `_bengkel/` dihapus K-11); lokasi mengikuti konvensi folder sistem repo ini, **dibaca dari `INDEKS_SISTEM.md` (single source of truth path) — tidak di-hardcode di aturan klinik** | [ATURAN] |
+| Pangkalan rawat inap (K-11) | folder sistem target di repo meta — TIDAK ada staging khusus (staging _bengkel/ dihapus K-11); lokasi mengikuti konvensi folder sistem repo ini, **sumber path-nya = indeks sistem repo ini (provenance area meta — tidak di-hardcode di aturan klinik, tidak disalin ke folder sistem)** | [ATURAN] |
 
 ### Bagian B — patch meta (PR TERPISAH, setelah rencana ini merge)
 
