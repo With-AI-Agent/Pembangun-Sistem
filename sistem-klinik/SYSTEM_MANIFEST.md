@@ -26,8 +26,8 @@
 ## Dokumen Navigasi
 
 - **Entry point:** START_DI_SINI.md (dibangun setelah rencana merge; sementara: baca 00_RENCANA_KERANGKA.md dulu)
-- **Dokumen instruksi aktif:** `_sistem/01_ALUR_RUN.md` dan `_sistem/03_KEBIJAKAN_LEBUR.md` sudah dibangun (dokumen lainnya: 02, 04, 05, 06 sedang dibangun sesuai urutan)
-- **Living documents:** 02_KATALOG_CACAT (menyusul dibuat) — daftar hidup; dokumen ini; STATUS.md
+- **Dokumen instruksi aktif:** `_sistem/01_ALUR_RUN.md` dan `_sistem/03_KEBIJAKAN_LEBUR.md` sudah dibangun (dokumen lainnya: 02, 04, 05, 06 juga sudah dibangun).
+- **Living documents:** 02_KATALOG_CACAT — daftar hidup; dokumen ini; STATUS.md
 - **Log keputusan:** tabel Log Keputusan di bawah (dokumen hidup lain membawa tabelnya masing-masing saat dibangun — W-05)
 - **Ringkasan cadangan:** belum ada — _cadangan-claude/RINGKASAN_sistem-klinik.md dibuat saat struktur stabil (W-09, status "menyusul" tercatat resmi di sini)
 - **Laporan audit:** belum ada
@@ -50,13 +50,13 @@ Status butir 03_KONTRAK_WARISAN.md (provenance) untuk sistem ini — salinan bag
 
 | Butir | Status (diterapkan / override) | Letak di folder sistem | Override? |
 |---|---|---|---|
-| W-01 pegangan | diterapkan | PANDUAN_PENGGUNA.md + PROMPT_ENTRI_UNIVERSAL.md (root sistem); sisi target: PROMPT-ENTRI-KIT.md + PROMPT-PENUTUP-KIT.md di kit (menyusul dibangun) | — |
-| W-02 LOG_SESI | diterapkan | 10_LOG_SESI.md (aturan self-contained sistem ini); turunan untuk target masuk kit (menyusul) | — |
-| W-03 field checkpoint STATUS | diterapkan | STATUS.md (unit pembangunan sistem ini; field deterministik exact); TEMPLATE-STATUS-TARGET.md masuk kit (menyusul) | — |
+| W-01 pegangan | diterapkan | PANDUAN_PENGGUNA.md + PROMPT_ENTRI_UNIVERSAL.md (root sistem); sisi target: PROMPT-ENTRI-KIT.md + PROMPT-PENUTUP-KIT.md di kit | — |
+| W-02 LOG_SESI | diterapkan | 10_LOG_SESI.md (aturan self-contained sistem ini); turunan untuk target masuk kit | — |
+| W-03 field checkpoint STATUS | diterapkan | STATUS.md (unit pembangunan sistem ini; field deterministik exact); TEMPLATE-STATUS-TARGET.md masuk kit | — |
 | W-04 manifest | diterapkan | SYSTEM_MANIFEST.md ini — dibuat pada PR yang sama dengan rencana kerangka (pola M-14) | — |
 | W-05 log keputusan | diterapkan | tabel Log Keputusan di bawah + di semua dokumen hidup saat dibangun | — |
-| W-06 QA 3-lapis | diterapkan (ringkas di dalam folder) | bagian Quality & Evolution ini + ACCEPTANCE_TESTS.md/_fixture (menyusul); aturan tidak dihilangkan, hanya dikedalaman-bertahapkan | — |
-| W-07 fakta platform | diterapkan | bagian Batasan Platform di bawah + diturunkan ke 01_ALUR_RUN dan turunan kit (menyusul) | — |
+| W-06 QA 3-lapis | diterapkan (ringkas di dalam folder) | bagian Quality & Evolution ini + ACCEPTANCE_TESTS.md/_fixture; aturan tidak dihilangkan, hanya dikedalaman-bertahapkan | — |
+| W-07 fakta platform | diterapkan | bagian Batasan Platform di bawah + diturunkan ke 01_ALUR_RUN dan turunan kit | — |
 | W-08 approval bertingkat | diterapkan | kriteria Besar/Kecil konkret dikunci di 00_RENCANA_KERANGKA.md Titik Penguncian + Bentuk Sistem di atas | — |
 | W-09 ringkasan cadangan | diterapkan — menyusuli alur (dibuat saat struktur stabil) | _cadangan-claude/RINGKASAN_sistem-klinik.md di master (belum dibuat — dicatat sadar, bukan kelalaian) | — |
 

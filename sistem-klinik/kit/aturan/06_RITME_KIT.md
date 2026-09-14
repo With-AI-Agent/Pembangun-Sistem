@@ -1,4 +1,4 @@
-> Sumber: _sistem/06_RITME_KIT.md sha d44754e7ee7d018cb92b60faa2518e62c67873df tanggal 2026-09-13 versi-kit 0.1.1
+> Sumber: _sistem/06_RITME_KIT.md sha d95a29c17b5119e0ce85c2fac7edf1bedbb06c26 tanggal 2026-09-14 versi-kit 0.1.1
 
 # Ritme dan Perakitan Kit Klinik
 
@@ -18,8 +18,9 @@ Semua salinan di `kit/aturan/` harus memiliki penanda ini di baris teratas (dite
 ```md
 > Sumber: _sistem/<berkas master> sha <40> tanggal <YYYY-MM-DD> versi-kit <x.y.z>
 ```
+*(Catatan konvensi: `<40>` di atas merujuk secara persis pada **blob SHA** dari berkas master pada saat dikompilasi, sehingga target dapat memverifikasi isi persis dari berkas tersebut).*
 - **Prosedur Sync (Manual/Skrip):** Jika aturan master `_sistem/` berubah, pemilik atau agent wajib mensinkronisasi ke `kit/` sebelum melakukan PR rilis.
-- **Cek Kit Basi:** Acceptancce Tests harus memeriksa apakah tanggal kompilasi/versi di `kit/` tertinggal dari versi manifest di `SYSTEM_MANIFEST.md`. Jika basi, build harus *fail-closed*.
+- **Cek Kit Basi:** Acceptance Tests harus memeriksa apakah tanggal kompilasi/versi di `kit/` tertinggal dari versi manifest di `SYSTEM_MANIFEST.md`. Jika basi, build harus *fail-closed*.
 
 ## 3. Aturan Promosi Kemampuan (Bengkel → Portabel)
 Sesuai K-9, prosedur berat yang masuk ke panggung `_bengkel/` (misalnya skrip rumit untuk memulihkan git history besar) bisa dipromosikan menjadi **alat portabel** di `kit/alat/` jika memenuhi syarat:

@@ -1,4 +1,4 @@
-> Sumber: _sistem/05_TAWARAN_KAPABILITAS.md sha af33785bc9580dec17cc611aaa68b461c3f64adf tanggal 2026-09-13 versi-kit 0.1.1
+> Sumber: _sistem/05_TAWARAN_KAPABILITAS.md sha 251f90289ae0c35f8a0cf914566531fd84a8a805 tanggal 2026-09-14 versi-kit 0.1.1
 
 # Mekanisme Tawaran Kapabilitas Eksternal
 

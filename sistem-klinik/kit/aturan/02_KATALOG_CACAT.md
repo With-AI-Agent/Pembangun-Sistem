@@ -1,4 +1,4 @@
-> Sumber: _sistem/02_KATALOG_CACAT.md sha 76baf5cb8bfaed139fcfe48ee09d93efabba6b69 tanggal 2026-09-13 versi-kit 0.1.1
+> Sumber: _sistem/02_KATALOG_CACAT.md sha 4019f4466f5d283a8e2d70db6248d6ba10fee9e0 tanggal 2026-09-14 versi-kit 0.1.1
 
 # Katalog Cacat Sistem (Sistem Klinik)
 
