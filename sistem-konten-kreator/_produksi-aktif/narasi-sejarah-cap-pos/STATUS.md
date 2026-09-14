@@ -3,8 +3,8 @@
 - **Status:** `in-progress`
 - **Channel:** `channel-fixture-narasi-sejarah/` (FIXTURE)
 - **Model konten:** `Narasi Riset 60 Detik` v1 (brief Operational pasca PR #52)
-- **Tahap terakhir selesai:** Pipeline standar Tahap 4 — Breakdown Output (segmen narasi) selesai; 7 segmen (close-up cap → cap kota asal → cap kota tujuan → dua waktu bertemu → rumah menanti → ponsel → meja kosong penutup). Menunggu G1 + G2 breakdown.
-- **Tahap berikutnya:** Setelah G2 breakdown terkunci → Tahap 5 Generate/Acquire Assets (7 still frame b-roll netral) → G1 asset → Tahap 6 Assembly & Publish Prep
+- **Tahap terakhir selesai:** Pipeline standar Tahap 5 — Generate/Acquire Assets: 7 still frame b-roll dihasilkan. Segmen 02, 03, 04, 05, 07 sudah layak pakai (tidak ada teks/logo/wajah terbaca); segmen 01 masih ada fragmen huruf di cap (akan diretry); segmen 06 masih berupa iPhone-styled phone (notch khas, dikenali) — akan diretry. Menunggu G1 Tahap 5 setelah aset final.
+- **Tahap berikutnya:** Retry segmen 01 dan 06 → G1 Tahap 5 (aset diterima/ada yang direvisi) → Tahap 6 Assembly & Publish Prep (metadata, arsip naskah, pindah ke arsip-naskah/, hapus folder produksi)
 - **Output resmi (yang sudah ada di branch):**
   - `tema.md`
   - `riset.md`
