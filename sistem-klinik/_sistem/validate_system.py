@@ -17,13 +17,13 @@ from pathlib import Path
 SYS_DIR = Path(__file__).resolve().parent.parent
 
 REQUIRED = [
+    "START_DI_SINI.md",
     "SYSTEM_MANIFEST.md",
     "00_RENCANA_KERANGKA.md",
     "PANDUAN_PENGGUNA.md",
     "PROMPT_ENTRI_UNIVERSAL.md",
     "STATUS.md",
     "10_LOG_SESI.md",
-    "_bengkel/README.md",
 ]
 
 def check_file_exists(errs):

@@ -1,4 +1,4 @@
-> Sumber: _sistem/02_KATALOG_CACAT.md sha 4019f4466f5d283a8e2d70db6248d6ba10fee9e0 tanggal 2026-09-14 versi-kit 0.1.1
+> Sumber: _sistem/02_KATALOG_CACAT.md sha 8f6b199c761f33510f6fc669cee0623f0b7fdc1f tanggal 2026-09-14 versi-kit 0.2.0
 
 # Katalog Cacat Sistem (Sistem Klinik)
 
@@ -6,7 +6,7 @@
 > Katalog ini adalah basis pengetahuan (knowledge base) dan panduan diagnostik utama bagi Sistem Klinik. Katalog ini digunakan saat Tahap B Diagnosis untuk memeriksa kesehatan sebuah sistem target.
 
 ## Aturan Promosi Temuan Baru
-1. **Sumber Wajib (Temuan Run):** Setiap kali Sistem Klinik menyelesaikan run di repo target (rawat-jalan/bengkel) dan menemui cacat struktural/prosedural, temuan tersebut wajib dipanen di Tahap F.
+1. **Sumber Wajib (Temuan Run):** Setiap kali Sistem Klinik menyelesaikan run di repo target (rawat-jalan/rawat-inap) dan menemui cacat struktural/prosedural, temuan tersebut wajib dipanen di Tahap F.
 2. **Cek Duplikat:** Cek dulu apakah cacat yang sama sudah ada di katalog ini. Hanya cacat yang **belum ada** atau varian yang benar-benar berbeda yang boleh ditambahkan.
 3. **Format Terkunci:** Cacat baru harus ditulis menggunakan field yang identik dengan yang ada (ID, Nama, Gejala, Cara Periksa, Pola Perbaikan, Bukti/Risiko).
 4. **Mekanisme Promosi:** Agent menyertakan cacat baru tersebut sebagai usulan (PR) ke repo meta (sistem klinik), menambahkan entri ke tabel di bawah beserta Log Keputusan perubahannya.
@@ -45,10 +45,10 @@
 - **Pola Perbaikan (Resep):** Tanamkan kebijakan *fail-closed* di dokumen alur atau panduan utama, wajibkan gerbang validasi (contoh: *exit code* wajib 0 sebelum membuat PR).
 - **Bukti / Risiko:** Kerusakan data persisten atau korupsi *state* sistem yang jauh lebih sulit diperbaiki.
 
-### C-06: Penyumbatan Bengkel / Bengkak Aset
-- **Gejala:** Branch perbaikan (bengkel) memuat commit berisi aset raksasa (gambar, video, DB) atau riwayat yang panjang tak berujung, yang pada akhirnya ikut tersimpan ke dalam penyimpanan `.git` repo induk meski tak di-merge.
-- **Cara Periksa (Diagnosis):** Cek kebijakan pembentukan branch perbaikan. Apakah sistem langsung mengkopi semua direktori secara membabi-buta termasuk file biner statis?
-- **Pola Perbaikan (Resep):** Batasi kebijakan penyalinan branch perbaikan. File *exclude* (misal `.gitignore` atau filter `.rsync`) wajib melompati aset berat. PR perbaikan diatur hanya berisi teks pelaporan/tindakan.
+### C-06: Bengkak Aset di Repo Induk
+- **Gejala:** Folder sistem yang diletakkan di repo meta (rawat inap) atau branch perbaikan memuat commit berisi aset raksasa (gambar, video, DB) atau riwayat yang panjang tak berujung, yang pada akhirnya ikut tersimpan ke dalam penyimpanan `.git` repo induk.
+- **Cara Periksa (Diagnosis):** Sebelum rawat inap: cek ukuran folder + daftar aset berat (gambar/video/data) — bila ada dan pemilik tidak bermaksud membawanya ke repo meta, panggung suntik yang dipakai (keputusan + alasan dicatat di laporan diagnosis). Selama run suntik: cek kebijakan penyalinan/perbaikan — apakah sistem langsung mengkopi semua direktori secara membabi-buta termasuk file biner statis?
+- **Pola Perbaikan (Resep):** Rawat inap: lingkup folder tamu diputuskan pemilik (butir Tahap A langkah 6); aset berat yang sengaja tidak dibawa dicatat di laporan diagnosis. Suntik: mekanisme perbaikan dibatasi pada berkas yang disentuh rencana — tidak pernah kopi buta seluruh pohon.
 - **Bukti / Risiko:** Kapasitas repo bengkak secara permanen (bloat), memperlambat setiap operasi `git clone` dan `git fetch`.
 
 ---
@@ -58,3 +58,4 @@
 | Tanggal | Perubahan | Alasan |
 |---|---|---|
 | 2026-09-13 | Seed awal katalog dibuat (C-01 sampai C-06) | Menyediakan tolok ukur awal bagi agent klinik untuk melakukan diagnosis sistem target (Langkah 3 rencana kerangka). |
+| 2026-09-14 UTC / 15 Sep WIB | C-06 diberi redaksi ulang: "Penyumbatan Bengkel / Bengkak Aset" → "Bengkak Aset di Repo Induk"; aturan promosi butir 1 disinkron ke dua panggung baru | K-11 menghapus panggung bengkel; polanya (bengkak aset di repo induk) tetap valid dan kini diikat ke kedua panggung yang ada (folder rawat inap yang diletakkan di meta + run suntik yang melakukan kopi buta) |

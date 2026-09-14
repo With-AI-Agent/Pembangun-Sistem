@@ -7,7 +7,7 @@ purpose: Pegangan pengguna Sistem Klinik — dokumen ini untuk manusia/pengguna,
 
 # Panduan Pengguna — Sistem Klinik
 
-> Pegangan pengguna sistem ini (W-01). Struktur mengikuti template pegangan meta (provenance: PANDUAN_PENGGUNA_TEMPLATE.md di _meta — aturan yang benar-benar dipakai sudah disalin/diturunkan ke file ini). Saat sistem masih tahap kerangka, bagian 4–7 sengaja ringkas dan diperluas saat dokumen _sistem/ jadi; bagian 2–3 final sejak hari pertama karena bagian itu yang membuat sistem bisa dipakai lintas sesi.
+> Pegangan pengguna sistem ini (W-01). Struktur mengikuti template pegangan meta (provenance: PANDUAN_PENGGUNA_TEMPLATE.md di _meta — aturan yang benar-benar dipakai sudah disalin/diturunkan ke file ini). Bagian 2–3 final sejak hari pertama karena bagian itu yang membuat sistem bisa dipakai lintas sesi; bagian 4–7 diperluas saat flip siap-pakai (14 Sep) seiring dokumen _sistem/ yang kini lengkap.
 
 ## 1. Pembuka
 
@@ -20,8 +20,8 @@ Kamu adalah agent yang terhubung ke repo meta ini, dan sesi ini bekerja pada Sis
 Sebelum melakukan apa pun:
 
 1. Jalankan Entry Point tingkat repo yang WAJIB (aturannya tertulis di file 00_CARA_KERJA_META.md di folder _meta — baca itu): laporan awal mengikuti SESSION_REPORT_TEMPLATE, cek PR menggantung lewat gh pr list --state all, cek INDEKS_SISTEM, dan cari LOG_SESI terbaru di _log-sesi/ — kalau ada yang OPEN, BACA dulu dan laporkan; jangan tanya ulang konteks yang sudah tercatat
-2. Baca `STATUS.md`, `SYSTEM_MANIFEST.md`, dan `00_RENCANA_KERANGKA.md` di folder sistem-klinik/ sebagai peta sistem ini. Bila START_DI_SINI.md sudah ada di folder itu, baca itu juga; bila belum (tahap kerangka), laporkan sebagai bagian yang menyusul — bukan blocker
-3. Tanyakan: "Apa tujuan sesi ini?" — kandidat: membangun dokumen sistem klinik yang dijadwalkan di rencana kerangka; menjalankan run bengkel (target menginap di _bengkel/); memperbaiki/menambah katalog cacat hasil temuan run; atau lain-lain
+2. Baca `START_DI_SINI.md` (entry point sistem — urutan baca per jenis sesi: pembangunan / run suntik / run rawat inap / audit kit / review PR) + `STATUS.md` dan `SYSTEM_MANIFEST.md` sebagai peta sistem ini; `00_RENCANA_KERANGKA.md` dibaca bila kerja menyentuh rencana kerangka
+3. Tanyakan: "Apa tujuan sesi ini?" — kandidat: menjalankan run klinik (suntik = target di repo eksternal, kit disalin ke sana; rawat inap = target adalah folder sistem di repo ini — alur standar meta + aturan klinik, K-11); melanjutkan pembangunan dokumen yang dijadwalkan rencana kerangka; memperbaiki/menambah katalog cacat hasil temuan run; atau lain-lain
 4. Baca sendiri konteks wajib sesuai tujuan — jangan baca seluruh isi repo. JANGAN menyentuh isi sistem lain (folder _produksi-aktif/, folder sistem lain, repo target manapun) kecuali tujuan sesi ini eksplisit memintanya
 5. Jangan mulai eksekusi/menulis file apa pun sebelum aku konfirmasi tujuan sesi ini jelas
 
@@ -43,9 +43,9 @@ Tutup sesi ini:
 
 ## 4. Apa sistem ini, dengan kata awam (istilah awam)
 
-Klinik Sistem = tempat perawatan untuk sistem-sistemMU yang hidup di repo terpisah — mau dia lahir sebelum meta ini matang (banyak cacat warisan) atau sesudahnya (pingin ditingkatkan/diksa ulang): yang dinilai keadaannya, bukan umurnya. Ada dua cara datang:
-- **Rawat jalan (suntikan)** — kamu salin folder kit/ dari sini ke repo target (di workspace, bukan ke git), kirim satu prompt dari kit itu, dan agent di sana mengaudit + menanam yang hilang + meleburkan dirinya. Targetmu terlihat normal saja, cuma lebih sehat. Ini mode default.
-- **Rawat inap (bengkel)** — copy sistem target "menginap" sementara di sistem-klinik/_bengkel/ (hanya di branch kerja, tidak pernah masuk main), untuk rombakan besar yang butuh alat-alat meta. Selesai, dia pulang; PR-nya tinggal jadi catatan. Salinannya seadanya — hanya yang dibedah menginap, aset besar tidak ikut; branch-nya dihapus setelah pemulangan (hygiene anti-bengkak, K-9).
+Klinik Sistem = tempat perawatan untuk sistem-sistemMU — yang hidup di repo terpisah, ATAU yang kuletakkan di repo ini untuk dirawat — mau dia lahir sebelum meta ini matang (banyak cacat warisan) atau sesudahnya (pingin ditingkatkan/diksa ulang): yang dinilai keadaannya, bukan umurnya. Ada dua cara datang:
+- **Rawat jalan (suntikan)** — untuk target di REPO EKSTERNAL: kamu salin folder kit/ dari sini ke repo target (di workspace, bukan ke git), kirim satu prompt dari kit itu, dan agent di sana mengaudit + menanam yang hilang + meleburkan dirinya. Targetmu terlihat normal saja, cuma lebih sehat. Ini mode default.
+- **Rawat inap** — untuk target yang KAMU LETAKKAN di repo ini (sebagaimana sistem-sistem lain yang dibangun meta): jalankan prompt universal, agent orientasi lalu TANYA apa yang mau kulakukan, bekerja dengan alur standar repo ini (branch → PR → merge) tapi memakai aturan klinik (diagnosis berbasis katalog, dua gerbang, rekam klinik). Selesai, sistemnya TETAP di repo ini sebagai warga kelas satu — hapus hanya kalau aku memang mau hapus (K-11).
 
 Kapan-kapan mau kontrol ulang: salin kit/ terbaru, jalankan lagi — kit membaca rekam klinik dulu, jadi tidak menanam dua hal yang sama dua kali; sistem yang sudah sehat cuma kena jalur "kontrol + upgrade".
 Dan klinik ini sendiri hidup: setiap run berakhir dengan TAHAP PANEN — cacat baru & ide perbaikan yang ditemukan di targetmu dilaporkan balik, dan kalau kamu setujui, masuk ke kit versi berikutnya.
@@ -56,14 +56,15 @@ Dan klinik ini sendiri hidup: setiap run berakhir dengan TAHAP PANEN — cacat b
 | Agent mau menimpa/menghapus file target | WAJIB izin per-item; diam-diam overwrite tidak sah |
 | Agent menemukan alat/skill yang mungkin berguna (UI, PPT, OCR, dll.) | DIA MENAWARKAN + hasil risetnya; kamu boleh bilang tidak; penolakan dicatat, tidak ditawari ulang tanpa alasan baru |
 | Agent butuh keputusan kamu (banyak persetujuan per-item) | TANYANYA DIBORONG, bukan dicicil (K-10): daftar bernomor maks ±5 per pesan, tiap tawaran skill/plugin dijelaskan fungsi/tujuan/alasan + risiko + alternatif, dan SELALU ada slot terakhir "mau mengusulkan yang belum ada di daftar?" — kamu jawab sekali, agent kerjakan sekali sampai checkpoint berikutnya |
-| Run selesai | Rekam klinik ditulis + cap versi kit; folder kit hilang dari git target; PR terbuka TANPA auto-merge; merge = kamu |
+| Run selesai | Rekam klinik ditulis + cap versi kit; suntik: folder kit hilang dari git target — rawat inap: sistem tinggal di repo; PR terbuka TANPA auto-merge; merge = kamu |
 | Sesi crash | Sesi baru cari LOG_SESI terbaru → lanjut; itulah kenapa commit tiap tahap itu fisik, bukan birokrasi |
+| Sistem rawat inap mau kuhapus | Penghapusan folder sistem = keputusanku yang sadar, dicatat di log — agent tidak pernah hapus diam-diam |
 
 
 ## 5. Kalimat pembuka untuk berbagai situasi
 
 - Mau menjalankan run ke sistem target: "Jalankan run klinik suntikan untuk <repo target>."
-- Mau run bengkel: "Ambil sistem <nama> dari <lokasi>, jalankan rawat inap di _bengkel/."
+- Mau rawat inap: "Sistem <nama> sudah kuletakkan di folder <path> — jalankan rawat inap; tanya dulu apa yang perlu kulakukan."
 - Mau sekadar menambah temuan ke katalog cacat: "Catat temuan ini untuk Katalog Cacat: ..."
 - Mau status saja: "Laporkan status sistem klinik, jangan kerjakan apa pun."
 
@@ -78,7 +79,8 @@ Sama seperti repo induk: buka PR → review isi (kamu pemilik keputusan) → mer
 | Kamu mau run ke sistem target | Agent MUST mulai dari diagnosis + rencana (G-Rencana); tidak ada sentuhan sebelum kamu setuju rencananya |
 | Agent mau menimpa/menghapus file target | WAJIB izin per-item; diam-diam overwrite tidak sah |
 | Agent menemukan alat/skill yang mungkin berguna (UI, PPT, OCR, dll.) | DIA MENAWARKAN + hasil risetnya; kamu boleh bilang tidak; penolakan dicatat, tidak ditawari ulang tanpa alasan baru |
-| Run selesai | Rekam klinik ditulis + cap versi kit; folder kit hilang dari git target; PR terbuka TANPA auto-merge; merge = kamu |
+| Run selesai | Rekam klinik ditulis + cap versi kit; suntik: folder kit hilang dari git target — rawat inap: sistem tinggal di repo; PR terbuka TANPA auto-merge; merge = kamu |
 | Sesi crash | Sesi baru cari LOG_SESI terbaru → lanjut; itulah kenapa commit tiap tahap itu fisik, bukan birokrasi |
+| Sistem rawat inap mau kuhapus | Penghapusan folder sistem = keputusanku yang sadar, dicatat di log — agent tidak pernah hapus diam-diam |
 
-Tahap pembangunan dibaca di `STATUS.md` dan `SYSTEM_MANIFEST.md` folder ini. Rencana keseluruhan + keputusan yang sudah kamu ambil (11 Sep 2026) ada di `00_RENCANA_KERANGKA.md`.
+Tahap pembangunan dibaca di `STATUS.md` dan `SYSTEM_MANIFEST.md` folder ini. Rencana keseluruhan + keputusan yang sudah kamu ambil (11 Sep & 15 Sep 2026) ada di `00_RENCANA_KERANGKA.md`.

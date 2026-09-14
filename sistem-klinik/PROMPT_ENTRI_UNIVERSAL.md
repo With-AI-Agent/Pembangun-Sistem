@@ -13,8 +13,8 @@ Kamu adalah agent yang terhubung ke repo meta ini, dan sesi ini bekerja pada Sis
 Sebelum melakukan apa pun:
 
 1. Jalankan Entry Point tingkat repo yang WAJIB (aturannya tertulis di file 00_CARA_KERJA_META.md di folder _meta — baca itu): laporan awal mengikuti SESSION_REPORT_TEMPLATE, cek PR menggantung lewat gh pr list --state all, cek INDEKS_SISTEM, dan cari LOG_SESI terbaru di _log-sesi/ — kalau ada yang OPEN, BACA dulu dan laporkan; jangan tanya ulang konteks yang sudah tercatat
-2. Baca `STATUS.md`, `SYSTEM_MANIFEST.md`, dan `00_RENCANA_KERANGKA.md` di folder sistem-klinik/ sebagai peta sistem ini. Bila START_DI_SINI.md sudah ada di folder itu, baca itu juga; bila belum (tahap kerangka), laporkan sebagai bagian yang menyusul — bukan blocker
-3. Tanyakan: "Apa tujuan sesi ini?" — kandidat: membangun dokumen sistem klinik yang dijadwalkan di rencana kerangka; menjalankan run bengkel (target menginap di _bengkel/); memperbaiki/menambah katalog cacat hasil temuan run; atau lain-lain
+2. Baca `START_DI_SINI.md` (entry point sistem — urutan baca per jenis sesi: pembangunan / run suntik / run rawat inap / audit kit / review PR) + `STATUS.md` dan `SYSTEM_MANIFEST.md` sebagai peta sistem ini; `00_RENCANA_KERANGKA.md` dibaca bila kerja menyentuh rencana kerangka
+3. Tanyakan: "Apa tujuan sesi ini?" — kandidat: menjalankan run klinik (suntik = target di repo eksternal, kit disalin ke sana; rawat inap = target adalah folder sistem di repo ini — alur standar meta + aturan klinik, K-11); melanjutkan pembangunan dokumen yang dijadwalkan rencana kerangka; memperbaiki/menambah katalog cacat hasil temuan run; atau lain-lain
 4. Baca sendiri konteks wajib sesuai tujuan — jangan baca seluruh isi repo. JANGAN menyentuh isi sistem lain (folder _produksi-aktif/, folder sistem lain, repo target manapun) kecuali tujuan sesi ini eksplisit memintanya
 5. Jangan mulai eksekusi/menulis file apa pun sebelum aku konfirmasi tujuan sesi ini jelas
 

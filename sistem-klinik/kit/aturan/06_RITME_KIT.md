@@ -1,4 +1,4 @@
-> Sumber: _sistem/06_RITME_KIT.md sha d95a29c17b5119e0ce85c2fac7edf1bedbb06c26 tanggal 2026-09-14 versi-kit 0.1.1
+> Sumber: _sistem/06_RITME_KIT.md sha 0a7f3d3d13c908972a3db4e9780b08e84a387d05 tanggal 2026-09-14 versi-kit 0.2.0
 
 # Ritme dan Perakitan Kit Klinik
 
@@ -22,8 +22,8 @@ Semua salinan di `kit/aturan/` harus memiliki penanda ini di baris teratas (dite
 - **Prosedur Sync (Manual/Skrip):** Jika aturan master `_sistem/` berubah, pemilik atau agent wajib mensinkronisasi ke `kit/` sebelum melakukan PR rilis.
 - **Cek Kit Basi:** Acceptance Tests harus memeriksa apakah tanggal kompilasi/versi di `kit/` tertinggal dari versi manifest di `SYSTEM_MANIFEST.md`. Jika basi, build harus *fail-closed*.
 
-## 3. Aturan Promosi Kemampuan (Bengkel → Portabel)
-Sesuai K-9, prosedur berat yang masuk ke panggung `_bengkel/` (misalnya skrip rumit untuk memulihkan git history besar) bisa dipromosikan menjadi **alat portabel** di `kit/alat/` jika memenuhi syarat:
+## 3. Aturan Promosi Kemampuan (Rawat Inap → Portabel)
+Prosedur berat yang hanya bisa dikerjakan di dalam repo meta — panggung rawat inap (K-11; misalnya skrip rumit untuk memulihkan git history besar) — bisa dipromosikan menjadi **alat portabel** di `kit/alat/` jika memenuhi syarat:
 - Sering ditemui (sudah ada di `02_KATALOG_CACAT`).
 - Bisa dipersingkat menjadi satu file Python statis (tanpa lib eksternal).
 - Ringan (tidak memakan kuota context token berlebih).
@@ -40,3 +40,4 @@ Klinik adalah sistem yang hidup (K-8).
 | Tanggal | Perubahan | Alasan |
 |---|---|---|
 | 2026-09-13 | Inisialisasi Ritme Kit | Menjawab K-8 (Sistem hidup) dengan memastikan kit yang beredar bisa disinkronkan kembali, dan memiliki stamp penanda agar target tahu versi terakhir ia dirawat. |
+| 2026-09-14 UTC / 15 Sep WIB | §3 diberi redaksi ulang → "Rawat Inap → Portabel" (panggung bengkel dihapus; sumber K-9 diganti K-11); VERSI kit 0.1.2 → 0.2.0 + restamp berkas aturan yang berubah | K-11: panggung rawat inap kini membaca MASTER di tempatnya, bukan salinan kit — mekanisme kit (stamp/sync/naik-versi) hanya melayani suntik; promosi kemampuan dari rawat inap tetap jalur evolusi kit yang sah |
