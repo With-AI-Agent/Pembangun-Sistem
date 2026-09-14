@@ -3,8 +3,8 @@
 - **Status:** `in-progress`
 - **Channel:** `channel-fixture-narasi-sejarah/` (FIXTURE)
 - **Model konten:** `Narasi Riset 60 Detik` v1 (brief Operational pasca PR #52)
-- **Tahap terakhir selesai:** Pipeline standar Tahap 3 — Naskah/Script final (r1) **DIKUNCI G2 2026-09-14**; 130 kata, estimasi ≈62,9 detik. Micro-revisi atas koreksi akurasi cap pos (tanggal pengiriman, bukan tanggal penulisan).
-- **Tahap berikutnya:** Tahap 4 Breakdown Output (unit = segmen narasi + deskripsi b-roll; tidak ada prompt karakter karena channel faceless) → G1 + G2 breakdown
+- **Tahap terakhir selesai:** Pipeline standar Tahap 4 — Breakdown Output (segmen narasi) selesai; 7 segmen (close-up cap → cap kota asal → cap kota tujuan → dua waktu bertemu → rumah menanti → ponsel → meja kosong penutup). Menunggu G1 + G2 breakdown.
+- **Tahap berikutnya:** Setelah G2 breakdown terkunci → Tahap 5 Generate/Acquire Assets (7 still frame b-roll netral) → G1 asset → Tahap 6 Assembly & Publish Prep
 - **Output resmi (yang sudah ada di branch):**
   - `tema.md`
   - `riset.md`
@@ -13,8 +13,8 @@
   - `ideation.md`
   - `konsep-angle.md`
   - `naskah-draft.md`
-  - (belum) `breakdown-output.md`
-  - (belum) `assets/`
+  - `breakdown-output.md`
+  - (belum) `assets/` (7 segmen b-roll akan digenerate)
 - **Sumber konteks yang dibaca:**
   - `_sistem/START_DI_SINI.md`
   - `_sistem/00_CARA_PAKAI_SISTEM.md`
