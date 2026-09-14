@@ -3,8 +3,8 @@
 - **Tanggal produksi:** 2026-09-14
 - **Model konten:** Narasi Riset 60 Detik v1 (Alur Kerja Kustom — pasca PR #52)
 - **Versi brief:** Channel Brief v2; Model Konten Brief Narasi Riset 60 Detik v1; Model Konten Brief Narasi 60 Detik v1
-- **Status:** G1 Tahap 5 aset diterima 2026-09-14; G2 final + metadata menunggu persetujuan; G3 merge belum
-- **Judul tayang resmi:** (ditentukan saat G2 Tahap 6 — opsi judul di bawah)
+- **Status:** G2 Tahap 6 disetujui 2026-09-14; judul tayang resmi dikunci opsi 1 ("Lingkaran tinta di sudut amplop"); G3 merge belum
+- **Judul tayang resmi:** Lingkaran tinta di sudut amplop (metadata opsi 1, dipilih)
 
 ## Prompt final asset
 

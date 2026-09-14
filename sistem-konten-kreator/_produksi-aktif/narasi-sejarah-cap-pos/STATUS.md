@@ -3,8 +3,8 @@
 - **Status:** `in-progress`
 - **Channel:** `sistem-konten-kreator/channel-fixture-narasi-sejarah/` (FIXTURE)
 - **Model konten:** `sistem-konten-kreator/channel-fixture-narasi-sejarah/model-konten/narasi-riset-60-detik/brief.md` — v1, `Operational` (pasca PR #52)
-- **Tahap terakhir selesai:** Pipeline standar Tahap 5 — Generate/Acquire Assets; 7 still frame b-roll final diterima pada G1 Tahap 5 2026-09-14 (termasuk retry segmen 01 dan 06 dengan catatan accepted limitation). Tahap 6 sedang berjalan: naskah, SUMBER, dan metadata arsip sudah ditulis; naskah+SUMBER sudah disalin ke arsip; indeks.md sudah ditambah; menunggu G2 Tahap 6 dan G3.
-- **Tahap berikutnya:** G2 final + metadata (paket konten final disetujui isinya) → PR produksi → G3 merge. Folder produksi **dipertahankan** mengikuti preseden fixture sebelumnya; penghapusan menunggu instruksi pengguna (setelah unduh hasil) sesuai Tahap 6 langkah 5.
+- **Tahap terakhir selesai:** Tahap 6 — Assembly & Publish Prep (arsip naskah+sumber+metadata, indeks, channel-brief v3, validasi lulus). **G2 final + metadata disetujui 2026-09-14.** Judul tayang resmi: "Lingkaran tinta di sudut amplop" (opsi 1 rekomendasi).
+- **Tahap berikutnya:** Membuat PR produksi ke main → meminta G3 (izin merge). Folder produksi **dipertahankan** menunggu instruksi pengguna setelah unduh.
 - **Output resmi:**
   - `tema.md` — **ADA**
   - `riset.md` — **ADA**
