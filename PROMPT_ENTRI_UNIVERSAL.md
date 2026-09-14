@@ -22,11 +22,12 @@ Setelah itu:
    sudah tercatat di sana.
 5. Kalau ada folder sistem yang baru saja kuletakkan di repo ini untuk
    dirawat (RAWAT INAP — sistemnya tinggal di repo ini, bukan repo
-   eksternal): ikuti `sistem-klinik/START_DI_SINI.md` jenis sesi 3 —
-   orientasi dulu (manifest/STATUS/log folder itu), lalu TANYA aku apa yang
-   mau kulakukan (audit / perbaiki / upgrade) SEBELUM menyentuh apa pun;
-   gerbang G-Rencana & G-Final aturan klinik berlaku, dan PR-nya = PR normal
-   repo ini (tanpa auto-merge).
+   eksternal): ikuti aturan rawat inap Sistem Klinik — entry point-nya jenis
+   sesi 3 di berkas START_DI_SINI.md folder sistem klinik (foldernya tercatat
+   di INDEKS_SISTEM, butir 3) — orientasi dulu (manifest/STATUS/log folder
+   itu), lalu TANYA aku apa yang mau kulakukan (audit / perbaiki / upgrade)
+   SEBELUM menyentuh apa pun; gerbang G-Rencana & G-Final aturan klinik
+   berlaku, dan PR-nya = PR normal repo ini (tanpa auto-merge).
 
 Berdasarkan itu, tanya aku: aku mau ngapain di sesi ini — bangun sistem
 baru, lanjut/audit sistem yang sudah ada, rawat inap salah satu sistem
