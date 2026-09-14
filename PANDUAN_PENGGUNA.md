@@ -26,9 +26,17 @@ Setelah itu:
    sistem / folder unit kerja); kalau keadaannya `OPEN`, BACA dulu dan laporkan apa yang
    terjadi di sesi terakhir — jangan minta aku menjelaskan ulang konteks yang
    sudah tercatat di sana.
+5. Kalau ada folder sistem yang baru saja kuletakkan di repo ini untuk
+   dirawat (RAWAT INAP — sistemnya tinggal di repo ini, bukan repo
+   eksternal): ikuti `sistem-klinik/START_DI_SINI.md` jenis sesi 3 —
+   orientasi dulu (manifest/STATUS/log folder itu), lalu TANYA aku apa yang
+   mau kulakukan (audit / perbaiki / upgrade) SEBELUM menyentuh apa pun;
+   gerbang G-Rencana & G-Final aturan klinik berlaku, dan PR-nya = PR normal
+   repo ini (tanpa auto-merge).
 
 Berdasarkan itu, tanya aku: aku mau ngapain di sesi ini — bangun sistem
-baru, lanjut/audit sistem yang sudah ada, atau hal lain. Kalau aku mau
+baru, lanjut/audit sistem yang sudah ada, rawat inap salah satu sistem
+(lihat butir 5), atau hal lain. Kalau aku mau
 lanjut sistem yang sudah lama tidak disentuh, ingatkan dulu apakah perlu
 diaudit sebelum lanjut. Kalau aku sebut sistem tertentu, BARU baca lebih
 dalam folder sistem-[nama]/ itu — jangan baca seluruh isi repo di awal,

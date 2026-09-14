@@ -135,6 +135,8 @@ Baru setelah itu, arahkan sesuai tujuan. Jika state tidak konsisten, gunakan `FA
 
 **Mau lanjut/audit sistem yang SUDAH ADA** → dari `INDEKS_SISTEM.md` yang sudah dicek di atas, masuk ke folder `sistem-[nama]/` itu dan baca dokumen navigasi di dalamnya (analog `START_DI_SINI.md` di sistem konten kreator — tiap sistem punya dokumen serupa, isinya spesifik ke sistem itu). **JANGAN baca seluruh isi repo di awal** — cukup baca yang relevan dengan sistem yang dituju, baru baca lebih dalam sesuai kebutuhan aktual.
 
+**Mau merawat sistem yang TINGGAL di repo ini (rawat inap via Sistem Klinik)** → `sistem-klinik/START_DI_SINI.md` jenis sesi 3 (keputusan K-11, 14 Sep UTC/15 Sep WIB): alur standar meta (branch → PR → merge) dijalankan dengan aturan klinik (katalog cacat, dua gerbang, REKAM-KLINIK, cap versi); master aturan klinik dibaca in-place — kit hanya untuk suntik ke repo eksternal; sistem target TETAP di repo sebagai warga kelas satu, penghapusannya = keputusan sadar pemilik.
+
 **Mau pakai Claude chat biasa sebagai cadangan** (karena lmarena Agent kurang maksimal saat itu) → lihat bagian "Alur Kerja: Menggunakan Claude Chat Biasa sebagai Cadangan" di bawah.
 
 ---
