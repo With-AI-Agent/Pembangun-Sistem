@@ -1,4 +1,4 @@
-> Sumber: _sistem/03_KEBIJAKAN_LEBUR.md sha 8dfa96ff0880074983c22b1d715a912d965cfad9 tanggal 2026-09-14 versi-kit 0.1.1
+> Sumber: _sistem/03_KEBIJAKAN_LEBUR.md sha 8dfa96ff0880074983c22b1d715a912d965cfad9 tanggal 2026-09-14 versi-kit 0.1.2
 
 # 03 — Kebijakan Lebur (Aturan Tanam Permanen)
 
