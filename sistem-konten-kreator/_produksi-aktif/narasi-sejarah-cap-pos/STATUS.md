@@ -45,8 +45,8 @@
   - `G1 Tahap 5 (Assets diterima):` disetujui 2026-09-14 (termasuk accepted limitation segmen 01/03)
   - `G2 final + metadata:` belum
   - `G3 merge:` belum
-- **Commit terakhir:** `b320274` ("Produksi cap pos: Tahap 5 — 7 b-roll digenerate; segmen 01+06 perlu retry…") dan `6d40f83` (catatan LOG_SESI); selanjutnya commit Tahap 6.
-- **PR terkait:** Belum ada — PR akan dibuat pada akhir Tahap 6
+- **Commit terakhir:** `96b5a50` ("Produksi cap pos: G2 final disetujui — kunci judul tayang 'Lingkaran tinta di sudut amplop', finalisasi STATUS")
+- **PR terkait:** PR #54 dibuat 2026-09-14 ke `main`; menunggu G3 merge (tidak auto-merge)
 - **Pekerjaan belum tersimpan:** Tidak ada
 - **Risiko atau blocker:** Tidak ada. Brand Core masih template kosong (gap dicatat di Channel Brief; produksi fixture tetap berjalan).
 - **Waktu pembaruan:** 2026-09-14
