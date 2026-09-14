@@ -1,6 +1,6 @@
 # START DI SINI — Sistem Klinik
 
-> Entry point sistem ini. Sesi agent yang bekerja pada folder `sistem-klinik/` mulai dari sini — SETELAH entry point tingkat repo selesai (laporan awal sesuai template laporan sesi, cek PR menggantung, cek INDEKS_SISTEM, cek LOG_SESI terbaru; aturannya di dokumen cara-kerja repo induk — provenance tanpa backtick: _meta/00_CARA_KERJA_META.md).
+> Entry point sistem ini. Sesi agent yang bekerja pada folder sistem ini mulai dari sini — SETELAH entry point tingkat repo selesai (laporan awal sesuai template laporan sesi, cek PR menggantung, cek INDEKS_SISTEM, cek LOG_SESI terbaru; aturannya di dokumen cara-kerja repo induk — provenance tanpa backtick: _meta/00_CARA_KERJA_META.md).
 > Sistem ini "klinik" untuk sistem-sistem milik pemilik: 1 run = 1 kunjungan perawatan ke 1 sistem target. Dua panggung: SUNTIK (rawat jalan, default — agent bekerja di repo target) dan BENGKEL (rawat inap, pengecualian — salinan target menginap di repo meta).
 
 ## Peta baca minimum (semua jenis sesi)

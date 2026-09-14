@@ -8,11 +8,11 @@
 - **Tujuan utama:** satu folder kit disalin ke repo sistem target + satu prompt → agent mengaudit terhadap katalog cacat, menanam mekanisme yang hilang, meng-upgrade, memverifikasi, mencatat rekam klinik, memanen temuan untuk evolusi kit (Tahap F), lalu kit melebur dan hilang — target terlihat normal tapi terukur lebih baik; dapat diulang kapan saja dan idempoten
 - **Pengguna/consumer:** pemilik repo ini sendiri; tidak ada audiens eksternal
 - **Pemilik keputusan:** pemilik repo (semua gerbang Besar + merge di repo target adalah haknya)
-- **Versi:** `0.1.1`
-- **Tahap:** kerangka — ubah ke `siap-pakai` saat sistem siap dipakai (cek W-01/W-02/W-03 kembali ketat; lihat _meta/03_KONTRAK_WARISAN.md bagian "Tahap pembangunan" — provenance)
-- **Status:** `Sedang dibangun` — PR rencana kerangka dan PR #47 (dokumen 01, 03) sudah di-merge ke main, melanjutkan pembangunan sesuai Langkah 3 urutan rencana
+- **Versi:** `0.1.2`
+- **Tahap:** siap-pakai — cek W-01/W-02/W-03 kembali ketat sudah dilakukan 14 Sep (validator ketat hijau; lihat _meta/03_KONTRAK_WARISAN.md bagian "Tahap pembangunan" — provenance)
+- **Status:** `Siap dipakai` — seluruh Langkah 1–7 rencana selesai (dokumen 01–06 + kit terakit + START_DI_SINI + acceptance test lulus, bukti ACCEPTANCE_TEST_LOG.md); flip Tahap atas delegasi pemilik 14 Sep (Log Keputusan). Menyusul (bukan syarat pakai): PR meta Bagian B, RINGKASAN cadangan (W-09, Langkah 10), run pertama.
 - **Tanggal dibuat:** 11 September 2026 (UTC)
-- **Audit terakhir:** belum ada (sistem baru; audit pertama terjadwal setelah dokumen inti + kit pertama jadi — lihat 00_RENCANA_KERANGKA.md bagian "Langkah setelah rencana merge")
+- **Audit terakhir:** 14 September 2026 — audit matkangan pra-run atas perintah pemilik + acceptance test pertama (AT-KL-01/02); bukti: ACCEPTANCE_TEST_LOG.md di folder ini
 - **Quality protocol (versi sistem ini — self-contained):** trigger audit, level default, dan prosedur rollback dirinci di bagian "Quality & Evolution" manifest ini; verifikasi output oleh ACCEPTANCE_TESTS.md (dibangun saat dokumen jadi; memakai `_fixture/`). Induk: _meta/QUALITY_ASSURANCE_AND_EVOLUTION.md di master = provenance saja (sistem harus tetap berfungsi penuh bila foldernya diunduh standalone)
 
 ## Bentuk Sistem
@@ -85,13 +85,13 @@ Status butir 03_KONTRAK_WARISAN.md (provenance) untuk sistem ini — salinan bag
 
 ## Acceptance
 
-- [ ] Semua dokumen wajib tersedia (menyusul — baru boleh dicentang di tahap siap-pakai)
-- [ ] Semua dependency valid
-- [x] Status dan versi sudah diperbarui (0.1.1 / Sedang dibangun — pasca-merge PR #47)
-- [ ] Approval yang diperlukan sudah ada (review menyeluruh rencana kerangka oleh pemilik = gerbang merge PR ini)
-- [ ] Audit terakhir tercatat
-- [ ] Ringkasan cadangan sinkron (menyusul — W-09)
-- [x] Pegangan pengguna tersedia di dalam folder sistem (prompt pembuka + prompt penutup) — dua file root sudah ada sejak kerangka
+- [x] Semua dokumen wajib tersedia (tuntas 14 Sep — Langkah 1–7 rencana; START_DI_SINI dibuat, AT lulus; dicentang saat flip siap-pakai)
+- [x] Semua dependency valid (akses sesi agent di repo target + riset kapabilitas dinyatakan sebagai kebutuhan, bukan asumsi terbukti — dinyatakan jujur di Dependency)
+- [x] Status dan versi sudah diperbarui (0.1.2 / Siap dipakai — flip atas delegasi pemilik 14 Sep)
+- [x] Approval yang diperlukan sudah ada (review menyeluruh rencana = merge PR #43; Langkah 7 = mandat pemilik 14 Sep; flip+ratifikasi = delegasi eksplisit 14 Sep, ratifikasi akhir di gerbang merge PR ini)
+- [x] Audit terakhir tercatat (14 Sep 2026 — ACCEPTANCE_TEST_LOG.md + log sesi)
+- [ ] Ringkasan cadangan sinkron (menyusul — W-09, Langkah 10 rencana; tercatat sadar, bukan kelalaian)
+- [x] Pegangan pengguna tersedia di dalam folder sistem (prompt pembuka + prompt penutup) — dua file root ada sejak kerangka; prompt pembuka terbukti bekerja (sesi 14 Sep dibuka dengannya)
 
 ## Log Keputusan
 
@@ -105,4 +105,5 @@ Status butir 03_KONTRAK_WARISAN.md (provenance) untuk sistem ini — salinan bag
 | 2026-09-13 | Baris "Unit kerja utama" disinkron: menyebut F Panen + urutan kanonik E→F→[G-Final]→Peleburan | Rekonsiliasi diagram-vs-gerbang rencana disetujui pemilik 13 Sep (ask_user: setuju + sync_sekarang); sumber: 01_ALUR_RUN bagian 2 + Log Keputusannya |
 | 2026-09-11 | Target diperluas jadi tanpa-umur (K-7): sistem pra-meta maupun pasca-meta semuanya boleh disuntik | Pemilik menyatakan sendiri saat review rencana: "target tuh sebenarnya bukan hanya sistem lama, tapi juga bisa aja sistem yang baru yang dibuat setelah meta sistem ditingkatkan" — sasaran = keadaan, bukan umur; tidak perlu aturan baru, idempotensi (rekam klinik + cap versi) sudah melayani sistem yang lahir lengkap |
 | 2026-09-14 | Langkah 7 rencana dikerjakan: START_DI_SINI.md lahir; acceptance test pertama dijalankan di fixture; temuan pre-audit AT-KL-02 diperbaiki (aturan anti-kit-usang di 01 §1.3 + Tahap A.4) → versi naik 0.1.1→0.1.2 | Mandat pemilik 14 Sep: "pastiin dulu sistem kliniknya udh matang" → tuntaskan Langkah 7 dulu; perbaikan aturan = hasil acceptance test sungguhan, bukan rencana awal (detail di ACCEPTANCE_TEST_LOG.md) |
+| 2026-09-14 | Flip Tahap kerangka → siap-pakai; ratifikasi v0.1.2; PR penutup sesi dibuka | Delegasi eksplisit pemilik 14 Sep pada tiga gerbang (near-verbatim ×3): "Dalam hal ini Aku ikut yang menurut kamu terbaik" — prasyarat flip dicek objektif (dokumen lengkap, AT lulus, validator hijau, syarat 03_KEBIJAKAN_LEBUR "run nyata baru sah setelah Tahap = siap-pakai"); ratifikasi PR = keputusan pemilik di gerbang merge |
 | 2026-09-11 | Prinsip hidup ditalangkan sebagai mekanisme (K-8): Tahap F Panen wajib per run + ritme rilis kit lewat PR + cap versi = deteksi basi | Pemilik: "sistem klinik ini juga kayanya perlu dibuat hidup dalam artian terus berkembang" — agent setuju dengan syarat: hidup lewat gerbang (nihil-panen sah, diam tidak sah), bukan lewat mood; selaras Prinsip 6 QA & Evolusi |
