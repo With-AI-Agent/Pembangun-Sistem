@@ -92,6 +92,12 @@ Cara pilih adaptif: Deploy? → `cloudflare+wrangler` jika user bilang Cloudflar
 
 **Sisa 10 Vercel niche tidak terpasang (tidak ditemukan sebagai skill valid):** `json-render-*` (5), `remotion-best-practices`, `turborepo` (repo bukan skill), `cra-to-next-migration`, `vercel-cli`, `autoship`, `before-and-after` — docs menyebut tapi repo tidak punya `SKILL.md` valid / user-invocable false. Tetap discoverable via `npx skills find` — bisa susulan bila Vercel publish ulang.
 
+## Update & Discoverability — snapshot vs terbaru
+
+> **Apakah skill auto-update? TIDAK — ini snapshot 15 Sep 2026 (sengaja untuk stabilitas, tidak berubah diam-diam).** Untuk dapat versi terbaru:
+> * **Skill publik Vercel/Cloudflare/Supabase/Google** (32 skill): `npx skills update` atau `npx skills add <owner/repo> --skill <nama>` (contoh: `npx skills add cloudflare/skills --skill cloudflare`, `npx skills add supabase/agent-skills --skill supabase`). Registry: `skills.sh` + `officialskills.sh`. Google butuh OAuth `python scripts/auth.py login` dulu.
+> * **10 skill dari Input-Pengguna zip** (`alibaba-java` 44K, `ai-agent-skills` 256K 18 skills, `ios-agent` 252K, `tsbs-benchmark` 28K, `awesome-agent-skills` 224K, `agent-skills` 10K catalog, `hub` 8.5K catalog, `frontend-designer` 24K, `excalidraw` 57K, `ui-ux-pro-max` 1.7M selective): **sudah terpasang selective lengkap di `skills/` ini** — agent langsung pakai tanpa `npx`. Update-nya **bukan via `npx`**, tapi dengan **upload zip baru** atau `git clone` sumber aslinya (tercatat di `_sistem/02_TAWARAN...` Tabel Audit: `alibaba-java-coding-guidelines-skill-main.zip`, `tsbs-benchmark-agent-skill-main.zip`, dll — bukan di `skills.sh`). Karena itu aku **tidak prune fungsi**, hanya prune bengkak (font 1.9M, hub 35M) — yang inti tetap 100% dan `find-skills` (8K) tetap ada untuk discover skill baru publik kapanpun dibutuhkan (lihat `AGENT_SYSTEM.md` § ADAPTIF). `agent` **punya dan bisa pakai** `npx skills find/add` kapanpun untuk skill publik, dan **punya** 10 skill zip di `skills/` ini kapanpun tanpa `npx`.
+
 ## Cara pakai (WAJIB ADAPTIF — lihat AGENT_SYSTEM.md § Kewajiban + Prinsip Adaptif)
 
 1. **Awal sesi:** `ls skills/` + baca `skills/README.md` + baca `SKILL.md` mapping adaptif per tahap (tabel di AGENT_SYSTEM) — pilih yang paling relevan, kombinasikan bila lintas domain.
