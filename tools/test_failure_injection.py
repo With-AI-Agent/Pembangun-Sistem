@@ -46,15 +46,15 @@ ROOT = Path(__file__).resolve().parents[1]
 # category as the two earlier SYSTEM_MANIFEST.md history references.)
 EXPECTED_TEMPLATE_WARNINGS = {
     ("_meta/00_CARA_KERJA_META.md",
-     "sistem-konten-kreator/_sistem/09_AUDIT_MIGRASI_GITHUB_AGENT.md"),
+     "sistem/sistem-konten-kreator/_sistem/09_AUDIT_MIGRASI_GITHUB_AGENT.md"),
     ("_meta/00_CARA_KERJA_META.md",
-     "sistem-konten-kreator/_sistem/00_CARA_PAKAI_SISTEM.md"),
+     "sistem/sistem-konten-kreator/_sistem/00_CARA_PAKAI_SISTEM.md"),
     ("_meta/SYSTEM_MANIFEST.md",
-     "sistem-pilot-catatan-belajar/unit-aktif/pilot-002-behavioral/OUTPUT.md"),
+     "sistem/sistem-pilot-catatan-belajar/unit-aktif/pilot-002-behavioral/OUTPUT.md"),
     ("_meta/SYSTEM_MANIFEST.md",
      "_sistem/11_LOG_SESI.md"),
     ("_meta/SYSTEM_MANIFEST.md",
-     "sistem-konten-kreator/ACCEPTANCE_TEST_LOG.md"),
+     "sistem/sistem-konten-kreator/ACCEPTANCE_TEST_LOG.md"),
 }
 
 MINI_MANIFEST = """# System Manifest — Sistem Uji Kerangka (skenario FI)
@@ -165,10 +165,11 @@ def regression_scenarios(base_dir: Path):
         # check-nya memang longgar = hasil positif-palsu terbalik (R4 merah
         # padahal sistemnya benar). Fail-closed diuji pada sistem siap-pakai.
         target_files = []
-        for sys_dir in sorted(cp.glob("sistem-*/")):
-            if sys_dir.name == core.EXACT_PILOT:
+        for sys_dir in sorted(list(cp.glob("sistem/sistem-*/")) + list(cp.glob("sistem-*/"))):
+            sys_rel = sys_dir.relative_to(cp).as_posix()
+            if sys_rel == core.EXACT_PILOT or sys_dir.name == core.EXACT_PILOT:
                 continue
-            if sys_dir.name in core.parse_index(idx_backup)[0]:
+            if sys_rel in core.parse_index(idx_backup)[0] or sys_dir.name in core.parse_index(idx_backup)[0]:
                 manifest = sys_dir / "SYSTEM_MANIFEST.md"
                 if manifest.is_file() and core.manifest_tahap(
                         manifest.read_text(encoding="utf-8")) == "kerangka":
@@ -842,10 +843,12 @@ def run():
     index_text = (ROOT / "_meta" / "INDEKS_SISTEM.md").read_text(encoding="utf-8")
     registered = set(core.parse_index(index_text)[0])
     real = []
-    for sys_dir in sorted(ROOT.glob("sistem-*/")):
+    for sys_dir in sorted(list(ROOT.glob("sistem/sistem-*/")) + list(ROOT.glob("sistem-*/"))):
+        sys_rel = sys_dir.relative_to(ROOT).as_posix()
         files = core.unit_status_files(sys_dir)
-        if sys_dir.name in registered and not files:
-            checks.append((f"registered system {sys_dir.name} punya unit STATUS (F3)", False))
+        is_reg = sys_rel in registered or sys_dir.name in registered
+        if is_reg and not files:
+            checks.append((f"registered system {sys_rel} punya unit STATUS (F3)", False))
             continue
         for status_path in files:
             real.append((status_path, core.state_is_safe(status_path.parent)))

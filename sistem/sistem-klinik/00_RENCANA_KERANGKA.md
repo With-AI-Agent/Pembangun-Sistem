@@ -62,7 +62,7 @@ Tujuh jangkar ini yang membuat hasil klinik bisa dipercaya lintas target dan lin
 3. **Kontrak Tanaman** — syarat minimum "sistem sudah dirawat": setiap sistem target pasca-run punya (a) aturan log sesi berkelanjutan turunan (format disalin, langkah cari-log-OPEN di prompt pembuka + tutup-log di prompt penutup), (b) kontrak STATUS unit dengan field deterministik `Pekerjaan belum tersimpan: Tidak ada` (nilai persis sesuai parser checkpoint meta) + `Waktu pembaruan`, (c) log keputusan di dokumen hidupnya, (d) pegangan pengguna/prompt pembuka kalau belum ada, (e) bagian fakta platform lmarena dengan bahasa kausal (dipakai via lmarena: ya, karena ini lingkungan utama target — lihat Putaran 2 jawaban pengguna). Terjemahan mandiri-butir W-01…W-09 — ditanam lewat `04_KONTRAK_TANAMAN.md`, disederhanakan untuk sistem kecil (mis. satu STATUS global untuk sistem 1-unit, tapi field deterministik WAJIB).
 4. **Versi kit + cap di rekam klinik** — setiap run meninggalkan `REKAM-KLINIK.md` (atau padanannya ikut konvensi target) yang memuat: tanggal run, versi kit saat itu, temuan, daftar perubahan + status approval-nya, dan apa yang DITOLAK pemilik (supaya run berikutnya tidak menawarkan ulang hal yang sudah ditolak tanpa alasan baru). Kit berikutnya membaca ini duluan → idempotensi + anti-regresi.
 5. **Gerbang yang tidak bisa ditawar** — G-Rencana sebelum menyentuh target (apa pun panggungnya) dan G-Final sebelum peleburan/PR; overwrite dan install kapabilitas selalu per-item. Tidak ada mode "agent percaya diri lanjut".
-6. **Format rekam yang sama untuk dua panggung** — satu run rawat-jalan maupun rawat-inap menghasilkan artefak identik (laporan diagnosis, rencana, catatan tindakan, verifikasi); supaya hasil bengkel bisa dievaluasi dengan mata yang sama dengan hasil suntikan.
+6. **Format rekam yang sama untuk dua panggung** — satu run rawat-jalan maupun rawat-inap menghasilkan artefak identik (laporan diagnosis, rencana, catatan tindakan, verifikasi); supaya hasil rawat inap bisa dievaluasi dengan mata yang sama dengan hasil suntikan.
 7. **Ritme evolusi kit (prinsip hidup, K-8)** — kit hanya berubah lewat PR ke meta yang di-merge: setiap rilis = versi naik + satu baris di Log Evolusi (di manifest) + `kit/` dibangun ulang oleh `06_RITME_KIT`. Target tahu ketinggalan-zamannya dari cap versi di rekam klinik; jika cap < versi kit terbaru, run berikutnya WAJIB menawarkan "naik ke vX" sebagai item rencana (boleh ditolak pemilik; penolakan dicatat). Yang mengalir BALIK dari target ke meta hanyalah panen (Tahap F) dan temuan katalog — bukan konten target.
 
 ---
@@ -77,12 +77,12 @@ Model yang disetujui pemilik 11 Sep 2026 (dua gerbang + per-item untuk hal berba
 | **Per-item override** | setiap kali mau menimpa/menghapus file/konten target yang sudah ada | **Besar** — tidak bisa dibalik diam-diam | izin eksplistik per item, tercatat di rekam klinik + Log Keputusan target bila target punya |
 | **Per-item kapabilitas** | install plugin/skill/tool apa pun (hasil riset) | **Besar** | SELALU lewat tawaran (lihat 05_TAWARAN_KAPABILITAS), pemilik boleh bilang tidak; penolakan dicatat supaya tidak ditawari ulang |
 | **G-Final** | isi perubahan selesai + hasil verifikasi | **Besar** — review isi lengkap | sebelum peleburan kit + PR |
-| **Discharge / merge** | merge ke main repo target (atau penyerahan hasil di bengkel) | **Besar** = hak pemilik penuh | sama pola G3 meta; agent tidak pernah auto-merge |
+| **Discharge / merge** | merge ke main repo target (atau alur standar meta pada rawat inap) | **Besar** = hak pemilik penuh | sama pola G3 meta; agent tidak pernah auto-merge |
 | Konfirmasi ringan (tanpa jeda) | tambahan file baru non-destruktif (menanam yang hilang), log, STATUS, verifikasi read-only | Kecil | jalan + lapor di G-Final |
 
 **Model tanya (K-10, pemilik 13 Sep 2026)** — per-item TIDAK berarti per-momen. Seluruh keputusan per-item (override & install kapabilitas & butir Besar lain) DITANYA DIBORONG: satu daftar bernomor lengkap, tiap butir dengan fungsi/tujuan/alasan + cara pasang + risiko + alternatif, maks ±5 butir per pesan; selalu ada slot terbuka bagi pemilik untuk mengusulkan yang belum masuk; jawaban dicatat persis. Tidak ada mode "jalan-sedikit-tanya-lagi" dan tidak ada mode "banting 10 pertanyaan sekaligus".
 
-**Satu unit kerja (1 run) dianggap SELESAI** kalau: semua item disetujui terpasang; verifikasi per item lolos dan tercatat; rekam klinik + cap versi kit ditulis; folder kit hilang dari repo target (peleburan = hanya artefak hasil yang masuk repo); PR target terbuka TANPA auto-merge (atau di bengkel: patch/download diserahkan + PR meta-close); G3-merge dilakukan pemilik. Tidak ada status "selesai" sebelum checklist itu lolos (pola DEFINITION_OF_DONE).
+**Satu unit kerja (1 run) dianggap SELESAI** kalau: semua item disetujui terpasang; verifikasi per item lolos dan tercatat; rekam klinik + cap versi kit ditulis; folder kit hilang dari repo target (peleburan = hanya artefak hasil yang masuk repo); PR target terbuka TANPA auto-merge (atau pada rawat inap: merge ke main di meta); G3-merge dilakukan pemilik. Tidak ada status "selesai" sebelum checklist itu lolos (pola DEFINITION_OF_DONE).
 
 ---
 
@@ -96,7 +96,7 @@ Tanda: [ATURAN] = dokumen aturan ditulis langsung dari rencana ini. [GENERATOR] 
 |---|---|---|
 | `00_RENCANA_KERANGKA.md` | file ini — kontrak kerangka, disetujui lewat PR ini | — (sudah ada) |
 | `SYSTEM_MANIFEST.md` | identitas + Tahap + tabel Warisan (dari template meta, PR yang sama — pola M-14) | [TEMPLATE] |
-| `START_DI_SINI.md` | entry point sistem: urutan baca per jenis sesi (bangun kit / run suntik / run bengkel / audit kit) | [ATURAN] |
+| `START_DI_SINI.md` | entry point sistem: urutan baca per jenis sesi (bangun kit / run suntik / run rawat inap / audit kit) | [ATURAN] |
 | `STATUS.md` | status pembangunan sistem ini sendiri (unit meta bagi validator; field deterministik W-03) | [TEMPLATE] |
 | `PANDUAN_PENGGUNA.md` + `PROMPT_ENTRI_UNIVERSAL.md` | pegangan pengguna sisi META (W-01): prompt pembuka universal klinik + prompt penutup sesi | [ATURAN] ikut template pegangan meta |
 | `10_LOG_SESI.md` | aturan log sesi sistem ini, self-contained (W-02); file log klinik di `_log-sesi/` level repo | [ATURAN] |
@@ -106,12 +106,12 @@ Tanda: [ATURAN] = dokumen aturan ditulis langsung dari rencana ini. [GENERATOR] 
 
 | Dokumen | Fungsi | Tanda | Catatan |
 |---|---|---|---|
-| `_sistem/01_ALUR_RUN.md` | siklus Tahap A–F + dua gerbang + adaptasi tiap panggung (suntik/bengkel); format laporan diagnosis & rencana; aturan berhenti fail-closed; aturan Tahap F Panen (nihil-panen sah, diam tidak sah) | [ATURAN] | ditulis langsung — prinsipnya sudah diputuskan di Discovery ini |
+| `_sistem/01_ALUR_RUN.md` | siklus Tahap A–F + dua gerbang + adaptasi tiap panggung (suntik/rawat inap); format laporan diagnosis & rencana; aturan berhenti fail-closed; aturan Tahap F Panen (nihil-panen sah, diam tidak sah) | [ATURAN] | ditulis langsung — prinsipnya sudah diputuskan di Discovery ini |
 | `_sistem/02_KATALOG_CACAT.md` | daftar hidup: ID temuan, gejala, cara periksa, pola perbaikan, risiko; SEED dari arsip meta + tambahan per run; aturan promosi temuan run → katalog | **[GENERATOR]** | butuh prompt gali `02A_PROMPT_SEED_KATALOG.md` (menambang arsip temuan meta secara sistematis, menterjemahkan ke netral-domain, redaksi sesuai aturan bukti) |
 | `_sistem/03_KEBIJAKAN_LEBUR.md` | enam aturan tanam (extend>create, per-item overwrite, konvensi target menang, kit tak pernah di-git, istilah tak menular, rekam klinik wajib); contoh benar/salah | [ATURAN] | keputusan sudah digali; tinggal ditulis |
 | `_sistem/04_KONTRAK_TANAMAN.md` | syarat minimum sistem terawat = turunan W-01…W-09 untuk repo mandiri; per butir: apa yang ditanam, bentuk sederhana untuk sistem kecil, cara verifikasi per tanaman | **[GENERATOR]** | butuh prompt gali `04A_PROMPT_KONTRAK_TANAMAN.md` (banyak keputusan terjemahan per butir) |
 | `_sistem/05_TAWARAN_KAPABILITAS.md` | mekanisme tawaran riset plugin/skill: pemetaan kebutuhan sistem → kandidat (riset internet) → tabel rekomendasi (apa, dari mana, cara install, risiko, pengganti lokal) → keputusan pemilik → TANAM ke repo target (isi/vendor + prosedur) → registrasi di manifest target → wajib ditawarkan di SETIAP run dan di alur bangun/audit meta | **[GENERATOR]** | butuh prompt gali `05A_PROMPT_KAPABILITAS.md`; semantik "install" per runtime (lmarena = skrip/vendor dalam repo, Claude Code = folder skill) adalah inti yang harus digali, bukan ditebak |
-| `_sistem/06_RITME_KIT.md` | perakitan `kit/`: dokumen mana yang ikut (turunan berlabel versi), alat portabel subset, stamp versi, prosedur sync master→kit + cek otomatis "kit tidak basi", aturan promotable (kemampuan bengkel → portabel), ritme rilis (Log Evolusi + tawaran naik-versi ke target lama) | [ATURAN] | bergantung 02/04/05 stabil lebih dulu |
+| `_sistem/06_RITME_KIT.md` | perakitan `kit/`: dokumen mana yang ikut (turunan berlabel versi), alat portabel subset, stamp versi, prosedur sync master→kit + cek otomatis "kit tidak basi", aturan promotable (kemampuan rawat inap → portabel), ritme rilis (Log Evolusi + tawaran naik-versi ke target lama) | [ATURAN] | bergantung 02/04/05 stabil lebih dulu |
 
 ### Folder distribusi `sistem-klinik/kit/`
 

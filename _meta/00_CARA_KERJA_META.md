@@ -68,12 +68,13 @@ repo-utama/
 │   ├── build_template.py             ← template bersih + guard kelengkapan
 │   └── check_selfcontained.py        ← gerbang folder sistem = deliverable
 │
-├── sistem-[nama-1]/                  ← misal sistem-konten-kreator/
+├── sistem/
+│   ├── sistem-[nama-1]/                  ← misal sistem-konten-kreator/
 │   └── (struktur & jumlah file BEDA-BEDA per sistem, ditentukan hasil
 │        Discovery, TIDAK dipaksa sama seperti sistem lain — TAPI butir
 │        03_KONTRAK_WARISAN wajib tertanam, override hanya via approval)
 │
-├── sistem-[nama-2]/                  ← sistem lain, struktur sendiri
+│   └── sistem-[nama-2]/                  ← sistem lain, struktur sendiri
 │
 ├── _log-sesi/                        ← semua LOG_SESI_*.md level repo/meta
 │                                        (sesi lintas-sistem — bukan di root langsung)
@@ -115,7 +116,7 @@ Berlaku sama seperti yang sudah terbukti penting di Sistem Konten Kreator: GitHu
 2. **Jangan pernah hapus branch `main`** selama repo ini aktif dipakai — kalaupun ada kebutuhan restrukturisasi besar, itu keputusan sadar yang dicatat, bukan tindakan spontan.
 3. Sebelum deploy/pakai hasil kerja apapun, selalu **merge dulu** PR yang relevan ke `main` — jangan asumsikan hasil kerja di suatu branch otomatis "sudah jadi" sebelum di-merge.
 
-*(Alasan detail di balik 3 poin ini — termasuk kasus nyata yang jadi pelajaran (repo tes `resto-pro2`) — ada di `sistem-konten-kreator/_sistem/09_AUDIT_MIGRASI_GITHUB_AGENT.md` bagian "KATEGORI 0 — Langkah Persiapan Repo", dan konteks pemakaian sehari-harinya di `sistem-konten-kreator/_sistem/00_CARA_PAKAI_SISTEM.md`. Prinsipnya sama persis, cuma sekarang berlaku untuk SELURUH repo meta-sistem, bukan cuma 1 sistem.)*
+*(Alasan detail di balik 3 poin ini — termasuk kasus nyata yang jadi pelajaran (repo tes `resto-pro2`) — ada di `sistem/sistem-konten-kreator/_sistem/09_AUDIT_MIGRASI_GITHUB_AGENT.md` bagian "KATEGORI 0 — Langkah Persiapan Repo", dan konteks pemakaian sehari-harinya di `sistem/sistem-konten-kreator/_sistem/00_CARA_PAKAI_SISTEM.md`. Prinsipnya sama persis, cuma sekarang berlaku untuk SELURUH repo meta-sistem, bukan cuma 1 sistem.)*
 
 ---
 
@@ -133,7 +134,7 @@ Baru setelah itu, arahkan sesuai tujuan. Jika state tidak konsisten, gunakan `FA
 
 **Mau bangun sistem BARU dari nol** → mulai dari `01_DISCOVERY_LEVEL_0.md`, ikuti alur di bagian "Alur Kerja: Membangun Sistem Baru dari Nol" di bawah.
 
-**Mau lanjut/audit sistem yang SUDAH ADA** → dari `INDEKS_SISTEM.md` yang sudah dicek di atas, masuk ke folder `sistem-[nama]/` itu dan baca dokumen navigasi di dalamnya (analog `START_DI_SINI.md` di sistem konten kreator — tiap sistem punya dokumen serupa, isinya spesifik ke sistem itu). **JANGAN baca seluruh isi repo di awal** — cukup baca yang relevan dengan sistem yang dituju, baru baca lebih dalam sesuai kebutuhan aktual.
+**Mau lanjut/audit sistem yang SUDAH ADA** → dari `INDEKS_SISTEM.md` yang sudah dicek di atas, masuk ke folder `sistem/sistem-[nama]/` itu dan baca dokumen navigasi di dalamnya (analog `START_DI_SINI.md` di sistem konten kreator — tiap sistem punya dokumen serupa, isinya spesifik ke sistem itu). **JANGAN baca seluruh isi repo di awal** — cukup baca yang relevan dengan sistem yang dituju, baru baca lebih dalam sesuai kebutuhan aktual.
 
 **Mau merawat sistem yang TINGGAL di repo ini (rawat inap via Sistem Klinik)** → entry point: jenis sesi 3 di berkas START_DI_SINI.md folder sistem klinik (foldernya tercatat di `INDEKS_SISTEM.md`; keputusan K-11, 14 Sep UTC/15 Sep WIB): alur standar meta (branch → PR → merge) dijalankan dengan aturan klinik (katalog cacat, dua gerbang, REKAM-KLINIK, cap versi); master aturan klinik dibaca in-place — kit hanya untuk suntik ke repo eksternal; sistem target TETAP di repo sebagai warga kelas satu, penghapusannya = keputusan sadar pemilik.
 
@@ -153,7 +154,7 @@ Baru setelah itu, arahkan sesuai tujuan. Jika state tidak konsisten, gunakan `FA
      JUGA prompt Discovery detailnya — baru peta dokumen apa saja yang
      akan dibangun, dengan fungsi masing-masing)
 
-2. BUAT folder `sistem-[nama-baru]/` dan salin `SYSTEM_MANIFEST_TEMPLATE.md`
+2. BUAT folder `sistem/sistem-[nama-baru]/` dan salin `SYSTEM_MANIFEST_TEMPLATE.md`
    menjadi manifest sistem tersebut (PR yang sama dengan rencana kerangka —
    manifest menyusul SETELAH merge adalah temuan M-14). Buat skeleton kosong
    sesuai rencana kerangka dari Langkah 1. Pastikan bagian **"Warisan"** pada
@@ -165,7 +166,7 @@ Baru setelah itu, arahkan sesuai tujuan. Jika state tidak konsisten, gunakan `FA
    detailnya (dokumen generator, setara 01_BRAND_CORE.md/
    02_CHANNEL_DISCOVERY_PROMPT.md di sistem konten kreator — ini BELUM
    ADA untuk sistem baru manapun, harus ditulis dari nol berdasarkan
-   rencana kerangka Langkah 1). Simpan di dalam folder sistem-[nama-baru]/
+   rencana kerangka Langkah 1). Simpan di dalam folder sistem/sistem-[nama-baru]/
    itu sendiri — bukan di _meta/, karena isinya spesifik ke sistem ini
 
 4. BARU SETELAH prompt generator di Langkah 3 ada: jalankan Discovery
@@ -202,7 +203,7 @@ Baru setelah itu, arahkan sesuai tujuan. Jika state tidak konsisten, gunakan `FA
    audit dulu sebelum lanjut kerja ("sistem ini terakhir disentuh
    [tanggal], mau saya audit dulu sebelum lanjut, atau langsung saja?")
 
-2. Masuk ke folder sistem-[nama]/, baca dokumen navigasinya (analog
+2. Masuk ke folder sistem/sistem-[nama]/, baca dokumen navigasinya (analog
    START_DI_SINI.md), lanjutkan kerja sesuai kebutuhan
 
 3. Begitu selesai kerja (apapun jenisnya), UPDATE tanggal "terakhir

@@ -34,7 +34,7 @@ baru, lanjut/audit sistem yang sudah ada, rawat inap salah satu sistem
 (lihat butir 5), atau hal lain. Kalau aku mau
 lanjut sistem yang sudah lama tidak disentuh, ingatkan dulu apakah perlu
 diaudit sebelum lanjut. Kalau aku sebut sistem tertentu, BARU baca lebih
-dalam folder sistem-[nama]/ itu — jangan baca seluruh isi repo di awal,
+dalam folder sistem/sistem-[nama]/ itu — jangan baca seluruh isi repo di awal,
 cukup baca yang relevan dengan apa yang aku mau kerjakan.
 ```
 

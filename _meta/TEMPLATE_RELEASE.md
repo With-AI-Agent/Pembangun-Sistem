@@ -66,11 +66,11 @@ Daftar area yang tidak boleh ikut template itu SATU definisi bersama (`master_on
 
 **Yang normal di repo hasil ekstrak — PERSIS 5 warning (daftar normalisasi, dipin di FI skenario R7):** semuanya rujukan historis master yang dilabeli (bukan instruksi aktif); exit code tetap 0. (Format daftar sengaja tanpa backtick pada path-nya: baris ini mendokumentasikan warning, bukan menunjuk dependensi — ia sendiri tidak boleh menjadi warning.)
 
-1. lokasi 00_CARA_KERJA_META.md:111 → target sistem-konten-kreator/_sistem/09_AUDIT_MIGRASI_GITHUB_AGENT.md — konteks "alasan detail" historis
-2. lokasi 00_CARA_KERJA_META.md:111 → target sistem-konten-kreator/_sistem/00_CARA_PAKAI_SISTEM.md — konteks pemakaian harian historis
-3. lokasi SYSTEM_MANIFEST.md:89 → target sistem-pilot-catatan-belajar/unit-aktif/pilot-002-behavioral/OUTPUT.md — bukti rilis di manifest ber-banner "sejarah master"
+1. lokasi 00_CARA_KERJA_META.md:111 → target sistem/sistem-konten-kreator/_sistem/09_AUDIT_MIGRASI_GITHUB_AGENT.md — konteks "alasan detail" historis
+2. lokasi 00_CARA_KERJA_META.md:111 → target sistem/sistem-konten-kreator/_sistem/00_CARA_PAKAI_SISTEM.md — konteks pemakaian harian historis
+3. lokasi SYSTEM_MANIFEST.md:89 → target sistem/sistem-pilot-catatan-belajar/unit-aktif/pilot-002-behavioral/OUTPUT.md — bukti rilis di manifest ber-banner "sejarah master"
 4. lokasi SYSTEM_MANIFEST.md:93 → target _sistem/11_LOG_SESI.md — rujukan turunan di sejarah rilis master (relatif sistem presentasi)
-5. lokasi SYSTEM_MANIFEST.md (baris Log Evolusi v1.4.0) → target sistem-konten-kreator/ACCEPTANCE_TEST_LOG.md — kolom Bukti v1.4.0: implementasi prompt reviewer terbukti pada Run 7/8 (provenance, bukan instruksi aktif; dipin 6 Sep 2026, meta v1.4.0)
+5. lokasi SYSTEM_MANIFEST.md (baris Log Evolusi v1.4.0) → target sistem/sistem-konten-kreator/ACCEPTANCE_TEST_LOG.md — kolom Bukti v1.4.0: implementasi prompt reviewer terbukti pada Run 7/8 (provenance, bukan instruksi aktif; dipin 6 Sep 2026, meta v1.4.0)
 
 Rujukan ke `_meta/_internal/…` tidak pernah di-warn (area histori; tidak pernah ikut template — tidak bisa menjadi dependensi operasional). **Bootstrap mandiri (F5):** tidak boleh ADA warning di `NEXT_SESSION_PROMPT.md` maupun `PANDUAN_PENGGUNA.md` — jika muncul, artinya instruksi aktif menunjuk file yang tidak ikut. Target "0 warning" tetap hanya berlaku di master blueprint.
 

@@ -170,7 +170,10 @@ def detect_pr_from_branch() -> int:
 # Turunan dari pohon kerja (dihitung, tidak ditulis manual)
 # --------------------------------------------------------------------------
 def sistem_folders() -> list[str]:
-    return sorted(p.name for p in ROOT.glob("sistem-*") if p.is_dir())
+    dirs = [p.relative_to(ROOT).as_posix() for p in (ROOT / "sistem").glob("sistem-*") if p.is_dir()]
+    if not dirs:
+        dirs = [p.name for p in ROOT.glob("sistem-*") if p.is_dir()]
+    return sorted(dirs)
 
 
 def pin_bearing_tools() -> list[str]:

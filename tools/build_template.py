@@ -295,7 +295,7 @@ def build():
         ]),
         transform("PANDUAN_PENGGUNA.md", [
             ("Untuk istilah teknis lain (branch, PR, merge, commit) — lihat "
-             "`sistem-konten-kreator/panduan/PANDUAN_PENGGUNA.md`, penjelasannya sama "
+             "`sistem/sistem-konten-kreator/panduan/PANDUAN_PENGGUNA.md`, penjelasannya sama "
              "berlaku di sini.",
              "Istilah teknis singkat: **branch** = salinan kerja; **commit** = snapshot "
              "tersimpan; **PR** = usulan penggabungan kerja; **merge** = penggabungan "
