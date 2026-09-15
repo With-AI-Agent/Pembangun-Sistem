@@ -381,7 +381,7 @@ def review_prompt_scenarios(base_dir: Path):
 
     # Mutasi RP3: matikan pengecualian log penulis; log sendiri kembali menjadi
     # blocking. Ini membuktikan baris pengecualian benar-benar dijaga uji.
-    mutated = original.replace('if log.name in writer_logs:', 'if False and log.name in writer_logs:')
+    mutated = original.replace('if rel in writer_logs:', 'if False and rel in writer_logs:')
     rp_path.write_text(mutated, encoding="utf-8")
     rp_mut = _load_review_prompt(cp, "review_prompt_mut_rp3")
     rp_mut.ROOT = log_root
@@ -499,6 +499,41 @@ def review_prompt_scenarios(base_dir: Path):
     checks.append((
         "RP5c diuji-mutasi: argv in-line tanpa paginasi -> tidak lagi sama dengan files_command",
         tangkap_mut.get("cmd") != rp_mut.files_command(42),
+    ))
+    rp_path.write_text(original, encoding="utf-8")
+    rp = _load_review_prompt(cp, "review_prompt_regression_nested")
+
+    # RP6 (C-1, temuan review PR #56): pemindaian log sesi harus mencakup
+    # `_log-sesi/` — sebelum diperbaiki, pemindai hanya mengglob root sehingga
+    # buta total sejak log pindah folder (v1.13.0).
+    nested = base_dir / "logs_nested"
+    (nested / "_log-sesi").mkdir(parents=True)
+    (nested / "_log-sesi" / "LOG_SESI_NESTED.md").write_text(
+        "# nested\n\n- **Keadaan:** `OPEN`\n\ncatatan: jendela uji terbuka untuk PR ini\n",
+        encoding="utf-8",
+    )
+    rp.ROOT = nested
+    blocking_n, _ = rp.open_test_window([])
+    checks.append((
+        "RP6 log sesi di _log-sesi/ ikut terdeteksi (bukan hanya root)",
+        blocking_n == ["_log-sesi/LOG_SESI_NESTED.md:5"],
+    ))
+    blocking_w, writer_w = rp.open_test_window(["_log-sesi/LOG_SESI_NESTED.md"])
+    checks.append((
+        "RP6 log penulis di _log-sesi/ dikecualikan dari penyembunyian (tetap dipointer)",
+        blocking_w == [] and writer_w == ["_log-sesi/LOG_SESI_NESTED.md:5"],
+    ))
+
+    mut_dir = original.replace(
+        'LOG_SESI_DIRS = ("", "_log-sesi")', 'LOG_SESI_DIRS = ("",)')
+    assert mut_dir != original, "mutasi RP6 tidak mengubah apa pun — uji tidak valid"
+    rp_path.write_text(mut_dir, encoding="utf-8")
+    rp_mut = _load_review_prompt(cp, "review_prompt_mut_rp6")
+    rp_mut.ROOT = nested
+    blocking_mut, _ = rp_mut.open_test_window([])
+    checks.append((
+        "RP6 diuji-mutasi: _log-sesi/ dihapus dari LOG_SESI_DIRS -> log di sana tak terdeteksi",
+        blocking_mut == [],
     ))
     rp_path.write_text(original, encoding="utf-8")
 

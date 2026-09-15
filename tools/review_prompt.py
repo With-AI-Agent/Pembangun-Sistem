@@ -70,6 +70,10 @@ GUARDED_SISTEM_PREFIXES = ("00", "05", "06")
 # Folder yang berisi state produksi/fixture (bukan aturan, tapi bukti hidup).
 PRODUCTION_DIR_HINTS = ("_produksi-aktif/", "deck-aktif/", "unit-aktif/")
 
+# Folder tempat LOG_SESI hidup: root (konvensi lama, sebelum v1.13.0) dan
+# `_log-sesi/` (konvensi berlaku sejak 9 Sep 2026 — v1.13.0).
+LOG_SESI_DIRS = ("", "_log-sesi")
+
 # `gh pr view --json files` berhenti di 100 berkas (T-2, temuan review PR #55).
 # Dipakai hanya untuk mendeteksi ketidakkonsistenan; daftar lengkap datang dari
 # `gh api --paginate`.
@@ -300,7 +304,7 @@ def reading_order(files: list[str]) -> list[str]:
     for rel in files:
         if rel in base_paths:
             continue
-        if rel.startswith("LOG_SESI_") and rel.endswith(".md"):
+        if Path(rel).name.startswith("LOG_SESI_") and rel.endswith(".md"):
             relevan.append((rel, f"`{rel}` — log sesi penulis PR"))
         elif rel.startswith("_meta/") and rel.endswith(".md"):
             relevan.append((rel, f"`{rel}` — disentuh PR"))
@@ -336,6 +340,28 @@ def latest_log_status(lines: list[str]) -> str:
     return statuses[-1] if statuses else "OPEN"
 
 
+def session_log_files() -> list[Path]:
+    """Semua `LOG_SESI_*.md` yang wajib dipindai: root DAN `_log-sesi/`.
+
+    Sebelum 15 Sep 2026 pemindaian hanya `ROOT.glob("LOG_SESI_*.md")`, sehingga
+    buta total sejak seluruh log pindah ke `_log-sesi/` — cacat C-1 yang
+    ditemukan review independen PR #56 (0 berkas di root, 38 di `_log-sesi/`).
+    """
+    found: list[Path] = []
+    for rel in LOG_SESI_DIRS:
+        base = ROOT if rel == "" else ROOT / rel
+        found.extend(sorted(base.glob("LOG_SESI_*.md")))
+    return found
+
+
+def log_pointer(log: Path) -> str:
+    """Path log relatif terhadap ROOT (pointer SHA+baris butuh path ini)."""
+    try:
+        return log.relative_to(ROOT).as_posix()
+    except ValueError:
+        return log.name
+
+
 def open_test_window(files: list[str] | None = None) -> tuple[list[str], list[str]]:
     """LOG_SESI terbuka yang menyebut jendela uji berjalan.
 
@@ -347,23 +373,29 @@ def open_test_window(files: list[str] | None = None) -> tuple[list[str], list[st
     """
     blocking: list[str] = []
     writer_hits: list[str] = []
-    writer_logs = {f for f in (files or []) if f.startswith("LOG_SESI_") and f.endswith(".md")}
+    # Path PR kini berawalan `_log-sesi/`, jadi penanda log penulis dicocokkan
+    # dari NAMA berkas, bukan awalan path (bagian dari cacat C-1).
+    writer_logs = {
+        f for f in (files or [])
+        if Path(f).name.startswith("LOG_SESI_") and f.endswith(".md")
+    }
     pattern = re.compile(
         r"jendela uji|jendela run|run acceptance|acceptance run|"
         r"belum dijalankan|sedang berjalan|dijadwalkan, belum",
         re.IGNORECASE,
     )
-    for log in sorted(ROOT.glob("LOG_SESI_*.md")):
+    for log in session_log_files():
         try:
             lines = log.read_text(encoding="utf-8").splitlines()
         except OSError:
             continue
         if latest_log_status(lines) != "OPEN":
             continue
+        rel = log_pointer(log)
         for idx, line in enumerate(lines, start=1):
             if pattern.search(line):
-                ptr = f"{log.name}:{idx}"
-                if log.name in writer_logs:
+                ptr = f"{rel}:{idx}"
+                if rel in writer_logs:
                     writer_hits.append(ptr)
                 else:
                     blocking.append(ptr)
