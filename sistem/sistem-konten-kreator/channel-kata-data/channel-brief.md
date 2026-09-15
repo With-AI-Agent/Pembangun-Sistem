@@ -121,3 +121,4 @@ Folder `arsip-naskah/` sudah dibuat bersama brief ini berisi `indeks.md` (kosong
 | 2026-09-15 | Format 30-60 detik vertikal; struktur baku hook-konteks-artinya-sumber; ritme 2x/minggu | Pilihan pemilik (`30_60`, `2x`) — padat untuk retensi, realistis untuk solo |
 | 2026-09-15 | Gaya visual motion-infografis flat dark + satu aksen; faceless; palet-gaya dikunci via kit 04 | Pilihan pemilik (`flat_dark`, `faceless_palet`) |
 | 2026-09-15 | Aturan keras tiap konten: 1 angka utama + sumber-tahun tampil + "artinya buat kamu"; larangan: angka tanpa sumber, klaim absolut, clickbait, politik/SARA, visualisasi menyesatkan | Anti-hoaks data sebagai pembeda channel — dikunci di bagian 3 |
+| 2026-09-15 | G2 Approved — Channel Brief v1 dikunci | Pemilik setuju via ask_user `setuju_g2` 2026-09-15 |
