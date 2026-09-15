@@ -60,16 +60,29 @@ banyak dan sayang diulang.
 | `CODING_AKTIF` | Masuk ke **PROSEDUR EKSEKUSI CODING** di bawah |
 | `SIKLUS_BARU` | Lanjutkan **TAHAP 0.5: Merancang Siklus Berikutnya** |
 
+### 1b. Cek `LOG_SESI` & `STATUS` — Anti-Hilang Konteks (WAJIB setelah Langkah 1)
+
+Ini **mekanisme anti-kehilangan konteks** yang diwarisi dari meta-sistem (W-02 + W-03 + fakta platform lmarena: sesi bisa crash kapan saja, agent sesi baru tidak punya akses chat lama). Lakukan **tepat setelah cek PROJECT_STATE**, sebelum lapor posisi:
+
+1. **Cari `LOG_SESI` terbaru:** `ls _log-sesi/LOG_SESI_*.md` (atau di root bila standalone) + cari `DISKUSI_MENTAH_*.md` lama sebagai arsip. Jika ada file dengan `Keadaan: OPEN` → **baca header `## Keadaan Sesi` dulu, laporkan keadaannya ke user, dan konfirmasi** sebelum tanya tujuan — **jangan minta user mengulang** keputusan/koreksi/preferensi yang sudah tercatat di sana.
+2. **Backstop bila log tidak ada/kosong:** baca `STATUS.md` (cek `Pekerjaan belum tersimpan: Tidak ada` exact + `Waktu pembaruan: YYYY-MM-DD — peristiwa`) + `PROJECT_STATE.md` + `git log --oneline -3` + `git status`. Itulah sumber kebenaran lintas sesi jika log belum sempat ditulis.
+3. **Verifikasi branch & PR (fakta platform #1 & #2):** `git branch --show-current` (harus `arena/...`, bukan asumsi `main`) + `gh pr list --state all --limit 20` (pakai `--state all`, bukan `--state open` — PR MERGED/CLOSED tidak terlihat di `open`). Jika PR branch aktif sudah MERGED/CLOSED → **sesi ini tidak bisa push lagi** → buka sesi baru dari `main`. Jika ada branch lain belum di-merge (selain `main` dan branch-mu) → beri tahu user seperti di Konsep Dasar.
+4. **Jangan ulang tahap `approved/merged` tanpa alasan sah** (Q-O2): hanya boleh ulang jika (a) instruksi eksplisit baru dari user (kutip + tanggal, catat di LOG_SESI) atau (b) bukti kecacatan ber-rujukan (path/commit/test). Selain itu → tanya dulu; jangan menebak. Alasan sah pun bukan auto-approve — tetap lewat jalur usulan → klasifikasi Besar/Kecil → approval.
+5. **Recovery saat crash di tengah diskusi:** jika sesi sebelumnya terputus sebelum `PROJECT_STATE.md` sempat dibuat/updated (mis. diskusi Tahap 1 belum “cukup” untuk jadi `DISCOVERY.md`), **jangan diam-diam mulai dari nol** — tanya user: “Sesi sebelumnya sepertinya terputus di [tahap X]. Mau lanjut dari sini atau mulai ulang?” — sertakan apa yang berhasil dipulihkan dari LOG_SESI + STATUS.
+
+> Workaround bila file terjebak setelah crash/merge dan tidak bisa push: tambah `/download-workspace` di akhir URL sesi lmarena untuk download zip, lalu pindahkan manual ke sesi baru — jangan mengarang konteks yang tidak tercatat. Detail lengkap ada di `10_LOG_SESI.md` (self-contained) + `_salinan-meta/PLATFORM_LMARENA.md`.
+
 ### 2. Laporkan posisi ke user SEBELUM mulai kerja
 
 Sebelum menyentuh apa pun, beri tahu user secara singkat: sedang di
-tahap/fase apa, dan apa yang akan kamu kerjakan sekarang. **Gunakan bahasa & gaya dari `PROFIL_PENGGUNA.md` (langkah 0)** — jika user minta Indonesia santai tanpa jargon, jangan pakai istilah Inggris teknis tanpa penjelasan.
+tahap/fase apa, dan apa yang akan kamu kerjakan sekarang — **sertakan apa yang kamu pulihkan dari LOG_SESI/STATUS** jika ada. **Gunakan bahasa & gaya dari `PROFIL_PENGGUNA.md` (langkah 0)** — jika user minta Indonesia santai tanpa jargon, jangan pakai istilah Inggris teknis tanpa penjelasan.
 
-### 3. Update `PROJECT_STATE.md` sebagai langkah TERAKHIR
+### 3. Update `PROJECT_STATE.md` + `STATUS.md` + `LOG_SESI` sebagai langkah TERAKHIR (WAJIB)
 
-Ini WAJIB dilakukan di akhir setiap sesi — baik karena tahap/task selesai,
-maupun karena diminta checkpoint. Sesi berikutnya bergantung sepenuhnya pada
-file ini untuk tahu harus lanjut dari mana.
+Ini WAJIB dilakukan di akhir setiap sesi — baik karena tahap/task selesai, maupun karena diminta checkpoint atau sesi terputus. **Sesi berikutnya bergantung sepenuhnya pada 3 file ini** (bukan ingatan chat) untuk tahu harus lanjut dari mana + anti-hilang konteks:
+- `PROJECT_STATE.md` → STATUS tahap berikutnya
+- `STATUS.md` → `Pekerjaan belum tersimpan: Tidak ada` + `Waktu pembaruan: YYYY-MM-DD — peristiwa`
+- `LOG_SESI` → header `Keadaan: CLOSED` (atau `OPEN — dilanjutkan di ...`) + kronologi terakhir, lalu `commit & push` semua sebelum PR (fakta platform: tanpa push, sesi baru tidak bisa melanjutkan).
 
 Format `PROJECT_STATE.md`:
 
