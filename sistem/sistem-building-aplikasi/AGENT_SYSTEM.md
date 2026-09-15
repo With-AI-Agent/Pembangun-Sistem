@@ -88,6 +88,38 @@ UPDATE TERAKHIR: [tanggal]
 
 ---
 
+## Kewajiban Penggunaan Skill (WAJIB — harus dan wajib di setiap aksi)
+
+> **Aturan ini override semua kebiasaan lama: skill bukan opsional, bukan saran, tapi KEWAJIBAN.** Kapanpun kamu buka sesi untuk sistem ini, kamu **WAJIB** memakai skill yang sudah terpasang vendor-local di `skills/` di dalam folder sistem ini (total 31 skill group, 6.0M — lihat `skills/README.md`). Jangan pernah coding/UI/riset/deploy tanpa baca `SKILL.md` yang relevan terlebih dulu.
+
+**Cara pakai (harus):**
+1. Di awal setiap sesi, `ls skills/` dan baca `skills/README.md` untuk tahu apa yang tersedia.
+2. Sebelum memulai **Tahap/Fase/Task apapun**, baca `SKILL.md` yang dipetakan di bawah — minimal 1 skill, idealnya semua yang relevan. Skill punya *Activation Contract* & *Hard Rules* — ikuti persis.
+3. Selama eksekusi, terapkan *rules* & *references* dari skill (bukan dari ingatanmu). Jika skill butuh fetch fresh guideline (mis. `web-design-guidelines` fetch `https://raw.githubusercontent.com/vercel-labs/web-interface-guidelines/main/command.md`), lakukan fetch.
+4. Jika tidak ada skill yang pas, catat gap-nya di `DECISIONS_LOG.md` dan lanjut dengan fallback yang aman — jangan diam-diam skip.
+
+**Pemetaan skill WAJIB per tahap (baca SKILL.md sebelum mulai):**
+
+| Tahap / Tugas | Skill yang WAJIB dibaca & dipakai |
+|---|---|
+| **Tahap 1 Discovery** (gali ide mentah) | `skills/product-discovery/discovery-interview-prep` + `skills/product-discovery/customer-journey-map` + `skills/ai-agent-skills/skills/ask-questions-if-underspecified` + `skills/brainstorming` — untuk 3-5 pertanyaan klarifikasi yang tidak overwhelm |
+| **Tahap 2 PRD** (MoSCoW, user story) | `skills/product-management/prd-development` + `skills/product-management/user-story-mapping` + `skills/prd-taskmaster` + `skills/ai-agent-skills/skills/ask-questions-if-underspecified` — untuk PRD 15-section + acceptance Given-When-Then |
+| **Tahap 3 TECH_SPEC** (arsitektur) | `skills/vercel-react-best-practices` + `skills/next-best-practices` + `skills/vercel-composition-patterns` + `skills/building-components` + `skills/next-cache-components` + `skills/excalidraw-diagram` (diagram argue-visually) |
+| **Tahap 4 AGENT_GUIDE** (standar agent) | `skills/security-review` + `skills/tdd-workflow` + `skills/verification-loop` + `skills/ai-agent-skills/skills/best-practices` |
+| **Tahap 5 ROADMAP** (pecah task) | `skills/product-discovery/roadmap-planning` + `skills/product-management/prioritization-advisor` + `skills/writing-plans` + `skills/product-discovery/opportunity-solution-tree` |
+| **Tahap 6 CROSS_CHECK** (audit) | `skills/web-design-guidelines` + `skills/frontend-designer` + `skills/design-system` + `skills/security-review` + `skills/verification-before-completion` |
+| **Coding UI** | `skills/frontend-designer` + `skills/design-system` + `skills/ui-styling` + `skills/ui-ux-pro-max` + `skills/vercel-react-best-practices` + `skills/building-components` + `skills/web-design-guidelines` (a11y 100+ rules) |
+| **Coding Logic/API** | `skills/ai-agent-skills/skills/backend-development` + `skills/ai-agent-skills/skills/database-design` + `skills/alibaba-java` (jika stack Java) |
+| **Coding Mobile (iOS)** | `skills/ios-agent` |
+| **Verify & Test** | `skills/agent-browser` + `skills/tdd-workflow` + `skills/test-driven-development` + `skills/systematic-debugging` + `skills/verification-loop` |
+| **Deploy** | `skills/vercel-deploy` (+ `skills/agent-browser` untuk claim) |
+| **AI Features** | `skills/ai-sdk` + `skills/ai-elements` + `skills/streamdown` |
+| **Workflow/Commerce** | `skills/workflow` (durable) + `skills/ucp` (checkout) — bila app butuh |
+
+*Jika membangun aplikasi Next.js/React (mayoritas kasus), kombinasi **vercel-react-best-practices + next-best-practices + web-design-guidelines + building-components** adalah paket minimal yang tidak boleh dilewati.*
+
+**Bukti kepatuhan:** di akhir tiap sesi, sebut skill mana yang kamu pakai di `LOG_SESI` — agar sesi berikutnya bisa audit.
+
 ## Struktur Dokumen Fondasi (`/docs`)
 
 Enam dokumen ini adalah sumber kebenaran proyek. Dua kategori cara membacanya:
