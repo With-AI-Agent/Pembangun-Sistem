@@ -3,12 +3,13 @@
 - **Status:** `in-progress`
 - **Channel:** Kisah Sudut Kota (`sistem/sistem-konten-kreator/channel-fixture-kisah-sudut-kota/`, Channel Brief **v3**)
 - **Model konten:** Kartu Teks 8–10 **v1 `Approved`** (G2-a 2026-09-15) — kerangka standar + override ringan, unit = kartu teks
-- **Tahap terakhir selesai:** Tahap 1 Ideation (**G1 disetujui** 2026-09-15); Tahap 2 Konsep & Angle **ditulis, menunggu G1**
-- **Tahap berikutnya:** G1 Tahap 2 → Tahap 3 Naskah per kartu (G1 + G2)
+- **Tahap terakhir selesai:** Tahap 2 Konsep & Angle (**G1 disetujui** 2026-09-15); Tahap 3 naskah r1 **ditulis + terverifikasi skrip, menunggu G1 + G2**
+- **Tahap berikutnya:** G1+G2 Tahap 3 → Tahap 4 Breakdown (unit kartu teks)
 - **Output resmi:**
   - `ideation.md` (Tahap 1 — 4 opsi + cek arsip + ide terpilih, G1 disetujui)
-  - `konsep-angle.md` (Tahap 2 — angle + hook + peta 9 kartu + kepatuhan batasan; **menunggu G1**)
-  - `naskah-draft.md` — belum
+  - `konsep-angle.md` (Tahap 2 — angle + hook + peta 9 kartu + kepatuhan batasan; **G1 disetujui**)
+  - `naskah-draft.md` (Tahap 3 — naskah r1, 9 kartu, 179 kata; **menunggu G1 + G2**)
+  - `cek-kartu.py` (pemeriksa batas model — PASS, sudah diuji-mutasi)
   - `breakdown-output.md` — belum (unit: kartu teks)
   - `assets/` — **tidak akan ada**: konten teks-only, Tahap 5 tidak berlaku
 - **Sumber konteks yang dibaca:** `channel-fixture-kisah-sudut-kota/channel-brief.md` v3, `model-konten/kartu-teks-8-10/brief.md` v1, `_sistem/05_CONTENT_PRODUCTION_PIPELINE.md`, `_sistem/06_PROMPT_LIBRARY.md`, `_sistem/01_BRAND_CORE.md` (masih generator kosong — gap dilaporkan), `arsip-naskah/indeks.md` (1 entri), `arsip-naskah/indeks-karakter.md` (1 entri). **Bank Konsistensi Visual dilewati — channel tidak mengunci elemen visual apa pun dan model ini teks-only tanpa gambar.**
@@ -19,7 +20,7 @@
   - Angka "tiga kali" diperlakukan sebagai premis naratif dari Bank Ide Awal channel (bukan klaim faktual) — alasan tercatat di `ideation.md`.
 - **Approval yang sudah diberikan:**
   - `G1 Tahap 1 (Ideation — ide "Warung kopi yang pindah tiga kali tanpa ganti nama"):` disetujui 2026-09-15
-  - `G1 Tahap 2 (Konsep & Angle):` belum
+  - `G1 Tahap 2 (Konsep & Angle — peta 9 kartu):` disetujui 2026-09-15
   - `G1 Tahap 3 (Naskah):` belum
   - `G2 naskah final:` belum
   - `G1 Tahap 4 (Breakdown):` belum
