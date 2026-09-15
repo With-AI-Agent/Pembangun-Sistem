@@ -1,0 +1,10 @@
+# SUMBER (arsip) — 2 Jam Sekali Jalan — Kata Data — 2026-09-15
+
+| # | Klaim/bahan yang dipakai | Sumber (URL/judul/penerbit) | Tanggal akses | Jenis | Status verifikasi | Lisensi/hak | Atribusi wajib? |
+|---|---|---|---|---|---|---|---|
+| 1 | Perjalanan komuter Jabodetabek bisa mencapai 1,5–2 jam per sekali jalan (BPS 2023); 60% <20 km, 40% ≥20 km | Kompas.id "Kapan Mimpi Banten Terkoneksi..." (mengutip BPS Survei Komuter 2023) — https://www.kompas.id/artikel/kapan-mimpi-banten-terkoneksi-transjabodetabek-mrt-dan-lrt-terwujud/amp | 2026-09-15 | data | `Terverifikasi` | Fakta publik — kutip angka + sebut lembaga | ya — "BPS 2023" di narasi + kartu sumber |
+| 2 | 35,6% responden menghabiskan 1–2 jam sekali jalan; 44,2% 30–60 menit (survei DTKJ 2021) | CNBC Indonesia "Mayoritas Pengguna Transportasi DKI..." (mengutip survei DTKJ via Ketua DTKJ) — https://www.cnbcindonesia.com/news/20210728144005-4-264318/mayoritas-pengguna-transportasi-dki-tempuh-40-km-per-hari | 2026-09-15 | data | `Terverifikasi` | Fakta publik — kutip angka + sebut lembaga | ya — "DTKJ 2021" di kartu sumber |
+| 3 | ±4,4 juta komuter Jabodetabek; 35,5% >1 jam/hari (BPS 2024) — CADANGAN, dipakai hanya bila naskah butuh | FEB UI "Perjalanan Harian Jabodetabek..." (mengutip BPS 2024) — https://feb.ui.ac.id/2025/12/29/perjalanan-harian-jabodetabek-tantangan-kesehatan-dan-ketimpangan-akses-transportasi/ | 2026-09-15 | data | `Terverifikasi` | Fakta publik | ya bila dipakai — "BPS 2024" |
+| 4 | Perhitungan "artinya": 1,5–2 jam × 2 (PP) × ±240 hari kerja ≈ 720–960 jam ≈ 30–40 hari penuh setahun | Perhitungan sendiri dari baris #1 (asumsi: 240 hari kerja/tahun, perjalanan PP tiap hari kerja) | 2026-09-15 | data-perhitungan | `Perhitungan sendiri` — aritmetika terverifikasi, asumsi dinyatakan eksplisit | — | wajib dilabeli di naskah sebagai hitungan ("kalau dihitung..."), bukan klaim sumber |
+
+Catatan: angka utama (1,5–2 jam) didukung 2 sumber independen (BPS via Kompas + survei DTKJ via CNBC) — memenuhi syarat klaim berisiko. Kandidat yang digugurkan (listrik, sampah plastik) tercatat di log sesi, tidak masuk SUMBER karena tidak dipakai.

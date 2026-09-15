@@ -12,8 +12,8 @@
 
 - [x] **Draft** — sudah digali
 - [x] **Reviewed** — sudah dibaca lengkap, koreksi masuk
-- [x] **Approved** — isi dikunci lewat gerbang **G2** 2026-09-04
-- [x] **Merged** — masuk `main` lewat gerbang **G3** 2026-09-04
+- [x] **Approved** — isi dikunci lewat gerbang **G2** 2026-09-04; **v4 dikunci ulang lewat G2 2026-09-15** (rekonsiliasi sisi A + sisi B, persetujuan pemilik eksplisit)
+- [x] **Merged** — masuk `main` lewat gerbang **G3** 2026-09-04; **v4 dan v5 BELUM masuk `main`** — G3 menunggu keputusan pemilik (PR tanpa auto-merge)
 - [x] **Operational** — sudah `Merged` dan semua dependency wajib ada (lihat Checklist Kelengkapan)
 
 **Checklist Kelengkapan — syarat naik ke `Operational`:**
@@ -24,7 +24,7 @@
 - [x] `arsip-naskah/indeks.md` dan `arsip-naskah/indeks-karakter.md` sudah dibuat (boleh kosong) — keduanya ada di folder ini
 - [x] Sudah `Merged` ke `main`
 
-**Versi:** `3` — **Terakhir diperbarui:** `2026-09-14` — **Diwarisi dari:** `_sistem/01_BRAND_CORE.md`
+**Versi:** `5` — **Terakhir diperbarui:** `2026-09-15` — **Diwarisi dari:** `_sistem/01_BRAND_CORE.md`
 
 > **Catatan dependency:** `_sistem/01_BRAND_CORE.md` di repo ini **masih template kosong** (belum pernah dijalankan sesi Brand Core). Brief fixture ini karena itu tidak benar-benar mewarisi apa pun dari Brand Core. Ini dicatat sadar, bukan disembunyikan — agent yang membaca brief ini wajib melaporkan gap tersebut, bukan berpura-pura konteksnya lengkap.
 
@@ -50,7 +50,7 @@
 - **Gaya bahasa:** santai tapi tertata, kalimat pendek, banyak jeda. Contoh: *"Meja itu tidak pernah pindah. Yang pindah, orang-orang yang duduk di sekitarnya."*
 - **Tone emosional dominan:** hangat & agak melankolis, tanpa mendramatisir.
 - **Kosakata/frasa khas:** "dulu", "konon", "yang tersisa", "tidak ada yang mencatat".
-- **Karakteristik suara/voice:** suara dewasa, tempo lambat (± 130 kata/menit), jeda 0,5 detik tiap ganti gagasan.
+- **Karakteristik suara/voice:** suara dewasa, tempo lambat (± 125 kata/menit), jeda 0,7 detik tiap ganti gagasan.
 - **Hal yang HARUS ADA di setiap konten:** satu benda atau ruang konkret sebagai pintu masuk cerita; penutup yang mengembalikan penonton ke masa kini.
 - **Hal yang TIDAK BOLEH ADA:** klaim sejarah yang tidak bisa dirujuk; nama tokoh nyata; nada menggurui; clickbait yang menjanjikan sesuatu yang tidak ada di naskah.
 - **Contoh kalimat pembuka/penutup khas:** pembuka — *"Dulu, ada satu benda yang…"*; penutup — *"Sekarang benda itu sudah tidak ada. Tapi caranya mengatur hari kita, masih."*
@@ -106,7 +106,7 @@
 
 ## 9. Arsip Naskah
 
-Naskah final disimpan di `arsip-naskah/` folder ini. `indeks.md` (judul/tanggal/topik) dan `indeks-karakter.md` (karakter Tipe B) keduanya sudah dibuat dan terisi — arsip saat ini berisi 5 naskah: "Tiga Benda di Meja Nenek" (2026-09-06), "Penjual Bunga di Pasar Subuh" (2026-09-09), "Pintu Kos yang Tidak Pernah Dikunci" (2026-09-10), "Melati Terakhir di Pasar Kosong" (2026-09-10), dan "Cap Pos di Amplop" (2026-09-14); karakter Tipe B "Nenek Penjual Bunga" tercatat di `indeks-karakter.md`.
+Naskah final disimpan di `arsip-naskah/` folder ini. `indeks.md` (judul/tanggal/topik) dan `indeks-karakter.md` (karakter Tipe B) keduanya sudah dibuat dan terisi — arsip saat ini berisi 6 naskah: "Tiga Benda di Meja Nenek" (2026-09-06), "Penjual Bunga di Pasar Subuh" (2026-09-09), "Pintu Kos yang Tidak Pernah Dikunci" (2026-09-10), "Melati Terakhir di Pasar Kosong" (2026-09-10), "Cap Pos di Amplop" (2026-09-14), dan "Sumur yang Tidak Pernah Sepi" (2026-09-15); karakter Tipe B "Nenek Penjual Bunga" tercatat di `indeks-karakter.md`.
 
 ## 10. Log Keputusan Channel
 
@@ -115,4 +115,8 @@ Naskah final disimpan di `arsip-naskah/` folder ini. `indeks.md` (judul/tanggal/
 | 2026-09-04 | Channel Brief fixture dikunci (G2) dan di-merge (G3) | Status dokumen: `Operational`, v1 |
 | 2026-09-04 | Semua elemen Konsistensi Visual ditandai "tidak berlaku" | Channel faceless; tidak ada elemen visual yang mewajibkan file acuan |
 | 2026-09-09 | Channel Brief v2 — contoh kalimat pembuka khas: "Ada satu benda yang…" → "Dulu, ada satu benda yang…" (G2+G3 tercatat) | Permintaan pemilik: pembuka perlu terasa lebih nostalgia; contoh penutup tidak berubah |
+| 2026-09-09 | Channel Brief v2 — tempo voice ±130 → ±125 kata/menit; jeda 0,5 → 0,7 detik (G2+G3 tercatat) | Permintaan pemilik: jeda lebih panjang agar format 60 detik terasa lebih lapang |
 | 2026-09-14 | Channel Brief v3 — tambah entri model `Narasi Riset 60 Detik` pada tabel Model Konten (status `Operational`) dan perbarui deskripsi arsip menjadi 5 naskah | Model baru merge ke main lewat PR #52; satu konten produksi ("Cap Pos di Amplop") ditambahkan ke arsip |
+| 2026-09-15 | v4 dikunci lewat gerbang **G2** (persetujuan pemilik eksplisit di sesi ini); **G3 belum** — merge menunggu keputusan pemilik | Rekonsiliasi dua sisi revisi paralel wajib lewat G2 sebelum produksi konten mewarisinya; tanpa itu brief yang dipakai produksi bukan brief yang disetujui |
+| 2026-09-15 | Channel Brief v5 — perbarui deskripsi arsip (bagian 9) menjadi 6 naskah dengan menambahkan "Sumur yang Tidak Pernah Sepi" (2026-09-15) | Konten produksi baru diarsipkan lewat G2 Tahap 6 (judul tayang "Sumur yang Tidak Pernah Sepi"); bagian 9 adalah deskripsi hidup yang harus mengikuti isi arsip |
+| 2026-09-15 | Channel Brief v4 — rekonsiliasi dua sisi revisi v2 yang berjalan paralel: sisi A (contoh pembuka khas, sudah di `main` sejak persiapan) + sisi B (tempo voice ±125 kata/menit + jeda 0,7 detik, dari branch `uji-06-branch-b` commit `fda1b20`, basis `3eb053e`) digabung; kedua perubahan substantif dipertahankan, tidak ada yang dibatalkan | Sisi B dikerjakan di branch yang basisnya lebih tua dari `main`, jadi nomor versinya (v2) sudah dilewati `main` (v3). Versi dinaikkan ke `4` = v3 + perubahan sisi B. Baris keputusan sisi B di atas masuk ke riwayat `main` lewat rekonsiliasi ini, tanggal keputusannya tetap 2026-09-09 |
