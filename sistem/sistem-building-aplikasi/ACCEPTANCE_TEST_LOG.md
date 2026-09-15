@@ -24,7 +24,7 @@
 ### Verifikasi Alat (Tahap D)
 
 - _sistem/validate_system.py: PASS
-- tools/validate_repo.py: PASS 0 warning (102 docs/324 refs/4 sistem)
+- tools/validate_repo.py: PASS 0 warning (102 docs/327 refs/4 sistem)
 - tools/check_selfcontained.py --semua: PASS (4 sistem)
 - tools/test_failure_injection.py: PASS 72 skenario (15 sintetis + 13 unit nyata + 14 PR-11 + 10 check_selfcontained + 20 review_prompt)
 - tools/backup_verify.py: PASS (backup 36 files, restore OK)

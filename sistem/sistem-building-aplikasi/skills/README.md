@@ -4,9 +4,9 @@ Folder ini berisi **skill/plugin vendor-local** untuk Building Aplikasi. Semanti
 
 ## Ringkasan terpasang (2026-09-15 — semua yang diminta pemilik + 2026-09-15 Cloudflare/Supabase/Google)
 
-**Total: 8.1M** (hemat 84% vs unzip semua Input-Pengguna 53,813,128 bytes (~51.3 MiB) + Vercel 2.3M penuh). Sisa katalog besar tetap tersedia sebagai zip/index, tidak dibengkakkan penuh. **Agent ADAPTIF**: baca `AGENT_SYSTEM.md` tabel panduan, pilih skill yang paling tepat per task (Cloudflare vs Vercel, Supabase vs generic DB, Gmail vs Drive etc.).
+**Total: 8.1M** (hemat 85% vs unzip semua `Input-Pengguna` 53,813,128 bytes di repo meta + Vercel 2.3M penuh — `Input-Pengguna` **tidak ikut** saat copy template, yang ikut hanya `skills/` 8.1M + catalog index ini). Sisa katalog besar di repo meta tetap sebagai zip/index, di repo baru fetch via `npx skills add` bila butuh — tidak dibengkakkan penuh. **Agent ADAPTIF**: baca `AGENT_SYSTEM.md` tabel panduan, pilih skill yang paling tepat per task (Cloudflare vs Vercel, Supabase vs generic DB, Gmail vs Drive etc.).
 
-### A. Inti dari Input-Pengguna 10 zip (scan virus aman 2026-09-15)
+### A. Inti dari 10 zip Input-Pengguna di repo meta (scan virus aman 2026-09-15) — sudah terpasang selective di `skills/` ini, zip asli tidak ikut template
 
 | # | Skill | Sumber | Ukuran | Folder | Fungsi |
 |---|---|---|---|---|---|
@@ -38,7 +38,7 @@ Folder ini berisi **skill/plugin vendor-local** untuk Building Aplikasi. Semanti
 | 21 | **workflow** (durable) | `vercel/workflow` | 32K | `workflow/` |
 | 22 | **find-skills** | `vercel-labs/skills` | 8K | `find-skills/` |
 
-### C. Sisa Input-Pengguna 7 zip (semua diminta — selective, hemat C-06)
+### C. Sisa 7 zip Input-Pengguna di repo meta (semua diminta — selective, hemat C-06) — sudah terpasang selective, zip asli tidak ikut template
 
 | # | Skill | Sumber | Ukuran | Folder | Catatan |
 |---|---|---|---|---|---|
@@ -47,7 +47,7 @@ Folder ini berisi **skill/plugin vendor-local** untuk Building Aplikasi. Semanti
 | 25 | **ios-agent** v3.3.0 | `ios-agent-skill-main.zip` 2.0M→252K | MIT | `ios-agent/` | iOS/SwiftUI (templates multiplatform) |
 | 26 | **tsbs-benchmark** | `tsbs-benchmark-agent-skill-main.zip` 18K | 28K | `tsbs-benchmark/` | QuestDB time-series benchmark |
 | 27 | **awesome-agent-skills** | `awesome-agent-skills-main.zip` 60K→224K | MIT | `awesome-agent-skills/` | Katalog 100+ community skills |
-| 28 | **agent-skills** | `agent-skills-main.zip` 6.6M→10K catalog | MIT | `agent-skills/` | Hub 248 skills — zip kept di Input-Pengguna, catalog index di sini (hindari 6.6M bengkak) |
+| 28 | **agent-skills** | `agent-skills-main.zip` 6.6M→10K catalog (di repo meta) | MIT | `agent-skills/` | Hub 248 skills — zip asli di repo meta, catalog index di sini (hindari 6.6M bengkak, di repo baru pakai `npx skills add`) |
 | 29 | **agent-skills-hub** | `agent-skills-hub-main.zip` 35M→8.5K catalog | — | `agent-skills-hub/` | Hub 42k files — zip kept, catalog 30 SKILL sample di sini |
 
 ### D. Rancangan aplikasi — riset fitur/fungsi (baru, untuk Tahap 1-2 Fondasi)
