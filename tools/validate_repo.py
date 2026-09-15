@@ -100,12 +100,13 @@ if core.EXACT_PILOT in index_folders:
 
 # Every sistem-* folder on disk (except the pilot fixture, by exact name)
 # must be registered — exact match, no substring exceptions (review F2).
-for sys_dir in sorted(ROOT.glob("sistem-*/")):
-    if sys_dir.name == core.EXACT_PILOT:
+for sys_dir in sorted(list(ROOT.glob("sistem/sistem-*/")) + list(ROOT.glob("sistem-*/"))):
+    rel_name = sys_dir.relative_to(ROOT).as_posix()
+    if rel_name == core.EXACT_PILOT or sys_dir.name == core.EXACT_PILOT:
         continue
-    if sys_dir.name not in index_folders:
+    if rel_name not in index_folders and sys_dir.name not in index_folders:
         errors.append(
-            f"system folder {sys_dir.name}/ not registered in INDEKS_SISTEM 'Daftar Sistem'"
+            f"system folder {rel_name}/ not registered in INDEKS_SISTEM 'Daftar Sistem'"
         )
 
 # Inheritance-contract checks for each REGISTERED system (03_KONTRAK_WARISAN).
@@ -157,7 +158,7 @@ for name in index_folders:
 # Every unit STATUS.md under any sistem-*/ dir (any layout — enumeration,
 # not a fixed pattern list) must carry the field exactly once, outside
 # quotes/fences. Template STATUS files must parse to the exact safe value.
-for sys_dir in sorted(ROOT.glob("sistem-*/")):
+for sys_dir in sorted(list(ROOT.glob("sistem/sistem-*/")) + list(ROOT.glob("sistem-*/"))):
     for status_path in core.unit_status_files(sys_dir):
         rel = status_path.relative_to(ROOT).as_posix()
         kind, value = core.parse_unsaved_field(status_path.read_text(encoding="utf-8"))
@@ -238,7 +239,11 @@ for _name in index_folders:
 
 
 def doc_roots(doc_rel):
-    first = doc_rel.split("/")[0]
+    parts = doc_rel.split("/")
+    if len(parts) >= 2 and parts[0] == "sistem" and f"sistem/{parts[1]}" in index_folders:
+        sys_name = f"sistem/{parts[1]}"
+        return system_roots(sys_name) + ["_meta", "_meta/_internal", ""]
+    first = parts[0]
     if first.startswith("sistem-") and first in index_folders:
         return system_roots(first) + ["_meta", "_meta/_internal", ""]
     return ALL_ROOTS

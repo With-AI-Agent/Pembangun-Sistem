@@ -41,9 +41,10 @@ def essential_list():
         set(core.CORE_TOOL_FILES)
         | {f"tools/{p.name}" for p in (ROOT / "tools").glob("*.py")}
     )
+    manifest_paths = list(ROOT.glob("sistem/sistem-*/SYSTEM_MANIFEST.md")) + list(ROOT.glob("sistem-*/SYSTEM_MANIFEST.md"))
     items += sorted(
-        f"{p.parent.name}/SYSTEM_MANIFEST.md"
-        for p in ROOT.glob("sistem-*/SYSTEM_MANIFEST.md")
+        p.relative_to(ROOT).as_posix()
+        for p in manifest_paths
     )
     return sorted(set(items))
 

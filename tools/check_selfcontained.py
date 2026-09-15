@@ -202,7 +202,12 @@ def active_doc_rels(copied_root: Path, system: str) -> set[str]:
     dengan validator master. Alat ini sengaja TIDAK membawa daftar glob sendiri
     (pelajaran v1.6.0: dua daftar salinan meleset satu sama lain).
     """
-    base = copied_root.parent
+    # base is the root from which `system` path is resolved
+    # e.g. if copied_root is temp_root / "sistem" / "sistem-foo", base should be temp_root
+    parts = Path(system).parts
+    base = copied_root
+    for _ in parts:
+        base = base.parent
     prefix = f"{system}/"
     out = set()
     for path in core.dokumen_aktif(base, system):
@@ -353,8 +358,10 @@ def run_validator(copied_root: Path) -> tuple[int, str, str]:
 
 
 def check_one(system: str, keep: bool) -> SystemResult:
-    temp_root = Path(tempfile.mkdtemp(prefix=f"check-selfcontained-{system}-"))
+    safe_prefix = f"check-selfcontained-{system.replace('/', '-')}-"
+    temp_root = Path(tempfile.mkdtemp(prefix=safe_prefix))
     copied_root = temp_root / system
+    copied_root.parent.mkdir(parents=True, exist_ok=True)
     shutil.copytree(
         ROOT / system,
         copied_root,
@@ -459,7 +466,17 @@ def main(argv: list[str] | None = None) -> int:
             print(f"- {e}")
         return 2
 
-    targets = systems if args.semua else [args.sistem]
+    if args.semua:
+        targets = systems
+    else:
+        # Allow passing either "sistem-presentasi" or "sistem/sistem-presentasi"
+        arg = args.sistem.strip().rstrip("/")
+        match = None
+        for s in systems:
+            if s == arg or s.split("/")[-1] == arg:
+                match = s
+                break
+        targets = [match if match else arg]
     missing = [name for name in targets if not (ROOT / name).is_dir()]
     if missing:
         print("CHECK SELF-CONTAINED FAILED: folder sistem tidak ada")

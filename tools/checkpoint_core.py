@@ -10,7 +10,7 @@ their own (drifting) copy of the same judgments. This module holds:
     (review finding F1 — before, deleting a required source silently
     shrank the derived requirement set and everything passed).
   * parse_index — STRICT 'Daftar Sistem' parsing (F2): a row is valid only
-    with an exact backticked `sistem-<nama>/` folder cell; the old
+    with an exact backticked `(sistem/)?sistem-<nama>/` folder cell; the old
     substring checks (folder-name `in row`, `"pilot" in name`) matched
     false positives such as an unregistered `sistem-autopilot-data/`.
   * unit_status_files — enumeration of EXPECTED units, not only discovered
@@ -38,7 +38,7 @@ import re
 from pathlib import Path
 
 SAFE_VALUE = "Tidak ada"
-EXACT_PILOT = "sistem-pilot-catatan-belajar"
+EXACT_PILOT = "sistem/sistem-pilot-catatan-belajar"
 
 # --- Static core inventory (F1) -------------------------------------------
 # These files MUST exist even if somebody deleted them. The derived glob
@@ -156,7 +156,7 @@ def state_is_safe(unit: Path) -> bool:
 
 
 # --- INDEKS parsing (F2) -----------------------------------------------------
-FOLDER_CELL_RE = re.compile(r"^`(sistem-[A-Za-z0-9._-]+)/?`$")
+FOLDER_CELL_RE = re.compile(r"^`((?:sistem/)?sistem-[A-Za-z0-9._-]+)/?`$")
 
 
 def parse_index(text: str):
@@ -164,7 +164,7 @@ def parse_index(text: str):
     Returns (folders, errors). Rules:
       * first table row must be the header (Nama Sistem / Folder);
       * a data row is valid only if its Folder cell is exactly
-        `sistem-<nama>/` (backticked) or a placeholder (empty / '(belum ada)');
+        `(sistem/)?sistem-<nama>/` (backticked) or a placeholder (empty / '(belum ada)');
       * anything else is a parse ERROR — the old code silently ignored
         rows without backticks, so a registered-looking line produced no
         coverage at all (review F2).
@@ -200,7 +200,7 @@ def parse_index(text: str):
         if not m:
             errors.append(
                 "baris 'Daftar Sistem' tidak valid — kolom Folder harus persis "
-                f"backticked `sistem-<nama>/` (ditemui: {folder_cell!r})"
+                f"backticked `(sistem/)?sistem-<nama>/` (ditemui: {folder_cell!r})"
             )
             continue
         folders.append(m.group(1))
@@ -363,8 +363,8 @@ def dokumen_aktif(root, sistem):
 
 MASTER_ONLY_PREFIXES = (
     "_meta/_internal/",       # audit & handoff historis (juga kena substring di bawah)
-    "sistem-konten-kreator/",  # keputusan domain contoh, bukan isi template
-    "sistem-pilot-",           # fixture uji meta-sistem, bukan sistem rilis
+    "sistem/sistem-konten-kreator/", "sistem-konten-kreator/",  # keputusan domain contoh, bukan isi template
+    "sistem/sistem-pilot-", "sistem-pilot-",           # fixture uji meta-sistem, bukan sistem rilis
 )
 MASTER_ONLY_SUBSTRINGS = (
     "_internal",      # area histori master

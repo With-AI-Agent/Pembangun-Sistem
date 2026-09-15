@@ -40,7 +40,7 @@ baru, lanjut/audit sistem yang sudah ada, rawat inap salah satu sistem
 (lihat butir 5), atau hal lain. Kalau aku mau
 lanjut sistem yang sudah lama tidak disentuh, ingatkan dulu apakah perlu
 diaudit sebelum lanjut. Kalau aku sebut sistem tertentu, BARU baca lebih
-dalam folder sistem-[nama]/ itu — jangan baca seluruh isi repo di awal,
+dalam folder sistem/sistem-[nama]/ itu — jangan baca seluruh isi repo di awal,
 cukup baca yang relevan dengan apa yang aku mau kerjakan.
 ```
 
@@ -143,7 +143,7 @@ jalankan proses di _meta/01_DISCOVERY_LEVEL_0.md.
 ```
 Aku mau lanjut kerja di sistem [NAMA SISTEM]. Cek dulu
 _meta/INDEKS_SISTEM.md untuk status terakhirnya, baca dokumen navigasi
-di dalam folder sistem-[nama]/, baru kita lanjut.
+di dalam folder sistem/sistem-[nama]/, baru kita lanjut.
 ```
 
 **Mau pakai Claude chat biasa sebagai cadangan** (karena lmarena kurang maksimal saat itu):
@@ -204,6 +204,6 @@ Kamu tidak perlu menghafal kapan pakai prompt yang mana — **prompt universal d
 - **`_cadangan-claude/`** — ringkasan tiap sistem, dipakai kalau perlu bantuan Claude chat biasa
 - **`_pegangan-kamu/`** — file milikmu sendiri, bebas diisi apa saja
 
-Untuk istilah teknis lain (branch, PR, merge, commit) — lihat `sistem-konten-kreator/panduan/PANDUAN_PENGGUNA.md`, penjelasannya sama berlaku di sini.
+Untuk istilah teknis lain (branch, PR, merge, commit) — lihat `sistem/sistem-konten-kreator/panduan/PANDUAN_PENGGUNA.md`, penjelasannya sama berlaku di sini.
 
 Alur "apa yang terjadi saat aku membangun sistem baru" diringkas di `_meta/03_KONTRAK_WARISAN.md` — daftar hal yang otomatis ikut tertanam di setiap sistem (pegangan, log sesi, checkpoint, dll) tanpa perlu kamu minta satu-satu.
