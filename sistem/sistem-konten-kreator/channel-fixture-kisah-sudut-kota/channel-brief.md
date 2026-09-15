@@ -26,7 +26,7 @@
 - [ ] `arsip-naskah/indeks.md` dan `arsip-naskah/indeks-karakter.md` sudah dibuat (boleh kosong) — indeks.md ada (kosong); indeks-karakter.md belum pernah dibuat (gap warisan terdakwa, lihat header)
 - [x] Sudah `Merged` ke `main` — git-true setelah PR prep di-merge (pola fixture Run-1)
 
-**Versi:** `1` — **Terakhir diperbarui:** `2026-09-09` — **Diwarisi dari:** `_sistem/01_BRAND_CORE.md`
+**Versi:** `2` — **Terakhir diperbarui:** `2026-09-15` — **Diwarisi dari:** `_sistem/01_BRAND_CORE.md`
 
 > **Catatan dependency:** `_sistem/01_BRAND_CORE.md` di repo ini **masih template kosong** (belum pernah dijalankan sesi Brand Core). Brief fixture ini karena itu tidak benar-benar mewarisi apa pun dari Brand Core. Ini dicatat sadar, bukan disembunyikan — agent yang membaca brief ini wajib melaporkan gap tersebut, bukan berpura-pura konteksnya lengkap.
 
@@ -104,6 +104,7 @@
 | Nama Model Konten | Folder | Status |
 |---|---|---|
 | Narasi 60 Detik | `model-konten/narasi-60-detik/` | `Operational` |
+| Kartu Teks 8–10 | `model-konten/kartu-teks-8-10/` | `Draft` |
 
 ## 9. Arsip Naskah
 
@@ -116,3 +117,4 @@ Naskah final disimpan di `arsip-naskah/` folder ini. `indeks.md` sudah dibuat (m
 | 2026-09-09 | Channel Brief fixture dikunci (G2) dan di-merge (G3) | Status dokumen: `Operational` dengan pengecualian terdakwa; klaim Merged git-true setelah PR prep di-merge (pola fixture Run-1) |
 | 2026-09-09 | Semua elemen Konsistensi Visual ditandai "tidak berlaku" | Channel faceless; tidak ada elemen visual yang mewajibkan file acuan |
 | 2026-09-09 | Gap warisan dinyatakan: indeks-karakter.md belum pernah dibuat | Arsip disiapkan sebelum aturan indeks karakter berlaku; dinyatakan apa adanya di header + bagian 9 |
+| 2026-09-15 | Channel Brief v2 — tambah entri model `Kartu Teks 8–10` pada tabel Model Konten (status `Draft`) | Model konten teks-only baru (8–10 kartu teks, tanpa gambar/video/audio) hasil `07_MODEL_KONTEN_DISCOVERY_PROMPT.md`; status masih `Draft` karena menunggu G2 pemilik dan belum `Merged`. Mengikuti pola penambahan model `Narasi Riset 60 Detik` di channel `channel-fixture-narasi-sejarah` |
