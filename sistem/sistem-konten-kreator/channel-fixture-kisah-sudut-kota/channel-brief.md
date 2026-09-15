@@ -2,7 +2,7 @@
 
 > **FIXTURE — bukan channel produksi sungguhan.** Bagian dari state uji backlog G-1 (clean-run 0.3.10) — channel kedua milik sistem ini. Rujukan state: `ACCEPTANCE_TEST_LOG.md` (bagian "Persiapan G-1").
 >
-> **Gap warisan yang dinyatakan:** gap warisan: indeks-karakter.md belum pernah dibuat — `arsip-naskah/indeks.md` sudah dibuat (kosong); arsip ini disiapkan sebelum aturan indeks karakter berlaku. Gap ini dinyatakan, bukan disembunyikan.
+> **Gap warisan: SUDAH DITUTUP 2026-09-15.** Channel ini pernah menyatakan gap warisan `indeks-karakter.md` (arsip disiapkan sebelum aturan indeks karakter berlaku). Berkas `arsip-naskah/indeks-karakter.md` kemudian benar-benar dibuat pada **2026-09-11** (dipicu Tahap 6 konten "Jumat Tanpa Jagung di Sudut Stasiun") dan kini berisi 1 entri karakter Tipe B. Pernyataan gap di header, kotak checklist, dan bagian 9 baru disinkron pada **2026-09-15** (G2-c) — selama 4 hari dokumen ini menyatakan gap yang sebenarnya sudah tidak ada. Catatan historis di `ACCEPTANCE_TEST_LOG.md`, `UJI_G1_CLEAN_RUN_2026-09-09.md`, dan `SYSTEM_MANIFEST.md` **tidak diubah** karena merekam keadaan pada tanggalnya masing-masing.
 
 ### Dokumen "hidup" milik SATU channel, mengikuti struktur `_sistem/03_TEMPLATE_CHANNEL_BRIEF.md`.
 
@@ -14,7 +14,7 @@
 - [x] **Reviewed** — sudah dibaca lengkap, koreksi masuk
 - [x] **Approved** — isi dikunci lewat gerbang **G2** 2026-09-09
 - [x] **Merged** — masuk `main` lewat gerbang **G3** 2026-09-09 — git-true setelah PR prep di-merge (pola fixture Run-1)
-- [x] **Operational** — pengecualian terdakwa: gap warisan: indeks-karakter.md belum pernah dibuat
+- [x] **Operational** — sudah `Merged` dan seluruh dependency ada; pengecualian gap warisan **ditutup 2026-09-15** (lihat header)
 
 > **Catatan fixture (pola Run-1):** klaim `Merged`/`Operational` di dokumen ini git-true setelah PR persiapan di-merge ke `main`. Sampai merge, berkas ini masih di branch.
 
@@ -23,10 +23,10 @@
 - [x] Semua bagian wajib di bawah terisi (tidak ada placeholder `[...]` tersisa)
 - [x] Semua pertanyaan di checklist konsistensi (bagian 6) sudah dijawab
 - [x] Setiap elemen visual yang ditandai wajib sudah berstatus `Reference-Ready` — **tidak ada elemen visual yang ditandai wajib** untuk channel ini (lihat bagian 4), jadi tidak ada file acuan yang harus ada
-- [ ] `arsip-naskah/indeks.md` dan `arsip-naskah/indeks-karakter.md` sudah dibuat (boleh kosong) — indeks.md ada (kosong); indeks-karakter.md belum pernah dibuat (gap warisan terdakwa, lihat header)
+- [x] `arsip-naskah/indeks.md` dan `arsip-naskah/indeks-karakter.md` sudah dibuat (boleh kosong) — **dua-duanya sudah ada**: `indeks.md` 1 entri naskah, `indeks-karakter.md` 1 entri karakter Tipe B (dibuat 2026-09-11)
 - [x] Sudah `Merged` ke `main` — git-true setelah PR prep di-merge (pola fixture Run-1)
 
-**Versi:** `1` — **Terakhir diperbarui:** `2026-09-09` — **Diwarisi dari:** `_sistem/01_BRAND_CORE.md`
+**Versi:** `3` — **Terakhir diperbarui:** `2026-09-15` — **Diwarisi dari:** `_sistem/01_BRAND_CORE.md`
 
 > **Catatan dependency:** `_sistem/01_BRAND_CORE.md` di repo ini **masih template kosong** (belum pernah dijalankan sesi Brand Core). Brief fixture ini karena itu tidak benar-benar mewarisi apa pun dari Brand Core. Ini dicatat sadar, bukan disembunyikan — agent yang membaca brief ini wajib melaporkan gap tersebut, bukan berpura-pura konteksnya lengkap.
 
@@ -104,10 +104,16 @@
 | Nama Model Konten | Folder | Status |
 |---|---|---|
 | Narasi 60 Detik | `model-konten/narasi-60-detik/` | `Operational` |
+| Kartu Teks 8–10 | `model-konten/kartu-teks-8-10/` | `Approved` |
 
 ## 9. Arsip Naskah
 
-Naskah final disimpan di `arsip-naskah/` folder ini. `indeks.md` sudah dibuat (masih kosong — belum ada konten yang sampai Tahap 6). `indeks-karakter.md` belum pernah dibuat (gap warisan, lihat header).
+Naskah final disimpan di `arsip-naskah/` folder ini. Kedua indeks **sudah ada dan sudah berisi**:
+
+- `indeks.md` — 1 entri: *Jumat Tanpa Jagung di Sudut Stasiun* (2026-09-11).
+- `indeks-karakter.md` — dibuat 2026-09-11 (menutup gap warisan), 1 entri: *Nenek Penjual Jagung Rebus* (Tipe B).
+
+> **Koreksi 2026-09-15 (G2-c):** bagian ini sebelumnya masih menulis "`indeks.md` … masih kosong" dan "`indeks-karakter.md` belum pernah dibuat". Dua-duanya sudah tidak benar sejak 2026-09-11. Diperbaiki setelah diverifikasi langsung terhadap berkasnya, bukan dari ingatan. Lihat header untuk jejak gap warisan.
 
 ## 10. Log Keputusan Channel
 
@@ -116,3 +122,5 @@ Naskah final disimpan di `arsip-naskah/` folder ini. `indeks.md` sudah dibuat (m
 | 2026-09-09 | Channel Brief fixture dikunci (G2) dan di-merge (G3) | Status dokumen: `Operational` dengan pengecualian terdakwa; klaim Merged git-true setelah PR prep di-merge (pola fixture Run-1) |
 | 2026-09-09 | Semua elemen Konsistensi Visual ditandai "tidak berlaku" | Channel faceless; tidak ada elemen visual yang mewajibkan file acuan |
 | 2026-09-09 | Gap warisan dinyatakan: indeks-karakter.md belum pernah dibuat | Arsip disiapkan sebelum aturan indeks karakter berlaku; dinyatakan apa adanya di header + bagian 9 |
+| 2026-09-15 | Channel Brief v2 — tambah entri model `Kartu Teks 8–10` pada tabel Model Konten (status `Draft`) | Model konten teks-only baru (8–10 kartu teks, tanpa gambar/video/audio) hasil `07_MODEL_KONTEN_DISCOVERY_PROMPT.md`; status masih `Draft` karena menunggu G2 pemilik dan belum `Merged`. Mengikuti pola penambahan model `Narasi Riset 60 Detik` di channel `channel-fixture-narasi-sejarah` |
+| 2026-09-15 | Channel Brief v3 — **gap warisan `indeks-karakter.md` DITUTUP**; header, kotak checklist, dan bagian 9 disinkron ke keadaan sebenarnya (**G2-c**) | Berkas `arsip-naskah/indeks-karakter.md` sudah benar-benar ada sejak **2026-09-11** (1 entri: Nenek Penjual Jagung Rebus) dan `indeks.md` sudah berisi 1 naskah, tetapi dokumen ini selama 4 hari tetap menyatakannya sebagai gap yang belum ditutup. Ditemukan saat entry point sesi `arena/01a0a448`; diperbaiki setelah pemilik memilih "perbaiki sekarang". Aman terhadap `validate_system.py`: marker `GAP_WARISAN_MARKER` hanya dibaca kalau `indeks-karakter.md` **tidak ada** (baris 166–170), jadi pencabutan pernyataan gap tidak melonggarkan gerbang — diverifikasi dengan menjalankan ulang validator, bukan diasumsikan. Catatan historis di `ACCEPTANCE_TEST_LOG.md` / `UJI_G1_CLEAN_RUN_2026-09-09.md` / `SYSTEM_MANIFEST.md` sengaja tidak diubah (append-only, merekam keadaan pada tanggalnya) |
