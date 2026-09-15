@@ -7,8 +7,8 @@
 ## Status: `Draft` → `Reviewed` → `Approved` → `Merged` → `Operational`
 
 - [x] **Draft** — draf pertama selesai 2026-09-15
-- [ ] **Reviewed** — menunggu review lengkap pengguna
-- [ ] **Approved** — menunggu gerbang **G2**
+- [x] **Reviewed** — dibaca lengkap oleh pemilik 2026-09-15
+- [x] **Approved** — dikunci lewat gerbang **G2** 2026-09-15 (gerbang **G2-a** sesi `arena/01a0a448`)
 - [ ] **Merged** — menunggu gerbang **G3** (PR tanpa auto-merge)
 - [ ] **Operational** — belum; hanya boleh dipakai produksi setelah `Merged` dan seluruh checklist di bawah tercentang
 
@@ -18,7 +18,7 @@
 - [x] Bentuk detail tiap tahap pipeline untuk model ini sudah ditetapkan: unit breakdown = **kartu teks**
 - [x] Override terhadap Channel Brief sudah dinyatakan eksplisit: 2 override (larangan "teks besar di layar" di bagian 5, dan terjemahan "karakteristik suara/voice" jadi ritme baca) + 1 penambahan platform
 - [x] Gerbang tambahan sudah dicatat — **tidak ada gerbang tambahan**; G2/G3 bawaan tetap berlaku dan tidak ada yang dihapus
-- [x] Channel Brief induknya sudah berstatus `Operational` (dengan pengecualian terdakwa yang dinyatakan di header-nya)
+- [x] Channel Brief induknya sudah berstatus `Operational` (v3 — pengecualian gap warisan **sudah ditutup** 2026-09-15, jadi `Operational` kini tanpa pengecualian)
 - [ ] Sudah `Merged` ke `main`
 
 **Versi:** `1` — **Terakhir diperbarui:** `2026-09-15`
