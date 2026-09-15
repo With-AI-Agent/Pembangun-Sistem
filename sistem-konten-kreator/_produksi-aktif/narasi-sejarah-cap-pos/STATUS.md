@@ -3,8 +3,8 @@
 - **Status:** `in-progress`
 - **Channel:** `sistem-konten-kreator/channel-fixture-narasi-sejarah/` (FIXTURE)
 - **Model konten:** `sistem-konten-kreator/channel-fixture-narasi-sejarah/model-konten/narasi-riset-60-detik/brief.md` — v1, `Operational` (pasca PR #52)
-- **Tahap terakhir selesai:** Tahap 6 — Assembly & Publish Prep (arsip naskah+sumber+metadata, indeks, channel-brief v3, validasi lulus). **G2 final + metadata disetujui 2026-09-14.** Judul tayang resmi: "Lingkaran tinta di sudut amplop" (opsi 1 rekomendasi).
-- **Tahap berikutnya:** Membuat PR produksi ke main → meminta G3 (izin merge). Folder produksi **dipertahankan** menunggu instruksi pengguna setelah unduh.
+- **Tahap terakhir selesai:** Tahap 6 — Assembly & Publish Prep (arsip naskah+sumber+metadata, indeks, channel-brief v3, validasi lulus). **G2 final + metadata disetujui 2026-09-14.** Judul tayang resmi: "Lingkaran tinta di sudut amplop" (opsi 1 rekomendasi). Branch sudah disinkronkan dengan `origin/main` lewat merge commit `5e47399` (membawa PR #51 + PR #53 Sistem Klinik); badan PR #54 diperbarui dengan angka final pasca-merge.
+- **Tahap berikutnya:** Menunggu review independen + G3 (izin merge) pada PR #54. Folder produksi **dipertahankan** menunggu instruksi pengguna setelah unduh.
 - **Output resmi:**
   - `tema.md` — **ADA**
   - `riset.md` — **ADA**
@@ -43,11 +43,10 @@
   - `G1 Tahap 4 (Breakdown cukup untuk lanjut):` disetujui 2026-09-14
   - `G2 breakdown terkunci:` disetujui 2026-09-14
   - `G1 Tahap 5 (Assets diterima):` disetujui 2026-09-14 (termasuk accepted limitation segmen 01/03)
-  - `G2 final + metadata:` belum
   - `G2 final + metadata:` disetujui 2026-09-14 (judul "Lingkaran tinta di sudut amplop" terkunci)
   - `G3 merge:` belum (PR #54 menunggu review/merge manual oleh pengguna)
-- **Commit terakhir:** `b48c587` ("LOG_SESI: catat G2 final dan pembukaan PR #54")
+- **Commit terakhir:** lihat `git rev-parse HEAD` di branch `arena/01a09fed-pembangun-sistem`; perubahan konten terakhir yang menyentuh artefak produksi/naskah/aset = commit `96b5a50` (G2 final + kunci judul tayang). Sinkronisasi pasca-merge main + pembaruan badan PR #54 = commit `5e47399` dan commit dokumen meta (`ec3c623`) yang ditumpuk di atasnya (2026-09-15).
 - **PR terkait:** PR #54 — https://github.com/With-AI-Agent/Pembangun-Sistem/pull/54 (dibuka 2026-09-14 ke `main`, tanpa auto-merge)
 - **Pekerjaan belum tersimpan:** Tidak ada
 - **Risiko atau blocker:** Tidak ada. Brand Core masih template kosong (gap dicatat di Channel Brief; produksi fixture tetap berjalan).
-- **Waktu pembaruan:** 2026-09-14
+- **Waktu pembaruan:** 2026-09-15 (setelah merge origin/main + pembaruan badan PR #54)
