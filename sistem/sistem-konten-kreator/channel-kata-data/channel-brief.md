@@ -105,7 +105,7 @@
 
 | Nama Model Konten | Folder | Status |
 |---|---|---|
-| (menyusul — discovery Model Konten langkah 5 sesi ini) | `model-konten/[nama-model]/` | `Direncanakan` |
+| Data 60 Detik | `model-konten/data-60-detik/` | `Draft` — menunggu G2 (ditulis 2026-09-15) |
 
 ## 9. Arsip Naskah
 
