@@ -1,0 +1,44 @@
+# Status Produksi — Narasi Sejarah — Sumur di Belakang Rumah
+
+- **Status:** `in-progress`
+- **Channel:** `channel-fixture-narasi-sejarah` (Channel Brief **v4**, G2 2026-09-15)
+- **Model konten:** `narasi-60-detik` (**v2**, G2 2026-09-15) — 55–65 detik, 108–125 kata, tempo channel 125 kata/menit, jeda 0,7 detik
+- **Tahap terakhir selesai:** Tahap 6 — Assembly & Publish Prep (naskah + metadata diarsipkan ke `arsip-naskah/`, `indeks.md` +1 baris, Channel Brief v5; judul tayang "Sumur yang Tidak Pernah Sepi") — menunggu **G3 merge**
+- **Tahap berikutnya:** G3 merge PR ke `main` (keputusan pemilik) — setelah owner mengunduh aset, folder ini boleh dihapus oleh sesi housekeeping terpisah
+- **Output resmi:**
+  - `ideation.md` — ADA
+  - `konsep-angle.md` — ADA
+  - `naskah-draft.md` — ADA (118 kata, dikunci G2 naskah final 2026-09-15)
+  - `breakdown-output.md` — ADA (7 segmen, dikunci G2 breakdown 2026-09-15)
+  - `assets/` — ADA (7 aset S1–S7 vertikal 768×1376, `CATATAN-ASSET.md`)
+  - `publish-prep.md` — ADA (judul tayang G2 disetujui 2026-09-15)
+  - Arsip: `arsip-naskah/2026-09-15-sumur-di-belakang-rumah.md` + `-metadata.md` — ADA
+- **Sumber konteks yang dibaca:** `channel-fixture-narasi-sejarah/channel-brief.md` v4; `model-konten/narasi-60-detik/brief.md` v2; `model-konten/narasi-riset-60-detik/brief.md` v2; `arsip-naskah/indeks.md`; `arsip-naskah/indeks-karakter.md`; `_sistem/05_CONTENT_PRODUCTION_PIPELINE.md`; `_sistem/06_PROMPT_LIBRARY.md` (A2); `_sistem/00_CARA_PAKAI_SISTEM.md`; `_sistem/START_DI_SINI.md`; `_sistem/01_BRAND_CORE.md` — **masih template kosong** (gap warisan yang sudah dideklarasikan di Channel Brief; dilaporkan, tidak diisi diam-diam)
+- **Sumber eksternal dipakai:** `Tidak ada`
+- **Keputusan baru:**
+  - Ide terpilih = "Sumur di belakang rumah" (Opsi 4 dari 4 opsi yang diajukan); tiga opsi lain beserta alasan dan catatan tumpang tindihnya tercatat di `ideation.md`.
+  - Tidak ada karakter Tipe B baru; channel faceless dan ide ini tidak memakai tokoh.
+  - Naskah dijaga bebas dari klaim sejarah spesifik (tanpa angka tahun, statistik, atau nama tokoh) sesuai batasan Channel Brief — karena itu `SUMBER.md` belum perlu dibuat. Kalau nanti naskah memuat klaim yang butuh rujukan, `SUMBER.md` dibuat lebih dulu, bukan direkonstruksi belakangan.
+  - **Draf naskah r1 direvisi sebelum diajukan ke gerbang:** versi pertama 137 kata dalam 16 paragraf = 76,26 detik (lewat jendela 55–65 dtk karena 15 jeda × 0,7 = 10,5 dtk). Diperbaiki dengan menggabungkan baris menjadi 7 paragraf (6 jeda) dan memangkas kata → **118 kata = 60,84 detik**. Batas rentang tidak dinaikkan dan tempo tidak diubah.
+- **Approval yang sudah diberikan:**
+  - `G1 Tahap 1 (Ideation):` disetujui 2026-09-15
+  - `G1 Tahap 2 (Konsep & Angle):` disetujui 2026-09-15
+  - `G1 Tahap 3 (Naskah draft):` disetujui 2026-09-15
+  - `G2 naskah final:` disetujui 2026-09-15 — naskah 118 kata dikunci sebagai dasar breakdown dan yang akan diarsipkan di Tahap 6
+  - `G1 Tahap 4 (Breakdown):` disetujui 2026-09-15
+  - `G2 breakdown (dasar generate aset):` disetujui 2026-09-15
+  - `G1 Tahap 5 (Asset):` disetujui 2026-09-15
+  - `G2 Tahap 6 (Assembly + judul tayang):` disetujui 2026-09-15 — judul tayang "Sumur yang Tidak Pernah Sepi"
+  - `G3 merge:` belum — keputusan pemilik, PR tanpa auto-merge
+  - `G2 Channel Brief v4:` disetujui 2026-09-15 (di luar unit ini — commit `bc545dd`)
+  - `G2 Channel Brief v5 (sinkron arsip 6 naskah):` disetujui 2026-09-15 (bagian dari G2 Tahap 6)
+  - `G2 brief model narasi-60-detik v2:` disetujui 2026-09-15 (commit `bc545dd`)
+  - `G3 merge:` belum
+- **Commit terakhir:** lihat `git rev-parse HEAD`
+- **PR terkait:** belum ada (PR dibuka di akhir sesi, tanpa auto-merge)
+- **Pekerjaan belum tersimpan:** Tidak ada
+- **Risiko atau blocker:**
+  - Channel Brief v4 dan kedua brief model v2 **belum masuk `main`** (G3 belum). Produksi ini mewarisi brief yang sudah dikunci G2 tapi belum merged — dicatat sadar, bukan disembunyikan.
+  - Brand Core masih template kosong → warisan konteks dari Brand Core tidak ada; sudah dideklarasikan di Channel Brief.
+  - Rentang kata baru (108–125) belum pernah dipakai produksi nyata mana pun; ini produksi pertama yang memakainya. Catatan nyata dari tahap ini: pada jeda 0,7 detik, **jumlah paragraf sama pentingnya dengan jumlah kata** — 15 jeda saja sudah memakan 10,5 detik. Ini insight taktis yang layak dicatat, bukan perubahan aturan.
+- **Waktu pembaruan:** 2026-09-15

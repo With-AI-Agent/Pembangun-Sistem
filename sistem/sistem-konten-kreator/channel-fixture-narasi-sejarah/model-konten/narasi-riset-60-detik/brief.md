@@ -8,8 +8,8 @@
 
 - [x] **Draft** — draf pertama selesai 2026-09-14
 - [x] **Reviewed** — direview lengkap oleh pengguna 2026-09-14
-- [x] **Approved** — dikunci lewat gerbang **G2** 2026-09-14
-- [x] **Merged** — masuk `main` lewat PR #52 pada 2026-09-14 (merge commit `2d39eea`)
+- [x] **Approved** — dikunci lewat gerbang **G2** 2026-09-14; **v2 dikunci lewat G2 2026-09-15** (target kata disinkron ke tempo Channel Brief v4)
+- [x] **Merged** — masuk `main` lewat PR #52 pada 2026-09-14 (merge commit `2d39eea`); **v2 BELUM masuk `main`** — G3 menunggu keputusan pemilik (PR tanpa auto-merge)
 - [x] **Operational** — sudah `Merged` dan seluruh dependency terpenuhi (2026-09-14)
 
 **Checklist Kelengkapan — syarat naik ke `Operational`:**
@@ -21,7 +21,7 @@
 - [x] Channel Brief induknya sudah berstatus `Operational`
 - [x] Sudah `Merged` ke `main` (PR #52, merge commit `2d39eea`, 2026-09-14)
 
-**Versi:** `1` — **Terakhir diperbarui:** `2026-09-14`
+**Versi:** `2` — **Terakhir diperbarui:** `2026-09-15`
 
 ## Mewarisi dari: `channel-fixture-narasi-sejarah/channel-brief.md`
 
@@ -36,7 +36,7 @@ Semua yang sudah dikunci di Channel Brief — termasuk Persona & Voice, batasan 
 
 ## 2. Format Teknis Spesifik
 
-- **Durasi/panjang pasti:** 55–65 detik; target 130–145 kata pada tempo channel sekitar 130 kata/menit.
+- **Durasi/panjang pasti:** 55–65 detik; target 108–125 kata pada tempo channel 125 kata/menit dengan jeda 0,7 detik (disinkron dari Channel Brief v4; rentang dihitung dari rumus durasi repo — 108 kata + 5 jeda = 55,34 dtk, 125 kata + 7 jeda = 64,90 dtk).
 - **Struktur konten khas format ini:** tema terbatas → paket riset dan peta fakta → beberapa kandidat ide → satu ide dipilih → pipeline standar untuk konsep/angle, naskah, breakdown segmen, asset, dan publish prep. Struktur naskah akhirnya tetap mewarisi pola model `Narasi 60 Detik`: benda/ruang sebagai pintu masuk, konteks kebiasaan, perubahan, lalu penutup yang kembali ke masa kini.
 - **Platform paling cocok untuk format ini:** YouTube Shorts dan TikTok.
 
@@ -103,3 +103,4 @@ Tema satu produksi: **jam dinding di ruang tamu**. Riset web mengumpulkan sejara
 | 2026-09-14 | Satu produksi dimulai dari satu tema terbatas yang menghasilkan beberapa kandidat ide, bukan bank tema lintas produksi | Menjaga scope riset cukup untuk satu konten 60 detik dan mencegah output riset menjadi backlog yang tidak diminta |
 | 2026-09-14 | Klaim sejarah spesifik memerlukan minimal dua sumber independen yang dapat diakses lewat web; satu sumber boleh dipakai hanya dengan bahasa diturunkan atau label `belum pasti` | Menjaga keterlacakan tanpa memaksakan sumber kedua yang memang tidak tersedia |
 | 2026-09-14 | Alur bertemu dengan pipeline standar setelah satu kandidat ide dipilih dan G1 pemilihan ide disetujui, mulai Tahap 2 Konsep & Angle | Ideation sudah dijalankan di alur kustom berbasis riset |
+| 2026-09-15 | v2 — target panjang naskah **130–145 kata → 108–125 kata**, dikunci lewat **G2** (persetujuan pemilik eksplisit); G3 menunggu | Bagian 2 brief ini menyebut tempo channel secara eksplisit, jadi ikut bergeser ketika Channel Brief v4 mengunci tempo 125 kata/menit + jeda 0,7 detik. Angka yang sama dipakai model `Narasi 60 Detik` v2 supaya dua model di channel yang sama tidak memakai rentang yang bertentangan. Struktur naskah, alur riset, dan aturan sumber tidak diubah |
