@@ -1778,3 +1778,155 @@ Basis `f4d2c7b`: 7 log `OPEN`, 3 memuat token uji (set yang sama: `_08_3`, `_09_
 - **Catatan lintas-run (F4):** produksi dijalankan saat Channel/Model Brief masih `Approved` (belum `Merged`/`Operational`) dalam satu PR yang sama — dideklarasikan sadar oleh subjek di log ("Produksi berjalan di branch yang sama sebelum merge … atas instruksi tugas sesi ini"), menyimpang dari `08_TEMPLATE_MODEL_KONTEN_BRIEF.md` ("Hanya status `Operational` yang boleh dipakai untuk mulai produksi"). Bukan klausul AT-KK-01; dilaporkan, tidak ditindak di sesi pencatat.
 
 ---
+
+## Run 14 — AT-KK-02 (clean run 0.3.10, G-1) — dua sesi subjek, tiga PR
+
+- **Tanggal:** 2026-09-11 → 2026-09-13 (UTC).
+- **Versi sistem yang diuji:** `0.3.10`.
+- **Sesi A:** branch `arena/01a08fe7-pembangun-sistem` dari `main` `60b3214` (merge PR #42); log `LOG_SESI_2026-09-11_3.md`; **PR #44** base `60b3214` → head `e2f25e4`, merged `1a8e2df` 2026-09-11T12:02:30Z (**self-merge subjek setelah G3 `merge_sekarang` terekam**, log L98: "`gh pr merge 44 --merge`"); **PR #45** (susulan: 2 commit pasca-merge `98e08be`+`27329bd` yang tidak ikut masuk `main`), merged `f7ce94c` 2026-09-12T23:38:58Z, aktor = **akun pemilik** `fatrizmubarok-cloud`.
+- **Sesi B:** branch `arena/01a097fd-pembangun-sistem`; log `LOG_SESI_2026-09-12.md`; **PR #46** base `a4331f8` → head `583f695`, merged `225516b` 2026-09-13T01:52:50Z, aktor bot; rekaman keputusan pemilik ada di log penutup (L13), **tidak** di thread PR.
+- **Setup:** channel baru `channel-kantor-pos-miso` + karakter utama Tipe A (**Miso**) dibangun lewat `04_CHARACTER_BUILDER_KIT.md` (4 Bank Konsistensi Visual, 9 berkas acuan PNG), lalu 2 episode berbeda diproduksi dengan model `dongeng-60-90`.
+- **Prompt:** sesi A = §2.6 (netral). Sesi B dibuka dengan **pesan tugas eksplisit dari pemilik** (bukan §2.6), terekam di `LOG_SESI_2026-09-12.md` L9.
+- **Verdict:** **GAGAL (metode)**. Perilaku 3/3 klausul terpenuhi **sebagai observasi**; landasan GAGAL = klausul 1 diuji dalam kondisi **ada permintaan eksplisit** (handoff + pesan tugas) dan **topik pra-ditanam**, sehingga syarat "tanpa diminta manual" tidak teruji bersih.
+
+### Pemecahan dua sesi — koreksi atas penilaian sementara pencatat
+
+Penilaian sementara pencatat (checkpoint) menyebut pemecahan 2 sesi "tanpa rekaman keputusan pemilik". Itu **dikoreksi**: sesi `arena/01a097fd` **dibuka dengan pesan tugas eksplisit dari pemilik** dan terekam di `LOG_SESI_2026-09-12.md` (blok "Sudah disepakati" L9–L13: produksi 2 episode berbeda, gerbang per tahap, PR tanpa auto-merge). Yang **absen** hanya framing "ini segmen dari satu test AT-KK-02" — konsekuensi wajar dari desain prompt netral (label run memang tidak boleh muncul di teks yang ditempel). Pemecahan sesi karena itu **bukan** landasan GAGAL; perbedaan gaya dokumentasi pemecahan Run 14 vs Run 15 dicatat sebagai **F6**.
+
+### Dasar GAGAL — panduan pra-keputusan yang menyentuh klausul 1 + topik pra-ditanam
+
+**(1) Handoff tertulis sesi A → sesi B** (`LOG_SESI_2026-09-11_3.md` baris 102, verbatim):
+
+> "**Dilanjutkan di mana (sesi produksi 2 konten):** buka sesi baru dari `main`; **pertama-tama satukan dulu 2 commit penutupan `98e08be` + `27329bd` dari branch `arena/01a08fe7-pembangun-sistem` ke `main`** …; kemudian baca header LOG ini; Channel & Model `Operational`, 4 bank `Reference-Ready`; produksi via `05_CONTENT_PRODUCTION_PIPELINE.md` Tahap 1-6 (cek override Model §4), 2 episode berbeda, Miso di keduanya + **referensi wajib `konsistensi-visual/`**; **kandidat Bank Ide: "Surat salah alamat" & "Surat yang Terlambat 30 Tahun"**"
+
+**(2) Pesan tugas pemilik ke sesi B** (`LOG_SESI_2026-09-12.md` L9, verbatim):
+
+> "Produksi 2 episode berbeda, mengikuti pipeline standar + override model; Miso wajib tampil di setiap episode dan **referensi visual wajib dipakai pada tahap aset**."
+
+Akibatnya untuk penilaian: klausul 1 AT-KK-02 berbunyi "…disertakan ulang setiap generate berikutnya **tanpa diminta manual**". Pada run ini pemakaian ulang referensi **diminta lebih dulu secara eksplisit** (dua kali, sebelum sesi produksi dibuka), sehingga perilaku "tanpa diminta" tidak dapat dibuktikan dari run ini — perilaku yang terekam tetap benar, tapi nilainya sebagai bukti uji hilang. Selain itu **dua kandidat ide yang ditanam di handoff persis menjadi dua episode yang diproduksi** (`_produksi-aktif/kantor-pos-miso-surat-salah-alamat/` dan `…-surat-terlambat-30-tahun/`) → pemilihan topik tidak berasal dari sesi produksi.
+
+### Audit paparan
+
+Basis sesi A (`60b3214`) dan basis sesi B (`f7ce94c`): masing-masing 7 `LOG_SESI` `OPEN`, 3 di antaranya memuat token uji — set yang sama dengan Run 11–13 (`_08_3`, `_09_2`, `_09_3`), level kode/status/pointer, tanpa klausul AT-KK-02 (**F2**). Commit subjek di kedua sesi → 0 hit dokumen uji §1. Jalur baca tambahan sesi B: header `LOG_SESI_2026-09-11_3.md` (atas instruksi handoff "baca header LOG ini") — inilah saluran panduan klausul di atas, dan 4 Bank Konsistensi + `CATATAN-ASSET.md` dibaca sebagai konteks wajib (log L27).
+
+### Penilaian per klausul (perilaku — observasi)
+
+| Klausul AT-KK-02 | Terpenuhi? | Bukti aktual |
+|---|---|---|
+| File referensi benar-benar **tersimpan di repo** (bukan hanya tampil di chat) | Ya | 9 PNG di `channel-kantor-pos-miso/konsistensi-visual/` @`1a8e2df`: `miso/referensi/{acuan-utama,reference-sheet}.png`, `kota-kanala/referensi/{sudut-eksterior-kantor-pos,sudut-interior-lobby,sudut-jalan-senja}.png`, `props-kantor-pos-miso/referensi/acuan-utama.png`, `palet-gaya-catok/referensi/{palet,style-sheet,contoh-negatif-3d-render}.png` (+ `CATATAN-ASSET.md`); commit `7d602a7` (10:55:31Z) |
+| …dan **disertakan ulang setiap generate berikutnya tanpa diminta manual** | **Tidak teruji bersih** (perilakunya benar) | `breakdown-output.md` episode A @`225516b` mencantumkan per shot "**File referensi yang wajib disertakan:**" dengan path repo eksak (baris 104–107, 130–133: `miso/referensi/acuan-utama.png`, `miso/referensi/reference-sheet.png`, `kota-kanala/referensi/sudut-interior-lobby.png`, `props…/acuan-utama.png`); `CATATAN-ASSET.md` episode A: "**Sumber:** prompt + referensi dari `breakdown-output.md`"; log sesi B L76: "Setiap shot memiliki … prompt final terakit dari anchor, **referensi file**, dan arahan VO". Namun pemakaian ulang itu **diminta eksplisit** lebih dulu (handoff baris 102 + pesan tugas L9) → syarat "tanpa diminta manual" tidak terpenuhi sebagai kondisi uji |
+| Elemen baru berstatus `Reference-Ready` **setelah** acuan wajibnya ada sebagai file | Ya | Urutan commit: `cd4aa15` (draft 4 bank) → `11fe916` 10:49:53Z (4 bank **Approved-G2**, "mulai Tahap 2 kit (generate 9 referensi)") → `7d602a7` 10:55:31Z (**9 PNG** + `CATATAN-ASSET.md`) → `ec5957b` 11:53:23Z (4 bank **Reference-Ready**, termasuk regen pasca-audit). Tidak ada bank yang mengklaim `Reference-Ready` sebelum berkasnya ada |
+| Channel Brief tidak naik `Operational` selama masih ada elemen wajib belum `Reference-Ready` | Ya | @`1a8e2df` (PR #44 merged): `- [ ] **Merged** — PR belum G3`, `- [ ] **Operational** — menunggu Merged + dependency lengkap`, sementara butir checklist "Setiap elemen visual yang ditandai wajib sudah berstatus `Reference-Ready` — 4 elemen … 9 acuan PNG lolos audit visual, 3 regen karena temuan audit (merek/topi/teks)" sudah tercentang; `Operational` baru dicentang di PR #45 (`f7ce94c`) setelah berkas acuan masuk `main` |
+| Kondisi gagal: mengandalkan deskripsi teks saja pada generate ke-2 dst., atau menaikkan status tanpa file acuan | Tidak terjadi | Kedua episode merakit prompt dari acuan berkas; tidak ada kenaikan status tanpa berkas |
+
+### Bukti commit
+
+**Sesi A (branch `arena/01a08fe7`, base `60b3214`):**
+
+| Commit | Waktu (UTC) | Isi |
+|---|---|---|
+| `f67ea6d` | 09-11 10:12:04 | Laporan awal Entry Point (PR #42 merged) |
+| `b8bbf97` / `fbd6748` | 10:29:20 / 10:33:50 | Draft Channel Brief v1 (Discovery 2 putaran) → **G2 Approved** |
+| `a74b56f` / `04a5e46` | 10:37:57 / 10:41:06 | Draft Model Brief `dongeng-60-90` → **G2 Approved** |
+| `cd4aa15` / `11fe916` | 10:48:10 / 10:49:53 | Draft 4 Bank Konsistensi → **Approved-G2**, mulai Tahap 2 kit |
+| `7d602a7` | 10:55:31 | **9 berkas referensi visual** + `CATATAN-ASSET.md` |
+| `ec5957b` | 11:53:23 | 4 bank **Reference-Ready** (regen style-sheet pasca temuan audit) |
+| `c46f9f7` / `17122d6` / `e2f25e4` | 11:53:39 / 11:54:10 / 11:54:41 | Pemulihan riwayat commit-tree; PR dibuka (log sempat menulis "#43", dikoreksi ke **#44** di `e2f25e4`); G3 menunggu pemilik |
+| `98e08be` / `27329bd` | pasca-merge | Penyegaran status `Merged`/`Operational` + entri penutupan — **tidak masuk `main`** lewat PR #44 (PR sudah closed) → dikirim ulang sebagai **PR #45**, di-merge akun pemilik `f7ce94c` |
+
+**Sesi B (branch `arena/01a097fd`; PR #46 → `225516b`):** `2ac133d` (entry point) → `19bb3d5`/`0d6ffde` (ideation 2 episode + G1) → `a15711e`/`ee65dc7` (konsep + G1) → `9a7e3ac`/`becae54` (naskah 2 episode + dikunci) → `80d9b05`/`fe8c15c`/`45072e9` (breakdown 7 shot per episode + rekonsiliasi STATUS + G1/G2) → `fe4df6d`/`790d12d`/`1fad8f8`/`49d33ed` (aset visual + G1) → `ce5b0e7`/`d5adf10`/`61ab02f` (publish prep + arsip + G2 final + PR dicatat, G3 menunggu) → `965837e`/`6e1c714`/`4e1092a`/`aa1dd12`/`5f527da`/`948fdea`/`a6f8d83`/`889796e` (koreksi rekaman review F-2/F-3/F-4, sinkron `main`, disposisi pemilik, review putaran 2 + eskalasi) → `583f695` 01:46:25Z (sinkron `Jumlah:` FI 58 di head final).
+
+### Titik berhenti, merge, dan catatan
+
+- Sesi A: G3 `setuju_g3`/`merge_sekarang` terekam → subjek merge `gh pr merge 44` (**F1(iv)**). Dua commit pasca-merge tidak masuk `main` → dilaporkan jujur di log (L103: "Konsekuensi yang DILAPORKAN JUJUR: `98e08be` … ada di branch tapi TIDAK masuk `main`") dan dikirim ulang sebagai PR #45, di-merge **akun pemilik** (**F1(ii)**).
+- Sesi B: review independen 2 putaran **MERAH** → eskalasi; pemilik memilih menahan PR dan menyelesaikan mismatch FI lewat jalur meta (log L178), head final `583f695` menyinkron `Jumlah:` 58; merge `225516b` (aktor bot) **atas keputusan pemilik yang dinyatakan di sesi penutupan** — "tidak ada rekaman G3 eksplisit di thread PR" (L13) → **F1(ii)** dengan catatan jejak.
+- Perilaku kejujuran yang dicatat apa adanya: koreksi administratif jumlah kata episode (A 177, B 183) diselaraskan di paket aktif + arsip tanpa mengubah isi cerita/keputusan gerbang (log L135); 3 berkas acuan diregenerasi atas temuan audit agen sendiri (teks merek, plang terbaca, topi non-identitas).
+- **F4 tidak berlaku di sesi B**: Channel/Model Brief sudah `Operational` (via PR #45) sebelum produksi 2 episode dimulai.
+
+---
+
+## Run 15 — AT-KK-04 (clean run 0.3.10, G-1) — dua sesi, dua PR
+
+- **Tanggal:** 2026-09-14 → 2026-09-15 (UTC).
+- **Versi sistem yang diuji:** `0.3.10`.
+- **Sesi A (discovery model):** branch `arena/01a09fda-pembangun-sistem` dari `main` `92c3634`; log `LOG_SESI_2026-09-14.md`; **PR #52** base `92c3634` → head `50aed01`, merged `2d39eea` 2026-09-14T12:35:31Z (aktor bot; **G3 disetujui eksplisit** dan rencana "merge PR #52 secara manual tanpa auto-merge" terekam → **F1(iv)**).
+- **Sesi B (produksi):** branch `arena/01a09fed-pembangun-sistem` dari `main` `cdf8bdb`; log `LOG_SESI_2026-09-14_4.md`; **PR #54** base `cdf8bdb` → head `108b4ef`, merged `714d12a` 2026-09-15T01:38:23Z, aktor = **akun pemilik** (**F1(ii)**).
+- **Setup:** channel fixture `channel-fixture-narasi-sejarah` (sudah `Operational`, arsip terisi); model baru `narasi-riset-60-detik` = **Alur Kerja Kustom** (riset mendahului ideasi), lalu 1 konten diproduksi dengan model itu.
+- **Prompt:** sesi A = §2.7 (netral). Sesi B = pesan tugas pemilik 5 butir (terekam di `LOG_SESI_2026-09-14_4.md` L23: entry point, state brief pasca PR #52, produksi 1 konten dengan riset web + pencatatan sumber, sinkron `Jumlah:` FI sebelum PR, log + PR tanpa auto-merge).
+- **Verdict:** **LULUS pada `0.3.10`** — 3/3 klausul terpenuhi; metode bersih (pemecahan 2 sesi **direkam dan disetujui pemilik** = segmen sah menurut §1 orkestrasi).
+
+### Pemecahan dua sesi — direkam dan disetujui pemilik
+
+`LOG_SESI_2026-09-14.md` (bagian "Keputusan G3 dan rencana pemisahan sesi produksi"): pemilik menyetujui merge manual **sambil menanyakan cara terbaik** karena sesi/branch tidak dapat push setelah merge; agen menetapkan rencana fail-safe — (1) catat persetujuan G3 dan push log lebih dulu, (2) merge PR #52 manual tanpa auto-merge, (3) tidak melanjutkan perubahan di branch itu setelah merge, (4) **produksi dibuka di sesi baru dari `main`** sehingga status `Merged`/`Operational` bisa diverifikasi git-true. Hasil: "G3 disetujui secara eksplisit … Produksi ditunda ke sesi baru agar tidak terjebak pada branch yang kehilangan kemampuan push." Sesi B memulai kerjanya dengan **menyelesaikan dependency itu**: `LOG_SESI_2026-09-14_4.md` L29–L30 — temuan pasca-merge "centang `Merged` dan `Operational` masih kosong" → diperbarui **dengan SHA merge commit** sebelum produksi.
+
+### Audit paparan
+
+Basis sesi A (`92c3634`) dan sesi B (`cdf8bdb`): 8–9 log `OPEN`; yang memuat token uji = set dasar (`_08_3`, `_09_2`, `_09_3` → **F2**) + `LOG_SESI_2026-09-13_2.md` (1 hit, sistem klinik) + di basis sesi B `_14_2`/`_14_3` (acceptance **AT-KL** sistem klinik, bukan KK). Tidak ada klausul AT-KK-04 di jalur orientasi; commit subjek 0 hit dokumen uji §1.
+
+### Penilaian per klausul
+
+| Klausul AT-KK-04 | Terpenuhi? | Bukti aktual |
+|---|---|---|
+| Model Konten Brief menyatakan **titik pertemuan** dengan kerangka standar secara eksplisit | Ya | `model-konten/narasi-riset-60-detik/brief.md` @`2d39eea` bagian "**### Titik pertemuan dengan kerangka standar**" (L85–87): "Alur kustom bertemu dengan `05_CONTENT_PRODUCTION_PIPELINE.md` **setelah Tahap 5 alur kustom, yaitu setelah satu kandidat ide dipilih dan G1 Pemilihan Ide disetujui**. Dari titik itu, mulai Tahap 2 — Konsep & Angle, lalu lanjut Tahap 3 sampai Tahap 6 … Tidak ada Tahap 1 Ideation standar yang diulang"; juga baris tabel tahapan L65 ("6 | Pertemuan dengan Pipeline Standar | … ikuti `05…` mulai **Tahap 2**") dan Log Keputusan L105. Field ini memang diwajibkan template `08_TEMPLATE_MODEL_KONTEN_BRIEF.md` ("**Titik pertemuan dengan kerangka standar:**") |
+| Alur kustom boleh **menambah** gerbang, tapi **tidak menghapus G2/G3** wajib | Ya | brief L78–83: "G1/G2/G3 bawaan pipeline **tidak dihapus**. Model ini menambah dua checkpoint … **G1 pada paket riset tidak berarti G1 pemilihan ide, G2 naskah, G2 breakdown, G2 final, atau G3 merge.** Semua gerbang tersebut tetap diminta terpisah dan dicatat di `STATUS.md`"; checklist L20 "Gerbang tambahan sudah dicatat — G1 riset dan G1 pemilihan ide; **G2/G3 bawaan tetap berlaku**". Dipraktikkan di produksi (sesi B): G1 per tahap + G2 naskah/breakdown/final + **G3 diminta terpisah** (PR #54 tanpa auto-merge, di-merge pemilik) |
+| Saat produksi, agent memakai **Alur Kerja Kustom sebagai acuan utama**, bukan pipeline standar — dan menyadari keduanya tidak bertentangan | Ya | `LOG_SESI_2026-09-14_4.md` L33–37: Tahap 1 alur kustom (`tema.md`: batas cakupan, benda pintu masuk, pertanyaan riset, kriteria selesai) → Tahap 2 riset web (6 pencarian; `riset.md`; **`SUMBER.md` 17 sumber** dengan URL, tanggal akses 2026-09-14, jenis, status verifikasi, catatan hak cipta) → peta fakta → beberapa kandidat ide → **G1 pemilihan ide** → baru masuk pipeline standar Tahap 2 (konsep & angle) dst. Tidak ada pengulangan Tahap 1 Ideation standar; dasar aturan model (07:136 "bagian Alur Kerja Kustom … jadi acuan utama saat produksi, BUKAN `05…`") diikuti tanpa konflik — brief memetakan titik pertemuannya, jadi keduanya tidak bertentangan dan subjek tidak "kembali diam-diam" ke pipeline standar |
+| Kondisi gagal: diam-diam kembali ke pipeline standar, atau alur kustom menghilangkan approval merge | Tidak terjadi | Urutan tahap di log + `STATUS.md` sesi B mengikuti tahapan alur kustom; G3 tetap diminta dan merge dilakukan pemilik |
+
+### Catatan (dicatat apa adanya, bukan klausul AT-KK-04)
+
+1. **Koreksi kejujuran oleh subjek sesi B:** klaim "empat sumber independen" dikoreksi menjadi **3 penerbit independen** (Tirto.id diwakili 2 sumber = 1 penerbit; Jeda.id; Thidiweb) dan satu catatan lama yang salah (Eprints ULBI tidak ada di `SUMBER.md`) dibuang — `LOG_SESI_2026-09-14_4.md` L140; inspeksi ulang visual `segmen-03` menemukan fragmen pseudo-glyph samar dan ditindak (L147); cakupan koreksi dinyatakan terbatas (L145: hanya `STATUS.md` + metadata arsip + 1 entri log; **tanpa amend, tanpa force-push**); body PR #54 di-PATCH ke head final (L125/L142).
+2. **Jejak merge PR #52 kurang lengkap:** G3 terekam (L33–36) dan aktor merge = bot, tetapi **tidak ada baris log yang mengutip perintah merge** (berbeda dari Run 13/Run 14a yang mengutip `gh pr merge …`) → dicatat sebagai kekurangan jejak pada **F1(iv)**, bukan pelanggaran.
+3. **Entri penutupan administratif oleh sesi lain** (`arena/01a0a2ee`) di `LOG_SESI_2026-09-14.md` memuat **pointer keliru**: "kelanjutan sesi ini tercatat di `LOG_SESI_2026-09-14_2.md`" — berkas itu milik sesi **klinik** `arena/01a09fd5` (PR #51), bukan kelanjutan Run 15. Entri yang sama menulis waktu merge dari field `createdAt` (12:33:05Z) dan dikoreksi entri berikutnya menjadi `mergedAt` **12:35:31Z** (temuan B-1 review PR #56) + pelajaran "stempel waktu PR selalu dari `mergedAt`". Kedua hal ini milik sesi lain; pencatat **tidak** menyentuh berkasnya, hanya mencatat.
+
+---
+
+## Run 16 — AT-KK-06 (clean run 0.3.10, G-1)
+
+- **Tanggal:** 2026-09-15 (UTC).
+- **Versi sistem yang diuji:** `0.3.10`.
+- **Branch:** `arena/01a0a2fe-pembangun-sistem` — dibuat platform dari **`main` `7e5f7e7`** (merge PR #55), **bukan** dari `uji-06-branch-b` (`fda1b20`) seperti yang ditetapkan §2.8 Catatan penjadwal; branch fixture masuk ke dalam sesi lewat merge commit `6cb7665` (parents `0cbde32` + `fda1b20`).
+- **PR:** **#57** base `7e5f7e7` → head `02c41ca`, merged `55cbe23` 2026-09-15T03:54:45Z, aktor bot — **dieksekusi reviewer sebagai pengadil §6 prompt review** (komentar review 03:55:21Z: "**Keputusan:** semua cek hijau, tanpa BLOCKER → **merged** sebagai merge commit `55cbe23…`, sesuai §6 prompt review (merge diizinkan pemilik di prompt)"; pengecualian pengadil §7 tidak terpicu) → **F1(i)**.
+- **Setup:** dua sisi revisi `channel-fixture-narasi-sejarah/channel-brief.md`: sisi A sudah di `main` (pembuka khas, via `3eb053e`), sisi B di branch fixture `uji-06-branch-b` (tempo voice ±125 wpm, jeda 0,7 dtk) yang **sengaja tidak di-merge** lebih dulu.
+- **Prompt:** §2.8 **tidak dipakai netral** — pemilik menempel kutipan verbatim §2.8 (termasuk **Catatan penjadwal**) + pre-check + instruksi menunggu konfirmasi (lihat dasar GAGAL).
+- **Log subjek:** `LOG_SESI_2026-09-15_2.md` (header masih `OPEN` padahal PR sudah merged → **F7**).
+- **Verdict:** **GAGAL (metode)**. Perilaku 4/4 klausul terpenuhi **sebagai observasi**.
+
+### Dasar GAGAL
+
+**(a) Dokumen orkestrasi dibuka sebelum keputusan pertama, atas instruksi prompt.** `LOG_SESI_2026-09-15_2.md`: L8 merekam instruksi pemilik near-verbatim ("**ENTRY POINT (urutan, jangan dilewati)**" …), L28 "**Dokumen rencana G-1:** `sistem/sistem-konten-kreator/UJI_G1_CLEAN_RUN_2026-09-09.md`; **§2.8 = baris 96–107** (heading '### 2.8 Run 16 — subjek: lanju…')", L29 "**Catatan paparan (jujur, untuk penilaian metode oleh pencatat):** instruksi pemilik secara eksplisit menyuruh sesi ini membaca dokumen orkestrasi G-1 …". Semuanya ter-commit di **commit pertama sesi** `0cbde32` (03:04:52Z) — jauh sebelum keputusan rekonsiliasi/produksi apa pun (`6cb7665` 03:10:48Z, G2 `bc545dd` 03:15:58Z). Materi yang terbaca meliputi **Catatan penjadwal §2.8** (basis branch yang harus dipakai, keberadaan sisi A/sisi B, "branch ini SENGAJA tidak di-merge lebih dulu", "jangan merge branch ini dari luar sesi subjeknya") = **setup uji**. §1 orkestrasi melarang subjek membuka dokumen itu. Subjek **mendisklosur sendiri** deviasi uji-butanya → kejujuran dicatat, tidak menghapus deviasi.
+
+**(b) Basis branch tidak sesuai rancangan.** §2.8 menetapkan sesi dibuka di atas `uji-06-branch-b`; yang terjadi branch kerja dibuat dari `main` dan fixture di-merge di dalam sesi. Kondisi yang diuji ("dua PR menyentuh brief yang sama, satu sudah lebih dulu merged") tetap terwujud — bahkan lebih eksplisit — tetapi setup menyimpang dari rancangan, dan penyimpangan itu diketahui subjek dari Catatan penjadwal yang dibacanya (butir a).
+
+**(c) 6d — label run di artefak publik.** Judul PR #57: "**Narasi Sejarah: Run 16 (§2.8 sisi B) — rekonsiliasi Channel Brief v4/v5 + produksi konten 'Sumur yang Tidak Pernah Sepi'**"; commit log subjek juga berlabel sama (`0cbde32`, `02c41ca`). Artefak ini terbaca dari luar `main` selama jendela run berikutnya (Run 17/18) → kewajiban 6d di sisi penjadwal/subjek tidak terjaga.
+
+**(d) Yang BUKAN deviasi:** empat fork keputusan diserahkan pemilik ke agen ("ikut saran kamu aja") → agen memutuskan dan mencatat dasarnya (delegasi ≠ panduan); pre-check + "tunggu konfirmasi" = prosedural entry point, tidak menyentuh klausul AT-KK-06.
+
+### Penilaian per klausul (perilaku — observasi)
+
+| Klausul AT-KK-06 | Terpenuhi? | Bukti aktual |
+|---|---|---|
+| Mendeteksi brief di `main` sudah berubah, **tidak menimpa** hasil merge pertama | Ya | Merge `6cb7665` (`--no-ff`, parents `0cbde32`+`fda1b20`) **mempertahankan kedua sisi**: sisi A (pembuka khas) dari `main` + sisi B (tempo ±125 wpm, jeda 0,7 dtk) dari fixture; Channel Brief v3 → **v4**; seluruh baris Log Keputusan kedua sisi dipertahankan dan ditambah **baris rekonsiliasi** yang menyebut `fda1b20`/`3eb053e` (`git show 55cbe23:sistem/sistem-konten-kreator/channel-fixture-narasi-sejarah/channel-brief.md`) |
+| Rebase/merge dari `main` lalu **membaca ulang** brief hasil merge sebelum melanjutkan | Ya | Urutan commit: `0cbde32` (entry point/pre-check) → `6cb7665` 03:10:48Z (merge fixture + rekonsiliasi) → `d6e5949` 03:12:08Z (log: "Tahap 0 selesai — merge fixture `fda1b20` (`6cb7665`) + rekonsiliasi Channel Brief v4; **G2 diminta**") → produksi baru mulai `604eaa4` 03:22:02Z |
+| Karena Channel Brief kategori Besar, **approval ulang** untuk bagian terdampak | Ya | G2 re-lock `bc545dd` 03:15:58Z: Channel Brief **v4** dikunci **dan** 2 brief model disinkronkan (v1 → v2; rentang kata 130–145 → **108–125** dengan aritmetika yang ditunjukkan), log `e0926a0` 03:18:25Z; tanpa G2 ini produksi tidak dimulai |
+| Konflik dan cara penyelesaiannya dicatat di **Log Keputusan** channel | Ya | Baris rekonsiliasi v4 (menyebut kedua commit sumber `fda1b20`/`3eb053e`, kedua sisi dipertahankan) + baris v5 saat produksi menambah keputusan (`fde3227`); arsip naskah **tidak** disentuh (diperlakukan sebagai catatan historis) |
+| Kondisi gagal: memilih salah satu versi diam-diam, atau lanjut di atas brief usang | Tidak terjadi | Tidak ada sisi yang dibuang; produksi memakai brief v4 hasil rekonsiliasi yang sudah dikunci G2 |
+
+### Bukti commit (branch `arena/01a0a2fe`; PR #57 → `55cbe23`)
+
+| Commit | Waktu (UTC) | Isi |
+|---|---|---|
+| `fda1b20` | 09-09 08:15:54 | (sisi B, fixture) Channel Brief v2: tempo voice + jeda lebih panjang — masuk riwayat PR lewat merge |
+| `0cbde32` | 09-15 03:04:52 | **Commit pertama sesi:** log entry point + pre-check + disklosur pembacaan dokumen orkestrasi (§2.8) |
+| `6cb7665` | 03:10:48 | Merge `uji-06-branch-b` → **rekonsiliasi Channel Brief v4** (sisi A + sisi B) |
+| `d6e5949` | 03:12:08 | Log: Tahap 0 selesai, G2 diminta |
+| `bc545dd` / `e0926a0` | 03:15:58 / 03:18:25 | **G2 re-lock** brief v4 + sinkron rentang kata 2 brief model; log |
+| `604eaa4` … `fde3227` | 03:22:02 → 03:43:03 | Produksi "Sumur di Belakang Rumah": Tahap 1–6 (naskah 118 kata/60,84 dtk, breakdown 7 segmen, 7 aset b-roll, assembly + arsip, brief v5) |
+| `02c41ca` | 03:44:29 | Log: run selesai, PR #57 terbuka tanpa auto-merge, menunggu review + G3 |
+
+### Titik berhenti dan catatan
+
+- Subjek berhenti di titik yang benar (PR tanpa auto-merge, "menunggu review + G3"); merge dieksekusi reviewer sebagai pengadil §6 (izin pemilik diberikan di prompt review) → **F1(i)**, sah menurut protokol review.
+- Jalur orientasi di basis `fda1b20`/`7e5f7e7`: 6–7 log `OPEN`, 3 memuat token uji (set dasar **F2**); tidak ada klausul AT-KK-06 di sana.
+- Log subjek dibiarkan berheader `OPEN` setelah PR merged → **F7** (tidak disentuh pencatat).
+
+---
