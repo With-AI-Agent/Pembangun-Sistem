@@ -25,7 +25,7 @@
   - `G2 konten final:` disetujui 2026-09-15
   - `G3 merge:` belum (PR tanpa auto-merge — keputusan pemilik)
 - **Commit terakhir:** (diisi saat commit)
-- **PR terkait:** (diisi setelah PR dibuka)
+- **PR terkait:** PR #58 (OPEN, tanpa auto-merge) — https://github.com/With-AI-Agent/Pembangun-Sistem/pull/58
 - **Pekerjaan belum tersimpan:** Tidak ada
 - **Risiko atau blocker:** tidak ada
 - **Waktu pembaruan:** 2026-09-15
