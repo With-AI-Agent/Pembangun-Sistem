@@ -90,35 +90,41 @@ UPDATE TERAKHIR: [tanggal]
 
 ## Kewajiban Penggunaan Skill (WAJIB — harus dan wajib di setiap aksi)
 
-> **Aturan ini override semua kebiasaan lama: skill bukan opsional, bukan saran, tapi KEWAJIBAN.** Kapanpun kamu buka sesi untuk sistem ini, kamu **WAJIB** memakai skill yang sudah terpasang vendor-local di `skills/` di dalam folder sistem ini (total 31 skill group, 6.0M — lihat `skills/README.md`). Jangan pernah coding/UI/riset/deploy tanpa baca `SKILL.md` yang relevan terlebih dulu.
+> **Aturan ini override semua kebiasaan lama: skill bukan opsional, bukan saran, tapi KEWAJIBAN.** Kapanpun kamu buka sesi untuk sistem ini, kamu **WAJIB** memakai skill yang sudah terpasang vendor-local di `skills/` di dalam folder sistem ini (total 52 dirs, 8.1M — lihat `skills/README.md`). Jangan pernah coding/UI/riset/deploy tanpa baca `SKILL.md` yang relevan terlebih dulu.
 
-**Cara pakai (harus):**
-1. Di awal setiap sesi, `ls skills/` dan baca `skills/README.md` untuk tahu apa yang tersedia.
-2. Sebelum memulai **Tahap/Fase/Task apapun**, baca `SKILL.md` yang dipetakan di bawah — minimal 1 skill, idealnya semua yang relevan. Skill punya *Activation Contract* & *Hard Rules* — ikuti persis.
-3. Selama eksekusi, terapkan *rules* & *references* dari skill (bukan dari ingatanmu). Jika skill butuh fetch fresh guideline (mis. `web-design-guidelines` fetch `https://raw.githubusercontent.com/vercel-labs/web-interface-guidelines/main/command.md`), lakukan fetch.
-4. Jika tidak ada skill yang pas, catat gap-nya di `DECISIONS_LOG.md` dan lanjut dengan fallback yang aman — jangan diam-diam skip.
+**Prinsip ADAPTIF (tidak kaku — menyesuaikan kebutuhan):**
+> Kamu **tidak boleh kaku** pada 1-2 skill saja. Untuk **setiap kerjaan / Tahap / Task**, nilai dulu *jenis pekerjaannya* (UI? backend? deploy? integrasi? riset?) lalu **pilih skill yang paling tepat** dari katalog yang tersedia. Kalau tugas butuh Cloudflare, pakai `cloudflare/wrangler`; kalau butuh Supabase, pakai `supabase`; kalau butuh Google Workspace, pakai `gmail/google-drive` dll. Kombinasikan beberapa skill bila tugasnya lintas domain. Tabel di bawah adalah **panduan cepat, bukan batas kaku** — jika ada skill lain yang lebih pas (lihat `skills/README.md` atau `find-skills`), pakai yang itu.
 
-**Pemetaan skill WAJIB per tahap (baca SKILL.md sebelum mulai):**
+**Cara pakai (harus, adaptif):**
+1. Di awal setiap sesi, `ls skills/` dan baca `skills/README.md` untuk tahu katalog lengkap (52 dirs, 8.1M). Gunakan `skills/find-skills` atau `npx skills find <keyword>` bila butuh discovery tambahan.
+2. Sebelum memulai **Tahap/Fase/Task apapun**, **analisa kebutuhan task**: tanyakan pada diri sendiri "Task ini butuh domain apa? (discovery? PRD? UI? API? DB? deploy Cloudflare/Vercel? Supabase? Google?)". Lalu baca `SKILL.md` yang **paling relevan** — minimal 1 skill, idealnya semua yang relevan untuk domain itu. Skill punya *Activation Contract* & *Hard Rules* — ikuti persis.
+3. Selama eksekusi, terapkan *rules* & *references* dari skill (bukan dari ingatanmu). Jika skill butuh fetch fresh guideline (mis. `web-design-guidelines` fetch `https://raw.githubusercontent.com/vercel-labs/web-interface-guidelines/main/command.md` atau `supabase` cek `https://supabase.com/changelog.md`), lakukan fetch.
+4. Jika tidak ada skill yang pas, catat gap-nya di `DECISIONS_LOG.md` dan lanjut dengan fallback yang aman — jangan diam-diam skip. Pertimbangkan untuk mengusulkan install skill baru via `npx skills add`.
 
-| Tahap / Tugas | Skill yang WAJIB dibaca & dipakai |
+**Pemetaan skill — panduan adaptif (baca SKILL.md sebelum mulai, pilih sesuai kebutuhan task):**
+
+| Tahap / Tugas | Skill yang direkomendasikan (pilih yang relevan, tidak harus semua) |
 |---|---|
 | **Tahap 1 Discovery** (gali ide mentah) | `skills/product-discovery/discovery-interview-prep` + `skills/product-discovery/customer-journey-map` + `skills/ai-agent-skills/skills/ask-questions-if-underspecified` + `skills/brainstorming` — untuk 3-5 pertanyaan klarifikasi yang tidak overwhelm |
 | **Tahap 2 PRD** (MoSCoW, user story) | `skills/product-management/prd-development` + `skills/product-management/user-story-mapping` + `skills/prd-taskmaster` + `skills/ai-agent-skills/skills/ask-questions-if-underspecified` — untuk PRD 15-section + acceptance Given-When-Then |
-| **Tahap 3 TECH_SPEC** (arsitektur) | `skills/vercel-react-best-practices` + `skills/next-best-practices` + `skills/vercel-composition-patterns` + `skills/building-components` + `skills/next-cache-components` + `skills/excalidraw-diagram` (diagram argue-visually) |
+| **Tahap 3 TECH_SPEC** (arsitektur) | `skills/vercel-react-best-practices` + `skills/next-best-practices` + `skills/vercel-composition-patterns` + `skills/building-components` + `skills/next-cache-components` + `skills/excalidraw-diagram` (diagram argue-visually) + `skills/supabase-postgres-best-practices` (jika pakai Postgres/Supabase) + `skills/cloudflare` (jika target Cloudflare) |
 | **Tahap 4 AGENT_GUIDE** (standar agent) | `skills/security-review` + `skills/tdd-workflow` + `skills/verification-loop` + `skills/ai-agent-skills/skills/best-practices` |
 | **Tahap 5 ROADMAP** (pecah task) | `skills/product-discovery/roadmap-planning` + `skills/product-management/prioritization-advisor` + `skills/writing-plans` + `skills/product-discovery/opportunity-solution-tree` |
 | **Tahap 6 CROSS_CHECK** (audit) | `skills/web-design-guidelines` + `skills/frontend-designer` + `skills/design-system` + `skills/security-review` + `skills/verification-before-completion` |
 | **Coding UI** | `skills/frontend-designer` + `skills/design-system` + `skills/ui-styling` + `skills/ui-ux-pro-max` + `skills/vercel-react-best-practices` + `skills/building-components` + `skills/web-design-guidelines` (a11y 100+ rules) |
-| **Coding Logic/API** | `skills/ai-agent-skills/skills/backend-development` + `skills/ai-agent-skills/skills/database-design` + `skills/alibaba-java` (jika stack Java) |
+| **Coding Logic/API** | `skills/ai-agent-skills/skills/backend-development` + `skills/ai-agent-skills/skills/database-design` + `skills/alibaba-java` (jika stack Java) + `skills/supabase` / `supabase-postgres-best-practices` (jika Supabase/Postgres) |
 | **Coding Mobile (iOS)** | `skills/ios-agent` |
 | **Verify & Test** | `skills/agent-browser` + `skills/tdd-workflow` + `skills/test-driven-development` + `skills/systematic-debugging` + `skills/verification-loop` |
-| **Deploy** | `skills/vercel-deploy` (+ `skills/agent-browser` untuk claim) |
-| **AI Features** | `skills/ai-sdk` + `skills/ai-elements` + `skills/streamdown` |
+| **Deploy — Vercel** | `skills/vercel-deploy` (+ `skills/agent-browser` untuk claim) |
+| **Deploy — Cloudflare (preferensi pemilik)** | `skills/cloudflare` (Workers/Pages/D1/R2/KV — 1.5M ref) + `skills/wrangler` (CLI) + `skills/agents-sdk` (stateful Agents) — **pakai ini bila user minta Cloudflare** |
+| **Backend — Supabase** | `skills/supabase` (DB/Auth/Edge/Storage/Realtime) + `skills/supabase-postgres-best-practices` (RLS/index/perf — 8 kategori) — **wajib sebelum tulis SQL/migration/RLS** |
+| **Integrasi — Google Workspace** | `skills/gmail` + `skills/google-drive` + `skills/google-sheets` + `skills/google-calendar` + `skills/google-docs` + `skills/google-chat` + `skills/google-slides` (sanjay3290, OAuth via `python scripts/auth.py`) — pakai sesuai layanan yang dibutuhkan (mail vs sheets vs drive) |
+| **AI Features** | `skills/ai-sdk` + `skills/ai-elements` + `skills/streamdown` + `skills/cloudflare` `workers-ai` (jika AI di edge) |
 | **Workflow/Commerce** | `skills/workflow` (durable) + `skills/ucp` (checkout) — bila app butuh |
 
-*Jika membangun aplikasi Next.js/React (mayoritas kasus), kombinasi **vercel-react-best-practices + next-best-practices + web-design-guidelines + building-components** adalah paket minimal yang tidak boleh dilewati.*
+*Contoh adaptif: Task "buat auth dengan Supabase dan deploy ke Cloudflare" → baca `supabase` + `supabase-postgres-best-practices` + `cloudflare` + `wrangler` sekaligus, bukan hanya `vercel-deploy`. Task "kirim laporan mingguan ke Sheets" → baca `google-sheets` + `gmail`. Jika membangun aplikasi Next.js/React, kombinasi **vercel-react-best-practices + next-best-practices + web-design-guidelines + building-components** adalah paket minimal yang tidak boleh dilewati — tapi tetap tambah `supabase`/`cloudflare`/`google` sesuai kebutuhan deploy/integrasi.*
 
-**Bukti kepatuhan:** di akhir tiap sesi, sebut skill mana yang kamu pakai di `LOG_SESI` — agar sesi berikutnya bisa audit.
+**Bukti kepatuhan:** di akhir tiap sesi, sebut skill mana yang kamu pakai (dan kenapa memilihnya) di `LOG_SESI` — agar sesi berikutnya bisa audit apakah pemilihan skill sudah adaptif & tepat.
 
 ## Struktur Dokumen Fondasi (`/docs`)
 

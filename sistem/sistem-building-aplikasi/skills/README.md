@@ -1,10 +1,10 @@
-# Skills — Sistem Building Aplikasi (maksimal — 31 group, 6.0M)
+# Skills — Sistem Building Aplikasi (maksimal — 52 dirs, 8.1M)
 
-Folder ini berisi **skill/plugin vendor-local** untuk Building Aplikasi. Semantik *install* di lmarena = vendor script disimpan di repo (bukan `npm -g`), persist antar sesi, terikat repo. **WAJIB dipakai tiap aksi** — lihat `AGENT_SYSTEM.md` § Kewajiban Penggunaan Skill.
+Folder ini berisi **skill/plugin vendor-local** untuk Building Aplikasi. Semantik *install* di lmarena = vendor script disimpan di repo (bukan `npm -g`), persist antar sesi, terikat repo. **WAJIB dipakai tiap aksi secara ADAPTIF** — lihat `AGENT_SYSTEM.md` § Kewajiban Penggunaan Skill (pilih skill sesuai kebutuhan task, tidak kaku).
 
-## Ringkasan terpasang (2026-09-15 — semua yang diminta pemilik)
+## Ringkasan terpasang (2026-09-15 — semua yang diminta pemilik + 2026-09-15 Cloudflare/Supabase/Google)
 
-**Total: 6.0M** (hemat 88% vs unzip semua Input-Pengguna 52M + 2.3M Vercel penuh). Sisa katalog besar tetap tersedia sebagai zip/index, tidak dibengkakkan penuh.
+**Total: 8.1M** (hemat 84% vs unzip semua Input-Pengguna 52M + Vercel 2.3M penuh). Sisa katalog besar tetap tersedia sebagai zip/index, tidak dibengkakkan penuh. **Agent ADAPTIF**: baca `AGENT_SYSTEM.md` tabel panduan, pilih skill yang paling tepat per task (Cloudflare vs Vercel, Supabase vs generic DB, Gmail vs Drive etc.).
 
 ### A. Inti dari Input-Pengguna 10 zip (scan virus aman 2026-09-15)
 
@@ -69,23 +69,47 @@ Folder ini berisi **skill/plugin vendor-local** untuk Building Aplikasi. Semanti
 | — | **tdd-workflow** + **verification-loop** | same | — | `tdd-workflow/`, `verification-loop/` |
 | — | **test-driven-development**, **systematic-debugging**, **writing-plans**, **verification-before-completion** | `obra/superpowers` | 24K+68K+12K+4K | `test-driven-development/` etc. |
 
+### F. Deploy & Integrasi — Cloudflare (preferensi pemilik), Supabase, Google Workspace (baru 2026-09-15)
+
+> Pemilik: "aku suka deploy pake cloudflare" + tanya supabase/google workspace/lain. Semua di-install vendor-local via `npx skills add --copy -y --agent "*"` (cloudflare/supabase) + `sanjay3290/ai-skills` (google).
+
+| # | Skill | Sumber | Ukuran | Folder | Fungsi & kapan dipakai (ADAPTIF) |
+|---|---|---|---|---|---|
+| 33 | **cloudflare** (comprehensive) | `cloudflare/skills` | 1.5M | `cloudflare/` | Workers, Pages, D1, R2, KV, Vectorize, AI, Tunnel, WAF, Terraform — 60+ refs. **Pakai bila deploy target Cloudflare** (bukan Vercel) |
+| 34 | **wrangler** | `cloudflare/skills` | 8K | `wrangler/` | CLI Cloudflare Workers — `wrangler whoami/login/deploy`, bindings, secrets |
+| 35 | **agents-sdk** | `cloudflare/skills` | 92K | `agents-sdk/` | Stateful Agents SDK (SQLite state, WebSocket, Workflows, MCP, React hooks) — untuk AI agent di Workers |
+| 36 | **supabase** | `supabase/agent-skills` | 32K | `supabase/` | DB/Auth/Edge/Storage/Realtime/Vectors/Cron/Queues, `supabase-js`, `@supabase/ssr`, CLI+MCP — **wajib sebelum SQL/RLS/migration** |
+| 37 | **supabase-postgres-best-practices** | `supabase/agent-skills` | 156K | `supabase-postgres-best-practices/` | 8 kategori Postgres (query, conn, RLS, schema, lock…) — load BEFORE ubah DB |
+| 38 | **gmail** | `sanjay3290/ai-skills` | 49K | `gmail/` | Gmail search/read/send/draft/labels via `python scripts/gmail.py` (OAuth `auth.py login`) |
+| 39 | **google-drive** | same | 45K | `google-drive/` | Drive file search/upload/share |
+| 40 | **google-sheets** | same | 45K | `google-sheets/` | Sheets read/write `scripts/sheets.py` |
+| 41 | **google-calendar** | same | 53K | `google-calendar/` | Calendar events, availability |
+| 42 | **google-docs** | same | 37K | `google-docs/` | Docs create/read export |
+| 43 | **google-chat** | same | 61K | `google-chat/` | Google Chat spaces messages |
+| 44 | **google-slides** | same | 41K | `google-slides/` | Slides create/edit |
+
+Cara pilih adaptif: Deploy? → `cloudflare+wrangler` jika user bilang Cloudflare, `vercel-deploy` jika Vercel. DB? → `supabase` jika Supabase, `database-design` generic jika lain. Email/laporan? → `gmail/google-sheets` dll. Jangan pakai Vercel bila diminta Cloudflare.
+
 **Sisa 10 Vercel niche tidak terpasang (tidak ditemukan sebagai skill valid):** `json-render-*` (5), `remotion-best-practices`, `turborepo` (repo bukan skill), `cra-to-next-migration`, `vercel-cli`, `autoship`, `before-and-after` — docs menyebut tapi repo tidak punya `SKILL.md` valid / user-invocable false. Tetap discoverable via `npx skills find` — bisa susulan bila Vercel publish ulang.
 
-## Cara pakai (WAJIB — lihat AGENT_SYSTEM.md § Kewajiban)
+## Cara pakai (WAJIB ADAPTIF — lihat AGENT_SYSTEM.md § Kewajiban + Prinsip Adaptif)
 
-1. **Awal sesi:** `ls skills/` + baca `skills/README.md` + baca `SKILL.md` mapping per tahap (tabel di AGENT_SYSTEM).
+1. **Awal sesi:** `ls skills/` + baca `skills/README.md` + baca `SKILL.md` mapping adaptif per tahap (tabel di AGENT_SYSTEM) — pilih yang paling relevan, kombinasikan bila lintas domain.
 2. **Discovery:** `product-discovery/discovery-interview-prep` → `customer-journey-map` → `ai-agent-skills/ask-questions-if-underspecified`.
 3. **PRD:** `product-management/prd-development` + `prd-taskmaster` → PRD 15-section + validasi 13 checks.
-4. **TECH_SPEC:** `vercel-react-best-practices` + `next-best-practices` + `excalidraw-diagram`.
+4. **TECH_SPEC:** `vercel-react-best-practices` + `next-best-practices` + `excalidraw-diagram` + `supabase-postgres-best-practices` (jika Postgres) + `cloudflare` (jika Cloudflare).
 5. **QA:** `security-review` + `tdd-workflow` + `verification-loop` + `agent-browser`.
+6. **Deploy adaptif:** Cloudflare? → `cloudflare` + `wrangler` (+ `agents-sdk` jika stateful). Vercel? → `vercel-deploy`. Supabase DB? → `supabase` + `supabase-postgres-best-practices` sebelum SQL.
+7. **Integrasi Google:** Gmail? → `gmail` (`python scripts/auth.py login` → `scripts/gmail.py search/send`). Sheets/Drive? → `google-sheets/google-drive` dll.
 
-Semua via **CLI `npx skills add --copy` + copy vendor-local** (persis lmarena) kecuali `openreview` 3 skill manual.
+Semua via **CLI `npx skills add --copy -y --agent "*"` + copy vendor-local** (persis lmarena) kecuali `openreview` 3 skill manual + sanjay google (manual copy via CLI sukses).
 
 ## Keamanan
 
 - 10 zip Input-Pengguna scan `curl|bash`/`rm -rf`/`base64` — aman, tidak auto-run.
-- 22 Vercel + planning + QA: badges Socket/Snyk/Trust Pass — aman.
+- Vercel 16 + planning + QA + Cloudflare/Supabase/Google: badges Socket/Snyk/Trust Pass — aman (Socket/Snyk Pass untuk cloudflare/supabase, kecuali trust prompt).
+- Google skills butuh OAuth browser (`python scripts/auth.py login`) — tidak auto-kirim tanpa `GOG_ACCOUNT` / confirm.
 
 ## Registrasi
 
-Terdaftar di `SYSTEM_MANIFEST.md` Dependency + Log Keputusan — total 6.0M.
+Terdaftar di `SYSTEM_MANIFEST.md` Dependency + Log Keputusan — total **8.1M, 52 dirs** (cloudflare 1.5M + supabase 188K + google 330K baru).
