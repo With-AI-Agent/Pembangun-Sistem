@@ -2096,7 +2096,7 @@ Ditemukan saat **audit ulang jalur orientasi 6a** (Tahap F, setelah semua penuli
 - "(4) Channel Brief Narasi Sejarah v2 (contoh kalimat pembuka) — **sisi A AT-KK-06 (sisi B = branch `uji-06-branch-b` di remote)**";
 - kolom "Alasan / bukti" baris yang sama memuat **premis** AT-KK-03b ("channel yang TIDAK PERNAH membuat `arsip-naskah/indeks-karakter.md`") + alasan pengecualian validator.
 
-**Jangkauan (diverifikasi `git show <basis>:…`):** baris itu ADA di **ke-11 basis batch** — `c8f60d5`, `fccf60b5`→`fccf0b6`, `c118c52`, `abd0f47`, `f4d2c7b`, `60b3214`, `f7ce94c`, `92c3634`, `cdf8bdb`, `55cbe23`, `341fbd3` (label `state AT-KK-03`, `sisi A AT-KK-06`, `state retest AT-KK-05/05b` = 1 hit di tiap basis). Jadi paparan ini **pra-ada** (ditulis sesi persiapan 9 Sep, masuk `main` sebelum Run 9) dan **bukan** tindakan subjek mana pun — sama seperti **F2**, ini beban penjadwal/orkestrasi.
+**Jangkauan (diverifikasi `git show <basis>:…`):** baris itu ADA di **ke-11 basis batch** — `c8f60d5`, `fccf0b6`, `c118c52`, `abd0f47`, `f4d2c7b`, `60b3214`, `f7ce94c`, `92c3634`, `cdf8bdb`, `55cbe23`, `341fbd3` (label `state AT-KK-03`, `sisi A AT-KK-06`, `state retest AT-KK-05/05b` = 1 hit di tiap basis). Jadi paparan ini **pra-ada** (ditulis sesi persiapan 9 Sep, masuk `main` sebelum Run 9) dan **bukan** tindakan subjek mana pun — sama seperti **F2**, ini beban penjadwal/orkestrasi.
 
 **Materialitas per kode (penilaian pencatat, jujur):**
 
