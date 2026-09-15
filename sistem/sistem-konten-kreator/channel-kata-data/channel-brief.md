@@ -16,7 +16,7 @@
 
 - [x] Semua bagian wajib di bawah terisi (tidak ada placeholder `[...]` tersisa)
 - [x] Semua pertanyaan di checklist konsistensi (bagian 4) sudah dijawab
-- [ ] Setiap elemen visual yang ditandai wajib sudah berstatus `Reference-Ready` (elemen `palet-gaya-data` dibangun langkah 4 via kit 04 — belum ada saat brief ini ditulis)
+- [x] Setiap elemen visual yang ditandai wajib sudah berstatus `Reference-Ready` (`palet-gaya-data`: 3 acuan PNG lolos audit, 1 regen style-sheet — detail `konsistensi-visual/CATATAN-ASSET.md`)
 - [x] `arsip-naskah/indeks.md` dan `arsip-naskah/indeks-karakter.md` sudah dibuat (ada, keduanya kosong karena channel baru)
 - [ ] Sudah `Merged` ke `main`
 
@@ -68,7 +68,7 @@
 
 **Palet Warna & Gaya Render**
 
-> [x] Ada, lihat detail di `konsistensi-visual/palet-gaya-data/` (dibangun langkah 4 via `04_CHARACTER_BUILDER_KIT.md`) dan bagian 5. Mencakup: gaya motion-infografis flat, palet terkunci, treatment angka raksasa, gaya chart sederhana (bar/donut), dan kartu sumber. Status saat ini: acuan ADA (palet + style-sheet + contoh negatif, lolos audit) — `Reference-Ready` final menunggu G2 elemen.
+> [x] Ada, lihat detail di `konsistensi-visual/palet-gaya-data/` (dibangun langkah 4 via `04_CHARACTER_BUILDER_KIT.md`) dan bagian 5. Mencakup: gaya motion-infografis flat, palet terkunci, treatment angka raksasa, gaya chart sederhana (bar/donut), dan kartu sumber. Status: `Reference-Ready` (G2 2026-09-15).
 
 **Props/Objek Berulang**
 

@@ -2,7 +2,7 @@
 
 ### Dibangun via `04_CHARACTER_BUILDER_KIT.md` — 2026-09-15. Elemen milik channel `channel-kata-data`. Ini "kunci keluarga visual" yang membuat semua episode langsung dikenali di feed.
 
-**Status:** `Calon Reference-Ready` — acuan wajib ADA di `referensi/` dan lolos audit visual (`../CATATAN-ASSET.md`): `referensi/palet.png` + `referensi/style-sheet.png` + `referensi/contoh-negatif-gaya-salah.png`. Status final `Reference-Ready` ditetapkan setelah G2 elemen.
+**Status:** `Reference-Ready` — G2 `setuju_g2` 2026-09-15; acuan wajib ADA di `referensi/` dan lolos audit visual (`../CATATAN-ASSET.md`): `referensi/palet.png` + `referensi/style-sheet.png` + `referensi/contoh-negatif-gaya-salah.png`.
 
 ## Jenis Elemen
 
@@ -66,3 +66,4 @@ realistic shadows, no photo elements, no people, no clip-art, maximum
 | 2026-09-15 | Aksen = kuning elektrik `#FFD60A` (bukan hijau mint) | Pilihan pemilik (`kuning`) — kontras tertinggi di layar HP |
 | 2026-09-15 | Referensi gaya = 1 gambar web (bar vertikal mediamodifier), arahan saja, tidak direproduksi | Tugas pemilik + aturan kit 04 (rujukan eksternal dicatat di SUMBER.md) |
 | 2026-09-15 | Kartu sumber & bingkai angka = bagian elemen ini, bukan props terpisah | Keputusan brief G2 — faceless, tidak ada props |
+| 2026-09-15 | G2 Approved — elemen dikunci + `Reference-Ready` | Pemilik setuju via ask_user `setuju_g2` 2026-09-15 |
