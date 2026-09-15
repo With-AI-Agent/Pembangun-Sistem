@@ -3,14 +3,16 @@
 - **Status:** `in-progress`
 - **Channel:** Kata Data (`sistem/sistem-konten-kreator/channel-kata-data/`, Channel Brief v1 Approved)
 - **Model konten:** Data 60 Detik v1 Approved (Alur Kerja Kustom + Tahap 0)
-- **Tahap terakhir selesai:** Tahap 5 Generate Assets (5 frame + audit LOLOS — menunggu G1)
-- **Tahap berikutnya:** Tahap 6 Assembly & Publish Prep (setelah G1 Tahap 5)
+- **Tahap terakhir selesai:** Tahap 5 Generate Assets (G1 disetujui 2026-09-15)
+- **Tahap berikutnya:** Tahap 6 Assembly & Publish Prep (publish-prep + arsip ditulis — menunggu G2 konten final)
 - **Output resmi:**
   - `ideation.md` (Tahap 0 ringkasan + opsi ide)
   - `konsep-angle.md` (Tahap 2 kerangka — G1 disetujui)
   - `naskah-draft.md` (naskah FINAL, G2 dikunci)
   - `breakdown-output.md` (5 frame — G1+G2 dikunci)
-  - `assets/` (F1–F5 + CATATAN-ASSET.md — audit LOLOS, menunggu G1)
+  - `assets/` (F1–F5 + CATATAN-ASSET.md — G1 disetujui)
+  - `publish-prep.md` (judul + caption + hashtag + thumbnail — menunggu G2)
+  - arsip: naskah + sumber + metadata + indeks (ditulis — menunggu G2)
 - **Sumber konteks yang dibaca:** Channel Brief Kata Data v1, Model Brief Data 60 Detik v1, 05 pipeline, 06 prompt library, bank `palet-gaya-data`, `arsip-naskah/indeks.md` (kosong)
 - **Sumber eksternal dipakai:** ada — `SUMBER.md` dibuat, klaim belum terverifikasi: tidak ada
 - **Keputusan baru:** Produksi berjalan di branch yang sama sebelum merge (brief Approved, isi dikunci) — instruksi tugas sesi ini; folder produksi sesi lain tidak disentuh
@@ -19,7 +21,7 @@
   - `G1 Tahap 2:` disetujui 2026-09-15
   - `G1+G2 Tahap 3 (naskah final):` disetujui 2026-09-15
   - `G1+G2 Tahap 4 (breakdown):` disetujui 2026-09-15
-  - `G1 Tahap 5:` belum
+  - `G1 Tahap 5:` disetujui 2026-09-15
   - `G2 konten final:` belum
   - `G3 merge:` belum
 - **Commit terakhir:** (diisi saat commit)
