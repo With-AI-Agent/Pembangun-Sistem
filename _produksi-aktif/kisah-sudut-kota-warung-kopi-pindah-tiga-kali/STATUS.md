@@ -1,17 +1,17 @@
 # Status Produksi — Kisah Sudut Kota — Warung Kopi yang Pindah Tiga Kali
 
-- **Status:** `ready-for-review`
+- **Status:** `approved`
 - **Channel:** Kisah Sudut Kota (`sistem/sistem-konten-kreator/channel-fixture-kisah-sudut-kota/`, Channel Brief **v3**)
 - **Model konten:** Kartu Teks 8–10 **v1 `Approved`** (G2-a 2026-09-15) — kerangka standar + override ringan, unit = kartu teks
-- **Tahap terakhir selesai:** Tahap 6 Assembly & Publish Prep **ditulis, menunggu G2**; Tahap 5 **TIDAK BERLAKU (konten teks-only)** — 0 asset digenerate
-- **Tahap berikutnya:** G2 konten final + metadata → PR tanpa auto-merge → G3 merge (keputusan pemilik) → folder produksi dihapus setelah konten dipakai
+- **Tahap terakhir selesai:** **seluruh 6 tahap selesai** (Tahap 5 tidak berlaku — teks-only). **G2 konten final + metadata disetujui 2026-09-15**
+- **Tahap berikutnya:** PR tanpa auto-merge → **G3 merge = keputusan pemilik** → folder produksi dihapus setelah konten dipakai/diunduh
 - **Output resmi:**
   - `ideation.md` (Tahap 1 — 4 opsi + cek arsip + ide terpilih, G1 disetujui)
   - `konsep-angle.md` (Tahap 2 — angle + hook + peta 9 kartu + kepatuhan batasan; **G1 disetujui**)
   - `naskah-draft.md` (Tahap 3 — naskah **FINAL** G2 dikunci, 9 kartu, 179 kata)
   - `breakdown-output.md` (Tahap 4 — 9 kartu teks, 0 asset; **G1 + G2 disetujui**)
-  - `publish-prep.md` (Tahap 6 — 5 opsi judul + caption + hashtag + tanpa thumbnail; **menunggu G2**)
-  - arsip: naskah + metadata + entri indeks (ditulis — menunggu G2)
+  - `publish-prep.md` (Tahap 6 — 5 opsi judul + caption + hashtag + tanpa thumbnail; **G2 disetujui**)
+  - arsip: naskah + metadata + entri indeks (**ditulis, G2 disetujui**)
   - `cek-kartu.py` (pemeriksa batas model + breakdown — PASS, keduanya sudah diuji-mutasi)
   - `assets/` — **tidak akan ada**: konten teks-only, Tahap 5 tidak berlaku
 - **Sumber konteks yang dibaca:** `channel-fixture-kisah-sudut-kota/channel-brief.md` v3, `model-konten/kartu-teks-8-10/brief.md` v1, `_sistem/05_CONTENT_PRODUCTION_PIPELINE.md`, `_sistem/06_PROMPT_LIBRARY.md`, `_sistem/01_BRAND_CORE.md` (masih generator kosong — gap dilaporkan), `arsip-naskah/indeks.md` (1 entri), `arsip-naskah/indeks-karakter.md` (1 entri). **Bank Konsistensi Visual dilewati — channel tidak mengunci elemen visual apa pun dan model ini teks-only tanpa gambar.**
@@ -28,13 +28,13 @@
   - `G1 Tahap 4 (Breakdown — 9 kartu teks):` disetujui 2026-09-15
   - `G2 breakdown:` disetujui 2026-09-15
   - `Tahap 5:` tidak berlaku (konten teks-only) — 0 asset, tercatat di sini sebagai keputusan sadar
-  - `G2 konten final:` belum
-  - `G3 merge:` belum
+  - `G2 konten final + metadata:` disetujui 2026-09-15
+  - `G3 merge:` belum — PR tanpa auto-merge, merge = keputusan pemilik
 - **Commit terakhir:** (diisi saat commit)
 - **PR terkait:** belum ada
 - **Pekerjaan belum tersimpan:** Tidak ada
 - **Risiko atau blocker:** tidak ada
-- **Waktu pembaruan:** 2026-09-15 (Tahap 6 — menunggu G2)
+- **Waktu pembaruan:** 2026-09-15 (produksi selesai — menunggu G3)
 
 ## Aturan
 
