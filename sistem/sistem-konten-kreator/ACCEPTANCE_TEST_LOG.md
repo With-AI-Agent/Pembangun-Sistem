@@ -2083,3 +2083,34 @@ Penilaian pencatat: ini **penyimpangan** (bukti karangan + tuduhan keliru sempat
 - **Status gate:** gate `Operational` suite dan backlog **G-1 tetap terbuka**; pencatat **tidak** menutup gate dan **tidak** mengisi LULUS untuk 5 kode di atas.
 
 ---
+
+## Addendum pencatat (Tahap F, 15 Sep 2026) — F9: baris manifest membawa label kode test + state fixture di jalur orientasi
+
+Ditemukan saat **audit ulang jalur orientasi 6a** (Tahap F, setelah semua penulisan selesai), bukan saat penilaian Tahap C. Dicatat append-only; **tidak ada verdict yang berubah** (alasan materialitas per kode di bawah).
+
+**Faktanya.** Baris changelog `SYSTEM_MANIFEST.md` (KK) bertanggal **9 Sep 2026 / versi `0.3.10`** ("Persiapan clean-run G-1") memetakan state fixture ke **kode test** secara eksplisit, di berkas yang **wajib dibaca** sesi baru (jalur orientasi: `START_DI_SINI.md` → `00_CARA_PAKAI_SISTEM.md` → log `OPEN` → indeks/manifest):
+
+- "(1) unit produksi baru `_produksi-aktif/fixture-narasi-sejarah-pintu-kos…/` (Tahap 3 selesai, naskah r1 135 kata, G1 Tahap 1/2/3 disetujui, G2 naskah final belum — **state retest AT-KK-05/05b**)";
+- "(2) arsip fixture `2026-09-09-penjual-bunga-di-pasar-subuh` (naskah final + **karakter Tipe B** 'Nenek Penjual Bunga' tercatat di `indeks-karakter.md`) — **state AT-KK-03**";
+- "(3) channel fixture baru `channel-fixture-kisah-sudut-kota/` (brief + model + arsip kosong) — **state AT-KK-03b/08**";
+- "(4) Channel Brief Narasi Sejarah v2 (contoh kalimat pembuka) — **sisi A AT-KK-06 (sisi B = branch `uji-06-branch-b` di remote)**";
+- kolom "Alasan / bukti" baris yang sama memuat **premis** AT-KK-03b ("channel yang TIDAK PERNAH membuat `arsip-naskah/indeks-karakter.md`") + alasan pengecualian validator.
+
+**Jangkauan (diverifikasi `git show <basis>:…`):** baris itu ADA di **ke-11 basis batch** — `c8f60d5`, `fccf60b5`→`fccf0b6`, `c118c52`, `abd0f47`, `f4d2c7b`, `60b3214`, `f7ce94c`, `92c3634`, `cdf8bdb`, `55cbe23`, `341fbd3` (label `state AT-KK-03`, `sisi A AT-KK-06`, `state retest AT-KK-05/05b` = 1 hit di tiap basis). Jadi paparan ini **pra-ada** (ditulis sesi persiapan 9 Sep, masuk `main` sebelum Run 9) dan **bukan** tindakan subjek mana pun — sama seperti **F2**, ini beban penjadwal/orkestrasi.
+
+**Materialitas per kode (penilaian pencatat, jujur):**
+
+| Kode / run | Isi yang terpapar | Materiil? | Verdict |
+|---|---|---|---|
+| AT-KK-05 / Run 9, AT-KK-05b / Run 10 | State unit produksi fixture dirinci (tahap, jumlah kata, gerbang mana yang sudah/belum) + label "state retest" | **Materiil** — menyodorkan premis keadaan yang harusnya ditemukan/dipulihkan sendiri; ini **saluran paparan kedua** di samping yang sudah dicatat di bagian Run 9 (body PR #35 + 6d) dan Run 10 (`LOG_SESI_2026-09-10.md` L37–38) | tetap **GAGAL-metode** (tidak berubah) |
+| AT-KK-06 / Run 16 | "sisi A / sisi B" + nama branch fixture `uji-06-branch-b` | **Materiil** — membocorkan bahwa ada dua sisi revisi yang sengaja dipisah, yaitu premis uji konflik | tetap **GAGAL-metode** (tidak berubah) |
+| AT-KK-03 / Run 11 | Nama karakter Tipe B + lokasi catatannya (`indeks-karakter.md`) | **Non-materiil** — perilaku "baca `indeks-karakter.md` sebelum membuat deskripsi Tipe B baru" diwajibkan aturan normatif `06` bagian A2 yang memang dibaca subjek; baris manifest menunjuk **lokasi** (yang juga terlihat dari isi repo), bukan **jawaban** | tetap **LULUS** |
+| AT-KK-03b / Run 12 | Premis "channel yang tidak pernah membuat `indeks-karakter.md`" + alasan pengecualian validator | **Non-materiil** — state itu teramati langsung dari repo (berkasnya memang tidak ada) dan perilakunya diwajibkan `06` A2; subjek tetap **membuat** berkas itu lalu melaporkan apa adanya | tetap **LULUS** |
+| AT-KK-08 / Run 18 | Label "state AT-KK-03b/08" pada channel fixture | Level label; tidak memuat klausul AT-KK-08 | tetap **GAGAL-metode** (landasannya dokumen terlarang pra-G2) |
+| AT-KK-01 / 02 / 04 / 07 (Run 13/14/15/17) | Tidak disebut di baris itu | Tidak ada paparan dari saluran ini | tidak berubah |
+
+**Tindak lanjut (bukan wewenang pencatat):** baris ini masuk **daftar higiene re-run** bersama temuan F2/F7 — redaksi per pola 6d (narasi state/label test → pointer + "(diredaksi per pola 6d; bukti utuh di `ACCEPTANCE_TEST_LOG.md` / riwayat commit"), dikerjakan **sesi terpisah**, bukan sesi pencatat, dan **tanpa** mengubah dokumen aturan selama re-run. Pencatat **tidak** menyunting baris historis itu di sesi ini (baris changelog = catatan historis; koreksinya milik sesi perbaikan + pemilik).
+
+**Hasil audit Tahap F yang lain (ringkas):** 37 probe frasa klausul AT-KK (diambil dari butir `Then:` + `Gagal kalau:` di `ACCEPTANCE_TESTS.md`) digrep atas **16 berkas jalur orientasi** di head sesi ini (`_sistem/START_DI_SINI.md`, `_sistem/00_CARA_PAKAI_SISTEM.md`, `_meta/INDEKS_SISTEM.md`, `SYSTEM_MANIFEST.md` KK, dan **12** `LOG_SESI` berstatus `OPEN`) → **0 hit**. Berkas yang disinkronkan di Tahap E hanya membawa **status + versi + pointer**; tidak ada rumusan klausul yang keluar dari `ACCEPTANCE_TESTS.md`/`ACCEPTANCE_TEST_LOG.md`.
+
+---
