@@ -54,6 +54,57 @@ def ekstrak_kartu(teks):
     return kartu
 
 
+KET_TB = "tidak berlaku — konten teks-only"
+
+
+def cek_breakdown(folder):
+    """Verifikasi breakdown-output.md: unit = kartu teks, tanpa asset, tanpa prompt karangan.
+
+    Memeriksa klaim yang ditulis di berkas itu sendiri, supaya tanda centang di
+    dokumen tidak pernah lepas dari isi berkasnya.
+    """
+    path = os.path.join(folder, "breakdown-output.md")
+    if not os.path.isfile(path):
+        return 0, []
+    teks = baca(path)
+    baris = [b for b in teks.splitlines()
+             if re.match(r"^\|\s*\d+/\d+\s*\|", b)]
+    gagal = []
+    print("CEK BREAKDOWN — unit kartu teks")
+    print("  jumlah unit (baris n/9) :", len(baris))
+
+    kolom_tb = sum(b.count(KET_TB) for b in baris)
+    print("  keterangan eksplisit '%s' : %d (harus 2 x unit = %d)"
+          % (KET_TB, kolom_tb, 2 * len(baris)))
+    if kolom_tb != 2 * len(baris):
+        gagal.append("keterangan 'tidak berlaku' = %d, seharusnya %d (2 per kartu)"
+                     % (kolom_tb, 2 * len(baris)))
+
+    aksen = sum(b.count("Aksen:") for b in baris)
+    print("  arahan 'Aksen:'          : %d (harus tepat 1 per unit = %d)"
+          % (aksen, len(baris)))
+    if aksen != len(baris):
+        gagal.append("jumlah 'Aksen:' = %d, seharusnya %d (satu per kartu)"
+                     % (aksen, len(baris)))
+
+    # tidak boleh ada sel prompt generate yang diisi sesuatu selain keterangan
+    for b in baris:
+        sel = [x.strip() for x in b.strip().strip("|").split("|")]
+        if len(sel) >= 5:
+            for idx, nama in ((2, "prompt generate"), (3, "referensi visual")):
+                if sel[idx] and KET_TB not in sel[idx]:
+                    gagal.append("baris '%s' kolom %s tidak kosong-berketerangan: %r"
+                                 % (sel[0], nama, sel[idx]))
+    if gagal:
+        print("  kolom prompt/referensi    : ADA YANG TERISI / TIDAK LENGKAP")
+    else:
+        print("  kolom prompt/referensi    : semua %d baris berketerangan eksplisit"
+              % len(baris))
+    for g in gagal:
+        print("  -", g)
+    return len(baris), gagal
+
+
 def main():
     folder = os.path.dirname(os.path.abspath(__file__))
     path = os.path.join(folder, "naskah-draft.md")
@@ -103,6 +154,9 @@ def main():
     # perkiraan waktu baca: 150 kata/menit (kecepatan baca santai)
     detik = total / 150.0 * 60
     print("  waktu baca       : ~%.0f detik pada 150 kata/menit" % detik)
+
+    n_unit, gagal_bd = cek_breakdown(folder)
+    gagal.extend(gagal_bd)
 
     if gagal:
         print("HASIL: FAIL")

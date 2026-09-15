@@ -3,14 +3,14 @@
 - **Status:** `in-progress`
 - **Channel:** Kisah Sudut Kota (`sistem/sistem-konten-kreator/channel-fixture-kisah-sudut-kota/`, Channel Brief **v3**)
 - **Model konten:** Kartu Teks 8–10 **v1 `Approved`** (G2-a 2026-09-15) — kerangka standar + override ringan, unit = kartu teks
-- **Tahap terakhir selesai:** Tahap 2 Konsep & Angle (**G1 disetujui** 2026-09-15); Tahap 3 naskah r1 **ditulis + terverifikasi skrip, menunggu G1 + G2**
-- **Tahap berikutnya:** G1+G2 Tahap 3 → Tahap 4 Breakdown (unit kartu teks)
+- **Tahap terakhir selesai:** Tahap 3 Naskah (**G1 + G2 naskah final disetujui** 2026-09-15, 9 kartu / 179 kata); Tahap 4 Breakdown **ditulis + terverifikasi skrip, menunggu G1 + G2**
+- **Tahap berikutnya:** G1+G2 Tahap 4 → Tahap 5 (tidak berlaku, teks-only) → Tahap 6 Assembly & Publish Prep
 - **Output resmi:**
   - `ideation.md` (Tahap 1 — 4 opsi + cek arsip + ide terpilih, G1 disetujui)
   - `konsep-angle.md` (Tahap 2 — angle + hook + peta 9 kartu + kepatuhan batasan; **G1 disetujui**)
-  - `naskah-draft.md` (Tahap 3 — naskah r1, 9 kartu, 179 kata; **menunggu G1 + G2**)
-  - `cek-kartu.py` (pemeriksa batas model — PASS, sudah diuji-mutasi)
-  - `breakdown-output.md` — belum (unit: kartu teks)
+  - `naskah-draft.md` (Tahap 3 — naskah **FINAL** G2 dikunci, 9 kartu, 179 kata)
+  - `breakdown-output.md` (Tahap 4 — 9 kartu teks, 0 asset; **menunggu G1 + G2**)
+  - `cek-kartu.py` (pemeriksa batas model + breakdown — PASS, keduanya sudah diuji-mutasi)
   - `assets/` — **tidak akan ada**: konten teks-only, Tahap 5 tidak berlaku
 - **Sumber konteks yang dibaca:** `channel-fixture-kisah-sudut-kota/channel-brief.md` v3, `model-konten/kartu-teks-8-10/brief.md` v1, `_sistem/05_CONTENT_PRODUCTION_PIPELINE.md`, `_sistem/06_PROMPT_LIBRARY.md`, `_sistem/01_BRAND_CORE.md` (masih generator kosong — gap dilaporkan), `arsip-naskah/indeks.md` (1 entri), `arsip-naskah/indeks-karakter.md` (1 entri). **Bank Konsistensi Visual dilewati — channel tidak mengunci elemen visual apa pun dan model ini teks-only tanpa gambar.**
 - **Sumber eksternal dipakai:** Tidak ada
@@ -21,8 +21,8 @@
 - **Approval yang sudah diberikan:**
   - `G1 Tahap 1 (Ideation — ide "Warung kopi yang pindah tiga kali tanpa ganti nama"):` disetujui 2026-09-15
   - `G1 Tahap 2 (Konsep & Angle — peta 9 kartu):` disetujui 2026-09-15
-  - `G1 Tahap 3 (Naskah):` belum
-  - `G2 naskah final:` belum
+  - `G1 Tahap 3 (Naskah):` disetujui 2026-09-15
+  - `G2 naskah final (9 kartu, 179 kata):` disetujui 2026-09-15
   - `G1 Tahap 4 (Breakdown):` belum
   - `G2 breakdown:` belum
   - `Tahap 5:` tidak berlaku (konten teks-only)
@@ -32,7 +32,7 @@
 - **PR terkait:** belum ada
 - **Pekerjaan belum tersimpan:** Tidak ada
 - **Risiko atau blocker:** tidak ada
-- **Waktu pembaruan:** 2026-09-15
+- **Waktu pembaruan:** 2026-09-15 (Tahap 4)
 
 ## Aturan
 
