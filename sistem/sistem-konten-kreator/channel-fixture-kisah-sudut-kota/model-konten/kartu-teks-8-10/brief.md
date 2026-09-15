@@ -45,8 +45,8 @@ Dua catatan pewarisan yang dinyatakan jujur, bukan disembunyikan:
 - **Struktur konten khas format ini:**
   1. **Kartu 1 — Hook:** satu sudut kota konkret sebagai pintu masuk, ≤ 15 kata. Boleh memakai pola pembuka khas channel (*"Di sudut [tempat], ada satu kebiasaan yang tidak pernah berubah."*).
   2. **Kartu 2 — Kebiasaan yang menempel:** apa yang selalu terjadi di sudut itu.
-  3. **Kartu 3 sampai n−2 — Akumulasi:** tiap kartu menambah satu detail atau satu lapis pengamatan. Tidak ada kartu yang mengulang gagasan kartu sebelumnya.
-  4. **Kartu n−1 — Yang berubah:** pergeseran, kehilangan, atau hal yang tidak lagi sama. Tanpa dramatisasi.
+  3. **Kartu 3 sampai n-2 — Akumulasi:** tiap kartu menambah satu detail atau satu lapis pengamatan. Tidak ada kartu yang mengulang gagasan kartu sebelumnya.
+  4. **Kartu n-1 — Yang berubah:** pergeseran, kehilangan, atau hal yang tidak lagi sama. Tanpa dramatisasi.
   5. **Kartu n — Penutup:** mengajak penonton melihat sudut terdekatnya sendiri. Boleh memakai pola penutup khas channel (*"Lain kali kamu lewat situ, lihat pelan-pelan."*).
 - **Platform paling cocok untuk format ini:** **platform-agnostik** — satu set kartu yang sama bisa dipakai sebagai **carousel Instagram** maupun **thread X/Twitter** tanpa diubah isinya. Ini **menambah** platform, **bukan mengganti** platform yang dikunci Channel Brief bagian 1 (YouTube Shorts + TikTok) — jadi Channel Brief tidak perlu direvisi untuk model ini.
 
