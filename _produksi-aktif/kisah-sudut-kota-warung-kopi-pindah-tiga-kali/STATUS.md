@@ -1,10 +1,10 @@
 # Status Produksi — Kisah Sudut Kota — Warung Kopi yang Pindah Tiga Kali
 
-- **Status:** `approved`
+- **Status:** `ready-for-review`
 - **Channel:** Kisah Sudut Kota (`sistem/sistem-konten-kreator/channel-fixture-kisah-sudut-kota/`, Channel Brief **v3**)
 - **Model konten:** Kartu Teks 8–10 **v1 `Approved`** (G2-a 2026-09-15) — kerangka standar + override ringan, unit = kartu teks
 - **Tahap terakhir selesai:** **seluruh 6 tahap selesai** (Tahap 5 tidak berlaku — teks-only). **G2 konten final + metadata disetujui 2026-09-15**
-- **Tahap berikutnya:** PR tanpa auto-merge → **G3 merge = keputusan pemilik** → folder produksi dihapus setelah konten dipakai/diunduh
+- **Tahap berikutnya:** **PR #60 terbuka (MERGEABLE, tanpa auto-merge)** → review independen → **G3 merge = keputusan pemilik** → folder produksi dihapus setelah konten dipakai/diunduh
 - **Output resmi:**
   - `ideation.md` (Tahap 1 — 4 opsi + cek arsip + ide terpilih, G1 disetujui)
   - `konsep-angle.md` (Tahap 2 — angle + hook + peta 9 kartu + kepatuhan batasan; **G1 disetujui**)
@@ -30,11 +30,11 @@
   - `Tahap 5:` tidak berlaku (konten teks-only) — 0 asset, tercatat di sini sebagai keputusan sadar
   - `G2 konten final + metadata:` disetujui 2026-09-15
   - `G3 merge:` belum — PR tanpa auto-merge, merge = keputusan pemilik
-- **Commit terakhir:** (diisi saat commit)
-- **PR terkait:** belum ada
+- **Commit terakhir:** lihat `git log --oneline origin/main..HEAD` (branch `arena/01a0a448-pembangun-sistem`)
+- **PR terkait:** **PR #60** (OPEN, MERGEABLE, tanpa auto-merge) — https://github.com/With-AI-Agent/Pembangun-Sistem/pull/60
 - **Pekerjaan belum tersimpan:** Tidak ada
 - **Risiko atau blocker:** tidak ada
-- **Waktu pembaruan:** 2026-09-15 (produksi selesai — menunggu G3)
+- **Waktu pembaruan:** 2026-09-15 (PR #60 terbuka — menunggu G3)
 
 ## Aturan
 
