@@ -7,8 +7,8 @@
 ## Status: `Draft` → `Reviewed` → `Approved` → `Merged` → `Operational`
 
 - [x] **Draft** — digali via Model Konten Discovery mode (b) 2026-09-15 (1 putaran, semua rekomendasi agen disetujui pemilik)
-- [ ] **Reviewed** — sudah dibaca lengkap oleh pengguna, koreksi sudah masuk (belum tentu final)
-- [ ] **Approved** — isi dikunci lewat gerbang **G2**, tapi masih di branch/PR
+- [x] **Reviewed** — dibaca lengkap oleh pemilik via viewer, 2026-09-15
+- [x] **Approved** — isi dikunci lewat gerbang **G2** 2026-09-15 (`setuju_g2`)
 - [ ] **Merged** — PR sudah lewat gerbang **G3** dan masuk ke `main`
 - [ ] **Operational** — sudah `Merged` DAN semua dependency wajibnya benar-benar ada (lihat Checklist Kelengkapan di bawah). Hanya status ini yang boleh dipakai untuk mulai produksi.
 
@@ -91,3 +91,4 @@ Konten "2 Jam Hilang di Jalan Tiap Hari":
 | 2026-09-15 | Model Konten Brief v1 Draft — Data 60 Detik untuk Kata Data | Discovery mode (b) 1 putaran — 30-60 dtk, struktur 4 beat baku, unit frame, alur kustom + Tahap 0 Riset |
 | 2026-09-15 | Mode Alur Kerja Kustom dipilih, bukan standar | Pemilik pilih `kustom_t0` — angka statistik = klaim berisiko, verifikasi 2 sumber harus sebelum ideation (preseden: Narasi 60 Detik) |
 | 2026-09-15 | Unit breakdown = frame; tanpa folder assets/; tanpa gerbang tambahan | Pemilik pilih `frame` — 1 frame = 1 layar 9:16; elemen channel tampil apa adanya |
+| 2026-09-15 | G2 Approved — Model Konten Brief v1 dikunci | Pemilik setuju via ask_user `setuju_g2` 2026-09-15 |

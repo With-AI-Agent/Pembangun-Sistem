@@ -105,7 +105,7 @@
 
 | Nama Model Konten | Folder | Status |
 |---|---|---|
-| Data 60 Detik | `model-konten/data-60-detik/` | `Draft` — menunggu G2 (ditulis 2026-09-15) |
+| Data 60 Detik | `model-konten/data-60-detik/` | `Approved` — G2 2026-09-15 (`setuju_g2`), menunggu Merged + induk Operational |
 
 ## 9. Arsip Naskah
 
