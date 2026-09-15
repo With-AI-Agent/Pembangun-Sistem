@@ -90,7 +90,7 @@ Model yang disetujui pemilik 11 Sep 2026 (dua gerbang + per-item untuk hal berba
 
 Tanda: [ATURAN] = dokumen aturan ditulis langsung dari rencana ini. [GENERATOR] = perlu prompt Discovery detail sendiri, ditulis dari nol dulu baru dijalankan (pola Langkah 3 alur meta). [TEMPLATE] = template diisi langsung.
 
-### Root `sistem-klinik/`
+### Root folder sistem ini (sistem/sistem-klinik/ di repo meta)
 
 | Dokumen | Fungsi | Tanda |
 |---|---|---|
@@ -102,7 +102,7 @@ Tanda: [ATURAN] = dokumen aturan ditulis langsung dari rencana ini. [GENERATOR] 
 | `10_LOG_SESI.md` | aturan log sesi sistem ini, self-contained (W-02); file log klinik di `_log-sesi/` level repo | [ATURAN] |
 | `ACCEPTANCE_TESTS.md` + `ACCEPTANCE_TEST_LOG.md` | skenario uji perilaku kit di `_fixture/` (AT-KL-xx) + bukti per run | [ATURAN]/[TEMPLATE] |
 
-### Dokumen inti `sistem-klinik/_sistem/`
+### Dokumen inti `_sistem/`
 
 | Dokumen | Fungsi | Tanda | Catatan |
 |---|---|---|---|
@@ -113,7 +113,7 @@ Tanda: [ATURAN] = dokumen aturan ditulis langsung dari rencana ini. [GENERATOR] 
 | `_sistem/05_TAWARAN_KAPABILITAS.md` | mekanisme tawaran riset plugin/skill: pemetaan kebutuhan sistem → kandidat (riset internet) → tabel rekomendasi (apa, dari mana, cara install, risiko, pengganti lokal) → keputusan pemilik → TANAM ke repo target (isi/vendor + prosedur) → registrasi di manifest target → wajib ditawarkan di SETIAP run dan di alur bangun/audit meta | **[GENERATOR]** | butuh prompt gali `05A_PROMPT_KAPABILITAS.md`; semantik "install" per runtime (lmarena = skrip/vendor dalam repo, Claude Code = folder skill) adalah inti yang harus digali, bukan ditebak |
 | `_sistem/06_RITME_KIT.md` | perakitan `kit/`: dokumen mana yang ikut (turunan berlabel versi), alat portabel subset, stamp versi, prosedur sync master→kit + cek otomatis "kit tidak basi", aturan promotable (kemampuan rawat inap → portabel), ritme rilis (Log Evolusi + tawaran naik-versi ke target lama) | [ATURAN] | bergantung 02/04/05 stabil lebih dulu |
 
-### Folder distribusi `sistem-klinik/kit/`
+### Folder distribusi `kit/`
 
 Kit = hasil rakitan (bukan sumber kebenaran; sumbernya master `_sistem/`):
 
@@ -139,7 +139,7 @@ kit/
 ### Bagian B — patch meta (PR TERPISAH, setelah rencana ini merge)
 
 Penanaman fitur #5 permintaan pemilik ke seluruh alur meta:
-1. `_meta/00_CARA_KERJA_META.md` — di alur "Membangun Sistem Baru" (setelah Langkah 1 Discovery) dan alur "Melanjutkan/Mengaudit" (langkah 2): langkah WAJIB-BERTAJUK **menawarkan** riset kapabilitas (plugin/skill) — tawaran, boleh ditolak; penolakan dicatat di Log Keputusan supaya tidak ditawari ulang. Sumber aturan turunan: `sistem-klinik/_sistem/05_TAWARAN_KAPABILITAS.md` (meta menyimpan salinan aktifnya sendiri — dua-duanya disinkron lewat acceptance test kit AT-KL).
+1. `_meta/00_CARA_KERJA_META.md` — di alur "Membangun Sistem Baru" (setelah Langkah 1 Discovery) dan alur "Melanjutkan/Mengaudit" (langkah 2): langkah WAJIB-BERTAJUK **menawarkan** riset kapabilitas (plugin/skill) — tawaran, boleh ditolak; penolakan dicatat di Log Keputusan supaya tidak ditawari ulang. Sumber aturan turunan: `_sistem/05_TAWARAN_KAPABILITAS.md` di folder ini (meta menyimpan salinan aktifnya sendiri — dua-duanya disinkron lewat acceptance test kit AT-KL).
 2. `_meta/01_DISCOVERY_LEVEL_0.md` — satu poin pertanyaan: "kapabilitas eksternal apa yang kemungkinan dibutuhkan sistem ini?" (jawaban masuk rencana kerangka, jadi acuan Langkah 3+).
 3. Versi meta naik (minor), regresi penuh dijalankan, review independen sesuai protokol meta.
 
@@ -170,7 +170,7 @@ Default SEMUA diterapkan (tidak ada yang di-offer satu-satu; tidak ada penonakti
 
 | Butir | Status | Diterapkan bagaimana di sistem ini |
 |---|---|---|
-| W-01 pegangan | diterapkan | `PANDUAN_PENGGUNA.md` + `PROMPT_ENTRI_UNIVERSAL.md` di root `sistem-klinik/` (sisi meta); sisi target: kit membawa `PROMPT-ENTRI-KIT.md` + `PROMPT-PENUTUP-KIT.md` |
+| W-01 pegangan | diterapkan | `PANDUAN_PENGGUNA.md` + `PROMPT_ENTRI_UNIVERSAL.md` di root folder sistem ini (sisi meta); sisi target: kit membawa `PROMPT-ENTRI-KIT.md` + `PROMPT-PENUTUP-KIT.md` |
 | W-02 LOG_SESI | diterapkan | aturan self-contained di `10_LOG_SESI.md`; turunan + template masuk `kit/`; langkah cari-OPEN/buka-tutup sudah di blok pembuka/penutup |
 | W-03 field checkpoint STATUS | diterapkan | `STATUS.md` sistem ini (unit pembangunan) + template status target di kit, field deterministik exact; validator global ikut mengawasi |
 | W-04 manifest | diterapkan | `SYSTEM_MANIFEST.md` di PR yang sama dengan rencana ini; `Tahap: kerangka` |
@@ -191,7 +191,7 @@ Default SEMUA diterapkan (tidak ada yang di-offer satu-satu; tidak ada penonakti
 | K-3 | Model approval | Dua gerbang + per-item untuk overwrite & install kapabilitas — "ikut saran terbaik" |
 | K-4 | Fitur kapabilitas | Split dua bagian: `_sistem/05` di kit + patch meta PR terpisah — disetujui eksplisit |
 | K-5 | Daftar cacat awal | Tidak diminta dari ingatan pemilik; seed = tambang arsip temuan meta, tumbuh per run — usulan agent, tidak ditolak pemilik |
-| K-6 | Nama | "Klinik Sistem" (folder `sistem-klinik/`) — usulan setelah pemilik menolak opsi sendiri untuk memilih; "Medical Sistem" tidak dipakai (campur bahasa + mengesankan domain medis). Kalau pemilik berubah pikiran, cukup diganti di review PR ini — belum ada yang menyinggung nama lain |
+| K-6 | Nama | "Klinik Sistem" (folder sistem ini: sistem/sistem-klinik/) — usulan setelah pemilik menolak opsi sendiri untuk memilih; "Medical Sistem" tidak dipakai (campur bahasa + mengesankan domain medis). Kalau pemilik berubah pikiran, cukup diganti di review PR ini — belum ada yang menyinggung nama lain |
 | K-7 | Target tanpa-umur | Pemilik 11 Sep 2026 (near-verbatim): "target tuh sebenarnya bukan hanya sistem lama, tapi juga bisa aja sistem yang baru yang dibuat setelah meta sistem ditingkatkan" → sasaran = keadaan, bukan umur; sistem baru yang lahir lengkap dilayani lewat jalur kontrol/upgrade yang sama (idempoten) |
 | K-8 | Sistem hidup (berevolusi) | Pemilik 11 Sep 2026: "sistem klinik ini juga kayanya perlu dibuat hidup dalam artian terus berkembang" → ditaatkan sebagai MEKANISME, bukan niat: Tahap F Panen wajib tiap run + ritme rilis kit lewat PR + cap versi = deteksi ketinggalan zaman (konsisten dengan QA-3-lapis prinsip 6; "hidup" tidak berarti "liar") |
 | K-9 | Anti-bengkak bengkel diperketat | Pemilik 13 Sep 2026 mengkritisi desain: "branch yang tidak di-merge ke main pun tetap bikin bengkak" — BENAR: objek branch ter-push masuk store repo (dan bertahan selama ref PR hidup). Aturan yang dikunci: (a) copy masuk bengkel SEADANYA — kerangka + dokumen yang dibedah saja, aset besar tidak ikut (daftar yang di-exclude tercatat di laporan diagnosis); (b) branch dihapus setelah pemulangan (keputusan sadar pemilik, bukan diam-diam); (c) PR bengkel hanya mengangkut berkas laporan; (d) konsekuensi disadari: bengkak bengkel dibatasi + sementara — dan justru karena itu suntik (yang tak memasukkan apa pun ke git meta) adalah DEFAULT sementara bengkel pengecualian ber-kuota |
