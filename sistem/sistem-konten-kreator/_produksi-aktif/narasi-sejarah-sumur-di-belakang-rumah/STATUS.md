@@ -1,0 +1,35 @@
+# Status Produksi — Narasi Sejarah — Sumur di Belakang Rumah
+
+- **Status:** `in-progress`
+- **Channel:** `channel-fixture-narasi-sejarah` (Channel Brief **v4**, G2 2026-09-15)
+- **Model konten:** `narasi-60-detik` (**v2**, G2 2026-09-15) — 55–65 detik, 108–125 kata, tempo channel 125 kata/menit, jeda 0,7 detik
+- **Tahap terakhir selesai:** Tahap 1 — Ideation (`ideation.md` sudah tersimpan, ide terpilih dikunci G1)
+- **Tahap berikutnya:** Tahap 2 — Konsep & Angle (`konsep-angle.md`), lalu berhenti minta G1
+- **Output resmi:**
+  - `ideation.md` — ADA
+  - `konsep-angle.md` — belum
+  - `naskah-draft.md` — belum
+  - `breakdown-output.md` — belum
+  - `assets/` — belum
+- **Sumber konteks yang dibaca:** `channel-fixture-narasi-sejarah/channel-brief.md` v4; `model-konten/narasi-60-detik/brief.md` v2; `model-konten/narasi-riset-60-detik/brief.md` v2; `arsip-naskah/indeks.md`; `arsip-naskah/indeks-karakter.md`; `_sistem/05_CONTENT_PRODUCTION_PIPELINE.md`; `_sistem/06_PROMPT_LIBRARY.md` (A2); `_sistem/00_CARA_PAKAI_SISTEM.md`; `_sistem/START_DI_SINI.md`; `_sistem/01_BRAND_CORE.md` — **masih template kosong** (gap warisan yang sudah dideklarasikan di Channel Brief; dilaporkan, tidak diisi diam-diam)
+- **Sumber eksternal dipakai:** `Tidak ada`
+- **Keputusan baru:**
+  - Ide terpilih = "Sumur di belakang rumah" (Opsi 4 dari 4 opsi yang diajukan); tiga opsi lain beserta alasan dan catatan tumpang tindihnya tercatat di `ideation.md`.
+  - Tidak ada karakter Tipe B baru; channel faceless dan ide ini tidak memakai tokoh.
+  - Naskah dijaga bebas dari klaim sejarah spesifik (tanpa angka tahun, statistik, atau nama tokoh) sesuai batasan Channel Brief — karena itu `SUMBER.md` belum perlu dibuat. Kalau nanti naskah memuat klaim yang butuh rujukan, `SUMBER.md` dibuat lebih dulu, bukan direkonstruksi belakangan.
+- **Approval yang sudah diberikan:**
+  - `G1 Tahap 1 (Ideation):` disetujui 2026-09-15
+  - `G1 Tahap 2 (Konsep & Angle):` belum
+  - `G1 Tahap 3 (Naskah draft):` belum
+  - `G2 naskah final:` belum
+  - `G2 Channel Brief v4:` disetujui 2026-09-15 (di luar unit ini — commit `bc545dd`)
+  - `G2 brief model narasi-60-detik v2:` disetujui 2026-09-15 (commit `bc545dd`)
+  - `G3 merge:` belum
+- **Commit terakhir:** lihat `git rev-parse HEAD`
+- **PR terkait:** belum ada (PR dibuka di akhir sesi, tanpa auto-merge)
+- **Pekerjaan belum tersimpan:** Tidak ada
+- **Risiko atau blocker:**
+  - Channel Brief v4 dan kedua brief model v2 **belum masuk `main`** (G3 belum). Produksi ini mewarisi brief yang sudah dikunci G2 tapi belum merged — dicatat sadar, bukan disembunyikan.
+  - Brand Core masih template kosong → warisan konteks dari Brand Core tidak ada; sudah dideklarasikan di Channel Brief.
+  - Rentang kata baru (108–125) belum pernah dipakai produksi nyata mana pun; ini produksi pertama yang memakainya.
+- **Waktu pembaruan:** 2026-09-15
