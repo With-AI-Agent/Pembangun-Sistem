@@ -266,7 +266,14 @@ def review_prompt_scenarios(base_dir: Path):
     urutan baca yang menjatuhkan Markdown root, jendela-uji yang dipicu
     log penulis PR sendiri, dan daftar berkas PR yang terpotong 100 berkas
     karena `gh pr view --json files` tidak dipaginasi (RP5 — T-2, temuan
-    review PR #55, 15 Sep 2026).
+    review PR #55).
+
+    RP5 diubah 15 Sep 2026 setelah temuan T-4 review PR #56: versi pertama
+    hanya memeriksa keberadaan teks `--paginate` di sumber (tautologi, bukan
+    perilaku). Kini yang diuji: argv yang benar-benar dipakai `fetch_pr_files`
+    (RP5b) dan penjaga konsistensi `resolve_pr_files` yang menolak daftar tak
+    konsisten (RP5a) — dua-duanya diuji-mutasi, dan mutasi yang tidak
+    mengubah apa pun membuat uji gagal (bukan lolos palsu).
     """
     checks = []
     cp = base_dir / "repo"
@@ -403,20 +410,60 @@ def review_prompt_scenarios(base_dir: Path):
     rp = _load_review_prompt(cp, "review_prompt_regression_files")
 
     # RP5 (T-2): `gh pr view --json files` berhenti di 100 berkas, sehingga PR
-    # besar bisa terlihat "tidak menyentuh berkas pelindung". Daftar berkas
-    # wajib diambil dengan `gh api --paginate`.
+    # besar bisa terlihat "tidak menyentuh berkas pelindung". Dua hal diuji
+    # sebagai PERILAKU (bukan keberadaan teks di sumber): argv yang benar-benar
+    # dipakai, dan penjaga konsistensi yang menolak daftar tak konsisten.
+    argv = rp.files_command(42)
     checks.append((
-        "RP5 daftar berkas PR diambil via gh api --paginate + ada ambang konsistensi",
-        '"--paginate"' in inspect.getsource(rp.fetch_pr_files)
-        and "PR_FILES_VIEW_CAP" in inspect.getsource(rp.resolve_pr_files),
+        "RP5b argv daftar berkas memuat --paginate + path pulls/<n>/files",
+        "--paginate" in argv and "repos/{owner}/{repo}/pulls/42/files" in argv,
     ))
 
-    marker = '            "--paginate",\n'
-    rp_path.write_text(original.replace(marker, ""), encoding="utf-8")
-    rp_mut = _load_review_prompt(cp, "review_prompt_mut_rp5")
+    mut_pag = original.replace('        "--paginate",\n', '')
+    assert mut_pag != original, "mutasi RP5b tidak mengubah apa pun — uji tidak valid"
+    rp_path.write_text(mut_pag, encoding="utf-8")
+    rp_mut = _load_review_prompt(cp, "review_prompt_mut_rp5b")
     checks.append((
-        "RP5 diuji-mutasi: --paginate dihilangkan -> fetch_pr_files kehilangan paginasi",
-        '"--paginate"' not in inspect.getsource(rp_mut.fetch_pr_files),
+        "RP5b diuji-mutasi: --paginate dihapus -> argv kehilangan paginasi",
+        "--paginate" not in rp_mut.files_command(42),
+    ))
+    rp_path.write_text(original, encoding="utf-8")
+    rp = _load_review_prompt(cp, "review_prompt_regression_guard")
+
+    fakta = {"files": [{"path": "satu.md"}, {"path": "dua.md"}]}
+    rp.fetch_pr_files = lambda number: ["satu.md"]
+    try:
+        rp.resolve_pr_files(7, fakta)
+        menolak = False
+    except rp.ToolError:
+        menolak = True
+    checks.append((
+        "RP5a penjaga konsistensi menolak daftar berkas tak konsisten (fail-closed)",
+        menolak,
+    ))
+
+    rp.fetch_pr_files = lambda number: ["satu.md", "dua.md"]
+    checks.append((
+        "RP5a daftar konsisten diteruskan (penjaga tidak menolak sembarangan)",
+        rp.resolve_pr_files(7, fakta) == ["satu.md", "dua.md"],
+    ))
+
+    mut_guard = original.replace(
+        "if len(viewed) < PR_FILES_VIEW_CAP and len(viewed) != len(files):",
+        "if False and len(viewed) != len(files):",
+    )
+    assert mut_guard != original, "mutasi RP5a tidak mengubah apa pun — uji tidak valid"
+    rp_path.write_text(mut_guard, encoding="utf-8")
+    rp_mut = _load_review_prompt(cp, "review_prompt_mut_rp5a")
+    rp_mut.fetch_pr_files = lambda number: ["satu.md"]
+    try:
+        rp_mut.resolve_pr_files(7, fakta)
+        menolak_mut = False
+    except rp_mut.ToolError:
+        menolak_mut = True
+    checks.append((
+        "RP5a diuji-mutasi: penjaga dimatikan -> daftar tak konsisten lolos",
+        not menolak_mut,
     ))
     rp_path.write_text(original, encoding="utf-8")
 

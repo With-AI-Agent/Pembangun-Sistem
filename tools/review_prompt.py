@@ -138,6 +138,22 @@ def fetch_base_sha(number: int) -> str:
     return out.strip()
 
 
+def files_command(number: int) -> list[str]:
+    """argv `gh api` untuk daftar berkas PR — dipaginasi (T-2).
+
+    Dipisah menjadi fungsi sendiri supaya paginasinya bisa diuji sebagai nilai
+    yang benar-benar dipakai `fetch_pr_files`, bukan sekadar teks di sumber.
+    """
+    return [
+        "gh",
+        "api",
+        f"repos/{{owner}}/{{repo}}/pulls/{number}/files",
+        "--paginate",
+        "--jq",
+        ".[].filename",
+    ]
+
+
 def fetch_pr_files(number: int) -> list[str]:
     """Daftar berkas PR yang LENGKAP — fail-closed.
 
@@ -146,16 +162,7 @@ def fetch_pr_files(number: int) -> list[str]:
     berkas pelindung tersentuh, jadi pemotongan itu bisa membuat deteksi buta.
     Karena itu diambil lewat `gh api --paginate` supaya semua halaman ikut.
     """
-    code, out, err = _run(
-        [
-            "gh",
-            "api",
-            f"repos/{{owner}}/{{repo}}/pulls/{number}/files",
-            "--paginate",
-            "--jq",
-            ".[].filename",
-        ]
-    )
+    code, out, err = _run(files_command(number))
     if code != 0:
         raise ToolError(
             f"daftar berkas PR #{number} tidak bisa dibaca (gh api keluar {code}): "

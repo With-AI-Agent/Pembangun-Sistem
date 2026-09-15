@@ -80,21 +80,22 @@ jawaban jelas untuk 5 hal ini:
    - Jika Ya: baca `_meta/PLATFORM_LMARENA.md` — pahami fakta platform: branch arena otomatis dibuat (tidak bisa asumsi kerja di main), tidak bisa push setelah PR merge/close (platform cabut akses), sesi bisa crash kapan saja. Bagaimana fakta ini mempengaruhi checkpoint & recovery di sistem ini? Pastikan sistem menurunkan **log sesi berkelanjutan (`LOG_SESI`)** secara self-contained (aturan: `_meta/PROTOKOL_CHECKPOINT_RECOVERY.md` bagian "Log Sesi Berkelanjutan"; format: `_meta/TEMPLATE_LOG_SESI.md`) + langkah recovery log di prompt pembuka + langkah menutup log di prompt penutup pegangan.
    - Jika Tidak: tulis alasan override eksplisit (misal sistem manual 100% Obsidian) + approval. Jangan asumsi platform tidak relevan tanpa alasan.
 
-Setiap beberapa putaran, kasih ringkasan checkpoint: "Sejauh ini sistem
-ini kelihatannya: ..." supaya kita selalu align.
-
-Setelah kelima hal ini terjawab jelas, rangkum jadi rencana kerangka
-dengan struktur:
-
-# Rencana Kerangka — Sistem [Nama Sistem]
-
-
 6. KAPABILITAS EKSTERNAL (WAJIB — satu pertanyaan, dijawab sekilas saja):
    "kapabilitas eksternal apa yang kemungkinan dibutuhkan sistem ini?"
    (plugin/skill/library/alat — bukan wajib dipakai; jawabannya masuk
    rencana kerangka sebagai acuan tawaran di Langkah 1 alur bangun dan
    Langkah 2 alur audit/lanjut). Mekanisme tawarannya:
    sistem/sistem-klinik/_sistem/05_TAWARAN_KAPABILITAS.md.
+
+Setiap beberapa putaran, kasih ringkasan checkpoint: "Sejauh ini sistem
+ini kelihatannya: ..." supaya kita selalu align.
+
+Setelah keenam hal ini terjawab jelas, rangkum jadi rencana kerangka
+dengan struktur:
+
+# Rencana Kerangka — Sistem [Nama Sistem]
+
+
 ## Untuk Siapa/Apa
 [jawaban poin 1]
 
