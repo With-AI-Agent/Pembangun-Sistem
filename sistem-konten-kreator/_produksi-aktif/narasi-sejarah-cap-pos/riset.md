@@ -29,7 +29,7 @@ Riset dilakukan lewat web pada 2026-09-14 untuk mendukung satu produksi Narasi R
 - Cerita blog personal (blogombal, 2014) mengingat kebiasaan sehari-hari memeriksa kotak surat ayah setiap hari; ketegangan menunggu balasan surat. [S5 dari hasil pencarian kedua]
 
 ### 4. Ketika surat mulai tergantikan
-- **Periode 2000–2008** adalah masa paling suram bagi bisnis surat pos di Indonesia; menurun drastis karena digantikan **SMS (pesan singkat) melalui ponsel** dan internet. [S14, S15, S16, S17] — keempat sumber ini saling menguatkan.
+- **Periode 2000–2008** adalah masa paling suram bagi bisnis surat pos di Indonesia; menurun drastis karena digantikan **SMS (pesan singkat) melalui ponsel** dan internet. [S14, S15, S16, S17] — empat entri dari **3 penerbit independen** saling menguatkan (S14+S16 = Tirto.id = 1 penerbit; S15 = Jeda.id; S17 = Thidiweb); eprints.ulbi tidak ada di SUMBER.md.
 - Pos Indonesia kemudian bertransformasi ke logistik/paket dan jasa keuangan digital (sampai 2026). [S2]
 - Catatan: tulisan narasi tidak perlu menyebut angka kerugian perusahaan; fokusnya pada pengalaman "menunggu" yang hilang.
 

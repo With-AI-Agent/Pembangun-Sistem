@@ -45,7 +45,7 @@
   - `G1 Tahap 5 (Assets diterima):` disetujui 2026-09-14 (termasuk accepted limitation segmen 01/03)
   - `G2 final + metadata:` disetujui 2026-09-14 (judul "Lingkaran tinta di sudut amplop" terkunci)
   - `G3 merge:` belum (PR #54 menunggu review/merge manual oleh pengguna)
-- **Commit terakhir:** lihat `git rev-parse HEAD` di branch `arena/01a09fed-pembangun-sistem`; perubahan konten terakhir yang menyentuh artefak produksi/naskah/aset = commit `96b5a50` (G2 final + kunci judul tayang). Sinkronisasi pasca-merge main + pembaruan badan PR #54 = commit `5e47399` dan commit dokumen meta (`ec3c623`) yang ditumpuk di atasnya (2026-09-15).
+- **Commit terakhir:** lihat `git rev-parse HEAD` di branch `arena/01a09fed-pembangun-sistem`; perubahan konten terakhir yang menyentuh artefak produksi/naskah/aset = commit `96b5a50` (G2 final + kunci judul tayang). Merge sinkronisasi dengan `origin/main` = commit `5e47399` (2026-09-15). Koreksi putaran review 1 dan regenerasi 3 aset + metadata + peta-fakta = commit yang sedang dibuka (lihat `git rev-parse HEAD`). SHA hantu yang ter-amend saat finalisasi awal (`ec3c623` serta sha intermediet lain) tidak lagi ada di sejarah dan dihapus dari pointer ini; dicatat di LOG_SESI entri 2026-09-15 koreksi review.
 - **PR terkait:** PR #54 — https://github.com/With-AI-Agent/Pembangun-Sistem/pull/54 (dibuka 2026-09-14 ke `main`, tanpa auto-merge)
 - **Pekerjaan belum tersimpan:** Tidak ada
 - **Risiko atau blocker:** Tidak ada. Brand Core masih template kosong (gap dicatat di Channel Brief; produksi fixture tetap berjalan).

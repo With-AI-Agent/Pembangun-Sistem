@@ -30,13 +30,15 @@ Sekarang pesan tiba di detik yang sama. Tidak ada lagi jarak di antara dua waktu
 | Paragraf | Teks pembuka | Jumlah kata | Estimasi ucapan @130 kata/menit |
 |---|---|---:|---:|
 | 1 (hook) | "Dulu, ada satu benda…" | 14 | 6,5 detik |
-| 2 (fungsi cap — dua waktu) | "Cap itu ditabalkan…" | 47 | 21,7 detik |
-| 3 (rumah yang menanti) | "Dulu, ada rumah…" | 22 | 10,2 detik |
+| 2 (fungsi cap — dua waktu) | "Cap itu ditabalkan…" | 45 | 20,8 detik |
+| 3 (rumah yang menanti) | "Dulu, ada rumah…" | 21 | 9,7 detik |
 | 4 (yang berubah) | "Ketika ponsel…" | 19 | 8,8 detik |
-| 5 (penutup) | "Sekarang pesan…" | 28 | 12,9 detik |
+| 5 (penutup) | "Sekarang pesan…" | 31 | 14,3 detik |
 | **Total ucapan** |  | **130** | **= 60,0 detik** |
 | + 4 jeda antarparagraf × ~0,7 detik |  | — | ≈ +2,9 detik |
 | **Estimasi total** |  | — | **≈ 62,9 detik** (dalam rentang 55–65 detik) |
+
+> Catatan hitungan (koreksi review putaran 1): kata dihitung per paragraf sebagai token terpisah spasi (whitespace-split) pada isi VO di antara heading `## Naskah (voice over)` dan garis `---` pertama setelahnya, termasuk tanda baca yang menempel pada kata (mis. `"aku`, `saja".`, `waktu:`) dihitung satu token. Hasil per paragraf: p1=14, p2=45, p3=21, p4=19, p5=31; total 130. Teks VO TIDAK diubah.
 
 > Jeda dipasang di 4 titik antarparagraf dengan ruang napas sekitar 0,5–0,8 detik bergantung intonasi. Tidak terburu-buru; bila rekaman nyata melewati 65 detik, lakukan revisi teks (bukan mempercepat suara diam-diam) dan laporkan.
 

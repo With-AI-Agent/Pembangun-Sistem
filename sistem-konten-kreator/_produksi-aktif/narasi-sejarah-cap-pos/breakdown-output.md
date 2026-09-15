@@ -24,20 +24,20 @@
 - **File referensi visual:** tidak ada.
 
 ### Segmen 3 — Cap kedua di kota tujuan
-- **Bagian naskah:** *"Berhari-hari kemudian, di kota tujuan, cap kedua ditabalkan di belakang amplop."* (12 kata ≈ 5,5 detik)
+- **Bagian naskah:** *"Berhari-hari kemudian, di kota tujuan, cap kedua ditabalkan di belakang amplop."* (11 kata ≈ 5,1 detik)
 - **Deskripsi visual:** Balik amplop (bagian belakang) di atas meja; tanda cap hitam lain yang sudah agak pudar, di dekat lipatan amplop; amplop sedikit aus di pinggirnya; di sudut bingkai terlihat saku kotak surat kayu yang terbuka sedikit.
 - **Prompt generate:** `Single vertical 9:16 documentary-style still frame. The back of a slightly worn cream paper envelope resting near the opening of a simple wooden mailbox slot, a second faint black ink postmark on the rear flap, soft morning light at the destination, warm muted brown and cream palette, subtle film grain, quiet feeling of arrival. No people, no faces, no readable text/address, no logos, no watermark, no collage.`
 - **File referensi visual:** tidak ada.
 
 ### Segmen 4 — Dua waktu yang bertemu
-- **Bagian naskah:** *"Satu surat membawa dua waktu: waktu dikirim, dan waktu dibaca. Keduanya tidak pernah sama."* (15 kata ≈ 6,9 detik)
+- **Bagian naskah:** *"Satu surat membawa dua waktu: waktu dikirim, dan waktu dibaca. Keduanya tidak pernah sama."* (14 kata ≈ 6,5 detik)
 - **Deskripsi visual:** Dua bidikan diam bertumpuk halus (bukan split screen terang-terangan): di satu sisi bayangan cap depan amplop, di sisi lain bayangan cap belakang, dengan ruang kosong kertas kosong di tengah; seolah-olah kedua cap "bertemu" di atas kertas yang sama. Cahaya agak redup, suasana hening.
 - **Catatan visual khusus:** Jangan buat kolase/split screen eksplisit (Channel Brief melarang kolase); gunakan overlay transparan yang sangat lembut di atas kertas amplop sehingga kedua cap terlihat seperti berhimpit di satu permukaan.
 - **Prompt generate:** `Single vertical 9:16 documentary-style still frame. A quiet overhead view of an old cream envelope lying flat on a worn wooden surface, with two soft overlapping circular ink marks (suggesting two postmarks from different places meeting on the same paper) blended gently into the paper texture, dim warm light, mood of stillness and distance, faded brown-cream palette, light film grain. No collage grid, no split screen, no people, no readable text, no logos, no watermark.`
 - **File referensi visual:** tidak ada.
 
 ### Segmen 5 — Rumah yang menanti
-- **Bagian naskah:** *"Dulu, ada rumah yang menanti kabar dari orang jauh. Sebulan sekali, cap di kertas adalah tanda pertama bahwa perjalanan itu selesai."* (22 kata ≈ 10,2 detik)
+- **Bagian naskah:** *"Dulu, ada rumah yang menanti kabar dari orang jauh. Sebulan sekali, cap di kertas adalah tanda pertama bahwa perjalanan itu selesai."* (21 kata ≈ 9,7 detik)
 - **Deskripsi visual:** Sebuah kotak surat kayu sederhana di dinding luar rumah (rumah sederhana dinding kayu/papan di lingkungan perumahan/desa tahun 90-an yang digambarkan secara generik); celah kotak surat sedikit terbuka; satu amplop terselip di celah; cahaya pagi yang lembut; tidak ada orang di frame. Di dekatnya ada tanaman hijau tua pudar (sesuai palet).
 - **Catatan visual khusus:** Rumah digambarkan generik; jangan ada nomor rumah/plat nama/alamat yang bisa dibaca. Jangan tampilkan wajah orang.
 - **Prompt generate:** `Single vertical 9:16 documentary-style still frame. A simple weathered wooden mailbox slot attached to an old wooden exterior wall of a modest house, a single cream envelope peeking out from the slot, soft early morning light, a small faded dark-green plant nearby, muted brown-cream-dark-green palette, texture of aged wood and paper, quiet residential atmosphere, subtle film grain. No people, no faces, no house number or readable address, no brands, no watermark, no collage.`
@@ -51,7 +51,7 @@
 - **File referensi visual:** tidak ada.
 
 ### Segmen 7 — Penutup: pesan yang tiba di detik yang sama
-- **Bagian naskah:** *"Sekarang pesan tiba di detik yang sama. Tidak ada lagi jarak di antara dua waktu. Tidak ada yang mencatat bahwa sebuah tanggal sudah menempuh perjalanan jauh untuk sampai ke mata kita."* (28 kata ≈ 12,9 detik)
+- **Bagian naskah:** *"Sekarang pesan tiba di detik yang sama. Tidak ada lagi jarak di antara dua waktu. Tidak ada yang mencatat bahwa sebuah tanggal sudah menempuh perjalanan jauh untuk sampai ke mata kita."* (31 kata ≈ 14,3 detik)
 - **Deskripsi visual:** Sudut meja kayu yang SAMA dengan segmen 1 (kontinuitas), tapi kali ini permukaannya kosong — tidak ada amplop, tidak ada cap. Hanya bayangan lembut di tempat yang dulu biasa diletakkan amplop (atau tapak samar bekas benda di permukaan kayu). Cahaya pagi/siang ini lebih netral (tidak senja seperti segmen 1), namun palet tetap hangat dan sedikit pudar; kesan tenang melankolis, tidak dramatis.
 - **Catatan visual khusus:** Ini penutup yang kembali ke benda pintu masuk (lingkaran tinta) namun benda itu sudah tidak ada. Meja kayu yang sama untuk kontinuitas. Jangan buat terlalu gelap/suram.
 - **Prompt generate:** `Using the same worn wooden table surface described in segment 1 as visual continuity reference: single vertical 9:16 documentary-style still frame showing the quiet empty corner of the wooden table where the old envelope used to rest, just a faint faint shadow or faint ring/discoloration on the wood where something once lay, present-day neutral-warm morning light, preserve the table material and warm faded brown-cream palette without any envelope, stamp, postmark, phone, or object in the frame. No people, no faces, no hands, no logos, no readable text, no watermark, no collage.`
