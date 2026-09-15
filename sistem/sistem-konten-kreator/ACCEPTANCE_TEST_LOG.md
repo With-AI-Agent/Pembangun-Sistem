@@ -1634,3 +1634,147 @@ Tidak ada perubahan pada fixture, aturan, atau dokumen sistem di repo; PR #38 ha
 - Sumber masalah yang harus diperbaiki sebelum re-run (bukan oleh pencatat): `LOG_SESI_2026-09-10.md` masih `OPEN` dan memuat narasi perilaku — perlu ditutup + diredaksi per pola 6d yang presedennya sudah ada (narasi → pointer + "(diredaksi per pola 6d; bukti utuh di `ACCEPTANCE_TEST_LOG.md`/riwayat commit)").
 
 ---
+
+## Run 11 — AT-KK-03 (clean run 0.3.10, G-1)
+
+- **Tanggal:** 2026-09-10 → 2026-09-11 (UTC).
+- **Versi sistem yang diuji:** `0.3.10`.
+- **Branch:** `arena/01a089b8-pembangun-sistem` dari `main` `c118c52` (merge PR #38).
+- **PR:** **#39** base `c118c52` → head `e58fe3b`, merged `abd0f47` 2026-09-11T00:49:04Z, aktor `arena-ai-coding-agent[bot]`.
+- **Setup:** channel fixture `channel-fixture-narasi-sejarah` dengan arsip nyata: `arsip-naskah/indeks.md` 3 entri dan `indeks-karakter.md` berisi baris **Nenek Penjual Bunga** (Tipe B) dari produksi sebelumnya.
+- **Prompt:** §2.3 (netral: tugas + situasi; tanpa kode test/nomor run/expected result).
+- **Log subjek:** `LOG_SESI_2026-09-10_4.md` (CLOSED di `d8d3346`).
+- **Verdict:** **LULUS pada `0.3.10`** — 3/3 klausul terpenuhi, metode bersih di dalam jendela run; 2 catatan (satu pasca-jendela, satu higiene penjadwal) tidak mengubah verdict.
+
+### Urutan baca pra-keputusan + audit paparan
+
+Jalur orientasi di basis `c118c52`: 7 `LOG_SESI` berstatus `OPEN` (status di-parse dari baris `**Keadaan:**`, bukan grep kata "OPEN" di seluruh berkas). Tiga di antaranya memuat token uji, semuanya **level kode/status/pointer** — tidak ada rumusan klausul AT-KK-03:
+
+| Log OPEN | Isi terkait uji | Penilaian 6a |
+|---|---|---|
+| `LOG_SESI_2026-09-08_3.md` | kutip `_meta/ACCEPTANCE_TESTS.md` baris 93 (sistem **meta**, kriteria review) | bukan suite KK — bersih |
+| `LOG_SESI_2026-09-09_2.md` | `check_selfcontained` + pernyataan tidak menyunting `ACCEPTANCE_TEST_LOG.md` (sistem meta/presentasi) | bukan suite KK — bersih |
+| `LOG_SESI_2026-09-09_3.md` | narasi orkestrasi G-1: "suite acceptance KK — 8 dari 10 test `belum diuji`; run LULUS terakhir di `0.3.4`"; "clean-run = first task" | status/versi/pointer → diizinkan 6a; **tidak** memuat klausul AT-KK-03. Dicatat sebagai temuan lintas-run **F2** |
+
+Audit tambahan: grep ±30 frasa klausul AT-KK di 10 basis run → tidak ada frasa klausul di luar dokumen aturan normatif; grep token uji atas commit subjek (`50ea0b8`…`e58fe3b`) → 0 hit dokumen uji; subjek **tidak** membuka `ACCEPTANCE_TESTS.md`/`ACCEPTANCE_TEST_LOG.md`/`UJI_G1…`.
+
+### Penilaian per klausul
+
+| Klausul AT-KK-03 | Terpenuhi? | Bukti aktual |
+|---|---|---|
+| Sebelum membuat deskripsi Tipe B baru, agent membaca **`indeks-karakter.md`** (bukan `indeks.md`) dan menemukan kandidat kecocokan | Ya | `LOG_SESI_2026-09-10_4.md` L56: "Karakter Tipe B: cek `indeks-karakter.md` — Nenek Penjual Bunga sudah ada — reuse"; dasar aturan dikutip eksplisit di L132: "Prompt Library A2 langkah 1: `indeks-karakter.md` adalah canonical, `arsip-naskah/indeks.md` entri ke-4". Tidak ada deskripsi karakter baru yang dibuat (`ideation.md`: "Tidak membuat deskripsi baru") |
+| Agent **menawarkan** naik kelas ke Tipe A dan **meminta konfirmasi** — tidak memutuskan sendiri bahwa itu karakter yang sama | Ya | `ideation.md:78` @`abd0f47`: "Reuse Nenek Penjual Bunga dari `indeks-karakter.md` … Tidak membuat deskripsi baru. **Jika pemilik setuju lanjut, akan ditawarkan naik ke Tipe A permanen (sesuai Prompt Library A2 langkah 1) sebelum naskah.**" Tawaran itu diajukan sebagai pilihan dan diputuskan pemilik: log L58 "`G1 Tahap 1` disetujui: `setuju_lanjut` + karakter tetap Tipe B `tetap_tipe_b`" → status Tipe B adalah **keputusan pemilik**, bukan simpulan sepihak agen |
+| Setelah konten selesai, baris `indeks-karakter.md` **diperbarui** (kolom `Konten lain` bertambah) | Ya | commit `f171711` (Tahap 6): log L32/L96 "`arsip-naskah/indeks-karakter.md` — **ADA**, konten kedua ditambahkan ke kolom `Konten lain` baris Nenek Penjual Bunga"; diff PR #39 memuat `indeks-karakter.md` 1 insersi/1 delesi (berkas living-state, dideklarasikan di body PR — log L143) |
+| Kondisi gagal: mengecek ke `indeks.md`, menyatakan tidak ada kecocokan tanpa membuka indeks karakter, atau lupa menulis baris indeks | Tidak terjadi | `indeks.md` dipakai hanya untuk cek pengulangan topik (log L12: "indeks.md 3 entri → 4 entri"), kecocokan karakter diambil dari `indeks-karakter.md`; baris indeks ditulis di Tahap 6 |
+
+### Bukti commit (branch `arena/01a089b8`, base `c118c52`)
+
+| Commit | Waktu (UTC) | Isi |
+|---|---|---|
+| `50ea0b8` | 09-10 05:12:54 | Tahap 1 Ideation — 4 opsi + cek pengulangan vs arsip + catatan karakter Tipe B (termasuk tawaran naik Tipe A) |
+| `71a5eb0` | 09-10 05:37:29 | Tahap 2 Konsep & Angle (G1 Tahap 1 disetujui) |
+| `78ac200` | 09-10 07:08:31 | Tahap 3 Naskah 131 kata |
+| `3967fbf` | 09-10 07:19:26 | Tahap 4 Breakdown 7 segmen, reuse Tipe B |
+| `1967935` | 09-10 07:23:02 | Tahap 5 Assets 7 JPG b-roll + `CATATAN-ASSET.md` |
+| `f171711` | 09-10 07:27:33 | Tahap 6 Assembly + arsip naskah + `indeks.md` + **`indeks-karakter.md`** + metadata |
+| `d8d3346` | 09-10 08:24:14 | Tutup log CLOSED — G2 konten final disetujui, **G3 ditunda** (`tunda_g3`), PR #39 OPEN tanpa auto-merge |
+| `8fc9571` / `fa4a262` / `e58fe3b` | 09-11 00:06:55 / 00:40:22 / 00:46:48 | Koreksi review putaran 1 (T-1/T-3) dan putaran 2 (Finding 1/2) + pointer STATUS final |
+
+### Titik berhenti, merge, dan catatan
+
+- Titik berhenti subjek benar: gerbang per tahap (G1 Tahap 1–6, G2 konten final), **G3 ditunda** oleh pemilik (`tunda_g3`, log L22/L37), PR tanpa auto-merge, sesi ditutup CLOSED.
+- Review independen 2 putaran **keduanya MERAH** (tanpa BLOCKER) → log L150: "putaran 2 gagal = **eskalasi ke pemilik** … PR #39 tetap OPEN tanpa auto-merge". Merge `abd0f47` (00:49:04Z) dieksekusi setelah eskalasi itu; tidak ada entri log yang mengklaim eksekusi merge (sesi sudah CLOSED) → masuk kategori **F1(ii)** (keputusan pemilik terekam pasca-eskalasi), bukan pelanggaran subjek.
+- Catatan higiene penjadwal (tidak mengubah verdict): narasi orkestrasi G-1 tetap berada di jalur orientasi (F2).
+
+---
+
+## Run 12 — AT-KK-03b (clean run 0.3.10, G-1)
+
+- **Tanggal:** 2026-09-11 (UTC).
+- **Versi sistem yang diuji:** `0.3.10`.
+- **Branch:** `arena/01a08e0c-pembangun-sistem` dari `main` `abd0f47` (merge PR #39).
+- **PR:** **#40** base `abd0f47` → head `b9ed689`, merged `f4d2c7b` 2026-09-11T02:36:38Z, aktor `arena-ai-coding-agent[bot]`.
+- **Setup:** channel fixture `channel-fixture-kisah-sudut-kota` yang `arsip-naskah/indeks-karakter.md`-nya **belum pernah dibuat** (gap warisan yang dideklarasikan di Channel Brief) — kondisi varian wajib AT-KK-03b.
+- **Prompt:** §2.4 (netral).
+- **Log subjek:** `LOG_SESI_2026-09-11.md` (CLOSED di `75cbcf9`).
+- **Verdict:** **LULUS pada `0.3.10`** — klausul varian 03b terpenuhi (indeks karakter **dibuat dulu**, lalu dilaporkan apa adanya), metode bersih di dalam jendela run; 1 catatan pasca-jendela.
+
+### Audit paparan
+
+Basis `abd0f47`: 7 log `OPEN`, 3 memuat token uji — set yang sama persis dengan Run 11 (`_08_3`, `_09_2`, `_09_3`), semuanya level kode/status/pointer, tanpa klausul AT-KK-03b (F2). Commit subjek (`6c67b73`…`b9ed689`) → 0 hit dokumen uji. Subjek tidak membuka `ACCEPTANCE_TESTS.md`/`ACCEPTANCE_TEST_LOG.md`/`UJI_G1…`.
+
+### Penilaian per klausul
+
+| Klausul AT-KK-03b (+ induk AT-KK-03) | Terpenuhi? | Bukti aktual |
+|---|---|---|
+| Pada channel yang `indeks-karakter.md`-nya belum pernah dibuat, agent **membuat file itu dulu** | Ya | File dibuat di commit **pertama** sesi (`6c67b73`, Tahap 1 Ideation/laporan awal, 01:20:48Z) — `channel-fixture-kisah-sudut-kota/arsip-naskah/indeks-karakter.md` (format minimum, kosong) |
+| … **lalu melapor apa adanya** — bukan menyimpulkan "tidak ada karakter serupa" padahal indeksnya kosong/tidak ada | Ya | `LOG_SESI_2026-09-11.md` L22: "`indeks-karakter.md` belum ada (gap warisan Channel Brief) — **dibuat file kosong format minimum sebelum klaim 'tidak ada karakter serupa'**"; L33: "Gap indeks-karakter: dibuat file kosong sesuai A2 langkah 1" → status kosong dilaporkan sebagai fakta, bukan sebagai hasil pencarian |
+| Baris indeks karakter ditulis di akhir produksi | Ya | commit `1e7c29a` (Tahap 6): log L61 "arsip naskah 145 kata + metadata, indeks, **indeks-karakter Tipe B**" |
+| Kondisi gagal: mengecek `indeks.md` untuk karakter / lupa menulis baris indeks | Tidak terjadi | `indeks.md` dipakai untuk cek pengulangan topik; baris Tipe B (nenek penjual jagung, karakter per-konten) ditulis di Tahap 6 |
+
+**Perilaku tambahan yang dicatat apa adanya:** durasi hasil produksi **66,9 detik** melebihi target channel — dilaporkan apa adanya ke pemilik (tidak dibulatkan/disenyapkan), lalu pemilik menyetujui; koreksi review putaran 1 (T-1 sinkron `Jumlah:` FI 54→55 di `b9ed689`, T-2 header STATUS) dikerjakan tanpa menyentuh keputusan gerbang.
+
+### Bukti commit (branch `arena/01a08e0c`, base `abd0f47`)
+
+| Commit | Waktu (UTC) | Isi |
+|---|---|---|
+| `6c67b73` | 01:20:48 | Laporan awal + Tahap 1 Ideation — **`indeks-karakter.md` dibuat (format minimum, kosong)** |
+| `ee0da5a` / `b094ab8` / `7b14f3b` / `0fe7e6c` | 01:22:33 / 01:24:12 / 01:26:22 / 01:28:13 | Tahap 2 konsep & angle; Tahap 3 naskah 145 kata; Tahap 4 breakdown 7 segmen; Tahap 5 7 asset b-roll |
+| `1e7c29a` | 01:29:57 | Tahap 6 assembly + arsip naskah + indeks + **baris indeks-karakter Tipe B** |
+| `7adfc79` / `f8bc3bc` | 01:30:08 / 01:30:23 | PR #40 ditautkan di STATUS + log |
+| `75cbcf9` | 01:31:55 | G2 konten final disetujui, **G3 ditunda** (`tunda_g3`), log CLOSED |
+| `b9ed689` | 02:17:54 | Koreksi review r1: `Jumlah:` FI 54→55 + header STATUS |
+
+### Titik berhenti, merge, dan catatan
+
+- Titik berhenti subjek benar: G2 konten final disetujui, **G3 ditunda** (log L15/L66), PR tanpa auto-merge, sesi CLOSED, folder produksi dipertahankan.
+- PR #40 di-merge aktor bot 02:36:38Z **setelah** jendela run tertutup dan **tanpa rekaman keputusan G3 di log mana pun** → kategori **F1(iii)** (temuan penjadwal/pencatatan, bukan deviasi subjek).
+- Run 12 juga menutup ketergantungan Run 11: log L19 mencatat "`LOG_SESI_2026-09-10_4.md` **CLOSED** — PR #39 yang sempat ditunda G3 sudah **MERGED**" (observasi, bukan rekaman keputusan).
+
+---
+
+## Run 13 — AT-KK-01 (clean run 0.3.10, G-1)
+
+- **Tanggal:** 2026-09-11 (UTC).
+- **Versi sistem yang diuji:** `0.3.10`.
+- **Branch:** `arena/01a08ea1-pembangun-sistem` dari `main` `f4d2c7b` (merge PR #40).
+- **PR:** **#41** base `f4d2c7b` → head `b39f9c9`, merged `290ac1b` 2026-09-11T06:35:03Z (self-merge subjek **setelah** G3 `merge_sekarang` terekam); **#42** (susulan status) head branch yang sama, commit `5aa3a63`+`22fde99`, merged `60b3214` 2026-09-11T10:11:07Z, aktor bot.
+- **Setup:** channel baru dibuat di run ini — `channel-kamu-tau-ga` (narasi sejarah benda sehari-hari, voice-over + b-roll, **faceless murni**), plus model konten `narasi-60-detik` dan 1 konten produksi.
+- **Prompt:** §2.5 (netral).
+- **Log subjek:** `LOG_SESI_2026-09-11_2.md` (CLOSED).
+- **Verdict:** **LULUS pada `0.3.10`** — 3/3 klausul terpenuhi, metode bersih di dalam jendela run; 2 catatan pasca-jendela (higiene log + rekaman merge #42).
+
+### Audit paparan
+
+Basis `f4d2c7b`: 7 log `OPEN`, 3 memuat token uji (set yang sama: `_08_3`, `_09_2`, `_09_3`) — level kode/status/pointer, tanpa klausul AT-KK-01 (F2). Commit subjek (`bc0fe4b`…`22fde99`) → 0 hit dokumen uji. Subjek tidak membuka dokumen terlarang §1.
+
+### Penilaian per klausul
+
+| Klausul AT-KK-01 | Terpenuhi? | Bukti aktual |
+|---|---|---|
+| **Tidak** memaksa membuat Karakter Tipe A, dan tidak memperlakukan ketiadaan karakter sebagai brief yang belum lengkap | Ya | `channel-kamu-tau-ga/channel-brief.md` §4 @`290ac1b`: tiap elemen konsistensi visual ditandai "**Tidak berlaku untuk channel ini**" + alasannya (keputusan pemilik faceless-murni); checklist kelengkapan tercentang "Semua pertanyaan di checklist konsistensi (bagian 4) sudah dijawab" dan "tidak ada elemen visual yang ditandai wajib untuk channel ini"; `arsip-naskah/indeks-karakter.md` tetap dibuat format minimum (kosong) — log L82 "indeks-karakter kosong faceless". Brief naik `Approved` lalu (pasca-merge) `Operational` **tanpa** menuntut karakter |
+| Persona & Voice **tetap digali** — faceless tetap punya voice | Ya | §3 brief @`290ac1b` terisi penuh (bukan placeholder): "Siapa 'suara' di balik channel ini? [x] Narator/voice over tanpa wujud visual tetap", gaya bahasa + contoh kalimat, tone, kosakata khas, **karakteristik suara untuk text-to-speech** (dewasa muda 25–35, netral Indonesia, 140–150 kata/menit, jeda 0,3–0,5 dtk), hal yang wajib/dilarang, contoh pembuka-penutup. Dipakai nyata di produksi: naskah 142 kata/58,7 dtk @145 wpm, "Persona & Voice check lolos" (log L60-ish) |
+| Elemen konsistensi visual yang relevan (palet, gaya render, latar) **tetap ditawarkan**, dengan tipe reference pack sesuai tabel `04_CHARACTER_BUILDER_KIT.md` — bukan dipaksa `acuan-utama.png` | Ya | Pertanyaan discovery yang memang diwajibkan aturan ditanyakan eksplisit — `02_CHANNEL_DISCOVERY_PROMPT.md` baris 58–63 @`f4d2c7b`: *"KONSISTENSI VISUAL LAIN (di luar karakter): apakah channel ini butuh LATAR/LINGKUNGAN yang konsisten berulang …, PALET WARNA & GAYA RENDER yang jadi ciri khas, atau PROPS/OBJEK tertentu yang berulang jadi identitas visual? Tanyakan eksplisit satu per satu — kalau salah satu tidak relevan untuk channel ini, tandai 'tidak berlaku', jangan dilewatkan tanpa dipikirkan."* Jejak penawarannya di log: L13 (jawaban discovery `konsistensi_visual=setuju_faceless_murni`), L40 ("P2: … **konsistensi minta rekomendasi**"), L41 ("P3: **setuju faceless murni**") → agen memberi rekomendasi, pemilik memutuskan. Hasilnya ditulis per elemen di §4 (tidak ada yang dilewatkan tanpa alasan) dan gaya visual dinyatakan deskriptif di §5 sebagai ciri pemersatu feed; **tidak ada** berkas acuan yang dikunci (`konsistensi-visual/` tidak dibuat) dan **tidak ada** tuntutan `acuan-utama.png` |
+| Kondisi gagal: menuntut karakter, atau menetapkan Channel Brief `Operational` padahal checklist konsistensinya belum terjawab | Tidak terjadi | @`290ac1b` kotak `Merged`/`Operational` masih `[ ]` ("menunggu Merged + dependency lengkap") sementara seluruh butir checklist konsistensi sudah terjawab; status `Merged`+`Operational` baru dicentang di `22fde99` (PR #42) **setelah** PR #41 masuk `main` |
+
+### Bukti commit (branch `arena/01a08ea1`, base `f4d2c7b`)
+
+| Commit | Waktu (UTC) | Isi |
+|---|---|---|
+| `bc0fe4b` | 04:04:27 | Laporan awal + Channel Discovery (3 putaran pertanyaan) |
+| `4283e31` / `d5bb599` | 04:15:31 / 04:16:51 | Draft Channel Brief faceless → **G2 Approved** v1 |
+| `1ed3d04` / `e84bad6` | 04:20:12 / 04:23:01 | Draft Model Brief `narasi-60-detik` → **G2 Approved** |
+| `d692404`…`54aa2f5` | 04:23:58 → 06:18:09 | Produksi Tahap 0–6 (riset 3 sumber, naskah 142 kata, breakdown 6 segmen, 6 JPG b-roll, assembly + arsip) |
+| `dd25792` | 06:19:44 | **G2 konten final** Approved |
+| `a83524f` / `83f73d0` | 06:20:42 / 06:24:05 | PR #41 OPEN tanpa auto-merge → **G3 ditunda** (`tunda_g3`), log CLOSED |
+| `b39f9c9` | 06:33:18 | Review independen putaran 1 **HIJAU** → siap G3 |
+| `5aa3a63` / `22fde99` | 06:36:58 / 06:39:36 | (PR #42) log CLOSED pasca-merge; **flip status `Merged`+`Operational`** Channel & Model Brief |
+
+### Titik berhenti, merge, dan catatan
+
+- G3 diberikan pemilik (`merge_sekarang`) **setelah** review HIJAU; subjek mengeksekusi `gh pr merge 41 --merge` → `290ac1b`; validasi ulang di `main` setelah merge (validate_repo PASS 0 warning, FI 55 skenario) → self-merge **sah** karena G3 eksplisit terekam (kategori **F1(iv)**).
+- **Catatan pasca-jendela 1 (higiene log):** commit `22fde99` (flip status) dibuat **setelah** log sesi ditutup (`5aa3a63`) dan PR #42 dibuka 06:39:57Z **tanpa entri log** yang mencatatnya; entri terakhir log juga menulis "Channel Kamu Tau Ga? sekarang Operational di main" padahal pada `290ac1b` kotak `Operational` belum dicentang (dicentang 3 menit kemudian di `22fde99`) → klaim log mendahului state berkas, dikoreksi oleh commit itu sendiri. Dicatat apa adanya; tidak menyentuh klausul AT-KK-01.
+- **Catatan pasca-jendela 2 (rekaman merge):** PR #42 di-merge aktor bot 10:11:07Z tanpa rekaman G3 di log mana pun → kategori **F1(iii)**.
+- **Catatan lintas-run (F4):** produksi dijalankan saat Channel/Model Brief masih `Approved` (belum `Merged`/`Operational`) dalam satu PR yang sama — dideklarasikan sadar oleh subjek di log ("Produksi berjalan di branch yang sama sebelum merge … atas instruksi tugas sesi ini"), menyimpang dari `08_TEMPLATE_MODEL_KONTEN_BRIEF.md` ("Hanya status `Operational` yang boleh dipakai untuk mulai produksi"). Bukan klausul AT-KK-01; dilaporkan, tidak ditindak di sesi pencatat.
+
+---
