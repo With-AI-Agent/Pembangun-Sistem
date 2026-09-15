@@ -76,7 +76,7 @@ Uji CLI 2026-09-15: `npx skills --help` OK (node v22.22.3, npm 10.9.8), `npx ski
 | 9 | **agent-browser** | vercel-labs/agent-browser `skills/agent-browser/` | 4.0K stub (+ `agent-browser skills get core` full) | `agent-browser/` | Coding verify E2E (playwright-like tapi 855K installs) |
 | 10 | **vercel-deploy** (deploy-to-vercel) v3.0.0 | vercel-labs/agent-skills `skills/deploy-to-vercel/` | 48K | `vercel-deploy/` | Deploy preview tarball + claim URL (40+ frameworks) |
 
-**Total Vercel terpasang: ~852K** — ditambah 6 skill sebelumnya (frontend-designer 24K + excalidraw 57K + ui-ux-pro-max 1.7M selective + design 132K + design-system 68K + ui-styling 96K) = **2.9M total skills/** (sebelumnya 2.1M). Masih sangat hemat vs 52M zip + 2.3M vercel-est total.
+**Total Vercel terpasang: ~852K** — ditambah 6 skill sebelumnya (frontend-designer 24K + excalidraw 57K + ui-ux-pro-max 1.7M selective + design 132K + design-system 68K + ui-styling 96K) = **2.9M total skills/** (sebelumnya 2.1M). Masih sangat hemat vs 53,813,128 bytes (~51.3 MiB) zip + 2.3M vercel-est total.
 
 **Keamanan:** semua 10 skill sudah `socket/pass` + `snyk/pass` di skills.sh (vercel-deploy SnykFail tapi Gen Agent Trust Pass — script deploy.sh hanya upload tarball, tidak rm -rf). Tidak ada `curl|bash` auto-run di install; hanya `npx` yang fetch repo resmi Vercel.
 

@@ -4,7 +4,7 @@ Folder ini berisi **skill/plugin vendor-local** untuk Building Aplikasi. Semanti
 
 ## Ringkasan terpasang (2026-09-15 — semua yang diminta pemilik + 2026-09-15 Cloudflare/Supabase/Google)
 
-**Total: 8.1M** (hemat 84% vs unzip semua Input-Pengguna 52M + Vercel 2.3M penuh). Sisa katalog besar tetap tersedia sebagai zip/index, tidak dibengkakkan penuh. **Agent ADAPTIF**: baca `AGENT_SYSTEM.md` tabel panduan, pilih skill yang paling tepat per task (Cloudflare vs Vercel, Supabase vs generic DB, Gmail vs Drive etc.).
+**Total: 8.1M** (hemat 84% vs unzip semua Input-Pengguna 53,813,128 bytes (~51.3 MiB) + Vercel 2.3M penuh). Sisa katalog besar tetap tersedia sebagai zip/index, tidak dibengkakkan penuh. **Agent ADAPTIF**: baca `AGENT_SYSTEM.md` tabel panduan, pilih skill yang paling tepat per task (Cloudflare vs Vercel, Supabase vs generic DB, Gmail vs Drive etc.).
 
 ### A. Inti dari Input-Pengguna 10 zip (scan virus aman 2026-09-15)
 

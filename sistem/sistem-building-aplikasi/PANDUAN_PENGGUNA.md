@@ -150,7 +150,7 @@ Jawabanmu disimpan di `PROFIL_PENGGUNA.md` dan jadi **prinsip permanen** — kap
 
 Sistem ini **hidup**, bukan sekali jadi:
 
-**A. Hidupnya Sistem Building itu sendiri:** kapan saja bilang *"audit sistem ini"*, *"sempurnakan sistem ini"*, *"tambah skill ..."*, agent akan jalankan audit (`validate_system` + `validate_repo` + `check_selfcontained` + FI 71), laporkan Critical/Minor, buka branch `sistem-audit-...`, PR tanpa auto-merge. Lihat `AGENT_SYSTEM.md` § *MEKANISME HIDUP — SISTEM & APLIKASI*.
+**A. Hidupnya Sistem Building itu sendiri:** kapan saja bilang *"audit sistem ini"*, *"sempurnakan sistem ini"*, *"tambah skill ..."*, agent akan jalankan audit (`validate_system` + `validate_repo` + `check_selfcontained` + FI 72), laporkan Critical/Minor, buka branch `sistem-audit-...`, PR tanpa auto-merge. Lihat `AGENT_SYSTEM.md` § *MEKANISME HIDUP — SISTEM & APLIKASI*.
 
 **B. Hidupnya Aplikasi yang kamu bangun:** bahkan setelah rilis MVP/v1, kapan saja bilang *"audit aplikasi ini"*, *"perbaiki bug ..."*, *"buat v2"*, *"apakah ada yang tercecer di ROADMAP?"*, agent akan:
 - audit via **Tahap 6 Cross-Check**,

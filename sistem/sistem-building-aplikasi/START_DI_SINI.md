@@ -47,7 +47,7 @@ Ikuti 6 audit di AGENT_SYSTEM.md §Checkpoint & Handoff (ROADMAP, DECISIONS_LOG,
 
 ## Jenis Sesi 6 — Audit/Sempurnakan Sistem (HIDUP)
 
-Kapan saja bilang "audit sistem ini" / "sempurnakan sistem ini" → baca `SYSTEM_MANIFEST.md` (Quality & Evolution) + `AGENT_SYSTEM.md` § Mekanisme Hidup A, jalankan `validate_system` + `validate_repo` + `check_selfcontained` + FI 71, laporkan Critical/Minor, buka branch `sistem-audit-...`, PR tanpa auto-merge.
+Kapan saja bilang "audit sistem ini" / "sempurnakan sistem ini" → baca `SYSTEM_MANIFEST.md` (Quality & Evolution) + `AGENT_SYSTEM.md` § Mekanisme Hidup A, jalankan `validate_system` + `validate_repo` + `check_selfcontained` + FI 72, laporkan Critical/Minor, buka branch `sistem-audit-...`, PR tanpa auto-merge.
 
 ## Jenis Sesi 7 — Audit/Sempurnakan Aplikasi / Buat v2 (HIDUP)
 

@@ -5,7 +5,7 @@
 
 ---
 
-## A. Audit 10 zip dari `Input-Pengguna/` (branch main 341fbd3, total 52M)
+## A. Audit 10 zip dari `Input-Pengguna/` (branch main 341fbd3, total 53,813,128 bytes (~51.3 MiB))
 
 Scan: `unzip -l` + `strings | grep -Ei curl|base64|rm -rf|eval|subprocess|shell=True` + `unzip -p SKILL.md`. **Hasil: tidak ada virus/malware jelas.** Temuan `curl|bash`/`rm -rf` bersifat legit (installer `bun.sh`, Dockerfile cleanup, kubeconfig base64) — tidak auto-run.
 
@@ -24,7 +24,7 @@ Scan: `unzip -l` + `strings | grep -Ei curl|base64|rm -rf|eval|subprocess|shell=
 
 \* Skor relevansi = seberapa langsung membantu Building Aplikasi membangun aplikasi untuk pemilik **non-teknis** (Fondasi 6 dokumen + Coding). ★★★★★ = langsung pakai setiap Tahap/Coding; ★☆ = niche.
 
-**Keputusan audit (hemat C-06):** Pasang 3 inti (no.6,7,10 selective) = 2.1M (≈4% dari 52M). Sisa 7 zip tetap di `Input-Pengguna/` sebagai referensi katalog — tidak dihapus, tidak di-unzip penuh, siap susulan bila stack butuh (mis. iOS/Java).
+**Keputusan audit (hemat C-06):** Pasang 3 inti (no.6,7,10 selective) = 2.1M (≈4% dari 53,813,128 bytes (~51.3 MiB)). Sisa 7 zip tetap di `Input-Pengguna/` sebagai referensi katalog — tidak dihapus, tidak di-unzip penuh, siap susulan bila stack butuh (mis. iOS/Java).
 
 ---
 

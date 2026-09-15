@@ -24,7 +24,7 @@
 - `_sistem/templates/` — starter templates 7 file: DISCOVERY, PRD, TECH_SPEC, AGENT_OPERATING_GUIDE, ROADMAP, DECISIONS_LOG, PROJECT_STATE
 - `docs/README.md` — placeholder /docs (akan diisi 6 dokumen Fondasi saat build app pertama)
 - `_salinan-meta/PLATFORM_LMARENA.md` — salinan berlabel fakta platform lmarena (W-07)
-- `skills/` — 8.1M, 52 dirs, vendor-local (lihat skills/README.md): frontend-designer, excalidraw, ui-ux-pro-max, Vercel 16, supabase 2, cloudflare 3, gmail/google 7, product-management/discovery, security/QA, etc. Hemat 84% vs 52M. Wajib pakai ADAPTIF.
+- `skills/` — 8.1M, 52 dirs, vendor-local (lihat skills/README.md): frontend-designer, excalidraw, ui-ux-pro-max, Vercel 16, supabase 2, cloudflare 3, gmail/google 7, product-management/discovery, security/QA, etc. Hemat 85% vs 53,813,128 bytes (~51.3 MiB) penuh bila unzip semua. Wajib pakai ADAPTIF.
 - `_Notes.md` — link chat Claude: https://claude.ai/chat/c2d459f8-4adc-48e3-a37d-6cbee248e6d3
 
 ## Bentuk & Warisan (semua tertanam matang)
@@ -37,7 +37,7 @@
   - W-03 STATUS → STATUS.md field deterministik exact + TEMPLATE di _sistem/templates/PROJECT_STATE.md
   - W-04 manifest → SYSTEM_MANIFEST ini
   - W-05 log keputusan → Log Keputusan di manifest + tiap /docs + DECISIONS_LOG template + Aturan Mengikat DECISIONS_LOG di AGENT_SYSTEM
-  - W-06 QA 3-lapis → ACCEPTANCE_TESTS 7 skenario + validate_system.py (stdlib) + check_selfcontained + validate_repo + FI 71
+  - W-06 QA 3-lapis → ACCEPTANCE_TESTS 7 skenario + validate_system.py (stdlib) + check_selfcontained + validate_repo + FI 72 (15+13+14+10+20)
   - W-07 fakta platform → PANDUAN_PENGGUNA + Batasan Platform + _salinan-meta/PLATFORM_LMARENA.md
   - W-08 approval bertingkat → Bentuk Sistem + AGENT_SYSTEM Stop Conditions
   - W-09 ringkasan cadangan → file ini (sinkron 2026-09-15, 8.1M)
@@ -53,7 +53,7 @@
 - **Fakta platform lmarena:** branch arena otomatis, push dicabut setelah merge/close, sesi bisa crash kapan saja, agent baru buta tanpa commit+push+LOG_SESI — mitigasi checkpoint tiap tahap + LOG_SESI berkelanjutan
 
 ## Kapabilitas Terpasang (maksimal 8.1M)
-- **Batch K-10 zip (10 zip 52M):** frontend-designer 24K, excalidraw 57K, ui-ux-pro-max selective 1.7M (2.1M)
+- **Batch K-10 zip (10 zip 53,813,128 bytes):** frontend-designer 24K, excalidraw 57K, ui-ux-pro-max selective 1.7M (2.1M)
 - **Vercel 16 (26 audit):** react-best-practices 416K (70 rules), composition 80K, web-design 4K (100+ a11y), building-components 152K, next-best 124K, cache 12K, upgrade 4K, ai-sdk 8K, agent-browser 4K, vercel-deploy 48K, react-native 260K, ai-elements 1016K, streamdown 68K, ucp 84K, workflow 32K, find-skills 8K (1.5M)
 - **Sisa zip 7:** alibaba-java 44K, ai-agent-skills 256K (18), ios-agent 252K, tsbs 28K, awesome 224K, agent-skills catalog 10K (248 skills), hub catalog 8.5K (42k files)
 - **Rancangan:** product-management 360K (8), product-discovery 204K (7), prd-taskmaster 76K, brainstorming 92K
@@ -61,7 +61,7 @@
 - **Cloudflare/Supabase/Google (baru):** cloudflare 1.5M (60+ refs Workers/Pages/D1/R2/KV), wrangler 8K, agents-sdk 92K, supabase 32K, supabase-postgres 156K (8 kategori), gmail 49K, drive 45K, sheets 45K, calendar 53K, docs 37K, chat 61K, slides 41K
 
 ## Status Saat Ini (matang)
-- **2026-09-15:** run klinik pertama C (rename + manifest + pegangan + log + QA + salinan meta) + Verifikasi D + Catatan E + Panen F (validator hijau) + G-Rencana 1-9 disetujui + susulan K-10 (3 skill inti, 2.1M) + susulan Vercel 10 inti (852K) + susulan maksimal semua sisa (6 Vercel niche +7 zip + planning + QA →6.0M) + susulan Cloudflare/Supabase/Google adaptif (12 skill →8.1M). Semua validator PASS (validate_system, validate_repo 317 refs, check_selfcontained, FI 71). PR #59 OPEN di arena/01a0a48f-pembangun-sistem menunggu G-Final merge pemilik. /docs masih kosong — Tahap 1 Discovery siap kapan saja. _cadangan ini sinkron 2026-09-15.
+- **2026-09-15:** run klinik pertama C (rename + manifest + pegangan + log + QA + salinan meta) + Verifikasi D + Catatan E + Panen F (validator hijau) + G-Rencana 1-9 disetujui + susulan K-10 (3 skill inti, 2.1M) + susulan Vercel 10 inti (852K) + susulan maksimal semua sisa (6 Vercel niche +7 zip + planning + QA →6.0M) + susulan Cloudflare/Supabase/Google adaptif (12 skill →8.1M). Semua validator PASS (validate_system, validate_repo 102 dokumen/324 refs, check_selfcontained --semua PASS 4 sistem, FI 72). PR #59 OPEN di arena/01a0a48f-pembangun-sistem menunggu G-Final merge pemilik. /docs masih kosong — Tahap 1 Discovery siap kapan saja. _cadangan ini sinkron 2026-09-15.
 
 ## Ke Mana Hasil Dibawa
 - Hasil kerja Fondasi → `/docs/*.md` + `PROJECT_STATE.md` di repo aplikasi target
