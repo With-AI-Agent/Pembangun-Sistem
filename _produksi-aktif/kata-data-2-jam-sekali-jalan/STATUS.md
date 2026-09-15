@@ -3,8 +3,8 @@
 - **Status:** `in-progress`
 - **Channel:** Kata Data (`sistem/sistem-konten-kreator/channel-kata-data/`, Channel Brief v1 Approved)
 - **Model konten:** Data 60 Detik v1 Approved (Alur Kerja Kustom + Tahap 0)
-- **Tahap terakhir selesai:** Tahap 5 Generate Assets (G1 disetujui 2026-09-15)
-- **Tahap berikutnya:** Tahap 6 Assembly & Publish Prep (publish-prep + arsip ditulis — menunggu G2 konten final)
+- **Tahap terakhir selesai:** Tahap 6 Assembly & Publish Prep (G2 konten final disetujui 2026-09-15)
+- **Tahap berikutnya:** PR tanpa auto-merge (menunggu G3 pemilik)
 - **Output resmi:**
   - `ideation.md` (Tahap 0 ringkasan + opsi ide)
   - `konsep-angle.md` (Tahap 2 kerangka — G1 disetujui)
@@ -22,10 +22,10 @@
   - `G1+G2 Tahap 3 (naskah final):` disetujui 2026-09-15
   - `G1+G2 Tahap 4 (breakdown):` disetujui 2026-09-15
   - `G1 Tahap 5:` disetujui 2026-09-15
-  - `G2 konten final:` belum
-  - `G3 merge:` belum
+  - `G2 konten final:` disetujui 2026-09-15
+  - `G3 merge:` belum (PR tanpa auto-merge — keputusan pemilik)
 - **Commit terakhir:** (diisi saat commit)
-- **PR terkait:** belum ada
+- **PR terkait:** (diisi setelah PR dibuka)
 - **Pekerjaan belum tersimpan:** Tidak ada
 - **Risiko atau blocker:** tidak ada
 - **Waktu pembaruan:** 2026-09-15
