@@ -64,8 +64,20 @@ CEK NASKAH — model Kartu Teks 8-10
   kartu 9 (Penutup) : 21 kata  [18-28]  OK
   total kata       : 179 (batas 160-250)  OK
   waktu baca       : ~72 detik pada 150 kata/menit
+CEK KALIMAT — bukti klaim 'kalimat pendek'
+  jumlah kalimat       : 18
+  rata-rata            : 9.9 kata
+  median               : 8 kata
+  terpanjang           : 19 kata (kartu 6)
+  distribusi           : <=8:10  9-12:2  13-16:3  17-19:3  >=20:0
+  maks per kartu       : k1=12, k2=11, k3=17, k4=14, k5=14, k6=19, k7=19, k8=15, k9=8
+CEK BREAKDOWN — unit kartu teks
+  jumlah unit (baris n/9) : 9
+  keterangan eksplisit 'tidak berlaku — konten teks-only' : 18 (harus 2 x unit = 18)
+  arahan 'Aksen:'          : 9 (harus tepat 1 per unit = 9)
+  frasa aksen diverifikasi ke naskah : 9
+  kolom prompt/referensi    : semua 9 baris berketerangan eksplisit
 HASIL: PASS
-EXIT=0
 ```
 
 **Mutation test (membuktikan skrip bergigi, bukan sekadar mencetak OK):** kartu 1 digembungkan jadi 20 kata dan kartu 4 jadi 31 kata, lalu skrip dijalankan ulang —
@@ -86,7 +98,7 @@ Kedua pelanggaran tertangkap **secara independen** (total masih 198 dan tetap OK
 |---|---|
 | Satu sudut kota konkret sebagai pintu masuk | ✅ Kartu 1 — sudut jalan + warung kopi |
 | Penutup mengajak melihat sudut terdekatnya sendiri | ✅ Kartu 9 — "ada di dekat rumahmu juga… lihat pelan-pelan" |
-| Kalimat pendek, tanpa basa-basi | ✅ Semua kalimat ≤ 12 kata; tidak ada pembuka basa-basi |
+| Kalimat pendek, tanpa basa-basi | ✅ Terukur (lihat `CEK KALIMAT` di bagian verifikasi di atas): 18 kalimat, rata-rata **9,9 kata**, median **8 kata**, 12 dari 18 kalimat ≤ 12 kata. **Koreksi:** draf awal berkas ini mengklaim "semua kalimat ≤ 12 kata" — itu **salah** (temuan T-3 review PR #60 putaran 1); kalimat terpanjang **19 kata** (kartu 6 dan 7). Channel Brief hanya menuntut "kalimat pendek" secara kualitatif, tanpa ambang numerik, jadi yang dilaporkan di sini adalah fakta terukurnya, bukan ambang karangan. Tidak ada pembuka basa-basi |
 | Kosakata khas channel terpakai | ✅ "sudut" (k1, k5, k9), "menempel"/"ikut pindah" (k2, k6, k7), "yang lewat" (k8), "tanpa nama" (k9), "kota yang sama"→"tempat yang sama" (k3) |
 | Tanpa klaim faktual yang tidak bisa dirujuk | ✅ Tidak ada angka statistik, tanggal, maupun nama resmi. "Tiga kali" dan "tiga hal" = premis naratif warung fiktif tanpa nama (lihat `ideation.md`) |
 | Tanpa nama tokoh nyata | ✅ Pemilik tidak pernah diberi nama |

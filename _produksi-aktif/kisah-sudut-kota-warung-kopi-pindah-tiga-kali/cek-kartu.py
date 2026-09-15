@@ -57,6 +57,65 @@ def ekstrak_kartu(teks):
 KET_TB = "tidak berlaku — konten teks-only"
 
 
+def pecah_kalimat(teks):
+    """Pecah teks kartu jadi kalimat (batas . ! ?)."""
+    return [k.strip() for k in re.split(r"(?<=[.!?])\s+", teks.strip()) if k.strip()]
+
+
+def cek_kalimat(kartu):
+    """Laporan panjang kalimat — dipakai untuk klaim 'kalimat pendek' yang bisa direproduksi.
+
+    Sebelumnya naskah-draft.md mengklaim "Semua kalimat <= 12 kata" secara tulisan tangan.
+    Temuan T-3 review PR #60 putaran 1 membuktikan klaim itu salah (terpanjang 19 kata).
+    Angka ini sekarang keluaran skrip, bukan karangan.
+    """
+    semua = []
+    print("CEK KALIMAT — bukti klaim 'kalimat pendek'")
+    for nomor, _judul, isi in kartu:
+        for k in pecah_kalimat(isi):
+            semua.append((nomor, len(hitung_kata(k)), k))
+    if not semua:
+        print("  tidak ada kalimat terbaca")
+        return []
+    panjang = [w for _n, w, _k in semua]
+    panjang_urut = sorted(panjang)
+    maks_n, maks_w, maks_k = max(semua, key=lambda x: x[1])
+    print("  jumlah kalimat       : %d" % len(semua))
+    print("  rata-rata            : %.1f kata" % (sum(panjang) / len(panjang)))
+    print("  median               : %d kata" % panjang_urut[len(panjang_urut) // 2])
+    print("  terpanjang           : %d kata (kartu %d)" % (maks_w, maks_n))
+    print("  distribusi           : <=8:%d  9-12:%d  13-16:%d  17-19:%d  >=20:%d"
+          % (sum(1 for w in panjang if w <= 8),
+             sum(1 for w in panjang if 9 <= w <= 12),
+             sum(1 for w in panjang if 13 <= w <= 16),
+             sum(1 for w in panjang if 17 <= w <= 19),
+             sum(1 for w in panjang if w >= 20)))
+    per_kartu = []
+    for nomor, _j, isi in kartu:
+        ws = [len(hitung_kata(k)) for k in pecah_kalimat(isi)]
+        if ws:
+            per_kartu.append("k%d=%d" % (nomor, max(ws)))
+    print("  maks per kartu       : %s" % ", ".join(per_kartu))
+    # Channel Brief hanya menuntut "kalimat pendek" (kualitatif) — tidak ada ambang numerik.
+    # Karena itu tidak ada batas yang ditegakkan di sini; yang dilaporkan adalah fakta terukurnya.
+    return []
+
+
+def norm(teks):
+    """Normalisasi untuk perbandingan frasa: huruf kecil, tanda baca -> spasi, spasi dirapikan."""
+    t = teks.lower()
+    t = re.sub(r"[^\w\s-]", " ", t, flags=re.UNICODE)
+    return re.sub(r"\s+", " ", t).strip()
+
+
+def peta_kartu_naskah(folder):
+    """{nomor kartu: teks naskah} dari naskah-draft.md."""
+    path = os.path.join(folder, "naskah-draft.md")
+    if not os.path.isfile(path):
+        return {}
+    return {n: isi for n, _j, isi in ekstrak_kartu(baca(path))}
+
+
 def cek_breakdown(folder):
     """Verifikasi breakdown-output.md: unit = kartu teks, tanpa asset, tanpa prompt karangan.
 
@@ -87,6 +146,26 @@ def cek_breakdown(folder):
         gagal.append("jumlah 'Aksen:' = %d, seharusnya %d (satu per kartu)"
                      % (aksen, len(baris)))
 
+    # CEK ISI ARAHAN AKSEN: frasa yang disorot HARUS benar-benar ada di naskah kartu itu.
+    # (Temuan T-2 review PR #60 putaran 1: kartu 7 menyorot frasa sisa draf Tahap 2 yang
+    #  sudah tidak ada di naskah final terkunci G2. Cek jumlah "Aksen:" saja tidak menangkapnya.)
+    naskah = peta_kartu_naskah(folder)
+    aksen_diperiksa = 0
+    for b in baris:
+        sel = [x.strip() for x in b.strip().strip("|").split("|")]
+        m_nomor = re.match(r"^(\d+)/(\d+)$", sel[0])
+        if not m_nomor:
+            continue
+        nomor = int(m_nomor.group(1))
+        for frasa in re.findall(r'Aksen:\s*\*\*"([^"]+)"\*\*', sel[-1]):
+            aksen_diperiksa += 1
+            teks_kartu = norm(naskah.get(nomor, ""))
+            if norm(frasa) not in teks_kartu:
+                gagal.append("kartu %d: frasa aksen %r TIDAK ADA di naskah kartu itu "
+                             "(arahan basi / tidak sinkron dengan naskah final)"
+                             % (nomor, frasa))
+    print("  frasa aksen diverifikasi ke naskah : %d" % aksen_diperiksa)
+
     # tidak boleh ada sel prompt generate yang diisi sesuatu selain keterangan
     for b in baris:
         sel = [x.strip() for x in b.strip().strip("|").split("|")]
@@ -95,11 +174,12 @@ def cek_breakdown(folder):
                 if sel[idx] and KET_TB not in sel[idx]:
                     gagal.append("baris '%s' kolom %s tidak kosong-berketerangan: %r"
                                  % (sel[0], nama, sel[idx]))
-    if gagal:
-        print("  kolom prompt/referensi    : ADA YANG TERISI / TIDAK LENGKAP")
-    else:
+    kolom_prompt_ok = not any("kolom" in g for g in gagal)
+    if kolom_prompt_ok:
         print("  kolom prompt/referensi    : semua %d baris berketerangan eksplisit"
               % len(baris))
+    else:
+        print("  kolom prompt/referensi    : ADA YANG TERISI / TIDAK LENGKAP")
     for g in gagal:
         print("  -", g)
     return len(baris), gagal
@@ -155,6 +235,7 @@ def main():
     detik = total / 150.0 * 60
     print("  waktu baca       : ~%.0f detik pada 150 kata/menit" % detik)
 
+    gagal.extend(cek_kalimat(kartu))
     n_unit, gagal_bd = cek_breakdown(folder)
     gagal.extend(gagal_bd)
 

@@ -18,7 +18,7 @@
 - **Sumber eksternal dipakai:** Tidak ada
 - **Keputusan baru:**
   - Unit produksi ditempatkan di **`_produksi-aktif/` root**, bukan `sistem/sistem-konten-kreator/_produksi-aktif/` — mengikuti pola pasca-housekeeping PR #57 (sama seperti `kata-data-2-jam-sekali-jalan` dan `kamu-tau-ga-tutup-panci-lubang-kecil`). Konsekuensi yang dinyatakan sadar: `validate_system.py` baris 186 hanya memindai `_produksi-aktif` di dalam folder sistem, jadi unit ini **di luar cakupan validator** — gap tooling pra-ada yang sudah dicatat `LOG_SESI_2026-09-15_3.md` baris 110, di luar scope PR konten.
-  - Produksi dijalankan sebelum brief model `Merged` (masih `Approved`) — sesuai instruksi pemilik dan preseden PR #54 / PR #58. Status `Approved` dipertahankan, tidak dinaikkan jadi `Operational` sebelum merge.
+  - Produksi dijalankan sebelum brief model `Merged` (masih `Approved`) — sesuai instruksi pemilik dan preseden **PR #58** (Kata Data): brief `model-konten/data-60-detik/brief.md` dan unit produksinya dikirim dalam satu PR yang sama dan brief-nya tetap berstatus `Approved`. **Koreksi (temuan T-4b review PR #60):** PR #54 **bukan** preseden untuk hal ini — PR #54 hanya mencentang kotak status `narasi-riset-60-detik`; isi brief itu sudah masuk `main` lebih dulu lewat PR #52. Status `Approved` dipertahankan, tidak dinaikkan jadi `Operational` sebelum merge.
   - Angka "tiga kali" diperlakukan sebagai premis naratif dari Bank Ide Awal channel (bukan klaim faktual) — alasan tercatat di `ideation.md`.
 - **Approval yang sudah diberikan:**
   - `G1 Tahap 1 (Ideation — ide "Warung kopi yang pindah tiga kali tanpa ganti nama"):` disetujui 2026-09-15
@@ -28,6 +28,7 @@
   - `G1 Tahap 4 (Breakdown — 9 kartu teks):` disetujui 2026-09-15
   - `G2 breakdown:` disetujui 2026-09-15
   - `Tahap 5:` tidak berlaku (konten teks-only) — 0 asset, tercatat di sini sebagai keputusan sadar
+  - Catatan Tahap 5 sesuai `05_CONTENT_PRODUCTION_PIPELINE.md` baris 214 & 259 (verbatim): `Tahap 5 — tidak berlaku (konten teks-only)`
   - `G2 konten final + metadata:` disetujui 2026-09-15
   - `G3 merge:` belum — PR tanpa auto-merge, merge = keputusan pemilik
 - **Commit terakhir:** lihat `git log --oneline origin/main..HEAD` (branch `arena/01a0a448-pembangun-sistem`)
