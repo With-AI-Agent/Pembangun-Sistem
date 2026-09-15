@@ -24,7 +24,7 @@
 - [x] `arsip-naskah/indeks.md` dan `arsip-naskah/indeks-karakter.md` sudah dibuat (boleh kosong) — keduanya ada di folder ini
 - [x] Sudah `Merged` ke `main`
 
-**Versi:** `2` — **Terakhir diperbarui:** `2026-09-09` — **Diwarisi dari:** `_sistem/01_BRAND_CORE.md`
+**Versi:** `3` — **Terakhir diperbarui:** `2026-09-14` — **Diwarisi dari:** `_sistem/01_BRAND_CORE.md`
 
 > **Catatan dependency:** `_sistem/01_BRAND_CORE.md` di repo ini **masih template kosong** (belum pernah dijalankan sesi Brand Core). Brief fixture ini karena itu tidak benar-benar mewarisi apa pun dari Brand Core. Ini dicatat sadar, bukan disembunyikan — agent yang membaca brief ini wajib melaporkan gap tersebut, bukan berpura-pura konteksnya lengkap.
 
@@ -102,10 +102,11 @@
 | Nama Model Konten | Folder | Status |
 |---|---|---|
 | Narasi 60 Detik | `model-konten/narasi-60-detik/` | `Operational` |
+| Narasi Riset 60 Detik | `model-konten/narasi-riset-60-detik/` | `Operational` |
 
 ## 9. Arsip Naskah
 
-Naskah final disimpan di `arsip-naskah/` folder ini. `indeks.md` (judul/tanggal/topik) dan `indeks-karakter.md` (karakter Tipe B) keduanya sudah dibuat dan terisi — arsip saat ini: "Tiga Benda di Meja Nenek" (2026-09-06) dan "Penjual Bunga di Pasar Subuh" (2026-09-09); karakter Tipe B "Nenek Penjual Bunga" tercatat di `indeks-karakter.md`.
+Naskah final disimpan di `arsip-naskah/` folder ini. `indeks.md` (judul/tanggal/topik) dan `indeks-karakter.md` (karakter Tipe B) keduanya sudah dibuat dan terisi — arsip saat ini berisi 5 naskah: "Tiga Benda di Meja Nenek" (2026-09-06), "Penjual Bunga di Pasar Subuh" (2026-09-09), "Pintu Kos yang Tidak Pernah Dikunci" (2026-09-10), "Melati Terakhir di Pasar Kosong" (2026-09-10), dan "Cap Pos di Amplop" (2026-09-14); karakter Tipe B "Nenek Penjual Bunga" tercatat di `indeks-karakter.md`.
 
 ## 10. Log Keputusan Channel
 
@@ -114,3 +115,4 @@ Naskah final disimpan di `arsip-naskah/` folder ini. `indeks.md` (judul/tanggal/
 | 2026-09-04 | Channel Brief fixture dikunci (G2) dan di-merge (G3) | Status dokumen: `Operational`, v1 |
 | 2026-09-04 | Semua elemen Konsistensi Visual ditandai "tidak berlaku" | Channel faceless; tidak ada elemen visual yang mewajibkan file acuan |
 | 2026-09-09 | Channel Brief v2 — contoh kalimat pembuka khas: "Ada satu benda yang…" → "Dulu, ada satu benda yang…" (G2+G3 tercatat) | Permintaan pemilik: pembuka perlu terasa lebih nostalgia; contoh penutup tidak berubah |
+| 2026-09-14 | Channel Brief v3 — tambah entri model `Narasi Riset 60 Detik` pada tabel Model Konten (status `Operational`) dan perbarui deskripsi arsip menjadi 5 naskah | Model baru merge ke main lewat PR #52; satu konten produksi ("Cap Pos di Amplop") ditambahkan ke arsip |

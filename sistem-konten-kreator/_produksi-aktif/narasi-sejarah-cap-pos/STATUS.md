@@ -1,0 +1,57 @@
+# Status Produksi — Narasi Sejarah — Cap Pos (judul kerja)
+
+- **Status:** `in-progress`
+- **Channel:** `sistem-konten-kreator/channel-fixture-narasi-sejarah/` (FIXTURE)
+- **Model konten:** `sistem-konten-kreator/channel-fixture-narasi-sejarah/model-konten/narasi-riset-60-detik/brief.md` — v1, `Operational` (pasca PR #52)
+- **Tahap terakhir selesai:** Tahap 6 — Assembly & Publish Prep (arsip naskah+sumber+metadata, indeks, channel-brief v3, validasi lulus). **G2 final + metadata disetujui 2026-09-14.** Judul tayang resmi: "Lingkaran tinta di sudut amplop" (opsi 1 rekomendasi). Branch sudah disinkronkan dengan `origin/main` lewat merge commit `5e47399` (membawa PR #51 + PR #53 Sistem Klinik); badan PR #54 diperbarui dengan angka final pasca-merge.
+- **Tahap berikutnya:** Menunggu review independen + G3 (izin merge) pada PR #54. Folder produksi **dipertahankan** menunggu instruksi pengguna setelah unduh.
+- **Output resmi:**
+  - `tema.md` — **ADA**
+  - `riset.md` — **ADA**
+  - `SUMBER.md` — **ADA**
+  - `peta-fakta.md` — **ADA**
+  - `ideation.md` — **ADA**
+  - `konsep-angle.md` — **ADA**
+  - `naskah-draft.md` — **ADA**, naskah final r1 (G2 terkunci 2026-09-14), 130 kata
+  - `breakdown-output.md` — **ADA**, 7 segmen narasi (G1+G2 terkunci 2026-09-14)
+  - `assets/` — **ADA**, 7 still frame PNG vertikal 768×1376 (9:16 portrait); segmen 01/02/06 diregenerasi 2026-09-15 pasca review (semua bersih tanpa teks terbaca); segmen 03 accepted limitation (pseudo-glyph samar tak terbaca) — lihat metadata arsip
+  - `publish-metadata.md` — **ADA**, opsi judul, caption, hashtag, konsep thumbnail
+- **Sumber konteks yang dibaca:**
+  - `_sistem/START_DI_SINI.md`, `_sistem/00_CARA_PAKAI_SISTEM.md`
+  - `_sistem/01_BRAND_CORE.md` — masih template kosong (gap dicatat sadar di Channel Brief)
+  - `_sistem/05_CONTENT_PRODUCTION_PIPELINE.md`, `_sistem/06_PROMPT_LIBRARY.md`, `_sistem/STATUS_TEMPLATE.md`
+  - `channel-fixture-narasi-sejarah/channel-brief.md` (v2, Operational)
+  - `channel-fixture-narasi-sejarah/model-konten/narasi-riset-60-detik/brief.md` (v1, Operational pasca PR #52)
+  - `channel-fixture-narasi-sejarah/model-konten/narasi-60-detik/brief.md` (v1, Operational)
+  - `channel-fixture-narasi-sejarah/arsip-naskah/indeks.md` (5 konten dengan naskah ini)
+  - `channel-fixture-narasi-sejarah/arsip-naskah/indeks-karakter.md` (1 karakter Tipe B: Nenek Penjual Bunga — konten ini tidak memakainya)
+  - `arsip-naskah/2026-09-06-tiga-benda-di-meja-nenek.md` + `-metadata.md` (contoh format)
+  - Bank Konsistensi Visual — tidak ada elemen acuan (channel faceless)
+- **Sumber eksternal dipakai:** Ada — `SUMBER.md` dibuat dengan 17 entri (S1–S17); peta-fakta.md memetakan 7 klaim dengan status verifikasi; klaim pengalaman generik (F4, F5) diturunkan bahasanya sesuai aturan model. SUMBER sudah diarsipkan ke `arsip-naskah/2026-09-14-cap-pos-di-amplop-sumber.md`.
+- **Keputusan baru:**
+  - Tema "cap pos (stempel pos) di amplop surat" dipilih agent dengan wewenang "terserah kamu, pilih yang terbaik".
+  - Kandidat ide 3 ("Tanggal yang sampai lebih dulu daripada orangnya") dipilih sebagai ide produksi (G1 Pemilihan Ide 2026-09-14).
+  - Micro-revisi naskah r0→r1 atas koreksi akurasi cap pos (tanggal *dikirim*, bukan tanggal ditulis; "waktu kata-kata itu ditulis" → "waktu dikirim") + penambahan 2 kata kecil untuk mempertahankan jumlah kata 130.
+  - Aset segmen 03 memiliki accepted limitation (pseudo-glyph/fragmen samar di dalam lingkaran cap yang tidak membentuk kata/kota/tanggal terbaca; batas kemampuan model). Segmen 01, 02, 06 diregenerasi 2026-09-15 menjadi bersih (vertikal 9:16, tidak ada teks/huruf/word/logo terbaca) sehingga tidak lagi memiliki limitation.
+  - Unit produksi aktif folder lain (fixture lama, miso/kantor-pos) adalah peninggalan produksi fixture terdahulu yang tidak dihapus; tidak disentuh dalam sesi ini.
+- **Approval yang sudah diberikan:**
+  - `G1 Paket Riset:` disetujui 2026-09-14
+  - `G1 Pemilihan Ide:` disetujui 2026-09-14 (Kandidat 3)
+  - `G1 Tahap 2 (Konsep & Angle):` disetujui 2026-09-14
+  - `G1 Tahap 3 (Naskah cukup untuk lanjut):` disetujui 2026-09-14
+  - `G2 naskah final:` disetujui 2026-09-14 (r1 pasca micro-revisi)
+  - `G1 Tahap 4 (Breakdown cukup untuk lanjut):` disetujui 2026-09-14
+  - `G2 breakdown terkunci:` disetujui 2026-09-14
+  - `G1 Tahap 5 (Assets diterima):` disetujui 2026-09-14; 2026-09-15 segmen 01/02/06 diregenerasi vertikal 9:16 (768×1376), segmen 02 bersih tanpa teks (retry-2); keadaan final = 7 aset vertikal, limitation hanya pada segmen 03 (pseudo-glyph tak terbaca)
+  - `G2 final + metadata:` disetujui 2026-09-14 (judul "Lingkaran tinta di sudut amplop" terkunci)
+  - `G3 merge:` belum (PR #54 menunggu review/merge manual oleh pengguna)
+- **Commit terakhir:** lihat `git rev-parse HEAD` di branch `arena/01a09fed-pembangun-sistem`. Anchor sejarah yang valid (semua `git cat-file -t` = commit):
+  - `96b5a50` — G2 final + kunci judul tayang (2026-09-14)
+  - `5e47399` — merge sinkronisasi dengan `origin/main` (PR #51 + PR #53)
+  - `3ae0f05677d71c9f398cd026c9bb9d84ea1e2a34` — perubahan konten produksi terakhir: koreksi review putaran 1 (regenerasi 3 aset 01/02/06 jadi vertikal 9:16, perbaikan tabel kata/paragraf, F6 3 penerbit, metadata arsip)
+  - Commit setelah itu (bookkeeping STATUS+LOG+metadata eskalasi owner) hanya menyentuh dokumen meta, tidak mengubah naskah/aset/riset.
+  - SHA hantu yang pernah ter-amend (`ec3c623`, `67fc118`, `459057b`, `63f082c`, `b5faf86`) sudah tidak ada di sejarah dan TIDAK dirujuk lagi.
+- **PR terkait:** PR #54 — https://github.com/With-AI-Agent/Pembangun-Sistem/pull/54 (dibuka 2026-09-14 ke `main`, tanpa auto-merge)
+- **Pekerjaan belum tersimpan:** Tidak ada
+- **Risiko atau blocker:** Tidak ada. Brand Core masih template kosong (gap dicatat di Channel Brief; produksi fixture tetap berjalan).
+- **Waktu pembaruan:** 2026-09-15 (setelah merge origin/main + pembaruan badan PR #54)
