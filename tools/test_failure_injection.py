@@ -24,7 +24,6 @@ from pathlib import Path
 from tempfile import TemporaryDirectory
 import hashlib
 import importlib.util
-import inspect
 import os
 import re
 import shutil
@@ -270,10 +269,12 @@ def review_prompt_scenarios(base_dir: Path):
 
     RP5 diubah 15 Sep 2026 setelah temuan T-4 review PR #56: versi pertama
     hanya memeriksa keberadaan teks `--paginate` di sumber (tautologi, bukan
-    perilaku). Kini yang diuji: argv yang benar-benar dipakai `fetch_pr_files`
-    (RP5b) dan penjaga konsistensi `resolve_pr_files` yang menolak daftar tak
-    konsisten (RP5a) — dua-duanya diuji-mutasi, dan mutasi yang tidak
-    mengubah apa pun membuat uji gagal (bukan lolos palsu).
+    perilaku). Kini yang diuji: (RP5b) argv yang dikembalikan `files_command`,
+    (RP5c) bahwa `fetch_pr_files` benar-benar memanggilnya — menutup celah
+    "argv karangan di tempat pemanggilan" yang disebut C-2 — dan (RP5a)
+    penjaga konsistensi `resolve_pr_files` yang menolak daftar tak konsisten.
+    Semuanya diuji-mutasi, dan mutasi yang tidak mengubah apa pun membuat uji
+    gagal (bukan lolos palsu).
     """
     checks = []
     cp = base_dir / "repo"
@@ -464,6 +465,40 @@ def review_prompt_scenarios(base_dir: Path):
     checks.append((
         "RP5a diuji-mutasi: penjaga dimatikan -> daftar tak konsisten lolos",
         not menolak_mut,
+    ))
+    rp_path.write_text(original, encoding="utf-8")
+    rp = _load_review_prompt(cp, "review_prompt_regression_link")
+
+    # RP5c (C-2 review PR #56): rantai pemanggilannya ikut diuji — bukan
+    # hanya nilai argv helper-nya. Kalau fetch_pr_files menyusun argv sendiri
+    # (tanpa paginasi), uji ini merah walaupun files_command benar.
+    tangkap = {}
+
+    def _run_palsu(cmd):
+        tangkap["cmd"] = list(cmd)
+        return 0, "satu.md\n", ""
+
+    rp._run = _run_palsu
+    hasil = rp.fetch_pr_files(42)
+    checks.append((
+        "RP5c fetch_pr_files benar-benar memakai argv files_command (bukan argv karangan)",
+        tangkap.get("cmd") == rp.files_command(42) and hasil == ["satu.md"],
+    ))
+
+    mut_link = original.replace(
+        "    code, out, err = _run(files_command(number))",
+        '    code, out, err = _run(["gh", "api",'
+        ' f"repos/{{owner}}/{{repo}}/pulls/{number}/files", "--jq", ".[].filename"])',
+    )
+    assert mut_link != original, "mutasi RP5c tidak mengubah apa pun — uji tidak valid"
+    rp_path.write_text(mut_link, encoding="utf-8")
+    rp_mut = _load_review_prompt(cp, "review_prompt_mut_rp5c")
+    tangkap_mut = {}
+    rp_mut._run = lambda cmd: (tangkap_mut.update(cmd=list(cmd)) or (0, "satu.md\n", ""))
+    rp_mut.fetch_pr_files(42)
+    checks.append((
+        "RP5c diuji-mutasi: argv in-line tanpa paginasi -> tidak lagi sama dengan files_command",
+        tangkap_mut.get("cmd") != rp_mut.files_command(42),
     ))
     rp_path.write_text(original, encoding="utf-8")
 
