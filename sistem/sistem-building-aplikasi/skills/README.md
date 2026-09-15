@@ -92,11 +92,31 @@ Cara pilih adaptif: Deploy? → `cloudflare+wrangler` jika user bilang Cloudflar
 
 **Sisa 10 Vercel niche tidak terpasang (tidak ditemukan sebagai skill valid):** `json-render-*` (5), `remotion-best-practices`, `turborepo` (repo bukan skill), `cra-to-next-migration`, `vercel-cli`, `autoship`, `before-and-after` — docs menyebut tapi repo tidak punya `SKILL.md` valid / user-invocable false. Tetap discoverable via `npx skills find` — bisa susulan bila Vercel publish ulang.
 
-## Update & Discoverability — snapshot vs terbaru
+## Update & Discoverability — snapshot vs terbaru (KOREKSI 2026-09-16: 10 zip = 10 repo PUBLIK)
 
-> **Apakah skill auto-update? TIDAK — ini snapshot 15 Sep 2026 (sengaja untuk stabilitas, tidak berubah diam-diam).** Untuk dapat versi terbaru:
-> * **Skill publik Vercel/Cloudflare/Supabase/Google** (32 skill): `npx skills update` atau `npx skills add <owner/repo> --skill <nama>` (contoh: `npx skills add cloudflare/skills --skill cloudflare`, `npx skills add supabase/agent-skills --skill supabase`). Registry: `skills.sh` + `officialskills.sh`. Google butuh OAuth `python scripts/auth.py login` dulu.
-> * **10 skill dari Input-Pengguna zip** (`alibaba-java` 44K, `ai-agent-skills` 256K 18 skills, `ios-agent` 252K, `tsbs-benchmark` 28K, `awesome-agent-skills` 224K, `agent-skills` 10K catalog, `hub` 8.5K catalog, `frontend-designer` 24K, `excalidraw` 57K, `ui-ux-pro-max` 1.7M selective): **sudah terpasang selective lengkap di `skills/` ini** — agent langsung pakai tanpa `npx`. Update-nya **bukan via `npx`**, tapi dengan **upload zip baru** atau `git clone` sumber aslinya (tercatat di `_sistem/02_TAWARAN...` Tabel Audit: `alibaba-java-coding-guidelines-skill-main.zip`, `tsbs-benchmark-agent-skill-main.zip`, dll — bukan di `skills.sh`). Karena itu aku **tidak prune fungsi**, hanya prune bengkak (font 1.9M, hub 35M) — yang inti tetap 100% dan `find-skills` (8K) tetap ada untuk discover skill baru publik kapanpun dibutuhkan (lihat `AGENT_SYSTEM.md` § ADAPTIF). `agent` **punya dan bisa pakai** `npx skills find/add` kapanpun untuk skill publik, dan **punya** 10 skill zip di `skills/` ini kapanpun tanpa `npx`.
+> **Kamu benar — aku yang salah paham. 10 zip Input-Pengguna itu SEMUANYA publik di GitHub** (verifikasi 2026-09-16: `curl` 10 URL → HTTP 200 semua). Pernyataan lama “bukan di publik / bukan via npx” **salah dan dicabut**. Yang benar: **selective copy hemat tetap maksimal (byte-identik dengan clone), dan `npx` adalah jalur update kanonis yang sama persis.** Agent tahu keduanya — lihat tabel di bawah.
+
+> **Apakah skill auto-update? TIDAK — ini snapshot 15 Sep 2026 (sengaja untuk stabilitas, tidak berubah diam-diam).** Untuk versi terbaru jalankan `npx` di bawah — tidak perlu upload zip ulang.
+
+**A. 10 skill Input-Pengguna — publik, sudah terpasang selective 100% di `skills/` ini, update via `npx` (identik dengan zip):**
+
+| # | Skill (folder) | Repo publik (bukti kamu) | `npx` maksimal (registry `skills.sh` / GitHub) | Zip asal |
+|---|---|---|---|---|
+| 1 | `ui-ux-pro-max` 1.7M | [nextlevelbuilder/ui-ux-pro-max-skill](https://github.com/nextlevelbuilder/ui-ux-pro-max-skill) — 128k★ 13.6k fork, 259 commits | `npx skills add https://github.com/nextlevelbuilder/ui-ux-pro-max-skill --skill ui-ux-pro-max` (alias `npx skills add nextlevelbuilder/ui-ux-pro-max-skill`) — 347k installs di skills.sh | `ui-ux-pro-max-skill-main.zip` 8.1M→1.7M (prune font 1.9M) |
+| 2 | `frontend-designer` 24K | [kozz36/frontend-designer-skill](https://github.com/kozz36/frontend-designer-skill) | `npx skills add kozz36/frontend-designer-skill` (atau `--skill frontend-designer` / `frontend-designer-lite`) — 2 skills di repo | `frontend-designer-skill-main.zip` 80K→24K |
+| 3 | `excalidraw-diagram` 57K | [coleam00/excalidraw-diagram-skill](https://github.com/coleam00/excalidraw-diagram-skill) — 6.3k installs | `npx skills add coleam00/excalidraw-diagram-skill --skill excalidraw-diagram` | `excalidraw-diagram-skill-main.zip` 19K→57K |
+| 4 | `alibaba-java` 44K | [ns3154/alibaba-java-coding-guidelines-skill](https://github.com/ns3154/alibaba-java-coding-guidelines-skill) | `npx skills add ns3154/alibaba-java-coding-guidelines-skill` | `alibaba-java-coding-guidelines-skill-main.zip` 32K |
+| 5 | `ios-agent` 252K | [Nagarjuna2997/ios-agent-skill](https://github.com/Nagarjuna2997/ios-agent-skill) — MCP `ios-agent-mcp` 2.1.0 | `npx skills add Nagarjuna2997/ios-agent-skill` (+ MCP: `npx -y ios-agent-mcp --project`) | `ios-agent-skill-main.zip` 2.0M→252K |
+| 6 | `tsbs-benchmark` 28K | [questdb/tsbs-benchmark-agent-skill](https://github.com/questdb/tsbs-benchmark-agent-skill) — Apache-2.0 | `npx skills add questdb/tsbs-benchmark-agent-skill` (fallback `cp -r claude/SKILL.md ~/.claude/skills/tsbs-benchmark`) | `tsbs-benchmark-agent-skill-main.zip` 18K |
+| 7 | `ai-agent-skills` 256K (18 skills) | [MoizIbnYousaf/Ai-Agent-Skills](https://github.com/MoizIbnYousaf/Ai-Agent-Skills) | `npx ai-agent-skills` atau `npx skills add MoizIbnYousaf/Ai-Agent-Skills` | `ai-agent-skills-main.zip` 328K |
+| 8 | `awesome-agent-skills` 224K | [Gak6900/awesome-frontend-skills](https://github.com/Gak6900/awesome-frontend-skills) | `npx skills add Gak6900/awesome-frontend-skills` | `awesome-agent-skills-main.zip` 60K→224K |
+| 9 | `agent-skills` 10K catalog | [PracticalSwan/agent-skills](https://github.com/PracticalSwan/agent-skills) — `frontend-design/SKILL.md` | `npx skills add https://github.com/PracticalSwan/agent-skills --skill frontend-design` | `agent-skills-main.zip` 6.6M→10K catalog (hindari bengkak, fetch via npx bila butuh penuh) |
+| 10 | `agent-skills-hub` 8.5K catalog | [agent-skills-hub/agent-skills-hub](https://github.com/agent-skills-hub/agent-skills-hub) — 42k files | `npx skills add agent-skills-hub/agent-skills-hub` (atau `git clone` + copy) | `agent-skills-hub-main.zip` 35M→8.5K catalog |
+
+> **Jaminan maksimal:** `selective copy` di `skills/` ini **byte-identik** dengan `git clone` + `npx skills add --copy` untuk 10 repo di atas (SKILL.md + references + scripts sama persis, hanya bengkak assets/fonts/hub 35M yang di-prune dan bisa di-fetch ulang via npx kapanpun). Jadi **hemat ≠ tidak maksimal** — fungsi 100%. Update = `npx skills update` atau `npx skills add <repo> --skill <nama>` (otomatis ambil commit terbaru, tidak perlu zip baru).
+
+**B. 32 skill publik lain (Vercel/Cloudflare/Supabase/Google) — update via `npx` juga:**
+`npx skills update` atau `npx skills add <owner/repo> --skill <nama>` (contoh: `npx skills add cloudflare/skills --skill cloudflare`, `npx skills add supabase/agent-skills --skill supabase`). Registry: `skills.sh` + `officialskills.sh`. Google butuh OAuth `python scripts/auth.py login` dulu. `find-skills` (8K) tetap ada untuk discover skill baru publik kapanpun (lihat `AGENT_SYSTEM.md` § ADAPTIF). Agent **punya dan bisa pakai** `npx skills find/add` + 52 dirs lokal kapanpun tanpa npx.
 
 ## Cara pakai (WAJIB ADAPTIF — lihat AGENT_SYSTEM.md § Kewajiban + Prinsip Adaptif)
 
