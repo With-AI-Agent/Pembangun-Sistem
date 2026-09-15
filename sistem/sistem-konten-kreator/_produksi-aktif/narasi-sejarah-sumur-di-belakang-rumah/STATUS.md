@@ -3,14 +3,14 @@
 - **Status:** `in-progress`
 - **Channel:** `channel-fixture-narasi-sejarah` (Channel Brief **v4**, G2 2026-09-15)
 - **Model konten:** `narasi-60-detik` (**v2**, G2 2026-09-15) — 55–65 detik, 108–125 kata, tempo channel 125 kata/menit, jeda 0,7 detik
-- **Tahap terakhir selesai:** Tahap 4 — Breakdown Output (`breakdown-output.md` tersimpan: **7 segmen narasi S1–S7** + timeline dari tempo 125 wpm + jeda 0,7 dtk, total 60,84 dtk) — menunggu G1 + G2
-- **Tahap berikutnya:** kalau G2 breakdown turun → Tahap 5 Generate/Acquire Assets (7 aset b-roll vertikal 9:16)
+- **Tahap terakhir selesai:** Tahap 5 — Generate/Acquire Assets (7 aset b-roll vertikal 9:16 tersimpan di `assets/`, semua diinspeksi: tanpa teks terbaca, tanpa wajah dikenali — `assets/CATATAN-ASSET.md`) — menunggu G1 Tahap 5
+- **Tahap berikutnya:** kalau G1 Tahap 5 turun → Tahap 6 Assembly & Publish Prep (publish-metadata + arsip naskah)
 - **Output resmi:**
   - `ideation.md` — ADA
   - `konsep-angle.md` — ADA
-  - `naskah-draft.md` — ADA (r1, **118 kata**, dikunci **G2 naskah final 2026-09-15**)
-  - `breakdown-output.md` — ADA (7 segmen; belum dikunci G2)
-  - `assets/` — belum
+  - `naskah-draft.md` — ADA (118 kata, dikunci G2 naskah final 2026-09-15)
+  - `breakdown-output.md` — ADA (7 segmen, dikunci G2 breakdown 2026-09-15)
+  - `assets/` — ADA (7 aset S1–S7 vertikal 768×1376)
 - **Sumber konteks yang dibaca:** `channel-fixture-narasi-sejarah/channel-brief.md` v4; `model-konten/narasi-60-detik/brief.md` v2; `model-konten/narasi-riset-60-detik/brief.md` v2; `arsip-naskah/indeks.md`; `arsip-naskah/indeks-karakter.md`; `_sistem/05_CONTENT_PRODUCTION_PIPELINE.md`; `_sistem/06_PROMPT_LIBRARY.md` (A2); `_sistem/00_CARA_PAKAI_SISTEM.md`; `_sistem/START_DI_SINI.md`; `_sistem/01_BRAND_CORE.md` — **masih template kosong** (gap warisan yang sudah dideklarasikan di Channel Brief; dilaporkan, tidak diisi diam-diam)
 - **Sumber eksternal dipakai:** `Tidak ada`
 - **Keputusan baru:**
@@ -23,8 +23,9 @@
   - `G1 Tahap 2 (Konsep & Angle):` disetujui 2026-09-15
   - `G1 Tahap 3 (Naskah draft):` disetujui 2026-09-15
   - `G2 naskah final:` disetujui 2026-09-15 — naskah 118 kata dikunci sebagai dasar breakdown dan yang akan diarsipkan di Tahap 6
-  - `G1 Tahap 4 (Breakdown):` belum
-  - `G2 breakdown (dasar generate aset):` belum
+  - `G1 Tahap 4 (Breakdown):` disetujui 2026-09-15
+  - `G2 breakdown (dasar generate aset):` disetujui 2026-09-15
+  - `G1 Tahap 5 (Asset):` belum
   - `G2 Channel Brief v4:` disetujui 2026-09-15 (di luar unit ini — commit `bc545dd`)
   - `G2 brief model narasi-60-detik v2:` disetujui 2026-09-15 (commit `bc545dd`)
   - `G3 merge:` belum
