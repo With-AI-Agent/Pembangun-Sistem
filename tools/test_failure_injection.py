@@ -24,6 +24,7 @@ from pathlib import Path
 from tempfile import TemporaryDirectory
 import hashlib
 import importlib.util
+import inspect
 import os
 import re
 import shutil
@@ -259,11 +260,13 @@ def _load_review_prompt(repo: Path, module_name: str):
 
 
 def review_prompt_scenarios(base_dir: Path):
-    """RP1-RP4 (8 Sep 2026): regresi pembangkit prompt review.
+    """RP1-RP5: regresi pembangkit prompt review.
 
-    Ini uji mutasi untuk tiga cacat nyata: deteksi pin via self-match string,
-    urutan baca yang menjatuhkan Markdown root, dan jendela-uji yang dipicu
-    log penulis PR sendiri.
+    Ini uji mutasi untuk empat cacat nyata: deteksi pin via self-match string,
+    urutan baca yang menjatuhkan Markdown root, jendela-uji yang dipicu
+    log penulis PR sendiri, dan daftar berkas PR yang terpotong 100 berkas
+    karena `gh pr view --json files` tidak dipaginasi (RP5 — T-2, temuan
+    review PR #55, 15 Sep 2026).
     """
     checks = []
     cp = base_dir / "repo"
@@ -396,6 +399,26 @@ def review_prompt_scenarios(base_dir: Path):
         "RP4 status akhir CLOSED mengalahkan header OPEN pada pemindai jendela-uji",
         blocking_closed == [] and writer_closed == [],
     ))
+    rp_path.write_text(original, encoding="utf-8")
+    rp = _load_review_prompt(cp, "review_prompt_regression_files")
+
+    # RP5 (T-2): `gh pr view --json files` berhenti di 100 berkas, sehingga PR
+    # besar bisa terlihat "tidak menyentuh berkas pelindung". Daftar berkas
+    # wajib diambil dengan `gh api --paginate`.
+    checks.append((
+        "RP5 daftar berkas PR diambil via gh api --paginate + ada ambang konsistensi",
+        '"--paginate"' in inspect.getsource(rp.fetch_pr_files)
+        and "PR_FILES_VIEW_CAP" in inspect.getsource(rp.resolve_pr_files),
+    ))
+
+    marker = '            "--paginate",\n'
+    rp_path.write_text(original.replace(marker, ""), encoding="utf-8")
+    rp_mut = _load_review_prompt(cp, "review_prompt_mut_rp5")
+    checks.append((
+        "RP5 diuji-mutasi: --paginate dihilangkan -> fetch_pr_files kehilangan paginasi",
+        '"--paginate"' not in inspect.getsource(rp_mut.fetch_pr_files),
+    ))
+    rp_path.write_text(original, encoding="utf-8")
 
     return checks
 

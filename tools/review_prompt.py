@@ -70,6 +70,11 @@ GUARDED_SISTEM_PREFIXES = ("00", "05", "06")
 # Folder yang berisi state produksi/fixture (bukan aturan, tapi bukti hidup).
 PRODUCTION_DIR_HINTS = ("_produksi-aktif/", "deck-aktif/", "unit-aktif/")
 
+# `gh pr view --json files` berhenti di 100 berkas (T-2, temuan review PR #55).
+# Dipakai hanya untuk mendeteksi ketidakkonsistenan; daftar lengkap datang dari
+# `gh api --paginate`.
+PR_FILES_VIEW_CAP = 100
+
 
 
 class ToolError(Exception):
@@ -131,6 +136,46 @@ def fetch_base_sha(number: int) -> str:
             f"{(err or out).strip()[:200] or '(kosong)'}"
         )
     return out.strip()
+
+
+def fetch_pr_files(number: int) -> list[str]:
+    """Daftar berkas PR yang LENGKAP — fail-closed.
+
+    `gh pr view --json files` berhenti di 100 berkas (terverifikasi pada PR #55:
+    283 berkas, hanya 100 yang dilaporkan). Daftar ini yang menentukan apakah
+    berkas pelindung tersentuh, jadi pemotongan itu bisa membuat deteksi buta.
+    Karena itu diambil lewat `gh api --paginate` supaya semua halaman ikut.
+    """
+    code, out, err = _run(
+        [
+            "gh",
+            "api",
+            f"repos/{{owner}}/{{repo}}/pulls/{number}/files",
+            "--paginate",
+            "--jq",
+            ".[].filename",
+        ]
+    )
+    if code != 0:
+        raise ToolError(
+            f"daftar berkas PR #{number} tidak bisa dibaca (gh api keluar {code}): "
+            f"{(err or out).strip()[:200] or '(kosong)'}\n"
+            "  Prompt tidak dicetak tanpa daftar berkas yang lengkap (fail-closed)."
+        )
+    return sorted({line.strip() for line in out.splitlines() if line.strip()})
+
+
+def resolve_pr_files(number: int, data: dict) -> list[str]:
+    """Daftar berkas PR lengkap + konsistensi dengan `gh pr view` (T-2)."""
+    files = fetch_pr_files(number)
+    viewed = data.get("files") or []
+    if len(viewed) < PR_FILES_VIEW_CAP and len(viewed) != len(files):
+        raise ToolError(
+            f"daftar berkas PR #{number} tidak konsisten: `gh pr view` melapor "
+            f"{len(viewed)} berkas, `gh api --paginate` mengembalikan {len(files)}. "
+            "Prompt tidak dicetak (fail-closed)."
+        )
+    return files
 
 
 def detect_pr_from_branch() -> int:
@@ -402,8 +447,14 @@ def render(pr: dict | None, files: list[str], generic: bool) -> tuple[str, list[
     a("1. **Kelengkapan vs isi PR** — setiap hal yang dijanjikan body PR benar-benar ada di diff; setiap hal di diff")
     a("   punya penjelasan di body. Selisih dua arah = temuan.")
     a("2. **Append-only** — `git diff --numstat <base> <head>` untuk berkas log/bukti (`LOG_SESI_*.md`,")
-    a("   `ACCEPTANCE_TEST_LOG.md`, dokumen bukti): kolom delesi **harus 0**. Entri lama yang diedit/dihapus/dihaluskan")
-    a("   = **BLOCKER**, bukan catatan kecil.")
+    a("   `ACCEPTANCE_TEST_LOG.md`, dokumen bukti): kolom delesi **harus 0** — KECUALI blok header")
+    a("   \"Keadaan Sesi\" pada `LOG_SESI_*.md`. Blok itu WAJIB disegarkan saat penutupan sesi (header")
+    a("   `OPEN` menjadi `CLOSED`, ringkasan keadaan diperbarui), jadi perubahan baris DI DALAM blok itu")
+    a("   SAH dan bukan temuan. Batas blok = awal berkas sampai baris `## Kronologi` (atau penanda setara);")
+    a("   perubahan di ATAS batas = wajar bila hanya di blok header; perubahan di BAWAH batas (entri")
+    a("   kronologi) = **BLOCKER**. Entri lama yang diedit/dihapus/dihaluskan = **BLOCKER**, bukan catatan")
+    a("   kecil. (Penyelarasan 15 Sep 2026: aturan segarkan-header ada di `_meta/TEMPLATE_LOG_SESI.md` dan")
+    a("   `_meta/PROTOKOL_CHECKPOINT_RECOVERY.md` — tanpa pengecualian ini dua aturan saling mengunci.)")
     a("3. **Klaim luar diverifikasi lewat API** — status PR/rilis/komentar/merge dicek dengan `gh api`, bukan dibaca")
     a("   dari body PR. Kalau body menyebut angka rilis/ID/URL, panggil API-nya sendiri.")
     a("4. **Angka direproduksi sendiri** — setiap angka yang dikutip di bukti (jumlah skenario, jumlah warning, jumlah")
@@ -530,7 +581,7 @@ def main(argv: list[str] | None = None) -> int:
             if number <= 0:
                 raise ToolError(f"nomor PR tidak masuk akal: {number}")
             data = fetch_pr(number)
-            files = [f["path"] for f in (data.get("files") or [])]
+            files = resolve_pr_files(number, data)
             text, windows = render(data, files, generic=False)
     except ToolError as exc:
         print(f"review_prompt: GAGAL — {exc}", file=sys.stderr)

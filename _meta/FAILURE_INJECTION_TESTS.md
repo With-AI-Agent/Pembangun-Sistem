@@ -116,7 +116,7 @@ FI-01…FI-10 di atas adalah test perilaku AGENT. Skrip `tools/test_failure_inje
 
 Alasan pensiun P1–P3: keputusan pemilik menetapkan folder sistem sebagai deliverable. Mekanisme lama memindahkan kerja penyatuan/glue ke pemilik; folder sebagai deliverable lebih murah dipertahankan. Karena profil repo dan daftar putih rujukan-absen dicabut, skenario yang mengawasi pembusukan daftar putih ikut pensiun bersama objek yang dijaganya.
 
-**Jumlah:** 59 skenario di master (15 sintetis + 10 unit nyata + 14 regresi review PR-11 + 10 regresi check_selfcontained + 10 regresi review_prompt), 16 di ekstrak template (15 sintetis + 1 unit nyata benih; regresi repo-copy tidak dijalankan bersarang). Angka ini disalin dari baris yang dicetak `tools/test_failure_injection.py`, bukan dihitung tangan.
+**Jumlah:** 61 skenario di master (15 sintetis + 10 unit nyata + 14 regresi review PR-11 + 10 regresi check_selfcontained + 12 regresi review_prompt), 16 di ekstrak template (15 sintetis + 1 unit nyata benih; regresi repo-copy tidak dijalankan bersarang). Angka ini disalin dari baris yang dicetak `tools/test_failure_injection.py`, bukan dihitung tangan. Penambahan terakhir: RP5 (12 regresi review_prompt) — uji mutasi paginasi daftar berkas PR (T-2, temuan review PR #55, 15 Sep 2026).
 
 
 ### AT-16/C5 — larangan angka korpus di sel Bukti
