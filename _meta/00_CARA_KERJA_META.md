@@ -154,6 +154,16 @@ Baru setelah itu, arahkan sesuai tujuan. Jika state tidak konsisten, gunakan `FA
      JUGA prompt Discovery detailnya — baru peta dokumen apa saja yang
      akan dibangun, dengan fungsi masing-masing)
 
+   **WAJIB-BERTAJUK (tawaran kapabilitas):** setelah Discovery, agent
+   MENAWARKAN riset kapabilitas (plugin/skill/library) yang mungkin
+   dibutuhkan sistem ini — tawaran, BOLEH DITOLAK; penolakan dicatat di
+   Log Keputusan supaya tidak ditawari ulang tanpa alasan baru. Mekanisme
+   lengkapnya: sistem/sistem-klinik/_sistem/05_TAWARAN_KAPABILITAS.md
+   (satu-satunya sumber; meta tidak menyimpan salinan kedua — norma
+   anti-dokumen-kembar). Ditulis tanpa backtick karena berkas itu tidak
+   ikut dalam ekstrak template bersih (penjaga pin R7 di
+   tools/test_failure_injection.py).
+
 2. BUAT folder `sistem/sistem-[nama-baru]/` dan salin `SYSTEM_MANIFEST_TEMPLATE.md`
    menjadi manifest sistem tersebut (PR yang sama dengan rencana kerangka —
    manifest menyusul SETELAH merge adalah temuan M-14). Buat skeleton kosong
@@ -204,7 +214,11 @@ Baru setelah itu, arahkan sesuai tujuan. Jika state tidak konsisten, gunakan `FA
    [tanggal], mau saya audit dulu sebelum lanjut, atau langsung saja?")
 
 2. Masuk ke folder sistem/sistem-[nama]/, baca dokumen navigasinya (analog
-   START_DI_SINI.md), lanjutkan kerja sesuai kebutuhan
+   START_DI_SINI.md), lanjutkan kerja sesuai kebutuhan.
+   **WAJIB-BERTAJUK (tawaran kapabilitas):** di titik ini agent juga
+   MENAWARKAN riset kapabilitas (plugin/skill/library) yang relevan —
+   tawaran, BOLEH DITOLAK; penolakan dicatat di Log Keputusan supaya tidak
+   ditawari ulang tanpa alasan baru (mekanisme: sistem/sistem-klinik/_sistem/05_TAWARAN_KAPABILITAS.md).
 
 3. Begitu selesai kerja (apapun jenisnya), UPDATE tanggal "terakhir
    disentuh" di INDEKS_SISTEM.md — WAJIB, jangan sampai lupa dicatat

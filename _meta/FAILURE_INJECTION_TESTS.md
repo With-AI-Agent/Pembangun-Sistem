@@ -77,7 +77,7 @@ FI-01…FI-10 di atas adalah test perilaku AGENT. Skrip `tools/test_failure_inje
 | R1 (F1) | hapus file inti `_meta/DEFINITION_OF_DONE.md` | validator + build_template + backup_verify HARUS gagal (sebelumnya: lolos — daftar wajib diturunkan dari keberadaan) |
 | R2 (F2) | folder `sistem-autopilot-data/` tak terdaftar | validator HARUS gagal (sebelumnya: di-skip karena substring "pilot") |
 | R3 (F2) | baris "Daftar Sistem" tanpa backtick di kolom Folder | validator HARUS gagal (parse ketat; sebelumnya: baris diabaikan, cakupan hilang) |
-| R4 (F3) | hapus SELURUH unit STATUS sistem terdaftar sampai nol (sistem boleh sah punya beberapa unit: produksi selesai yang dipertahankan + produksi berjalan) | validator & FI HARUS gagal (sebelumnya: cakupan menyusut, tetap lulus) |
+| R4 (F3) | hapus SELURUH unit STATUS sistem terdaftar sampai nol (sistem boleh sah punya beberapa unit: produksi selesai yang dipertahankan + produksi berjalan). **Sistem `Tahap: kerangka` DILEWATI** — kehadiran unitnya sengaja berperingkat warning (aturan Tahap), jadi fail-closed diuji pada sistem siap-pakai; ikut R4 = positif-palsu terbalik | validator & FI HARUS gagal (sebelumnya: cakupan menyusut, tetap lulus) |
 | R5/R6 (F9) | sistem skeleton `Tahap: kerangka` tanpa artefak W-01/W-02/W-03 / kondisi sama dengan `Tahap: siap-pakai` | PASS (warning saja) / HARUS gagal |
 | R7 (F5) | build template di salinan → ekstrak → `git init` → validator | exit 0 + PERSIS 5 warning normalisasi (daftar di `TEMPLATE_RELEASE.md`, dipin di skrip) + tanpa warning di bootstrap/pegangan pengguna |
 | R8 (PR A) | hapus `tools/check_selfcontained.py` dari salinan repo | validator HARUS gagal karena alat ini masuk CORE tool; penghapusan tidak boleh hilang lewat glob turunan |

@@ -88,6 +88,13 @@ dengan struktur:
 
 # Rencana Kerangka — Sistem [Nama Sistem]
 
+
+6. KAPABILITAS EKSTERNAL (WAJIB — satu pertanyaan, dijawab sekilas saja):
+   "kapabilitas eksternal apa yang kemungkinan dibutuhkan sistem ini?"
+   (plugin/skill/library/alat — bukan wajib dipakai; jawabannya masuk
+   rencana kerangka sebagai acuan tawaran di Langkah 1 alur bangun dan
+   Langkah 2 alur audit/lanjut). Mekanisme tawarannya:
+   sistem/sistem-klinik/_sistem/05_TAWARAN_KAPABILITAS.md.
 ## Untuk Siapa/Apa
 [jawaban poin 1]
 
