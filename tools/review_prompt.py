@@ -70,6 +70,15 @@ GUARDED_SISTEM_PREFIXES = ("00", "05", "06")
 # Folder yang berisi state produksi/fixture (bukan aturan, tapi bukti hidup).
 PRODUCTION_DIR_HINTS = ("_produksi-aktif/", "deck-aktif/", "unit-aktif/")
 
+# Folder tempat LOG_SESI hidup: root (konvensi lama, sebelum v1.13.0) dan
+# `_log-sesi/` (konvensi berlaku sejak 9 Sep 2026 — v1.13.0).
+LOG_SESI_DIRS = ("", "_log-sesi")
+
+# `gh pr view --json files` berhenti di 100 berkas (T-2, temuan review PR #55).
+# Dipakai hanya untuk mendeteksi ketidakkonsistenan; daftar lengkap datang dari
+# `gh api --paginate`.
+PR_FILES_VIEW_CAP = 100
+
 
 
 class ToolError(Exception):
@@ -131,6 +140,53 @@ def fetch_base_sha(number: int) -> str:
             f"{(err or out).strip()[:200] or '(kosong)'}"
         )
     return out.strip()
+
+
+def files_command(number: int) -> list[str]:
+    """argv `gh api` untuk daftar berkas PR — dipaginasi (T-2).
+
+    Dipisah menjadi fungsi sendiri supaya paginasinya bisa diuji sebagai nilai
+    yang benar-benar dipakai `fetch_pr_files`, bukan sekadar teks di sumber.
+    """
+    return [
+        "gh",
+        "api",
+        f"repos/{{owner}}/{{repo}}/pulls/{number}/files",
+        "--paginate",
+        "--jq",
+        ".[].filename",
+    ]
+
+
+def fetch_pr_files(number: int) -> list[str]:
+    """Daftar berkas PR yang LENGKAP — fail-closed.
+
+    `gh pr view --json files` berhenti di 100 berkas (terverifikasi pada PR #55:
+    283 berkas, hanya 100 yang dilaporkan). Daftar ini yang menentukan apakah
+    berkas pelindung tersentuh, jadi pemotongan itu bisa membuat deteksi buta.
+    Karena itu diambil lewat `gh api --paginate` supaya semua halaman ikut.
+    """
+    code, out, err = _run(files_command(number))
+    if code != 0:
+        raise ToolError(
+            f"daftar berkas PR #{number} tidak bisa dibaca (gh api keluar {code}): "
+            f"{(err or out).strip()[:200] or '(kosong)'}\n"
+            "  Prompt tidak dicetak tanpa daftar berkas yang lengkap (fail-closed)."
+        )
+    return sorted({line.strip() for line in out.splitlines() if line.strip()})
+
+
+def resolve_pr_files(number: int, data: dict) -> list[str]:
+    """Daftar berkas PR lengkap + konsistensi dengan `gh pr view` (T-2)."""
+    files = fetch_pr_files(number)
+    viewed = data.get("files") or []
+    if len(viewed) < PR_FILES_VIEW_CAP and len(viewed) != len(files):
+        raise ToolError(
+            f"daftar berkas PR #{number} tidak konsisten: `gh pr view` melapor "
+            f"{len(viewed)} berkas, `gh api --paginate` mengembalikan {len(files)}. "
+            "Prompt tidak dicetak (fail-closed)."
+        )
+    return files
 
 
 def detect_pr_from_branch() -> int:
@@ -248,7 +304,7 @@ def reading_order(files: list[str]) -> list[str]:
     for rel in files:
         if rel in base_paths:
             continue
-        if rel.startswith("LOG_SESI_") and rel.endswith(".md"):
+        if Path(rel).name.startswith("LOG_SESI_") and rel.endswith(".md"):
             relevan.append((rel, f"`{rel}` — log sesi penulis PR"))
         elif rel.startswith("_meta/") and rel.endswith(".md"):
             relevan.append((rel, f"`{rel}` — disentuh PR"))
@@ -284,6 +340,28 @@ def latest_log_status(lines: list[str]) -> str:
     return statuses[-1] if statuses else "OPEN"
 
 
+def session_log_files() -> list[Path]:
+    """Semua `LOG_SESI_*.md` yang wajib dipindai: root DAN `_log-sesi/`.
+
+    Sebelum 15 Sep 2026 pemindaian hanya `ROOT.glob("LOG_SESI_*.md")`, sehingga
+    buta total sejak seluruh log pindah ke `_log-sesi/` — cacat C-1 yang
+    ditemukan review independen PR #56 (0 berkas di root, 38 di `_log-sesi/`).
+    """
+    found: list[Path] = []
+    for rel in LOG_SESI_DIRS:
+        base = ROOT if rel == "" else ROOT / rel
+        found.extend(sorted(base.glob("LOG_SESI_*.md")))
+    return found
+
+
+def log_pointer(log: Path) -> str:
+    """Path log relatif terhadap ROOT (pointer SHA+baris butuh path ini)."""
+    try:
+        return log.relative_to(ROOT).as_posix()
+    except ValueError:
+        return log.name
+
+
 def open_test_window(files: list[str] | None = None) -> tuple[list[str], list[str]]:
     """LOG_SESI terbuka yang menyebut jendela uji berjalan.
 
@@ -295,23 +373,29 @@ def open_test_window(files: list[str] | None = None) -> tuple[list[str], list[st
     """
     blocking: list[str] = []
     writer_hits: list[str] = []
-    writer_logs = {f for f in (files or []) if f.startswith("LOG_SESI_") and f.endswith(".md")}
+    # Path PR kini berawalan `_log-sesi/`, jadi penanda log penulis dicocokkan
+    # dari NAMA berkas, bukan awalan path (bagian dari cacat C-1).
+    writer_logs = {
+        f for f in (files or [])
+        if Path(f).name.startswith("LOG_SESI_") and f.endswith(".md")
+    }
     pattern = re.compile(
         r"jendela uji|jendela run|run acceptance|acceptance run|"
         r"belum dijalankan|sedang berjalan|dijadwalkan, belum",
         re.IGNORECASE,
     )
-    for log in sorted(ROOT.glob("LOG_SESI_*.md")):
+    for log in session_log_files():
         try:
             lines = log.read_text(encoding="utf-8").splitlines()
         except OSError:
             continue
         if latest_log_status(lines) != "OPEN":
             continue
+        rel = log_pointer(log)
         for idx, line in enumerate(lines, start=1):
             if pattern.search(line):
-                ptr = f"{log.name}:{idx}"
-                if log.name in writer_logs:
+                ptr = f"{rel}:{idx}"
+                if rel in writer_logs:
                     writer_hits.append(ptr)
                 else:
                     blocking.append(ptr)
@@ -402,8 +486,14 @@ def render(pr: dict | None, files: list[str], generic: bool) -> tuple[str, list[
     a("1. **Kelengkapan vs isi PR** — setiap hal yang dijanjikan body PR benar-benar ada di diff; setiap hal di diff")
     a("   punya penjelasan di body. Selisih dua arah = temuan.")
     a("2. **Append-only** — `git diff --numstat <base> <head>` untuk berkas log/bukti (`LOG_SESI_*.md`,")
-    a("   `ACCEPTANCE_TEST_LOG.md`, dokumen bukti): kolom delesi **harus 0**. Entri lama yang diedit/dihapus/dihaluskan")
-    a("   = **BLOCKER**, bukan catatan kecil.")
+    a("   `ACCEPTANCE_TEST_LOG.md`, dokumen bukti): kolom delesi **harus 0** — KECUALI blok header")
+    a("   \"Keadaan Sesi\" pada `LOG_SESI_*.md`. Blok itu WAJIB disegarkan saat penutupan sesi (header")
+    a("   `OPEN` menjadi `CLOSED`, ringkasan keadaan diperbarui), jadi perubahan baris DI DALAM blok itu")
+    a("   SAH dan bukan temuan. Batas blok = awal berkas sampai baris `## Kronologi` (atau penanda setara);")
+    a("   perubahan di ATAS batas = wajar bila hanya di blok header; perubahan di BAWAH batas (entri")
+    a("   kronologi) = **BLOCKER**. Entri lama yang diedit/dihapus/dihaluskan = **BLOCKER**, bukan catatan")
+    a("   kecil. (Penyelarasan 15 Sep 2026: aturan segarkan-header ada di `_meta/TEMPLATE_LOG_SESI.md` dan")
+    a("   `_meta/PROTOKOL_CHECKPOINT_RECOVERY.md` — tanpa pengecualian ini dua aturan saling mengunci.)")
     a("3. **Klaim luar diverifikasi lewat API** — status PR/rilis/komentar/merge dicek dengan `gh api`, bukan dibaca")
     a("   dari body PR. Kalau body menyebut angka rilis/ID/URL, panggil API-nya sendiri.")
     a("4. **Angka direproduksi sendiri** — setiap angka yang dikutip di bukti (jumlah skenario, jumlah warning, jumlah")
@@ -530,7 +620,7 @@ def main(argv: list[str] | None = None) -> int:
             if number <= 0:
                 raise ToolError(f"nomor PR tidak masuk akal: {number}")
             data = fetch_pr(number)
-            files = [f["path"] for f in (data.get("files") or [])]
+            files = resolve_pr_files(number, data)
             text, windows = render(data, files, generic=False)
     except ToolError as exc:
         print(f"review_prompt: GAGAL — {exc}", file=sys.stderr)

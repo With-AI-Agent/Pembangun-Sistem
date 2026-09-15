@@ -1,7 +1,7 @@
 ---
 agent_instruction: IGNORE for execution — USER GUIDE ONLY
 user_guide_only: true
-folder: sistem-klinik/
+folder: sistem/sistem-klinik/
 purpose: Pegangan pengguna Sistem Klinik — dokumen ini untuk manusia/pengguna, bukan instruksi eksekusi agent; agent membacanya hanya jika diminta eksplisit oleh pengguna. Prompt eksekusi lintas-sesi tetap sah ditempel dari bagian 2–3 (sumber: PROMPT_ENTRI_UNIVERSAL.md).
 ---
 
@@ -16,7 +16,7 @@ Semua sesi di sistem ini dimulai dengan SATU prompt (bagian 2) dan diakhiri deng
 ## 2. Prompt Pembuka Universal
 
 ```
-Kamu adalah agent yang terhubung ke repo meta ini, dan sesi ini bekerja pada Sistem Klinik (folder sistem-klinik/).
+Kamu adalah agent yang terhubung ke repo meta ini, dan sesi ini bekerja pada Sistem Klinik (folder sistem/sistem-klinik/ di repo meta ini).
 Sebelum melakukan apa pun:
 
 1. Jalankan Entry Point tingkat repo yang WAJIB (aturannya tertulis di file 00_CARA_KERJA_META.md di folder _meta — baca itu): laporan awal mengikuti SESSION_REPORT_TEMPLATE, cek PR menggantung lewat gh pr list --state all, cek INDEKS_SISTEM, dan cari LOG_SESI terbaru di _log-sesi/ — kalau ada yang OPEN, BACA dulu dan laporkan; jangan tanya ulang konteks yang sudah tercatat
@@ -32,7 +32,7 @@ Sepanjang sesi: pelihara LOG_SESI di _log-sesi/ (aturannya ada di `10_LOG_SESI.m
 
 ```
 Tutup sesi ini:
-1. Perbarui `STATUS.md` di sistem-klinik/ — field deterministik wajib benar: Pekerjaan belum tersimpan = "Tidak ada" hanya bila working tree memang bersih dan seluruh commit ter-push
+1. Perbarui `STATUS.md` di folder sistem ini — field deterministik wajib benar: Pekerjaan belum tersimpan = "Tidak ada" hanya bila working tree memang bersih dan seluruh commit ter-push
 2. Perbarui header LOG_SESI sesi ini: CLOSED (atau OPEN + "dilanjutkan di mana" bila disengaja)
 3. Perbarui tanggal "terakhir disentuh" dan status sistem ini di _meta/INDEKS_SISTEM.md — pencatatan manual, TIDAK mengandalkan git history
 4. Kalau kerja berlanjut lintas sesi: tinggalkan handoff di log sesi + STATUS supaya sesi baru melanjutkan tanpa ditanya ulang dari nol

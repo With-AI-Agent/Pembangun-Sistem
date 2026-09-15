@@ -3,7 +3,7 @@
 
 Dijalankan dari root sistem manapun:
     python3 _sistem/validate_system.py          (cwd = folder sistem)
-    python3 sistem-klinik/_sistem/validate_system.py   (cwd = root repo meta)
+    python3 sistem/sistem-klinik/_sistem/validate_system.py   (cwd = root repo meta)
 
 Mengexit 0 bila struktur sistem ini konsisten; 1 + daftar temuan bila tidak.
 Aturan yang ditegakkan DI SINI adalah aturan sistem ini sendiri (bukan salinan
