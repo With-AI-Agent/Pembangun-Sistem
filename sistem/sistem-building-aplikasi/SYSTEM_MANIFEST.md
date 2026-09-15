@@ -99,8 +99,9 @@ Status butir 03_KONTRAK_WARISAN untuk sistem ini — default SEMUA diterapkan (G
 - [x] Status dan versi sudah diperbarui (0.1.0 / Siap dipakai — G-Rencana 2026-09-15)
 - [x] Approval yang diperlukan sudah ada (G-Rencana borongan 1-9 disetujui pemilik 2026-09-15; G-Final menunggu)
 - [x] Audit terakhir tercatat (run klinik pertama — diagnosis katalog + kontrak tanaman + verifikasi)
-- [ ] Ringkasan cadangan sinkron (akan dibuat di _cadangan-claude/ pada run ini — W-09)
+- [x] Ringkasan cadangan sinkron (2026-09-15 8.1M — _cadangan-claude/RINGKASAN_sistem-building-aplikasi.md sinkron, 52 dirs)
 - [x] Pegangan pengguna tersedia di dalam folder sistem (prompt pembuka + penutup — dibuat run ini)
+- [x] Template Fondasi tersedia di `_sistem/templates/` (7 file: DISCOVERY/PRD/TECH_SPEC/AGENT_GUIDE/ROADMAP/DECISIONS_LOG/PROJECT_STATE) + `docs/README.md` placeholder — matang maksimal
 
 ## Log Keputusan
 
