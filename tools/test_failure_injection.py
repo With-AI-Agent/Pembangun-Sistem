@@ -259,11 +259,22 @@ def _load_review_prompt(repo: Path, module_name: str):
 
 
 def review_prompt_scenarios(base_dir: Path):
-    """RP1-RP4 (8 Sep 2026): regresi pembangkit prompt review.
+    """RP1-RP5: regresi pembangkit prompt review.
 
-    Ini uji mutasi untuk tiga cacat nyata: deteksi pin via self-match string,
-    urutan baca yang menjatuhkan Markdown root, dan jendela-uji yang dipicu
-    log penulis PR sendiri.
+    Ini uji mutasi untuk empat cacat nyata: deteksi pin via self-match string,
+    urutan baca yang menjatuhkan Markdown root, jendela-uji yang dipicu
+    log penulis PR sendiri, dan daftar berkas PR yang terpotong 100 berkas
+    karena `gh pr view --json files` tidak dipaginasi (RP5 — T-2, temuan
+    review PR #55).
+
+    RP5 diubah 15 Sep 2026 setelah temuan T-4 review PR #56: versi pertama
+    hanya memeriksa keberadaan teks `--paginate` di sumber (tautologi, bukan
+    perilaku). Kini yang diuji: (RP5b) argv yang dikembalikan `files_command`,
+    (RP5c) bahwa `fetch_pr_files` benar-benar memanggilnya — menutup celah
+    "argv karangan di tempat pemanggilan" yang disebut C-2 — dan (RP5a)
+    penjaga konsistensi `resolve_pr_files` yang menolak daftar tak konsisten.
+    Semuanya diuji-mutasi, dan mutasi yang tidak mengubah apa pun membuat uji
+    gagal (bukan lolos palsu).
     """
     checks = []
     cp = base_dir / "repo"
@@ -370,7 +381,7 @@ def review_prompt_scenarios(base_dir: Path):
 
     # Mutasi RP3: matikan pengecualian log penulis; log sendiri kembali menjadi
     # blocking. Ini membuktikan baris pengecualian benar-benar dijaga uji.
-    mutated = original.replace('if log.name in writer_logs:', 'if False and log.name in writer_logs:')
+    mutated = original.replace('if rel in writer_logs:', 'if False and rel in writer_logs:')
     rp_path.write_text(mutated, encoding="utf-8")
     rp_mut = _load_review_prompt(cp, "review_prompt_mut_rp3")
     rp_mut.ROOT = log_root
@@ -396,6 +407,135 @@ def review_prompt_scenarios(base_dir: Path):
         "RP4 status akhir CLOSED mengalahkan header OPEN pada pemindai jendela-uji",
         blocking_closed == [] and writer_closed == [],
     ))
+    rp_path.write_text(original, encoding="utf-8")
+    rp = _load_review_prompt(cp, "review_prompt_regression_files")
+
+    # RP5 (T-2): `gh pr view --json files` berhenti di 100 berkas, sehingga PR
+    # besar bisa terlihat "tidak menyentuh berkas pelindung". Dua hal diuji
+    # sebagai PERILAKU (bukan keberadaan teks di sumber): argv yang benar-benar
+    # dipakai, dan penjaga konsistensi yang menolak daftar tak konsisten.
+    argv = rp.files_command(42)
+    checks.append((
+        "RP5b argv daftar berkas memuat --paginate + path pulls/<n>/files",
+        "--paginate" in argv and "repos/{owner}/{repo}/pulls/42/files" in argv,
+    ))
+
+    mut_pag = original.replace('        "--paginate",\n', '')
+    assert mut_pag != original, "mutasi RP5b tidak mengubah apa pun — uji tidak valid"
+    rp_path.write_text(mut_pag, encoding="utf-8")
+    rp_mut = _load_review_prompt(cp, "review_prompt_mut_rp5b")
+    checks.append((
+        "RP5b diuji-mutasi: --paginate dihapus -> argv kehilangan paginasi",
+        "--paginate" not in rp_mut.files_command(42),
+    ))
+    rp_path.write_text(original, encoding="utf-8")
+    rp = _load_review_prompt(cp, "review_prompt_regression_guard")
+
+    fakta = {"files": [{"path": "satu.md"}, {"path": "dua.md"}]}
+    rp.fetch_pr_files = lambda number: ["satu.md"]
+    try:
+        rp.resolve_pr_files(7, fakta)
+        menolak = False
+    except rp.ToolError:
+        menolak = True
+    checks.append((
+        "RP5a penjaga konsistensi menolak daftar berkas tak konsisten (fail-closed)",
+        menolak,
+    ))
+
+    rp.fetch_pr_files = lambda number: ["satu.md", "dua.md"]
+    checks.append((
+        "RP5a daftar konsisten diteruskan (penjaga tidak menolak sembarangan)",
+        rp.resolve_pr_files(7, fakta) == ["satu.md", "dua.md"],
+    ))
+
+    mut_guard = original.replace(
+        "if len(viewed) < PR_FILES_VIEW_CAP and len(viewed) != len(files):",
+        "if False and len(viewed) != len(files):",
+    )
+    assert mut_guard != original, "mutasi RP5a tidak mengubah apa pun — uji tidak valid"
+    rp_path.write_text(mut_guard, encoding="utf-8")
+    rp_mut = _load_review_prompt(cp, "review_prompt_mut_rp5a")
+    rp_mut.fetch_pr_files = lambda number: ["satu.md"]
+    try:
+        rp_mut.resolve_pr_files(7, fakta)
+        menolak_mut = False
+    except rp_mut.ToolError:
+        menolak_mut = True
+    checks.append((
+        "RP5a diuji-mutasi: penjaga dimatikan -> daftar tak konsisten lolos",
+        not menolak_mut,
+    ))
+    rp_path.write_text(original, encoding="utf-8")
+    rp = _load_review_prompt(cp, "review_prompt_regression_link")
+
+    # RP5c (C-2 review PR #56): rantai pemanggilannya ikut diuji — bukan
+    # hanya nilai argv helper-nya. Kalau fetch_pr_files menyusun argv sendiri
+    # (tanpa paginasi), uji ini merah walaupun files_command benar.
+    tangkap = {}
+
+    def _run_palsu(cmd):
+        tangkap["cmd"] = list(cmd)
+        return 0, "satu.md\n", ""
+
+    rp._run = _run_palsu
+    hasil = rp.fetch_pr_files(42)
+    checks.append((
+        "RP5c fetch_pr_files benar-benar memakai argv files_command (bukan argv karangan)",
+        tangkap.get("cmd") == rp.files_command(42) and hasil == ["satu.md"],
+    ))
+
+    mut_link = original.replace(
+        "    code, out, err = _run(files_command(number))",
+        '    code, out, err = _run(["gh", "api",'
+        ' f"repos/{{owner}}/{{repo}}/pulls/{number}/files", "--jq", ".[].filename"])',
+    )
+    assert mut_link != original, "mutasi RP5c tidak mengubah apa pun — uji tidak valid"
+    rp_path.write_text(mut_link, encoding="utf-8")
+    rp_mut = _load_review_prompt(cp, "review_prompt_mut_rp5c")
+    tangkap_mut = {}
+    rp_mut._run = lambda cmd: (tangkap_mut.update(cmd=list(cmd)) or (0, "satu.md\n", ""))
+    rp_mut.fetch_pr_files(42)
+    checks.append((
+        "RP5c diuji-mutasi: argv in-line tanpa paginasi -> tidak lagi sama dengan files_command",
+        tangkap_mut.get("cmd") != rp_mut.files_command(42),
+    ))
+    rp_path.write_text(original, encoding="utf-8")
+    rp = _load_review_prompt(cp, "review_prompt_regression_nested")
+
+    # RP6 (C-1, temuan review PR #56): pemindaian log sesi harus mencakup
+    # `_log-sesi/` — sebelum diperbaiki, pemindai hanya mengglob root sehingga
+    # buta total sejak log pindah folder (v1.13.0).
+    nested = base_dir / "logs_nested"
+    (nested / "_log-sesi").mkdir(parents=True)
+    (nested / "_log-sesi" / "LOG_SESI_NESTED.md").write_text(
+        "# nested\n\n- **Keadaan:** `OPEN`\n\ncatatan: jendela uji terbuka untuk PR ini\n",
+        encoding="utf-8",
+    )
+    rp.ROOT = nested
+    blocking_n, _ = rp.open_test_window([])
+    checks.append((
+        "RP6 log sesi di _log-sesi/ ikut terdeteksi (bukan hanya root)",
+        blocking_n == ["_log-sesi/LOG_SESI_NESTED.md:5"],
+    ))
+    blocking_w, writer_w = rp.open_test_window(["_log-sesi/LOG_SESI_NESTED.md"])
+    checks.append((
+        "RP6 log penulis di _log-sesi/ dikecualikan dari penyembunyian (tetap dipointer)",
+        blocking_w == [] and writer_w == ["_log-sesi/LOG_SESI_NESTED.md:5"],
+    ))
+
+    mut_dir = original.replace(
+        'LOG_SESI_DIRS = ("", "_log-sesi")', 'LOG_SESI_DIRS = ("",)')
+    assert mut_dir != original, "mutasi RP6 tidak mengubah apa pun — uji tidak valid"
+    rp_path.write_text(mut_dir, encoding="utf-8")
+    rp_mut = _load_review_prompt(cp, "review_prompt_mut_rp6")
+    rp_mut.ROOT = nested
+    blocking_mut, _ = rp_mut.open_test_window([])
+    checks.append((
+        "RP6 diuji-mutasi: _log-sesi/ dihapus dari LOG_SESI_DIRS -> log di sana tak terdeteksi",
+        blocking_mut == [],
+    ))
+    rp_path.write_text(original, encoding="utf-8")
 
     return checks
 

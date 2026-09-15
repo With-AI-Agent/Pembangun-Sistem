@@ -1,7 +1,7 @@
 # System Manifest — Meta-Sistem Pembangun Sistem
 
-- **Status:** `Released — v1.13.2`
-- **Versi:** `1.13.2`
+- **Status:** `Released — v1.14.0`
+- **Versi:** `1.14.0`
 - **Tujuan:** merancang, membangun, mengaudit, memperbaiki, dan memelihara sistem kerja untuk berbagai domain.
 - **Consumer:** pengguna dan agent yang bekerja pada repository.
 - **Pemilik keputusan:** pengguna
@@ -84,6 +84,7 @@
 
 | Tanggal | Perubahan | Alasan | Bukti | Approval |
 |---|---|---|---|---|
+| 2026-09-15 | v1.13.2 → **v1.14.0: tawaran kapabilitas jadi langkah WAJIB-BERTAJUK di dua alur meta** — `00_CARA_KERJA_META.md`: setelah Langkah 1 Discovery (alur bangun sistem baru) dan di Langkah 2 (alur lanjut/audit) agent MENAWARKAN riset kapabilitas (plugin/skill/library); tawaran boleh ditolak dan penolakan dicatat di Log Keputusan agar tidak ditawari ulang; `01_DISCOVERY_LEVEL_0.md` mendapat poin ke-6 KAPABILITAS EKSTERNAL; deskripsi baris R4 di `FAILURE_INJECTION_TESTS.md` dilengkapi pengecualian `Tahap: kerangka`; plus perbaikan cacat **C-1** (temuan review PR #56) pada `tools/review_prompt.py` — pemindai jendela-uji aturan 6d kini memindai `_log-sesi/` selain root (sebelumnya buta total sejak v1.13.0: 0 berkas di root, 38 di `_log-sesi/`), penanda log penulis dicocokkan dari nama berkas, klasifikasi log di urutan baca dikembalikan, dijaga uji mutasi RP6. Sumber mekanisme tunggal: sistem/sistem-klinik/_sistem/05_TAWARAN_KAPABILITAS.md (tanpa salinan kedua di `_meta/` — norma anti-dokumen-kembar; keputusan ini tercatat di Bagian B rencana klinik dan bisa dibalik pemilik) | Bagian B dari rencana Sistem Klinik (PR #43) yang tertunda sejak 11 Sep 2026 + permintaan pemilik 13 Sep (setiap tawaran skill/plugin wajib dijelaskan fungsi/tujuan/alasannya — K-10) | `tools/validate_repo.py` PASS 0-warning; `tools/test_failure_injection.py` PASS 70 skenario (15 sintetis + 11 unit nyata + 14 regresi review PR-11 + 10 check_selfcontained + 20 regresi review_prompt — termasuk RP5 yang ditulis ulang pasca-T-4/C-2 dan RP6 untuk cacat C-1); `tools/backup_verify.py` PASS; `tools/build_template.py` PASS; `tools/check_selfcontained.py --semua` PASS; validator lokal sistem-klinik PASS | Menunggu approval pengguna (PR tanpa auto-merge) |
 | 2026-09-03 | Menambahkan quality assurance tiga lapisan, pilot, dan acceptance tests | Menutup kebutuhan self-improvement dan verifikasi output | Audit dan pilot struktural | Pending review pengguna |
 | 2026-09-04 | Behavioral audit nyata + recovery test nyata via pilot-002-behavioral | Menutup B-03 dan B-04 dari BEHAVIORAL_AUDIT_2026-09-03, memenuhi gate rilis behavioral & recovery | `sistem/sistem-pilot-catatan-belajar/unit-aktif/pilot-002-behavioral/OUTPUT.md`, `RECOVERY_TEST_LOG.md`, `_meta/_internal/BEHAVIORAL_AUDIT_2026-09-04_PILOT_002.md`, `tools/validate_repo.py PASS`, `tools/test_failure_injection.py PASS`, commit 6fcc371 | Menunggu approval pengguna |
 | 2026-09-04 | Fix C-01 deterministik field Pekerjaan belum tersimpan + backup & template bersih + approval pilot | Maksimalisasi setelah approval: tutup fragile field, backup verify, template clean AT-10, semua gate rilis centang | `tools/validate_repo.py PASS` (14 refs checked), `tools/test_failure_injection.py PASS`, `tools/backup_verify.py PASS`, `tools/build_template.py PASS`, `_meta/PROTOKOL_CHECKPOINT_RECOVERY.md` update, `_meta/TEMPLATE_RELEASE.md` NEW | Disetujui pengguna 2026-09-04 |
