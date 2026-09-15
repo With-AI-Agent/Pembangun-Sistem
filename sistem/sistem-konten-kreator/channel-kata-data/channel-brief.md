@@ -68,7 +68,7 @@
 
 **Palet Warna & Gaya Render**
 
-> [x] Ada, lihat detail di `konsistensi-visual/palet-gaya-data/` (dibangun langkah 4 via `04_CHARACTER_BUILDER_KIT.md`) dan bagian 5. Mencakup: gaya motion-infografis flat, palet terkunci, treatment angka raksasa, gaya chart sederhana (bar/donut), dan kartu sumber. Status saat brief ditulis: BELUM Reference-Ready.
+> [x] Ada, lihat detail di `konsistensi-visual/palet-gaya-data/` (dibangun langkah 4 via `04_CHARACTER_BUILDER_KIT.md`) dan bagian 5. Mencakup: gaya motion-infografis flat, palet terkunci, treatment angka raksasa, gaya chart sederhana (bar/donut), dan kartu sumber. Status saat ini: acuan ADA (palet + style-sheet + contoh negatif, lolos audit) — `Reference-Ready` final menunggu G2 elemen.
 
 **Props/Objek Berulang**
 
