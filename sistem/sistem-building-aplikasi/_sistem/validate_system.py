@@ -23,6 +23,7 @@ REQUIRED = [
     "10_LOG_SESI.md",
     "AGENT_SYSTEM.md",
     "ACCEPTANCE_TESTS.md",
+    "PROFIL_PENGGUNA.md",
 ]
 
 def check_file_exists(errs):

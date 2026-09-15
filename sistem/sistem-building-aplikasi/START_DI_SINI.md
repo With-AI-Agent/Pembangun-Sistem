@@ -3,12 +3,15 @@
 > Entry point sistem ini. Sesi agent mulai dari sini — SETELAH membaca PROMPT_ENTRI_UNIVERSAL.md / PANDUAN_PENGGUNA.md.
 > Sistem ini membantu pemilik non-teknis membangun aplikasi: Fondasi 6 dokumen → Coding task demi task, dengan checkpoint lintas sesi.
 
-## Peta Baca Minimum (semua jenis sesi)
+## Peta Baca Minimum (semua jenis sesi — SIAP TEMPLATE)
 
+0. `PROFIL_PENGGUNA.md` — **wajib pertama** (bahasa/gaya/latar belakang) — jika masih kosong, tanya 4 pertanyaan dulu, simpan, baru lanjut. Semua kalimat setelahnya harus menyesuaikan profil ini.
 1. `SYSTEM_MANIFEST.md` — identitas, tahap, warisan W-01…W-09
 2. `STATUS.md` — keadaan kerja terakhir (field deterministik)
-3. `AGENT_SYSTEM.md` — aturan kerja agent (6 Tahap + Coding + Handoff)
+3. `AGENT_SYSTEM.md` — aturan kerja agent (6 Tahap + Coding + Handoff + Mekanisme Hidup + ADAPTIF)
 4. `LOG_SESI` terbaru yang masih `OPEN` di `_log-sesi/` — bila ada, lanjutkan konteksnya
+
+**Template siap copy:** folder `sistem-building-aplikasi` ini sudah self-contained — `cp -r sistem-building-aplikasi/* my-app-baru/` → `my-app-baru` jadi repo standalone, prompt di `PANDUAN_PENGGUNA.md` langsung jalan tanpa edit (lihat § Cara Pakai Sebagai Template).
 
 Sisanya baca SESUAI jenis sesi di bawah — jangan baca seluruh folder sekaligus.
 
@@ -41,6 +44,14 @@ Sisanya baca SESUAI jenis sesi di bawah — jangan baca seluruh folder sekaligus
 ## Jenis Sesi 5 — Checkpoint & Handoff (sesi panjang)
 
 Ikuti 6 audit di AGENT_SYSTEM.md §Checkpoint & Handoff (ROADMAP, DECISIONS_LOG, konsistensi, repo, PROJECT_STATE, ringkasan jujur).
+
+## Jenis Sesi 6 — Audit/Sempurnakan Sistem (HIDUP)
+
+Kapan saja bilang "audit sistem ini" / "sempurnakan sistem ini" → baca `SYSTEM_MANIFEST.md` (Quality & Evolution) + `AGENT_SYSTEM.md` § Mekanisme Hidup A, jalankan `validate_system` + `validate_repo` + `check_selfcontained` + FI 71, laporkan Critical/Minor, buka branch `sistem-audit-...`, PR tanpa auto-merge.
+
+## Jenis Sesi 7 — Audit/Sempurnakan Aplikasi / Buat v2 (HIDUP)
+
+Kapan saja setelah rilis bilang "audit aplikasi", "perbaiki ...", "buat v2" → baca `PROJECT_STATE.md` + `ROADMAP.md` + `DECISIONS_LOG.md`, ikuti `AGENT_SYSTEM.md` § Mekanisme Hidup B (Cross-Check atau Tahap 0.5 atau tambah task ROADMAP dengan 7 atribut lengkap).
 
 ## Penutup Sesi (semua jenis)
 

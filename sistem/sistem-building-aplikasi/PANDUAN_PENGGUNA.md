@@ -114,6 +114,51 @@ Ikuti Tahap 0.5 di AGENT_SYSTEM.md.
 
 ---
 
+## Cara Pakai Sebagai Template (copy folder ini jadi repo baru) — SIAP TEMPLATE
+
+**Ini sudah siap sebagai template.** Kapanpun mau buat aplikasi baru, tinggal copy folder `sistem-building-aplikasi` ini jadi repo tersendiri — semua mekanisme, skill, dan prompt ikut.
+
+**Cara copy paling aman (2 opsi):**
+
+**Opsi A — via GitHub (direkomendasikan):**
+1. Di GitHub, buat repo baru kosong (mis. `my-app-baru`) — jangan centang README.
+2. Di komputer/lmarena: `git clone https://github.com/With-AI-Agent/Pembangun-Sistem.git` lalu `cp -r sistem/sistem-building-aplikasi/* my-app-baru/` (atau download ZIP folder `sistem-building-aplikasi` dari GitHub → extract ke `my-app-baru`).
+3. `cd my-app-baru && git init && git add . && git commit -m "init dari template Building Aplikasi 8.1M" && git branch -M main && git remote add origin https://github.com/KAMU/my-app-baru.git && git push -u origin main`
+4. Hubungkan lmarena agent ke repo `my-app-baru` → buka sesi baru → paste **Prompt Pembuka Universal** di atas → langsung jalan. Prompt di atas sudah portabel: `AGENT_SYSTEM.md di repo ini secara penuh (di folder sistem-building-aplikasi/ bila sistem ini ada di repo meta, atau di root bila sudah jadi repo standalone)` → jadi tidak perlu edit prompt.
+
+**Opsi B — via lmarena langsung:**
+- Di lmarena, buat repo baru, lalu `cp -r /home/user/Pembangun-Sistem/sistem/sistem-building-aplikasi/* /home/user/my-app-baru/` — push seperti di atas.
+
+**Yang ikut ter-copy:** `AGENT_SYSTEM.md` (33K, 6 Tahap + ADAPTIF), `PROFIL_PENGGUNA.md`, `SYSTEM_MANIFEST.md`, `STATUS.md`, `PANDUAN_PENGGUNA.md` + `PROMPT_ENTRI_UNIVERSAL.md` (identik), `START_DI_SINI.md`, `10_LOG_SESI.md`, `ACCEPTANCE_TESTS.md`, `_sistem/templates/` (7 template), `docs/README.md`, `skills/` (52 dirs, 8.1M, Cloudflare/Supabase/Google), `_salinan-meta/PLATFORM_LMARENA.md`. Semua self-contained — `check_selfcontained` PASS, `validate_system` PASS. Validasi ulang di repo baru: `python3 _sistem/validate_system.py` harus `PASS`.
+
+**Jangan copy `Input-Pengguna/` atau `.git`** — itu hanya di repo meta, bukan template.
+
+## Profil Pengguna — 4 Pertanyaan Awal (jadi Prinsip Permanen)
+
+Di **sesi pertama** repo baru, agent akan **Wajib** baca `PROFIL_PENGGUNA.md` dulu (sebelum PROJECT_STATE). Kalau masih kosong, dia akan tanya 4 hal ini — jawab dengan jujur, supaya semua sesi selanjutnya langsung menyesuaikan otakmu:
+
+1. **Bahasa:** mau pakai Indonesia / English / campur?
+2. **Gaya:** mau santai-singkat / formal-rinci / step-by-step tanpa jargon?
+3. **Latar belakang:** seberapa paham coding/database/DevOps? (tidak sama sekali / sedikit / lumayan / expert)
+4. **Preferensi opsi:** mau langsung direkomendasikan yang terbaik + alasan singkat, atau mau dijelaskan trade-off dulu?
+
+Jawabanmu disimpan di `PROFIL_PENGGUNA.md` dan jadi **prinsip permanen** — kapanpun buka sesi terbaru, agent langsung pakai gaya itu tanpa kamu ulang. Mau ganti? Bilang saja "ganti gaya jadi ...", agent update file-nya.
+
+> **Aku jujur:** ide kamu ini **sangat penting dan benar**. Tanpa ini, agent akan kaku pakai bahasa Indonesia teknis untuk semua orang — padahal ada pengguna yang tidak paham Inggris, ada yang expert yang mau to-the-point. Dengan PROFIL, sistem jadi benar-benar menyesuaikan. Ini sudah aku jadikan `LANGKAH 0` wajib di `AGENT_SYSTEM.md` (sebelum cek PROJECT_STATE).
+
+## Mekanisme Hidup — Kapanpun Bisa Audit / Sempurnakan / Lanjutkan (Sistem & Aplikasi)
+
+Sistem ini **hidup**, bukan sekali jadi:
+
+**A. Hidupnya Sistem Building itu sendiri:** kapan saja bilang *"audit sistem ini"*, *"sempurnakan sistem ini"*, *"tambah skill ..."*, agent akan jalankan audit (`validate_system` + `validate_repo` + `check_selfcontained` + FI 71), laporkan Critical/Minor, buka branch `sistem-audit-...`, PR tanpa auto-merge. Lihat `AGENT_SYSTEM.md` § *MEKANISME HIDUP — SISTEM & APLIKASI*.
+
+**B. Hidupnya Aplikasi yang kamu bangun:** bahkan setelah rilis MVP/v1, kapan saja bilang *"audit aplikasi ini"*, *"perbaiki bug ..."*, *"buat v2"*, *"apakah ada yang tercecer di ROADMAP?"*, agent akan:
+- audit via **Tahap 6 Cross-Check**,
+- atau tambah task baru di `ROADMAP.md` (dengan 7 atribut lengkap) dan eksekusi via Prosedur Coding,
+- atau jalankan **Tahap 0.5 Siklus Baru** (arsipkan ROADMAP lama → tulis ROADMAP baru, `PROJECT_STATE=SIKLUS_BARU`).
+
+> **Jujur:** kamu benar — tanpa mekanisme hidup, sistem akan mati setelah rilis. Sekarang sudah tertanam eksplisit di `AGENT_SYSTEM.md` § *MEKANISME HIDUP* (bisa dipicu dengan bahasa natural, sesuai PROFIL). Kamu bisa **audit kapanpun**, tidak perlu tunggu "sempurna".
+
 ## Kebiasaan yang perlu dijaga
 
 - **Checkpoint tiap tahap/task + commit & push** — jangan tunda.
@@ -122,6 +167,7 @@ Ikuti Tahap 0.5 di AGENT_SYSTEM.md.
 - **Jangan lanjut kerja di sesi yang PR-nya sudah merge** — file baru akan terjebak tidak bisa di-push. Buka sesi baru.
 - **DECISIONS_LOG wajib dibaca** sebelum ubah Area Berisiko Tinggi — jangan tebak dari kode.
 - Kalau sesi panjang dan agent mulai ngawur: tempel prompt **"STOP dulu sebelum lanjut kerja. Aku mau kamu melakukan Checkpoint & Handoff..."** (lihat AGENT_SYSTEM.md §Checkpoint & Handoff).
+- **ROADMAP harus sedetail mungkin** — jika di sesi Coding ada hal kecil yang ternyata belum ada di ROADMAP (favicon, empty state, `.env.example`), **STOP**, tambah task dulu dengan 7 atribut lengkap, baru lanjut (lihat Tahap 5 checklist kelengkapan).
 
 ---
 
