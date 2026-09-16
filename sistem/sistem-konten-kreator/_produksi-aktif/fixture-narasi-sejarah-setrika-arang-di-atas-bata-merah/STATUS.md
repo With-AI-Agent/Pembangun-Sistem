@@ -31,8 +31,8 @@
   - `G1 Tahap 5 (Generate/Acquire Assets):` belum
   - `G2 konten final + metadata (Tahap 6):` belum
   - `G3 merge:` belum
-- **Commit terakhir:** commit penyimpanan state unit ini; pointer final dicatat pada PR terkait
-- **PR terkait:** PR persiapan state unit produksi lanjutan; tanpa auto-merge
+- **Commit terakhir:** `421dddb79a716900d8e2521c75a6ec7a76bef67d` — penyimpanan state unit
+- **PR terkait:** PR #67 — persiapan state unit produksi lanjutan; tanpa auto-merge
 - **Pekerjaan belum tersimpan:** Tidak ada
 - **Risiko atau blocker:**
   - G2 naskah final belum diberikan dan sengaja ditahan; produksi tidak boleh masuk Tahap 4.
