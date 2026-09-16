@@ -4,9 +4,9 @@
 - **Channel:** `channel-fixture-narasi-sejarah` (Narasi Sejarah — FIXTURE)
 - **Model konten:** `narasi-60-detik` v2 — 55–65 detik, 108–125 kata, tempo 125 kata/menit, jeda 0,7 detik
 - **Tahap terakhir selesai:** Tahap 3 — Naskah/Script; naskah draft r1 di-commit dan G1 Tahap 3 disetujui
-- **Tahap berikutnya:** G2 naskah final — belum (ditahan)
+- **Tahap berikutnya:** G2 naskah final — DIMINTA ke pemilik 2026-09-16 oleh sesi lanjutan (branch `arena/01a0aaa2-pembangun-sistem`), menunggu jawaban; Tahap 4 belum boleh dimulai
 - **Output resmi:**
-  - `naskah-draft.md` — ADA; r1, 120 kata, 7 paragraf pendek, 6 jeda; G1 Tahap 3 disetujui; G2 naskah final belum (ditahan)
+  - `naskah-draft.md` — ADA, diverifikasi ulang di branch oleh sesi lanjutan pada HEAD `7d1b5a8189d68252c5e718a620c329455e3f81c6`; r1, 120 kata, 7 paragraf pendek, 6 jeda, 61,80 dtk estimasi — angka dihitung ulang (whitespace-split pada blok `## Naskah (voice over)`) dan cocok persis dengan klaim sebelumnya; G1 Tahap 3 disetujui; G2 naskah final belum (diminta, menunggu)
 - **Sumber konteks yang dibaca:**
   - `_sistem/START_DI_SINI.md`
   - `_sistem/STATUS_TEMPLATE.md`
@@ -14,6 +14,8 @@
   - `channel-fixture-narasi-sejarah/model-konten/narasi-60-detik/brief.md` v2
   - `channel-fixture-narasi-sejarah/arsip-naskah/indeks.md` — 6 naskah diperiksa; cerita baru berbeda
   - Tiga unit aktif pembanding diperiksa untuk konvensi penamaan dan isi status
+  - Ditambah oleh sesi lanjutan 2026-09-16 (baris "Lanjut produksi yang terputus" di `_sistem/00_CARA_PAKAI_SISTEM.md`): `_sistem/00_CARA_PAKAI_SISTEM.md` (Prinsip Approval Bertingkat + 4 aturan recovery), `_sistem/01_BRAND_CORE.md` (masih template kosong — gap dilaporkan, tidak ditutupi), `_sistem/05_CONTENT_PRODUCTION_PIPELINE.md` (tabel gerbang, aturan sumber/fakta, Tahap 3–6), `_sistem/06_PROMPT_LIBRARY.md` bagian 0, `arsip-naskah/indeks-karakter.md` (tanpa karakter Tipe B relevan), `_produksi-aktif/narasi-sejarah-sumur-di-belakang-rumah/breakdown-output.md` (acuan konvensi bentuk breakdown channel ini)
+  - Kondisional dilewati sesi lanjutan dengan alasan: Bank Konsistensi Visual — Channel Brief v5 bagian 4 menandai semua elemen "tidak berlaku" (channel faceless) dan folder `konsistensi-visual/` tidak ada; `SUMBER.md` — belum ada sumber eksternal yang dipakai
 - **Sumber eksternal dipakai:** `Tidak ada`
 - **Keputusan baru:**
   - Tahap 1 (Ideation) selesai; ide setrika arang di atas bata merah dipilih dan G1 disetujui 2026-09-16.
@@ -21,23 +23,30 @@
   - Tahap 3 (Naskah/Script) selesai; naskah r1 120 kata di-commit; G1 Tahap 3 disetujui 2026-09-16.
   - Sesi sebelumnya terputus (platform reset) tanpa penyelesaian; state ini adalah kondisi terakhir sebelum interupsi.
   - Tahap 4–6 belum dimulai; seluruh gerbang pada tahap tersebut belum.
+  - Sesi lanjutan 2026-09-16 (branch `arena/01a0aaa2-pembangun-sistem`, basis HEAD `7d1b5a8` = merge PR #67) memverifikasi state di branch, bukan dari klaim file ini: tepat 2 berkas unit ada di `git ls-tree -r HEAD`, dan angka naskah dihitung ulang = 120 kata / 7 paragraf / 6 jeda / 61,80 dtk (57,60 dtk ucapan @125 kata/menit + 4,20 dtk jeda) → cocok persis. Tidak ada output yang diklaim ada tapi hilang, jadi aturan recovery butir 4 (berhenti + lapor) tidak terpicu.
+  - Pemeriksaan pra-G2 Tahap 3 oleh sesi lanjutan: LULUS 7 butir — 120 kata di dalam rentang 108–125 (Model Brief v2 bagian 2); 61,80 dtk di dalam 55–65 dtk; pintu masuk benda konkret di 0,00–5,76 dtk; penutup mengembalikan ke masa kini (S6–S7); pola pembuka khas "Dulu, ada satu …" + kosakata khas "dulu"/"konon" dipakai; tidak ada unsur terlarang Channel Brief bagian 3 (tanpa nama tokoh nyata, angka tahun, nada menggurui, clickbait); topik tidak berulang terhadap 6 naskah arsip dan tanpa karakter Tipe B → `indeks-karakter.md` tidak perlu ditambah.
+  - 3 temuan diserahkan ke pemilik bersama permintaan G2 (tidak diputuskan agent): **T-1** timeline terukur S1 0,00–5,76 · S2 6,46–17,02 · S3 17,72–26,36 · S4 27,06–33,78 · S5 34,48–43,12 · S6 43,82–51,98 · S7 52,68–61,80 → beat "yang berubah" baru mulai 43,82 dtk, sedangkan panduan struktur Model Brief v2 menaruhnya di 35–52 dtk (S5 melintasi batas 35 dtk); durasi total tetap sah, jadi ini penempatan beat, bukan pelanggaran rentang. **T-2** naskah menggambarkan praktik masa lampau tanpa `SUMBER.md` sementara unit mendeklarasikannya fiksi fixture → pemilik yang memutuskan (kunci sebagai fiksi / minta verifikasi + `SUMBER.md` / turunkan bahasanya); agent tidak memverifikasi ke web karena itu akan memasukkan sumber eksternal dan mengubah state unit. **T-3** baris "BELUM masuk `main`" di Channel Brief v5 (baris 16) dan Model Brief v2 (baris 14) sudah basi — isinya ada di `main` via `fde3227` dan `bc545dd`; perbaikan = revisi dokumen terkunci (kategori Besar) dan di luar scope sesi produksi ini.
+  - Baseline alat diukur sebelum edit sesi lanjutan, pohon bersih @ `7d1b5a8`: `tools/validate_repo.py` PASS 104 dokumen aktif / 366 rujukan / 0 unresolved / 4 sistem / tanpa warning; `tools/test_failure_injection.py` PASS 73 skenario; `tools/check_selfcontained.py --semua --report` PASS; `_sistem/validate_system.py` PASS 0 temuan.
 - **Approval yang sudah diberikan:**
   - `G1 Tahap 1 (Ideation):` disetujui 2026-09-16
   - `G1 Tahap 2 (Konsep & Angle):` disetujui 2026-09-16
   - `G1 Tahap 3 (Naskah/Script):` disetujui 2026-09-16
-  - `G2 naskah final:` belum (ditahan)
+  - `G2 naskah final:` belum — **DIMINTA 2026-09-16** oleh sesi lanjutan (branch `arena/01a0aaa2-pembangun-sistem`), menunggu keputusan pemilik; G1 Tahap 3 TIDAK dipakai sebagai penggantinya (aturan recovery butir 3)
   - `G1 Tahap 4 (Breakdown Output):` belum
   - `G2 breakdown:` belum
   - `G1 Tahap 5 (Generate/Acquire Assets):` belum
   - `G2 konten final + metadata (Tahap 6):` belum
   - `G3 merge:` belum
-- **Commit terakhir:** `421dddb79a716900d8e2521c75a6ec7a76bef67d` — penyimpanan state unit
-- **PR terkait:** PR #67 — persiapan state unit produksi lanjutan; tanpa auto-merge
+- **Commit terakhir:** `421dddb79a716900d8e2521c75a6ec7a76bef67d` — penyimpanan state unit (sudah masuk `main`: HEAD `7d1b5a8` = merge PR #67); pembaruan verifikasi sesi lanjutan 2026-09-16 di-commit setelah baris ini ditulis, sha-nya dicatat di `_log-sesi/LOG_SESI_2026-09-16_6.md`
+- **PR terkait:** PR #67 (persiapan state unit produksi lanjutan) — **MERGED** 2026-09-16T14:12:28Z, merge commit `7d1b5a8189d68252c5e718a620c329455e3f81c6`; PR sesi lanjutan dari branch `arena/01a0aaa2-pembangun-sistem` — waktu pembukaannya ditanyakan ke pemilik, tanpa auto-merge
 - **Pekerjaan belum tersimpan:** Tidak ada
 - **Risiko atau blocker:**
-  - G2 naskah final belum diberikan dan sengaja ditahan; produksi tidak boleh masuk Tahap 4.
+  - **BLOCKER AKTIF:** G2 naskah final sudah DIMINTA ke pemilik 2026-09-16 dan belum dijawab; sampai dijawab, unit tetap `blocked` dan produksi tidak boleh masuk Tahap 4.
+  - **T-1 (menunggu keputusan pemilik):** beat "yang berubah" mulai 43,82 dtk, menyimpang dari panduan struktur Model Brief v2 bagian 2 (35–52 dtk) — pembanding: unit arsip "Sumur" menaruhnya di 36,14 dtk. Kalau pemilik memilih revisi, Tahap 3 diulang lewat pola ulang-tahap di `_sistem/06_PROMPT_LIBRARY.md` bagian 0 lalu G2 diminta ulang; kalau dikunci apa adanya, penyimpangan ini dicatat sebagai keputusan sadar di baris Keputusan baru.
+  - **T-2 (menunggu keputusan pemilik):** naskah memuat gambaran praktik masa lampau tanpa `SUMBER.md`; gerbang fact-check Tahap 3 adalah bagian dari G2, jadi belum bisa dinyatakan lulus sampai pemilik memutuskan status klaimnya (fiksi fixture / perlu verifikasi + `SUMBER.md` / turunkan bahasa).
+  - **T-3 (di luar scope unit ini):** baris "BELUM masuk `main`" yang basi di Channel Brief v5 dan Model Brief v2 — revisi dokumen terkunci, kategori Besar, butuh sesi + G2 tersendiri; jangan ditumpangkan ke branch produksi ini (satu tujuan per branch).
   - Brand Core masih template kosong; Persona & Voice bersumber dari Channel Brief yang berlaku.
-  - Durasi 61,80 detik masih estimasi berbasis 120 kata dan enam jeda; belum pengukuran audio nyata.
+  - Durasi 61,80 detik masih estimasi berbasis 120 kata dan enam jeda; belum ada pengukuran audio nyata.
 - **Waktu pembaruan:** 2026-09-16
 
 ## Aturan
