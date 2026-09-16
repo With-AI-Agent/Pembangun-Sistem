@@ -40,7 +40,7 @@ Total terinstall via npx di `/tmp/npx-test`: **32 skills** (21M karena full copy
 | alibaba-java | `7311d7906502246eba010b144e1b7f55` | `7311d7906502246eba010b144e1b7f55` | **IDENTIK** |
 | frontend-designer | `c776e7eb40f5fc3b2c5c727446bd65f5` | `c776e7eb40f5fc3b2c5c727446bd65f5` | **IDENTIK** |
 
-=> Selective copy di `sistem/sistem-building-aplikasi/skills/` byte-identik dengan `npx add` — hemat bukan sunat.
+=> Selective copy di skills/ (vendor) byte-identik dengan npx add — hemat bukan sunat (provenance: sistem/sistem-building-aplikasi/skills/ di repo meta).
 
 ## npx update — lancar
 
