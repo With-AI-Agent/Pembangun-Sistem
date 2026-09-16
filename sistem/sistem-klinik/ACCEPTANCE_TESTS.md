@@ -13,8 +13,10 @@ Uji end-to-end untuk memastikan Sistem Klinik bekerja dengan benar pada sistem t
 1. Salin `kit/` versi lama (misalnya tanggal/versi di bawah `SYSTEM_MANIFEST.md`) ke target uji.
 2. Jalankan Agent Klinik.
 3. **Ekspektasi:** Agent menolak bekerja (fail-closed) pada Tahap B Diagnosis karena mendeteksi bahwa kit/ versi usang dibandingkan manifest, dan mewajibkan sinkronisasi/update kit terlebih dahulu.
+4. **Invarian struktural (sejak 2026-09-16 — bagian ini OTOMATIS, bukan manual):** jalankan `python3 _sistem/validate_system.py`. Cek `check_kit_segarkan` menegakkan, tanpa git dan tanpa angka volatil: (a) keenam aturan master punya turunan di `kit/aturan/`; (b) sha di tiap stamp == **blob SHA isi master saat ini**; (c) isi turunan identik master (bentuk: stamp + baris kosong + isi master verbatim); (d) `versi-kit` di tiap stamp == `kit/VERSI.txt`; (e) `kit/VERSI.txt` == field Versi `SYSTEM_MANIFEST.md`.
+5. **Uji mutasi (wajib, anti F-8):** rusak satu per satu — sunting master tanpa sync, ubah `VERSI.txt`, ubah `versi-kit` di stamp, hapus satu turunan, ubah satu kata isi turunan, arahkan stamp ke sumber lain, rusak satu karakter sha, naikkan Versi manifest tanpa rilis kit — validator harus **GAGAL** untuk semuanya; dan harus tetap **PASS** pada keadaan benar serta bila folder `kit/` tidak ada (panggung rawat inap).
 
-*(AT ini dieksekusi secara manual oleh QA saat rilis versi baru)*
+*(Langkah 1-3 tetap dieksekusi manual oleh QA saat rilis versi baru — itu menguji keputusan agent. Langkah 4-5 adalah gerbang mekanisnya: sampai 2026-09-16 aturan 06_RITME_KIT §2 hanya bertumpu pada prosedur manual, dan panen C-07 membuktikan akibatnya — master berubah, kit jadi basi, tidak ada satu pun alat yang menyala.)*
 
 ## AT-KL-03: Varian Rawat Inap (Target = Folder Sistem di Repo — K-11)
 1. Buat salinan `_fixture/sistem-kecil-sakit/` di sandbox (mis. /tmp) yang direpresentasikan sebagai "folder sistem target yang diletakkan pemilik di repo ini". **SALINAN KIT TIDAK DIPAKAI** — panggung rawat inap membaca master `_sistem/01–06` in-place: tidak ada folder `kit/` di sandbox, tidak ada stamp, tidak ada `.gitignore` kerja untuk kit (tidak ada peleburan kit).
@@ -30,5 +32,6 @@ Uji end-to-end untuk memastikan Sistem Klinik bekerja dengan benar pada sistem t
 
 | Tanggal | Perubahan | Alasan |
 |---|---|---|
+| 2026-09-16 | AT-KL-02 diperluas: langkah 4 (invarian struktural otomatis lewat cek `check_kit_segarkan` di validator sistem) + langkah 5 (uji mutasi wajib, anti F-8) | Panen C-07 run ke-2 Building Aplikasi menemukan akibat nyata dari AT-KL-02 yang hanya prosedur manual: master `02_KATALOG_CACAT.md` berubah, `kit/` jadi basi, dan **tidak ada satu pun alat yang menyala** — aturan 06_RITME_KIT §2 ("wajib sync sebelum PR rilis", "jika basi, build harus fail-closed") tidak punya gerbang. Bagian strukturalnya kini otomatis dan dibuktikan dengan mutasi; bagian keputusan agent tetap manual |
 | 2026-09-14 | Menambahkan AT-KL-02 (Cek Kit Basi) | Memenuhi syarat dari 06_RITME_KIT.md §2 dan hasil eskalasi review putaran 2. |
 | 2026-09-14 UTC / 15 Sep WIB | AT-KL-03 lahir (varian rawat inap: master in-place, tanpa salin kit, artefak identik, idempoten, PR meta normal) + teks AT-KL-01/02 disinkron ke dua panggung baru | K-11: varian panggung baru wajib terbukti mekanis seperti varian lain; sandbox di luar repo (pola AT-KL-01: kit/kerja tidak pernah masuk git) |

@@ -143,3 +143,52 @@ Bagian run ke-2 putaran 1 di berkas ini sempat mengutip angka coverage (`354`); 
 **Koreksi atas riwayat ter-merge (baris ~27, bagian run ke-1):** baris `- tools/validate_repo.py: PASS 0 warning (102 docs/327 refs/4 sistem)` mengutip angka korpus yang **kini dilarang** oleh aturan meta C5 + AT-16 (dan oleh cek `check_no_volatile_corpus_numbers` di `_sistem/validate_system.py`). Baris itu ** SENGAJA TIDAK DIEDIT**: ia sudah ter-merge di `main` lewat PR #59, dan menulis ulang riwayat ter-merge dilarang (append-only; koreksi = entri baru). Yang benar: verdict-nya (`PASS 0 warning`) tetap sah dan masih bisa direproduksi dengan `python3 tools/validate_repo.py`; **angka coverage-nya tidak boleh dipakai lagi sebagai bukti** dan tidak boleh ditiru di run berikutnya. Pemilik memutuskan 2026-09-16 ("diperbaiki semuanya sekarang, supaya sekalian") bahwa penandaan ini dilakukan di PR ini juga, bukan ditunda ke run housekeeping tersendiri.
 
 **Koreksi angka di log sesi (append-only):** entri log sesi level repo meta: _log-sesi/LOG_SESI_2026-09-16.md (di luar folder ini — ditulis sebagai provenance tanpa backtick supaya tidak jadi rujukan menggantung di repo standalone) sempat menulis validator "226→303 baris". Nyata: **308 baris** di `590acd1` maupun di head, dengan **12 fungsi `check_*`** (5 bawaan + 7 ditanam run ke-2). Ditemukan reviewer putaran 2 (catatan non-penghalang); dikoreksi lewat entri baru di log, bukan dengan menyunting entri lama.
+
+## Run 2026-09-16 (putaran 3) — mandate pemilik "selesaikan, bereskan, sempurnakan semuanya"
+
+**Konteks:** review independen PR #63 putaran 2 = HIJAU. Penulis menunda dua hal supaya delta pasca-verdict tetap minimal; pemilik lalu memandatkan semuanya dikerjakan. Putaran ini **bukan** perbaikan temuan review — isinya: (1) gerbang baru untuk kelas cacat yang tiga kali lolos dari penulis sendiri, (2) housekeeping meta yang tertunda, (3) panen C-07 ke kit Klinik (bukti di ACCEPTANCE_TEST_LOG sistem klinik).
+
+### Cek ke-8: scan rujukan AT-08 ditanam jadi gerbang permanen
+
+- Cek baru `check_no_dangling_internal_refs` di `_sistem/validate_system.py`: token ber-backtick berprefix internal (`_sistem/`, `skills/`, `docs/`, `_log-sesi/`, `_salinan-meta/`) wajib nyata ada di dalam folder. Vendor di dalam `skills/` tidak dipindai (rujukan internal skill = positif palsu).
+- **Pemicu nyata (bukan teoritis):** teks koreksi yang ditulis penulis sendiri di bagian putaran 2 berkas ini mengutip log sesi level repo meta dengan backtick → scan AT-08 menangkapnya sebagai rujukan menggantung, validator tidak. Ini **kali ketiga** pola yang sama di run ke-2 (sebelumnya: rujukan path master-only di `AGENT_SYSTEM.md`, lalu rujukan alat meta di transkrip).
+- Total fungsi cek sekarang **13** (5 bawaan + 8 ditanam run ke-2).
+
+**Uji mutasi cek ke-8** (mutasi di pohon kerja, dipulihkan dengan `git checkout -- <berkas yang sudah di-commit>`; keadaan akhir diverifikasi bersih):
+
+| # | Mutasi | Hasil |
+|---|---|---|
+| M11 | suntik ke `STATUS.md` rujukan ber-backtick ke path internal yang tidak ada di folder (di bawah `_sistem/templates/`) | **GAGAL** — "rujukan ber-backtick … tidak ada di dalam folder — di repo standalone (AT-08) ini jadi rujukan menggantung" |
+| M12 | suntik ke `STATUS.md` rujukan ber-backtick ke log sesi level repo meta di bawah `_log-sesi/` (varian yang benar-benar terjadi) | **GAGAL** — pesan sama |
+| N1 | kontrol negatif: rujukan berprefix internal ke berkas yang **nyata ada** (`_sistem/templates/ROADMAP.md`, `docs/README.md`) | **PASS** |
+| N2 | kontrol negatif: sebutan area berakhiran garis miring (`skills/`, `docs/`) | **PASS** |
+| N3 | kontrol negatif: pola/placeholder bertanda bintang dan kurung siku | **PASS** |
+
+Catatan proses yang jujur: saat menulis spesifikasi AT-09 untuk cek ini, prosa penulis sendiri ("AT-08 menangkap 1 rujukan menggantung") **tertangkap cek anti-angka-korpus** (cek ke-6) — redaksinya dibuang angkanya. Gerbangnya bekerja pada penulisnya sendiri.
+
+### AT-09 penuh (9 mutasi + 4 kontrol negatif) — LULUS
+
+Semua mutasi M1-M8 dari putaran 2 diulang di head putaran 3 dan tetap **GAGAL** (terdeteksi): penanda arsip `PANDUAN_PEMAKAIAN.md`; klaim jumlah direktori di header `skills/README.md`; klaim satu berkas di `START_DI_SINI.md`; rujukan ber-backtick master-only di `STATUS.md`; atribut task di `_sistem/templates/ROADMAP.md`; angka korpus di `SYSTEM_MANIFEST.md`; atribut `Tujuan` hilang dari satu task contoh `AGENT_SYSTEM.md`; kalimat aturan Tahap 5 jadi 6 atribut; **ditambah M11/M12** di atas. Kontrol negatif: N1-N3 di atas **plus** verdict "0 rujukan … menggantung" tetap **PASS** (tidak jadi positif palsu cek ke-6).
+
+### AT-08 (copy → repo standalone) — diulang di head putaran 3, LULUS
+
+`cp -r` seluruh isi folder ke direktori kosong → hapus `_Notes.md` → `git init` + commit → jalankan validator dari salinan (tanpa alat meta):
+
+- `python3 _sistem/validate_system.py` → **PASS**, exit 0 (9 berkas wajib + 8 cek, termasuk cek ke-8 yang baru)
+- `find skills -mindepth 1 -maxdepth 1 -type d | wc -l` → **56** = klaim dokumen; `du -sh skills` → **26M**
+- berkas di salinan (di luar `.git`) → **1.832**; `tools/`, `_meta/`, `PROJECT_STATE.md` → **tidak ada** (sesuai desain)
+- scan rujukan berprefix internal → **0 menggantung**
+
+### Housekeeping meta (bagian dari putaran ini, di luar folder sistem)
+
+5 artefak review/audit yang tergeletak di root repo **dipindah, bukan dihapus** ke _meta/_internal/arsip-review-2026-09-16/ (ditulis tanpa backtick: area itu milik repo meta dan tidak ikut ter-copy) + README arsip + banner arsip di kepala 3 berkas `REVIEW_*`; isi asli tidak disunting. Dua berkas audit terbukti duplikat byte-identik (md5) dari salinan kanonik di `_sistem/`. Temuan yang **tidak** ditindak sendiri (cabang remote tanpa PR yang memegang bukti review pihak lain; log sesi OPEN milik sesi lain) didokumentasikan di _meta/_internal/HOUSEKEEPING_2026-09-16.md dengan rekomendasi + perintah, karena tindakan destruktif lintas sesi butuh izin per-item (Kebijakan Lebur Aturan 2).
+
+Rujukan yang tadinya menunjuk path root disesuaikan di `REKAM-KLINIK.md` — kalau tidak, pemindahan itu justru menciptakan rujukan menggantung (kelas cacat yang baru saja ditanam gerbangnya).
+
+### Verifikasi struktural putaran 3 (tanpa angka korpus — C5/AT-16)
+
+- `python3 _sistem/validate_system.py` → **PASS** (9 berkas wajib + 8 cek)
+- `python3 tools/validate_repo.py` → **PASS, WARNINGS: none, 0 unresolved**
+- `python3 tools/check_selfcontained.py --semua` → **HASIL AKHIR: PASS**
+- `python3 tools/test_failure_injection.py` → **PASSED: 72 skenario**
+- `python3 sistem/sistem-klinik/_sistem/validate_system.py` → **PASS** (sistem yang dipanen tetap hijau; sebelum kit disinkron cek barunya **GAGAL** = bukti menyala)
