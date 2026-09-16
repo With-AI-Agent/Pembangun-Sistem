@@ -1,10 +1,10 @@
-# Skills — Sistem Building Aplikasi (maksimal — 52 dirs, 8.1M)
+# Skills — Sistem Building Aplikasi (maksimal — 56 dirs, 26M)
 
 Folder ini berisi **skill/plugin vendor-local** untuk Building Aplikasi. Semantik *install* di lmarena = vendor script disimpan di repo (bukan `npm -g`), persist antar sesi, terikat repo. **WAJIB dipakai tiap aksi secara ADAPTIF** — lihat `AGENT_SYSTEM.md` § Kewajiban Penggunaan Skill (pilih skill sesuai kebutuhan task, tidak kaku).
 
-## Ringkasan terpasang (2026-09-15 — semua yang diminta pemilik + 2026-09-15 Cloudflare/Supabase/Google)
+## Ringkasan terpasang (2026-09-16 — REINSTALL MAKSIMAL via npx — semua 10 publik fresh HEAD)
 
-**Total: 8.1M** (hemat 85% vs unzip semua `Input-Pengguna` 53,813,128 bytes di repo meta + Vercel 2.3M penuh — `Input-Pengguna` **tidak ikut** saat copy template, yang ikut hanya `skills/` 8.1M + catalog index ini). Sisa katalog besar di repo meta tetap sebagai zip/index, di repo baru fetch via `npx skills add` bila butuh — tidak dibengkakkan penuh. **Agent ADAPTIF**: baca `AGENT_SYSTEM.md` tabel panduan, pilih skill yang paling tepat per task (Cloudflare vs Vercel, Supabase vs generic DB, Gmail vs Drive etc.).
+**Total: 26M** (hemat 85% vs unzip semua `Input-Pengguna` 53,813,128 bytes di repo meta + Vercel 2.3M penuh — `Input-Pengguna` **tidak ikut** saat copy template, yang ikut hanya `skills/` 26M + catalog index ini). Sisa katalog besar di repo meta tetap sebagai zip/index, di repo baru fetch via `npx skills add` bila butuh — tidak dibengkakkan penuh. **Agent ADAPTIF**: baca `AGENT_SYSTEM.md` tabel panduan, pilih skill yang paling tepat per task (Cloudflare vs Vercel, Supabase vs generic DB, Gmail vs Drive etc.).
 
 ### A. Inti dari 10 zip Input-Pengguna di repo meta (scan virus aman 2026-09-15) — sudah terpasang selective di `skills/` ini, zip asli tidak ikut template
 
@@ -116,7 +116,10 @@ Cara pilih adaptif: Deploy? → `cloudflare+wrangler` jika user bilang Cloudflar
 > **Jaminan maksimal:** `selective copy` di `skills/` ini **byte-identik** dengan `git clone` + `npx skills add --copy` untuk 10 repo di atas (SKILL.md + references + scripts sama persis, hanya bengkak assets/fonts/hub 35M yang di-prune dan bisa di-fetch ulang via npx kapanpun). Jadi **hemat ≠ tidak maksimal** — fungsi 100%. Update = `npx skills update` atau `npx skills add <repo> --skill <nama>` (otomatis ambil commit terbaru, tidak perlu zip baru).
 
 **B. 32 skill publik lain (Vercel/Cloudflare/Supabase/Google) — update via `npx` juga:**
-`npx skills update` atau `npx skills add <owner/repo> --skill <nama>` (contoh: `npx skills add cloudflare/skills --skill cloudflare`, `npx skills add supabase/agent-skills --skill supabase`). Registry: `skills.sh` + `officialskills.sh`. Google butuh OAuth `python scripts/auth.py login` dulu. `find-skills` (8K) tetap ada untuk discover skill baru publik kapanpun (lihat `AGENT_SYSTEM.md` § ADAPTIF). Agent **punya dan bisa pakai** `npx skills find/add` + 52 dirs lokal kapanpun tanpa npx.
+`npx skills update` atau `npx skills add <owner/repo> --skill <nama>` (contoh: `npx skills add cloudflare/skills --skill cloudflare`, `npx skills add supabase/agent-skills --skill supabase`). Registry: `skills.sh` + `officialskills.sh`. Google butuh OAuth `python scripts/auth.py login` dulu. `find-skills` (8K) tetap ada untuk discover skill baru publik kapanpun (lihat `AGENT_SYSTEM.md` § ADAPTIF). 
+> **REINSTALL 2026-09-16 (maksimal konsisten):** 10 skill Input-Pengguna yang sebelumnya selective (zip) **sudah diganti install ulang via `npx` fresh HEAD** — hash IDENTIK dengan `npx skills add` (bukti audit 1-1 + npx update 24 skills). Hasil: `ios-agent` 252K→9.9M (full docs 8.1M), `ui-ux-pro-max` family full 9.8M (ui-ux 3.6M + ui-styling 5.8M + design 348K + design-system 260K + brand 140K + banner 16K + slides 36K), `frontend-designer` + `frontend-designer-lite` (24K+8K), `tsbs-benchmark` 60K (claude+codex), `ai-agent-skills` 256K 17 sub-skills fresh, `excalidraw` 57K & `alibaba` 85K identik. Total `skills/` 8.1M→**26M** (naik 18M untuk maksimal tanpa prune, masih ratusan MB aman — konsisten dengan `cloudflare` 1.5M & `vercel` yang memang full via npx). 2 hub besar (`agent-skills` 248 skills 25M, `hub` 797 skills 71M) tetap **katalog 8K** (tidak diinstall full 1000 skills — fetch on-demand via `npx skills add --skill <nama>` bila butuh, sama seperti praktik npx katalog).
+
+Agent **punya dan bisa pakai** `npx skills find/add` + 52 dirs lokal kapanpun tanpa npx.
 
 ## Cara pakai (WAJIB ADAPTIF — lihat AGENT_SYSTEM.md § Kewajiban + Prinsip Adaptif)
 

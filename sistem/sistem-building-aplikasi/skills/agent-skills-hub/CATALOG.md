@@ -1,30 +1,60 @@
-     5445  2026-08-25 12:28   agent-skills-hub-main/skills/3d-web-experience/SKILL.md
-     7086  2026-08-25 12:28   agent-skills-hub-main/skills/ab-test-setup/SKILL.md
-     1904  2026-08-25 12:28   agent-skills-hub-main/skills/accessibility-compliance-accessibility-audit/SKILL.md
-     9504  2026-08-25 12:28   agent-skills-hub-main/skills/active-directory-attacks/SKILL.md
-    13391  2026-08-25 12:28   agent-skills-hub-main/skills/ad-creative/SKILL.md
-     4561  2026-08-25 12:28   agent-skills-hub-main/skills/adaptyv/SKILL.md
-     1227  2026-08-25 12:28   agent-skills-hub-main/skills/address-github-comments/SKILL.md
-    11406  2026-08-25 12:28   agent-skills-hub-main/skills/aeon/SKILL.md
-     2089  2026-08-25 12:28   agent-skills-hub-main/skills/agent-evaluation/SKILL.md
-     1054  2026-08-25 12:28   agent-skills-hub-main/skills/agent-manager-skill/SKILL.md
-     2101  2026-08-25 12:28   agent-skills-hub-main/skills/agent-memory-mcp/SKILL.md
-     2317  2026-08-25 12:28   agent-skills-hub-main/skills/agent-memory-systems/SKILL.md
-    10130  2026-08-25 12:28   agent-skills-hub-main/skills/agent-orchestration-improve-agent/SKILL.md
-     6782  2026-08-25 12:28   agent-skills-hub-main/skills/agent-orchestration-multi-agent-optimize/SKILL.md
-     1673  2026-08-25 12:28   agent-skills-hub-main/skills/agent-tool-builder/SKILL.md
-     2571  2026-08-25 12:28   agent-skills-hub-main/skills/ai-agents-architect/SKILL.md
-     8925  2026-08-25 12:28   agent-skills-hub-main/skills/ai-engineer/SKILL.md
-     2170  2026-08-25 12:28   agent-skills-hub-main/skills/ai-product/SKILL.md
-    17185  2026-08-25 12:28   agent-skills-hub-main/skills/ai-seo/SKILL.md
-     6623  2026-08-25 12:28   agent-skills-hub-main/skills/ai-wrapper-product/SKILL.md
-     1422  2026-08-25 12:28   agent-skills-hub-main/skills/airflow-dag-patterns/SKILL.md
-     1971  2026-08-25 12:28   agent-skills-hub-main/skills/algolia-search/SKILL.md
-    19769  2026-08-25 12:28   agent-skills-hub-main/skills/algorithmic-art/SKILL.md
-     6259  2026-08-25 12:28   agent-skills-hub-main/skills/alpha-vantage/SKILL.md
-    17220  2026-08-25 12:28   agent-skills-hub-main/skills/alphafold-database/SKILL.md
-     7966  2026-08-25 12:28   agent-skills-hub-main/skills/analytics-tracking/SKILL.md
-    13096  2026-08-25 12:28   agent-skills-hub-main/skills/angular-best-practices/SKILL.md
-    10302  2026-08-25 12:28   agent-skills-hub-main/skills/angular-migration/SKILL.md
-    15393  2026-08-25 12:28   agent-skills-hub-main/skills/angular-state-management/SKILL.md
-    11161  2026-08-25 12:28   agent-skills-hub-main/skills/angular-ui-patterns/SKILL.md
+# Catalog agent-skills-hub — update 2026-09-16 via npx (HEAD 8185719)
+
+Total: 797 skills (full 71M, vendor catalog untuk hemat)
+
+Fetch via: `npx skills add agent-skills-hub/agent-skills-hub --skill <nama>`
+
+## Sample 50
+
+- 3d-web-experience
+- SPDD
+- ab-test-setup
+- accessibility-compliance-accessibility-audit
+- active-directory-attacks
+- ad-creative
+- adaptyv
+- address-github-comments
+- aeon
+- agent-evaluation
+- agent-manager-skill
+- agent-memory-mcp
+- agent-memory-systems
+- agent-orchestration-improve-agent
+- agent-orchestration-multi-agent-optimize
+- agent-tool-builder
+- ai-agents-architect
+- ai-engineer
+- ai-product
+- ai-seo
+- ai-wrapper-product
+- airflow-dag-patterns
+- algolia-search
+- algorithmic-art
+- alpha-vantage
+- alphafold-database
+- analytics-tracking
+- angular
+- angular-best-practices
+- angular-migration
+- angular-state-management
+- angular-ui-patterns
+- anndata
+- anti-reversing-techniques
+- api-design-principles
+- api-documentation-generator
+- api-documenter
+- api-fuzzing-bug-bounty
+- api-patterns
+- api-security-best-practices
+- api-testing-observability-api-mock
+- app-builder
+- app-store-optimization
+- application-performance-performance-optimization
+- arboreto
+- architect-review
+- architecture
+- architecture-decision-records
+- architecture-patterns
+- arm-cortex-expert
+
+... dan 747 lainnya
