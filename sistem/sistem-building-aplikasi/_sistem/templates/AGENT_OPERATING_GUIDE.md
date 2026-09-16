@@ -10,7 +10,7 @@
 - [isi: mis. Next.js App Router, TypeScript strict, Tailwind, ESLint, Prettier — sesuai TECH_SPEC]
 
 ## Struktur Commit & Branch (fakta platform lmarena)
-- Setiap sesi = branch baru deskriptif (`tahap-1-discovery`, `fase-2-task-5-...`), JANGAN push ke `main`, PR tanpa auto-merge.
+- Setiap sesi = branch kerja sendiri, JANGAN push ke `main`, PR tanpa auto-merge. Di lmarena branch `arena/[id]-...` dibuat otomatis dan tidak bisa diganti → **deskripsi pindah ke judul commit + judul PR + LOG_SESI**. Bila environment mengizinkan branch manual, pakai nama deskriptif (`tahap-1-discovery`, `fase-2-task-5-...`).
 - Di awal sesi: `git branch --show-current` (harus `arena/...`) + `gh pr list --state all` (pakai `--state all` agar PR MERGED/CLOSED terlihat). Jika PR branch aktif sudah MERGED → tidak bisa push lagi → buka sesi baru dari `main`.
 - Di awal sesi juga cek branch menggantung lain (selain `main` dan branch-mu) → beri tahu user.
 

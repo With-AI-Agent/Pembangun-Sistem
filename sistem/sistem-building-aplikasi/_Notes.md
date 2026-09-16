@@ -1,3 +1,7 @@
+> **[CATATAN PRIBADI PEMILIK — JANGAN IKUT KE REPO APLIKASI]** Berkas ini jejak asal-usul
+> sistem (provenance), bukan bagian template. Saat `cp -r` folder ini ke repo aplikasi baru,
+> **hapus berkas ini** (lihat `PANDUAN_PENGGUNA.md` § Cara Pakai Sebagai Template — daftar jangan-copy).
+> Agent: berkas ini bukan instruksi kerja dan bukan state proyek — jangan dipakai untuk orientasi.
 
 Chat Pembangun sistem ini ada di Claude AI di akun FATRIZ MUBAROK
 

@@ -89,6 +89,119 @@ def check_pegangan(errs):
         if "Prompt Penutup" not in pu_text:
             errs.append("PANDUAN_PENGGUNA.md: tidak ada Prompt Penutup")
 
+
+# ---- cek run klinik ke-2 (2026-09-16): anti-dokumen-pengganti-hidup + anti-klaim-basi ----
+
+# Dokumen yang diperlakukan sebagai ARSIP/catatan (bukan dokumen aktif):
+ARSIP_DOCS = ("PANDUAN_PEMAKAIAN.md", "REKAM-KLINIK.md", "_Notes.md")
+# Penanda wajib di kepala berkas arsip supaya tidak dibaca sebagai aturan berlaku.
+PENANDA_ARSIP = {
+    "PANDUAN_PEMAKAIAN.md": "SUDAH DIGANTIKAN",
+    "REKAM-KLINIK.md": "ARSIP PERAWATAN SISTEM",
+    "_Notes.md": "CATATAN PRIBADI PEMILIK",
+}
+# Area di luar folder sistem yang isinya TIDAK ikut keluar (provenance tanpa backtick).
+AREA_LUAR = ("_meta/", "tools/", "_cadangan-claude/", "Input-Pengguna/")
+# Dokumen aktif yang kena cek area luar + klaim jumlah direktori skills/.
+DOK_AKTIF = ("AGENT_SYSTEM.md", "SYSTEM_MANIFEST.md", "STATUS.md", "PANDUAN_PENGGUNA.md",
+             "PROMPT_ENTRI_UNIVERSAL.md", "START_DI_SINI.md", "10_LOG_SESI.md",
+             "ACCEPTANCE_TESTS.md", "PROFIL_PENGGUNA.md", "skills/README.md")
+ATRIBUT_ROADMAP = ("**Tujuan:**", "**Ref:**", "**File:**", "**DoD", "**Kompleksitas:**",
+                   "**Risiko & mitigasi:**", "**Verifikasi:**")
+
+
+def check_penanda_arsip(errs):
+    """Berkas yang digantikan/catatan pribadi WAJIB berpenanda arsip di kepalanya.
+
+    Akar masalah run klinik ke-2 (cacat K-1 / butir katalog Klinik C-07): dokumen yang
+    sudah digantikan tetap hidup tanpa penanda, dan isinya bertentangan dengan dokumen
+    yang berlaku — pemilik mengikuti dokumen lama dan tersesat di pemakaian pertama.
+    """
+    for nama, penanda in PENANDA_ARSIP.items():
+        p = SYS_DIR / nama
+        if not p.is_file():
+            continue
+        kepala = "\n".join(p.read_text(encoding="utf-8").splitlines()[:12])
+        if penanda not in kepala:
+            errs.append(f"{nama}: berkas arsip/digantikan wajib memuat penanda '{penanda}' di 12 baris pertama")
+
+
+def check_tidak_adaklaim_satu_berkas(errs):
+    """Tidak boleh ada dokumen aktif yang MENYURUH copy hanya AGENT_SYSTEM.md (cacat K-1).
+
+    Baris yang membantah/mengoreksi klaim lama (memuat penanda sanggahan) dikecualikan —
+    koreksi justru wajib menyebut klaim salah itu supaya tidak terulang.
+    """
+    pola = re.compile(r"(masuk|dimasukk?an|di-copy|copy)[^.\n]{0,60}hanya[^.\n]{0,20}`?AGENT_SYSTEM\.md`?", re.I)
+    sanggahan = ("tidak berlaku", "sudah digantikan", "DIGANTIKAN", "salah", "arsip", "ARSIP",
+                 "bukan hanya", "SELURUH", "sebut", "menyebut", "pernah")
+    for rel in DOK_AKTIF:
+        p = SYS_DIR / rel
+        if not p.is_file():
+            continue
+        for i, baris in enumerate(p.read_text(encoding="utf-8").splitlines(), 1):
+            if pola.search(baris) and not any(s in baris for s in sanggahan):
+                errs.append(f"{rel}:{i}: klaim 'hanya AGENT_SYSTEM.md yang masuk repo' — yang benar SELURUH isi folder (lihat PANDUAN_PENGGUNA.md § Cara Pakai Sebagai Template)")
+
+
+def check_area_luar_tanpa_backtick(errs):
+    """Rujukan ber-backtick ke BERKAS di area luar folder = dependensi yang putus saat folder di-copy.
+
+    Sebutan area berbentuk direktori (mis. `tools/`) TIDAK ditegakkan — sama seperti norma
+    alat meta check_selfcontained: itu sebutan area, bukan janji satu berkas ikut.
+    """
+    for rel in DOK_AKTIF:
+        p = SYS_DIR / rel
+        if not p.is_file():
+            continue
+        text = p.read_text(encoding="utf-8")
+        pola = r"`((?:%s)[^`\s]+)`" % "|".join(re.escape(a) for a in AREA_LUAR)
+        for ref in re.findall(pola, text):
+            if ref.endswith("/"):
+                continue  # sebutan area, bukan berkas
+            errs.append(f"{rel}: rujukan ber-backtick `{ref}` ke berkas di area luar folder — tulis sebagai provenance tanpa backtick (area itu tidak ikut saat folder di-copy jadi repo standalone)")
+
+
+# Anchor klaim jumlah direktori skills/ — dibandingkan dengan hitungan NYATA tiap run,
+# jadi tidak bisa basi (bukan bukti volatil ala C-04). Anchor yang hilang = temuan,
+# supaya penyuntingan kalimat tidak diam-diam mematikan cek ini.
+ANCHOR_DIR_SKILLS = (
+    ("skills/README.md", r"^# Skills .*\((?:maksimal[^)]*?)?(\d+) dirs"),
+    ("AGENT_SYSTEM.md", r"total (\d+) dirs"),
+    ("SYSTEM_MANIFEST.md", r"(\d+) direktori, [\d.]+ berkas"),
+)
+
+
+def check_klaim_jumlah_dir_skills(errs):
+    sk = SYS_DIR / "skills"
+    if not sk.is_dir():
+        return
+    nyata = sum(1 for p in sk.iterdir() if p.is_dir())
+    for rel, pola in ANCHOR_DIR_SKILLS:
+        p = SYS_DIR / rel
+        if not p.is_file():
+            errs.append(f"{rel}: berkas anchor klaim jumlah direktori skills/ tidak ada")
+            continue
+        text = p.read_text(encoding="utf-8")
+        m = re.search(pola, text, re.MULTILINE)
+        if not m:
+            errs.append(f"{rel}: anchor klaim jumlah direktori skills/ tidak ditemukan (pola {pola!r}) — jangan hapus angkanya, segarkan")
+        elif int(m.group(1)) != nyata:
+            errs.append(f"{rel}: klaim {m.group(1)} direktori skills/ != nyata {nyata} — segarkan (ukur: find skills -mindepth 1 -maxdepth 1 -type d | wc -l)")
+
+
+def check_template_roadmap_7_atribut(errs):
+    """Template ROADMAP wajib mencontohkan 7 atribut task (bukan bentuk singkat yang dilarang)."""
+    p = SYS_DIR / "_sistem" / "templates" / "ROADMAP.md"
+    if not p.is_file():
+        return
+    text = p.read_text(encoding="utf-8")
+    hilang = [a for a in ATRIBUT_ROADMAP if a not in text]
+    if hilang:
+        errs.append(f"_sistem/templates/ROADMAP.md: atribut task hilang {hilang} — AGENT_SYSTEM.md Tahap 5 mewajibkan 7 atribut dan melarang bentuk singkat")
+
+
+
 def main():
     errs = []
     check_file_exists(errs)
@@ -96,6 +209,11 @@ def main():
     check_manifest(errs)
     check_no_meta_operational_refs(errs)
     check_pegangan(errs)
+    check_penanda_arsip(errs)
+    check_tidak_adaklaim_satu_berkas(errs)
+    check_area_luar_tanpa_backtick(errs)
+    check_klaim_jumlah_dir_skills(errs)
+    check_template_roadmap_7_atribut(errs)
     if errs:
         print("SYSTEM-BUILDING-APLIKASI VALIDATOR: GAGAL")
         for e in errs:

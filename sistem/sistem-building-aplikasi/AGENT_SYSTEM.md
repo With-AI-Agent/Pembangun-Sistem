@@ -1,9 +1,17 @@
 # Agent System — Aturan Kerja untuk AI Agent
 
 > File ini adalah instruksi kerja untukmu (AI agent). Baca dan ikuti persis.
-> JANGAN PERNAH membaca, membuka, atau mengambil isi dari folder
-> `/panduan-owner/` kalau folder itu ada di repo ini — folder itu (jika ada)
-> khusus milik pemilik proyek, bukan bagian dari instruksi kerjamu.
+>
+> **Batas dokumen pemilik (bukan instruksi kerja):** `PANDUAN_PENGGUNA.md`,
+> `PROMPT_ENTRI_UNIVERSAL.md`, dan `PANDUAN_PEMAKAIAN.md` (arsip versi lama — sudah
+> digantikan) adalah **pedoman untuk pemilik/manusia**, bukan aturan kerjamu. Keduanya
+> diberi penanda `agent_instruction: IGNORE for execution — USER GUIDE ONLY`. Baca
+> berkas-berkas itu HANYA bila pemilik memintanya eksplisit atau bila kamu masuk lewat
+> prompt entri — jangan pernah memperlakukannya sebagai instruksi pelaksanaan, dan
+> jangan mengeditnya sebagai bagian dari kerja membangun aplikasi.
+> *(Catatan sejarah: versi lama file ini melarang membaca folder bernama panduan-owner —
+> folder itu tidak ada di desain sekarang; pedoman pemilik kini ikut di dalam folder/repo.
+> Diperbaiki run klinik ke-2, 2026-09-16.)*
 
 ## Siapa kamu & siapa user
 
@@ -21,8 +29,9 @@ penting harus selalu berasal dari file-file di repo ini, bukan dari asumsi
 atau "ingatan" percakapan sebelumnya.
 
 **Aturan branch & commit yang berlaku di SEMUA sesi, fase apa pun:**
-- Setiap sesi kerja = satu branch baru.
-- **Nama branch harus deskriptif** agar user (yang tidak paham istilah teknis) bisa langsung mengerti isinya dari GitHub tanpa harus buka isi kodenya. Format: `tahap-1-discovery`, `tahap-3-tech-spec`, `fase-2-task-5-checkout`, `siklus-baru-v1`, dsb — bukan nama default seperti `patch-1` atau nama acak.
+- Setiap sesi kerja = satu branch kerja sendiri; **JANGAN PERNAH kerja di `main`**.
+- **Nama branch:** di platform lmarena, branch `arena/[id]-...` **dibuat otomatis oleh platform** dan tidak bisa kamu ganti — itu fakta platform, bukan kelalaian. **Jangan** `git checkout -b` manual kecuali platform/environment mengizinkan. Karena namanya tidak deskriptif, **deskripsi harus pindah ke tempat yang bisa kamu kendalikan**: judul & isi commit, judul PR, dan `LOG_SESI`. Format yang dipakai bila environment mengizinkan branch manual: `tahap-1-discovery`, `tahap-3-tech-spec`, `fase-2-task-5-checkout`, `siklus-baru-v1` — bukan `patch-1` atau nama acak.
+- **Verifikasi dulu, jangan asumsi:** jalankan `git branch --show-current` di awal sesi dan laporkan nama branch apa adanya ke user (bareng commit terakhir + working tree bersih/kotor).
 - Commit & push ke branch sesi ini. **JANGAN PERNAH push langsung ke `main`.**
 - User yang akan me-review dan merge branch ke `main` secara manual setelah menyetujui hasilnya. **Ini bukan berarti kamu harus menunggu approval user untuk tiap commit** — selama masih di branch (bukan `main`), commit demi commit setiap task selesai itu wajar dan diharapkan, karena review sesungguhnya terjadi nanti saat user memeriksa branch sebelum merge, bukan per-commit secara real-time.
 - Karena itu, jangan berasumsi perubahan dari sesi sebelumnya yang BELUM di-merge ke `main` itu final — kalau ragu, cek dulu isi `main`.
@@ -34,7 +43,9 @@ atau "ingatan" percakapan sebelumnya.
 
 ### 0. Cek `PROFIL_PENGGUNA.md` — Prinsip Komunikasi (WAJIB PALING PERTAMA)
 
-Baca `PROFIL_PENGGUNA.md` di root repo (atau di folder `sistem-building-aplikasi` bila masih di repo meta) **sebelum** baca PROJECT_STATE. Kalau masih kosong/template (`[isi: ...]` masih ada) → **JANGAN lanjut ke proyek.** Tanya 4 pertanyaan wajib di file itu sekarang (bahasa pilihan, gaya komunikasi, paham coding?, preferensi opsi), simpan ke file, `commit & push` dulu. Kalau sudah terisi → pakai isinya untuk sesuaikan **semua** kalimatmu selanjutnya (bahasa, jargon, kedalaman). File ini hidup — user bisa minta "ganti bahasa/gaya" kapan saja → update file dulu. Ini prinsip permanen yang memastikan kapanpun buka sesi terbaru, agent langsung tau otak pengguna.
+**Kapan langkah 0 ini berlaku:** sesi **membangun/melanjutkan aplikasi** (Fondasi Tahap 1-6, Coding, Siklus Baru). **Pengecualian — JANGAN pakai langkah ini sebagai penghenti** pada sesi yang mengurus **sistemnya sendiri** (audit/perawatan/upgrade sistem ini, run klinik, sesi di repo meta induk): di sana `PROFIL_PENGGUNA.md` **sengaja kosong** karena ia template yang akan diisi di repo aplikasi hasil copy — memaksa mengisi atau berhenti di situ adalah deadlock. Pada sesi perawatan sistem, cukup baca profil bila sudah terisi, lalu lanjut ke pekerjaan yang diminta.
+
+Baca `PROFIL_PENGGUNA.md` di root repo (atau di folder `sistem-building-aplikasi` bila masih di repo meta) **sebelum** baca PROJECT_STATE. Kalau masih kosong/template (`[isi: ...]` masih ada) → **JANGAN lanjut ke proyek** (kecuali sesi perawatan sistem — lihat pengecualian di atas). Tanya 4 pertanyaan wajib di file itu sekarang (bahasa pilihan, gaya komunikasi, paham coding?, preferensi opsi), simpan ke file, `commit & push` dulu. Kalau sudah terisi → pakai isinya untuk sesuaikan **semua** kalimatmu selanjutnya (bahasa, jargon, kedalaman). File ini hidup — user bisa minta "ganti bahasa/gaya" kapan saja → update file dulu. Ini prinsip permanen yang memastikan kapanpun buka sesi terbaru, agent langsung tau otak pengguna.
 
 ### 1. Cek `PROJECT_STATE.md` di root repo
 
@@ -101,13 +112,13 @@ UPDATE TERAKHIR: [tanggal]
 
 ## Kewajiban Penggunaan Skill (WAJIB — harus dan wajib di setiap aksi)
 
-> **Aturan ini override semua kebiasaan lama: skill bukan opsional, bukan saran, tapi KEWAJIBAN.** Kapanpun kamu buka sesi untuk sistem ini, kamu **WAJIB** memakai skill yang sudah terpasang vendor-local di `skills/` di dalam folder sistem ini (total 56 dirs, 26M — lihat `skills/README.md` — 10 skill publik fresh HEAD via `npx`, 2 hub katalog 248+797 skills on-demand). Jangan pernah coding/UI/riset/deploy tanpa baca `SKILL.md` yang relevan terlebih dulu. Untuk skill katalog (`agent-skills` 248 & `hub` 797) yang hanya ada `CATALOG.md` 8K di vendor: kamu **WAJIB** fetch on-demand via `npx skills add <owner/repo> --skill <nama>` (contoh di `skills/README.md` § Update & Discoverability) — itulah jalur maksimal, bukan kekurangan. `Input-Pengguna/` tidak ikut template, tapi semua skill katalog tetap **bisa dipakai kapanpun** — jangan bingung, jangan bilang “skill tidak ada”.
+> **Aturan ini override semua kebiasaan lama: skill bukan opsional, bukan saran, tapi KEWAJIBAN.** Kapanpun kamu buka sesi untuk sistem ini, kamu **WAJIB** memakai skill yang sudah terpasang vendor-local di `skills/` di dalam folder sistem ini (total 56 dirs, 26M — lihat `skills/README.md` — 10 skill publik fresh HEAD via `npx`, 2 hub katalog on-demand: `agent-skills` 248 skills + `agent-skills-hub` 787 skill valid dari 797 direktori). Jangan pernah coding/UI/riset/deploy tanpa baca `SKILL.md` yang relevan terlebih dulu. Untuk skill katalog (`agent-skills` 248 & `hub` 797) yang hanya ada `CATALOG.md` 8K di vendor: kamu **WAJIB** fetch on-demand via `npx skills add <owner/repo> --skill <nama>` (contoh di `skills/README.md` § Update & Discoverability) — itulah jalur maksimal, bukan kekurangan. Input-Pengguna/ tidak ikut template, tapi semua skill katalog tetap **bisa dipakai kapanpun** — jangan bingung, jangan bilang “skill tidak ada”.
 
 **Prinsip ADAPTIF (tidak kaku — menyesuaikan kebutuhan):**
 > Kamu **tidak boleh kaku** pada 1-2 skill saja. Untuk **setiap kerjaan / Tahap / Task**, nilai dulu *jenis pekerjaannya* (UI? backend? deploy? integrasi? riset?) lalu **pilih skill yang paling tepat** dari katalog yang tersedia. Kalau tugas butuh Cloudflare, pakai `cloudflare/wrangler`; kalau butuh Supabase, pakai `supabase`; kalau butuh Google Workspace, pakai `gmail/google-drive` dll. Kombinasikan beberapa skill bila tugasnya lintas domain. Tabel di bawah adalah **panduan cepat, bukan batas kaku** — jika ada skill lain yang lebih pas (lihat `skills/README.md` atau `find-skills`), pakai yang itu.
 
 **Cara pakai (harus, adaptif):**
-1. Di awal setiap sesi, `ls skills/` dan baca `skills/README.md` untuk tahu katalog lengkap (56 dirs, 26M + 2 katalog 248/797). Gunakan `skills/find-skills` atau `npx skills find <keyword>` bila butuh discovery. Untuk katalog 1045 skills: baca `skills/agent-skills/CATALOG.md` & `skills/agent-skills-hub/CATALOG.md` lalu `npx skills add <repo> --skill <nama>` kapanpun dibutuhkan — tidak perlu semua ter-install di disk.
+1. Di awal setiap sesi, `ls skills/` dan baca `skills/README.md` untuk tahu katalog lengkap (56 dirs, 26M + 2 katalog 248/797). Gunakan `skills/find-skills` atau `npx skills find <keyword>` bila butuh discovery. Untuk katalog (248 + 787 skill valid): baca `skills/agent-skills/CATALOG.md` & `skills/agent-skills-hub/CATALOG.md` lalu `npx skills add <repo> --skill <nama>` kapanpun dibutuhkan — tidak perlu semua ter-install di disk.
 2. Sebelum memulai **Tahap/Fase/Task apapun**, **analisa kebutuhan task**: tanyakan pada diri sendiri "Task ini butuh domain apa? (discovery? PRD? UI? API? DB? deploy Cloudflare/Vercel? Supabase? Google?)". Lalu baca `SKILL.md` yang **paling relevan** — minimal 1 skill, idealnya semua yang relevan untuk domain itu. Skill punya *Activation Contract* & *Hard Rules* — ikuti persis.
 3. Selama eksekusi, terapkan *rules* & *references* dari skill (bukan dari ingatanmu). Jika skill butuh fetch fresh guideline (mis. `web-design-guidelines` fetch `https://raw.githubusercontent.com/vercel-labs/web-interface-guidelines/main/command.md` atau `supabase` cek `https://supabase.com/changelog.md`), lakukan fetch.
 4. Jika tidak ada skill yang pas, catat gap-nya di `DECISIONS_LOG.md` dan lanjut dengan fallback yang aman — jangan diam-diam skip. Pertimbangkan untuk mengusulkan install skill baru via `npx skills add`.
@@ -135,7 +146,15 @@ UPDATE TERAKHIR: [tanggal]
 
 *Contoh adaptif: Task "buat auth dengan Supabase dan deploy ke Cloudflare" → baca `supabase` + `supabase-postgres-best-practices` + `cloudflare` + `wrangler` sekaligus, bukan hanya `vercel-deploy`. Task "kirim laporan mingguan ke Sheets" → baca `google-sheets` + `gmail`. Jika membangun aplikasi Next.js/React, kombinasi **vercel-react-best-practices + next-best-practices + web-design-guidelines + building-components** adalah paket minimal yang tidak boleh dilewati — tapi tetap tambah `supabase`/`cloudflare`/`google` sesuai kebutuhan deploy/integrasi.*
 
-**Catatan path:** `skills/product-discovery/*` dan `skills/product-management/*` adalah direct dirs (mis. `skills/product-discovery/discovery-interview-prep/SKILL.md`); `skills/ai-agent-skills/skills/*` memang nested `skills/` karena library. Jika ragu, gunakan `find skills/<nama> -name SKILL.md` untuk resolve — jangan hardcode tanpa cek `ls`. `find-skills` juga bisa discovery.
+**Catatan path & 6 direktori agregat (PENTING — jangan menyimpulkan "skill tidak ada"):** dari 56 direktori di `skills/`, **50 punya `SKILL.md` di akarnya** dan **6 adalah direktori induk/agregat** yang isinya skill bersarang atau katalog:
+> - `skills/product-discovery/` → 7 sub-skill langsung, contoh `skills/product-discovery/discovery-interview-prep/SKILL.md`
+> - `skills/product-management/` → 8 sub-skill langsung, contoh `skills/product-management/prd-development/SKILL.md`
+> - `skills/ai-agent-skills/` → nested `skills/` (17 sub-skill valid, mis. `skills/ai-agent-skills/skills/backend-development/SKILL.md`)
+> - `skills/agent-skills/` → **katalog** (`CATALOG.md` 248 skills + `README.md`) — fetch via `npx skills add PracticalSwan/agent-skills --skill <nama>`
+> - `skills/agent-skills-hub/` → **katalog** (`CATALOG.md` 787 skill valid + `README.md`) — fetch via `npx skills add agent-skills-hub/agent-skills-hub --skill <nama>`
+> - `skills/awesome-agent-skills/` → **katalog curated list** komunitas (`README.md`, tanpa `SKILL.md`) — dipakai sebagai indeks referensi, bukan skill yang dijalankan
+>
+> **Cara resolve yang benar:** `find skills/<nama> -name SKILL.md` (atau `ls -R skills/<nama> | head`) — jangan hardcode path tanpa cek, dan **jangan** menyimpulkan skill tidak ada hanya karena `SKILL.md` tidak ada di akar direktori. `skills/find-skills` + `npx skills find <keyword>` untuk discovery. **Jangan menambah/mengedit file di dalam direktori skill vendor** — isinya dijaga byte-identik dengan sumber publiknya supaya `npx skills update` tetap bisa dipakai; catatan navigasi milik kita tempatnya di `skills/README.md`.
 
 **Bukti kepatuhan:** di akhir tiap sesi, sebut skill mana yang kamu pakai (dan kenapa memilihnya) di `LOG_SESI` — agar sesi berikutnya bisa audit apakah pemilihan skill sudah adaptif & tepat.
 
@@ -339,8 +358,6 @@ Setiap task **harus** punya `ref`, `file`, `DoD`, `verifikasi`, `kompleksitas`, 
 
 Setelah user setujui: commit ke `/docs/ROADMAP.md`, update `PROJECT_STATE.md` jadi `STATUS: FONDASI_TAHAP_6_CROSS_CHECK`.
 
-Setelah user setujui: commit ke `/docs/ROADMAP.md`, update `PROJECT_STATE.md` jadi `STATUS: FONDASI_TAHAP_6_CROSS_CHECK`.
-
 ---
 
 # TAHAP 6: Cross-Check Akhir
@@ -495,7 +512,7 @@ Pengguna boleh kapan saja bilang (dengan bahasa apapun, sesuai PROFIL_PENGGUNA):
 1. Baca `SYSTEM_MANIFEST.md` (Quality & Evolution), `AGENT_SYSTEM.md`, `PANDUAN_PENGGUNA.md`, `STATUS.md`, `LOG_SESI` terbaru.
 2. Jalankan **audit hidup**: `python3 _sistem/validate_system.py` (selalu ada di template) + bila di repo meta/induk dan folder `tools/` tersedia: `python3 tools/validate_repo.py`, `python3 tools/check_selfcontained.py --sistem sistem-building-aplikasi --report`, `python3 tools/test_failure_injection.py`; bila di repo **standalone hasil copy template** (tidak ada `tools/`), cukup `python3 _sistem/validate_system.py` + cek manual `ls skills/` dan `cat skills/README.md` — itu sudah self-contained. Jangan gagalkan audit hanya karena `tools/` tidak ada.
 3. Audit isi: apakah `PROFIL_PENGGUNA` masih adaptif? Apakah `ROADMAP` template masih sedetail mungkin? Apakah skill ada yang usang? Apakah panduan masih ramah non-teknis? Cari gap, laporkan dengan severity (Critical/Minor) seperti Tahap 6, usulkan perbaikan konkret.
-4. Setelah user setuju, terapkan perbaikan di **branch sesi yang diberikan platform (biasanya `arena/...`)** — jangan `git checkout -b sistem-audit-...` manual kecuali platform mengizinkan; gunakan branch sesi saat ini dengan nama deskriptif di commit/PR title, commit & push, buka PR tanpa auto-merge. Update `SYSTEM_MANIFEST.md` Log Keputusan + `STATUS.md` + `_cadangan-claude/RINGKASAN` + `LOG_SESI`. Jangan diam-diam ubah `AGENT_SYSTEM.md` tanpa PR dan tanpa catat di Log Keputusan (Quality & Evolution → rollback = PR balikan).
+4. Setelah user setuju, terapkan perbaikan di **branch sesi yang diberikan platform (biasanya `arena/...`)** — jangan `git checkout -b sistem-audit-...` manual kecuali platform mengizinkan; gunakan branch sesi saat ini dengan nama deskriptif di commit/PR title, commit & push, buka PR tanpa auto-merge. Update `SYSTEM_MANIFEST.md` Log Keputusan + `STATUS.md` + `LOG_SESI`, **dan bila sistem ini masih berada di repo meta induk** (ada folder _cadangan-claude di root repo induk) ikut segarkan RINGKASAN_sistem-building-aplikasi.md di sana — di repo standalone hasil copy template berkas itu memang tidak ada, jadi lewati tanpa menganggapnya kegagalan. Jangan diam-diam ubah `AGENT_SYSTEM.md` tanpa PR dan tanpa catat di Log Keputusan (Quality & Evolution → rollback = PR balikan).
 
 > Prinsip: sistem yang membangun aplikasi **harus** bisa memperbaiki dirinya sendiri. Jika user merasa sistem kurang matang, itu adalah *sinyal hidup*, bukan kegagalan.
 
