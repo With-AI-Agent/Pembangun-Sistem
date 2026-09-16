@@ -98,7 +98,7 @@ Cara pilih adaptif: Deploy? → `cloudflare+wrangler` jika user bilang Cloudflar
 
 > **Apakah skill auto-update? TIDAK — ini snapshot 15 Sep 2026 (sengaja untuk stabilitas, tidak berubah diam-diam).** Untuk versi terbaru jalankan `npx` di bawah — tidak perlu upload zip ulang.
 
-**A. 10 skill Input-Pengguna — publik, sudah terpasang selective 100% di `skills/` ini, update via `npx` (identik dengan zip):**
+**A. 10 sumber publik Input-Pengguna (9 skill installable + 1 katalog curated list) — sudah terpasang selective 100% di `skills/` ini, update via `npx` (identik dengan zip):**
 
 | # | Skill (folder) | Repo publik (bukti kamu) | `npx` maksimal (registry `skills.sh` / GitHub) | Zip asal |
 |---|---|---|---|---|
@@ -108,7 +108,7 @@ Cara pilih adaptif: Deploy? → `cloudflare+wrangler` jika user bilang Cloudflar
 | 4 | `alibaba-java` 44K | [ns3154/alibaba-java-coding-guidelines-skill](https://github.com/ns3154/alibaba-java-coding-guidelines-skill) | `npx skills add ns3154/alibaba-java-coding-guidelines-skill` | `alibaba-java-coding-guidelines-skill-main.zip` 32K |
 | 5 | `ios-agent` 252K | [Nagarjuna2997/ios-agent-skill](https://github.com/Nagarjuna2997/ios-agent-skill) — MCP `ios-agent-mcp` 2.1.0 | `npx skills add Nagarjuna2997/ios-agent-skill` (+ MCP: `npx -y ios-agent-mcp --project`) | `ios-agent-skill-main.zip` 2.0M→252K |
 | 6 | `tsbs-benchmark` 28K | [questdb/tsbs-benchmark-agent-skill](https://github.com/questdb/tsbs-benchmark-agent-skill) — Apache-2.0 | `npx skills add questdb/tsbs-benchmark-agent-skill` (fallback `cp -r claude/SKILL.md ~/.claude/skills/tsbs-benchmark`) | `tsbs-benchmark-agent-skill-main.zip` 18K |
-| 7 | `ai-agent-skills` 256K (18 skills) | [MoizIbnYousaf/Ai-Agent-Skills](https://github.com/MoizIbnYousaf/Ai-Agent-Skills) | `npx ai-agent-skills` atau `npx skills add MoizIbnYousaf/Ai-Agent-Skills` | `ai-agent-skills-main.zip` 328K |
+| 7 | `ai-agent-skills` 256K (17 skills — 18 di zip termasuk 1 meta, 17 SKILL.md valid) | [MoizIbnYousaf/Ai-Agent-Skills](https://github.com/MoizIbnYousaf/Ai-Agent-Skills) | `npx ai-agent-skills` atau `npx skills add MoizIbnYousaf/Ai-Agent-Skills` | `ai-agent-skills-main.zip` 328K |
 | 8 | `awesome-agent-skills` 224K | [Gak6900/awesome-frontend-skills](https://github.com/Gak6900/awesome-frontend-skills) | `npx skills add Gak6900/awesome-frontend-skills` | `awesome-agent-skills-main.zip` 60K→224K |
 | 9 | `agent-skills` 10K catalog | [PracticalSwan/agent-skills](https://github.com/PracticalSwan/agent-skills) — `frontend-design/SKILL.md` | `npx skills add https://github.com/PracticalSwan/agent-skills --skill frontend-design` | `agent-skills-main.zip` 6.6M→10K catalog (hindari bengkak, fetch via npx bila butuh penuh) |
 | 10 | `agent-skills-hub` 8.5K catalog | [agent-skills-hub/agent-skills-hub](https://github.com/agent-skills-hub/agent-skills-hub) — 42k files | `npx skills add agent-skills-hub/agent-skills-hub` (atau `git clone` + copy) | `agent-skills-hub-main.zip` 35M→8.5K catalog |

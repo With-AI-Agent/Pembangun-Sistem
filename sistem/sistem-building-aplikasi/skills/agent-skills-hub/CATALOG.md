@@ -1,10 +1,10 @@
 # Catalog agent-skills-hub — update 2026-09-16 via npx (HEAD 8185719)
 
-Total: 797 skills (full 71M, vendor catalog untuk hemat)
+Total: 787 installable skills (788 dirs total, 1 invalid `imagen` tanpa `description` — CLI `skills 1.5.26` skip, katalog claim 797 adalah total dirs sebelum validasi) (full 71M, vendor catalog untuk hemat)
 
 Fetch via: `npx skills add agent-skills-hub/agent-skills-hub --skill <nama>`
 
-## Sample 50
+## Sample 50 (sample-only, bukan full list — full 787 ada di `npx skills add --list`)
 
 - 3d-web-experience
 - SPDD

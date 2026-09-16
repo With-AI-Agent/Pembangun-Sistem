@@ -34,7 +34,7 @@ Total terinstall via npx di `/tmp/npx-test`: **32 skills** (21M karena full copy
 
 ## Hash IDENTIK — vendor hemat = npx penuh
 
-| Skill | npx `.claude/skills/.../SKILL.md` | vendor `sistem/.../skills/.../SKILL.md` | Hasil |
+| Skill | npx output `SKILL.md` (contoh: .claude/skills/<nama>/SKILL.md) | vendor skills `SKILL.md` (contoh: skills/<nama>/SKILL.md) | Hasil |
 |---|---|---|---|
 | excalidraw-diagram | `1b69d72e17d463772c2a9baf64d0cff2` | `1b69d72e17d463772c2a9baf64d0cff2` | **IDENTIK** |
 | alibaba-java | `7311d7906502246eba010b144e1b7f55` | `7311d7906502246eba010b144e1b7f55` | **IDENTIK** |

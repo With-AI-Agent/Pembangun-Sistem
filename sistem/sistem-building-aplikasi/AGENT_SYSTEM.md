@@ -39,10 +39,8 @@ Baca `PROFIL_PENGGUNA.md` di root repo (atau di folder `sistem-building-aplikasi
 ### 1. Cek `PROJECT_STATE.md` di root repo
 
 **Kalau file ini TIDAK ADA** (repo kosong/baru): sebelum menyimpulkan ini
-proyek benar-benar baru, cek dulu apakah folder `/docs` sudah berisi file
-apa pun (misal `DISCOVERY.md` sudah ada tapi belum lengkap). Kalau `/docs`
-juga kosong sama sekali → ini proyek benar-benar baru, mulai dari
-**TAHAP 1: Discovery**. Kalau ternyata ada file `/docs` tapi `PROJECT_STATE.md`
+proyek benar-benar baru, cek dulu apakah folder `docs/` (relatif terhadap root repo — tulis `docs/` bukan `/docs`) sudah berisi **artefak fondasi selain `docs/README.md`** (misal `DISCOVERY.md`, `PRD.md`, atau file fondasi lain). `docs/README.md` selalu ada di template dan **bukan** tanda sesi terputus — hanya hitung file selain `README.md`. Kalau `docs/` hanya berisi `README.md` atau kosong sama sekali → ini proyek benar-benar baru, mulai dari
+**TAHAP 1: Discovery**. Kalau ternyata ada artefak fondasi selain `README.md` di `docs/` tapi `PROJECT_STATE.md`
 belum ada — berarti sesi sebelumnya terputus SEBELUM sempat membuat file ini
 (misal diskusi Tahap 1 belum sempat "cukup" untuk ditulis jadi dokumen).
 Dalam kasus ini: buat `PROJECT_STATE.md` sekarang juga dengan `STATUS` sesuai
@@ -136,6 +134,8 @@ UPDATE TERAKHIR: [tanggal]
 | **Workflow/Commerce** | `skills/workflow` (durable) + `skills/ucp` (checkout) — bila app butuh |
 
 *Contoh adaptif: Task "buat auth dengan Supabase dan deploy ke Cloudflare" → baca `supabase` + `supabase-postgres-best-practices` + `cloudflare` + `wrangler` sekaligus, bukan hanya `vercel-deploy`. Task "kirim laporan mingguan ke Sheets" → baca `google-sheets` + `gmail`. Jika membangun aplikasi Next.js/React, kombinasi **vercel-react-best-practices + next-best-practices + web-design-guidelines + building-components** adalah paket minimal yang tidak boleh dilewati — tapi tetap tambah `supabase`/`cloudflare`/`google` sesuai kebutuhan deploy/integrasi.*
+
+**Catatan path:** `skills/product-discovery/*` dan `skills/product-management/*` adalah direct dirs (mis. `skills/product-discovery/discovery-interview-prep/SKILL.md`); `skills/ai-agent-skills/skills/*` memang nested `skills/` karena library. Jika ragu, gunakan `find skills/<nama> -name SKILL.md` untuk resolve — jangan hardcode tanpa cek `ls`. `find-skills` juga bisa discovery.
 
 **Bukti kepatuhan:** di akhir tiap sesi, sebut skill mana yang kamu pakai (dan kenapa memilihnya) di `LOG_SESI` — agar sesi berikutnya bisa audit apakah pemilihan skill sudah adaptif & tepat.
 
@@ -445,8 +445,8 @@ Selama proses ini, `PROJECT_STATE.md` diset `STATUS: SIKLUS_BARU`. Setelah ROADM
 3. Task menyentuh Area Berisiko Tinggi → update `DECISIONS_LOG.md` setelah selesai (atau konfirmasi entri lama masih berlaku).
 4. Task butuh input user → stop, tanyakan step-by-step yang jelas, tunggu reply.
 5. Update `ROADMAP.md` saat task selesai (`[ ]` → `[x]`).
-6. Commit & push ke branch sesi ini dengan pesan jelas.
-7. Update `PROJECT_STATE.md` (`STATUS: CODING_AKTIF`, `DETAIL`: fase & task terbaru).
+6. Update `PROJECT_STATE.md` (`STATUS: CODING_AKTIF`, `DETAIL`: fase & task terbaru) + `STATUS.md` + `LOG_SESI` (CLOSED/OPEN) — **semua state dulu**.
+7. Commit & push **sekali** ke branch sesi ini dengan pesan jelas (cek `git status` bersih, verifikasi `git log --oneline -1` sudah push). Jika sempat commit per task, **wajib push kedua** setelah state di-update — jangan biarkan state tertinggal lokal saat crash.
 
 ## Aturan kerja:
 1. Kode harus sesuai `TECH_SPEC.md` dan `AGENT_OPERATING_GUIDE.md`, ada comment untuk bagian kompleks, ada unit test (minimal logic penting).
@@ -493,9 +493,9 @@ Pengguna boleh kapan saja bilang (dengan bahasa apapun, sesuai PROFIL_PENGGUNA):
 
 **Yang harus kamu lakukan:**
 1. Baca `SYSTEM_MANIFEST.md` (Quality & Evolution), `AGENT_SYSTEM.md`, `PANDUAN_PENGGUNA.md`, `STATUS.md`, `LOG_SESI` terbaru.
-2. Jalankan **audit hidup**: `python3 _sistem/validate_system.py` + tools/validate_repo.py + tools/check_selfcontained.py --sistem sistem-building-aplikasi --report + tools/test_failure_injection.py.
+2. Jalankan **audit hidup**: `python3 _sistem/validate_system.py` (selalu ada di template) + bila di repo meta/induk dan folder `tools/` tersedia: `python3 tools/validate_repo.py`, `python3 tools/check_selfcontained.py --sistem sistem-building-aplikasi --report`, `python3 tools/test_failure_injection.py`; bila di repo **standalone hasil copy template** (tidak ada `tools/`), cukup `python3 _sistem/validate_system.py` + cek manual `ls skills/` dan `cat skills/README.md` — itu sudah self-contained. Jangan gagalkan audit hanya karena `tools/` tidak ada.
 3. Audit isi: apakah `PROFIL_PENGGUNA` masih adaptif? Apakah `ROADMAP` template masih sedetail mungkin? Apakah skill ada yang usang? Apakah panduan masih ramah non-teknis? Cari gap, laporkan dengan severity (Critical/Minor) seperti Tahap 6, usulkan perbaikan konkret.
-4. Setelah user setuju, terapkan perbaikan di branch baru (`sistem-audit-YYYY-MM-DD` atau `sistem-sempurna-...`), commit & push, buka PR tanpa auto-merge. Update `SYSTEM_MANIFEST.md` Log Keputusan + `STATUS.md` + `_cadangan-claude/RINGKASAN` + `LOG_SESI`. Jangan diam-diam ubah `AGENT_SYSTEM.md` tanpa PR dan tanpa catat di Log Keputusan (Quality & Evolution → rollback = PR balikan).
+4. Setelah user setuju, terapkan perbaikan di **branch sesi yang diberikan platform (biasanya `arena/...`)** — jangan `git checkout -b sistem-audit-...` manual kecuali platform mengizinkan; gunakan branch sesi saat ini dengan nama deskriptif di commit/PR title, commit & push, buka PR tanpa auto-merge. Update `SYSTEM_MANIFEST.md` Log Keputusan + `STATUS.md` + `_cadangan-claude/RINGKASAN` + `LOG_SESI`. Jangan diam-diam ubah `AGENT_SYSTEM.md` tanpa PR dan tanpa catat di Log Keputusan (Quality & Evolution → rollback = PR balikan).
 
 > Prinsip: sistem yang membangun aplikasi **harus** bisa memperbaiki dirinya sendiri. Jika user merasa sistem kurang matang, itu adalah *sinyal hidup*, bukan kegagalan.
 
