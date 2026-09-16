@@ -4,13 +4,19 @@ Folder ini berisi **skill/plugin vendor-local** untuk Building Aplikasi. Semanti
 
 ## Ringkasan terpasang (2026-09-16 — REINSTALL MAKSIMAL via npx — semua 10 publik fresh HEAD)
 
-**Total terukur 2026-09-16:** `du -sh skills` = **26M** (23.099.842 bytes ukuran nyata / *apparent size*), **56 direktori**, 1.802 berkas. Angka persentase "hemat X%" **sengaja tidak dipakai lagi** di berkas ini — ia turunan yang gampang basi (pelajaran C-04 Katalog Cacat: bukti volatil). Yang dipakai = fakta terukur + perintah mengukurnya:
+**Total terukur 2026-09-16:** `du -sh skills` = **26M**, **56 direktori**, 1.802 berkas.
+
+Dua jenis angka **sengaja tidak dikutip** di berkas ini (pelajaran C-04 Katalog Cacat: bukti volatil, ditegaskan reviewer PR #63 putaran 1):
+1. **Persentase "hemat X%"** — turunan tanpa pembanding yang stabil.
+2. **Total byte eksak folder ini** — ia berubah setiap kali berkas di dalam `skills/` disunting, **termasuk README ini sendiri**: kutipan byte total di run klinik ke-2 jadi basi oleh suntingan README pada commit yang sama (temuan R-3). Angka beku untuk besaran yang bergerak = jaminan basi.
+
+Yang dikutip hanya fakta yang **stabil terhadap penulisan dokumen** (jumlah direktori & berkas — dan jumlah direktori ditegakkan validator terhadap hitungan nyata) + perintah mengukur sendiri:
 
 ```bash
-du -sh skills                                  # 26M
-du -sb skills                                  # 23099842 bytes (apparent)
-find skills -mindepth 1 -maxdepth 1 -type d | wc -l   # 56 direktori
-find skills -type f | wc -l                    # 1802 berkas
+du -sh skills                                        # ukuran kasar, mis. 26M
+du -sb skills                                        # total byte (apparent) — UKUR SAAT BUTUH, jangan kutip angka beku
+find skills -mindepth 1 -maxdepth 1 -type d | wc -l   # jumlah direktori (ditegakkan validator)
+find skills -type f | wc -l                          # jumlah berkas
 ```
 
 **Yang sengaja TIDAK dipasang penuh** (tetap katalog 8K, fetch on-demand): `agent-skills-hub` (787 skill valid / 797 direktori — penuh ±71M) dan `agent-skills` (248 skills — penuh ±25M). Input-Pengguna/ (10 zip, 53.813.128 bytes) **tidak ikut** saat copy template — ia provenance audit di repo meta. **Agent ADAPTIF**: baca `AGENT_SYSTEM.md` tabel panduan, pilih skill yang paling tepat per task (Cloudflare vs Vercel, Supabase vs generic DB, Gmail vs Drive etc.).
@@ -156,7 +162,7 @@ Semua via **CLI `npx skills add --copy -y --agent "*"` + copy vendor-local** (pe
 
 ## Registrasi
 
-Terdaftar di `SYSTEM_MANIFEST.md` Dependency + Log Keputusan — **total terukur 2026-09-16: 26M / 56 direktori / 1.802 berkas** (23.099.842 bytes apparent). Riwayat: 2.1M (15 Sep, selective 3 skill) → 2.9M (Vercel 10 inti) → 6.0M/31 group (semua sisa) → 8.1M/52 dirs (Cloudflare/Supabase/Google) → **26M/56 dirs** (reinstall penuh via `npx`, 2026-09-16).
+Terdaftar di `SYSTEM_MANIFEST.md` Dependency + Log Keputusan — **total terukur 2026-09-16: `du -sh` 26M / 56 direktori / 1.802 berkas** (total byte eksak tidak dikutip — lihat § Ringkasan terpasang). Riwayat: 2.1M (15 Sep, selective 3 skill) → 2.9M (Vercel 10 inti) → 6.0M/31 group (semua sisa) → 8.1M/52 dirs (Cloudflare/Supabase/Google) → **26M/56 dirs** (reinstall penuh via `npx`, 2026-09-16).
 
 ## Integritas vendor & catatan update (audit run klinik ke-2, 2026-09-16)
 

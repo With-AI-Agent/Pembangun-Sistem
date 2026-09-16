@@ -59,9 +59,11 @@ Run ini adalah run pertama Klinik (pola F-8) — AT dijalankan penulis perubahan
 ### Verifikasi Alat (Tahap D, keluaran mentah)
 
 - `python3 sistem/sistem-building-aplikasi/_sistem/validate_system.py` → `SYSTEM-BUILDING-APLIKASI VALIDATOR: PASS`, exit 0 (**9 berkas wajib** + 5 cek baru run ke-2)
-- `python3 tools/validate_repo.py` → `VALIDATION PASSED: 29 required files and Markdown invariants checked` / `COVERAGE: 104 active documents scanned, 354 path references checked, 0 unresolved` / `SYSTEMS CHECKED: 4 registered + pilot excluded by design` / `WARNINGS: none`
+- `python3 tools/validate_repo.py` → `VALIDATION PASSED: 29 required files and Markdown invariants checked` / `SYSTEMS CHECKED: 4 registered + pilot excluded by design` / `WARNINGS: none` / **0 unresolved**.
+  - **Angka coverage (jumlah dokumen aktif & rujukan path) SENGAJA TIDAK DIKUTIP** — aturan meta C5 + AT-16 (di repo meta: _meta/00_CARA_KERJA_META.md § Bukti numerik permanen C5 + _meta/ACCEPTANCE_TESTS.md AT-16 — ditulis sebagai provenance tanpa backtick karena area itu tidak ikut ter-copy): angka itu dihitung dari korpus dan berubah setiap ada entri log baru, **dilarang dikutip di bukti permanen termasuk bila dipin ke SHA**. Run ini membuktikannya sendiri: hitungan nyata 339 (base) → 361 (tiap commit sejak `e438cee`), sedangkan draf pertama log ini sempat mengutip 354 dan body PR sempat mengutip 360 — **dua-duanya tidak cocok commit mana pun** (temuan reviewer R-1, putaran 1). Yang permanen = verdict + perintah reproduksi: `python3 tools/validate_repo.py`.
   - Catatan jujur: sempat **2 warning** (`AGENT_SYSTEM.md:150-151` unresolved `discovery-interview-prep/SKILL.md`, `prd-development/SKILL.md`) akibat teks baru run ini → diperbaiki jadi path penuh → 0 unresolved. Tidak dibiarkan lolos.
-- `python3 tools/check_selfcontained.py --semua --report` → `HASIL AKHIR: PASS` (4 sistem); building: temuan 0, salinan berlabel 1, rujukan historis 2, sebutan area `tools/` 3 + `ACCEPTANCE_TESTS.md` 2 (sebutan area, tidak ditegakkan)
+- `python3 tools/check_selfcontained.py --semua --report` → `HASIL AKHIR: PASS` (4 sistem); building: **temuan 0**, salinan berlabel 1 (`_salinan-meta/PLATFORM_LMARENA.md`, perbedaan: tidak ada). Hitungan "rujukan historis" dan "sebutan area" tidak dikutip karena alasan yang sama (volatil terhadap penulisan dokumen).
+- **Catatan append-only:** bagian run ke-1 di berkas ini (baris ~27) masih mengutip `102 docs/327 refs` — itu riwayat yang sudah ter-merge di `main` dan **tidak diedit** (koreksi = entri baru, bukan menulis ulang riwayat). Penyimpangan lama itu dilaporkan ke pemilik sebagai housekeeping meta, bukan diperbaiki diam-diam.
 - `python3 tools/test_failure_injection.py` → `FAILURE-INJECTION TESTS PASSED: 72 scenarios (15 sintetis + 13 unit nyata + 14 regresi review PR-11 + 10 regresi check_selfcontained + 20 regresi review_prompt)`
 - Tidak dijalankan run ini: tools/backup_verify.py, tools/build_template.py (PASS pada PR #59; tidak ada berkas yang mereka uji yang diubah run ini)
 
@@ -90,3 +92,50 @@ Run ini kembali dijalankan oleh penulis perubahan (agent yang sama yang memperba
 ### Panen (Tahap F)
 
 **Tidak nihil.** Satu cacat di luar katalog C-01…C-06 ditemukan dan diusulkan jadi butir baru: **C-07 "Dokumen Pengganti yang Tidak Dipensiunkan (superseded-but-live)"** — ditambah ke `sistem/sistem-klinik/_sistem/02_KATALOG_CACAT.md` lewat mekanisme promosi (Aturan Promosi butir 4). Celah aturan kit yang ketahuan: Kebijakan Lebur melarang overwrite/hapus tanpa izin (benar), tetapi **tidak ada butir yang mewajibkan dokumen yang digantikan diberi penanda arsip** — akibatnya run 1 meninggalkan pedoman lama yang hidup dan menyesatkan. Usulan: penanda arsip jadi bagian Kontrak Tanaman/planting checklist.
+
+## Run 2026-09-16 (putaran 2) — Perbaikan temuan review independen PR #63
+
+- **Tanggal:** 2026-09-16
+- **Pelaksana:** agent sesi arena/01a0a7d3-pembangun-sistem (penulis PR; reviewer = sesi independen lain)
+- **Pemicu:** review independen PR #63 **putaran 1 = MERAH** (4 temuan R-1…R-4 + 2 catatan pra-ada). Semua gerbang fungsional direproduksi HIJAU oleh reviewer; yang MERAH adalah **angka di bukti permanen yang tidak cocok commit mana pun**.
+- **Sikap terhadap temuan:** direproduksi sendiri dulu, bukan dipercaya/dibantah. Hasil reproduksi penulis = **sama persis** dengan reviewer: hitungan rujukan nyata 361 di setiap commit sejak `e438cee` (339 di base..`40cfb06`) → angka 354 dan 360 tidak cocok commit mana pun; berkas validator di base = **108 baris** (bukan 154); `du -sb skills` head = **23.104.989** vs kutipan 23.099.842 (selisih = pembesaran `skills/README.md` oleh PR ini sendiri); `AGENT_SYSTEM.md` = **50.527 bytes** (bukan "46K").
+
+### Akar penyebab (satu, bukan empat)
+
+Keempat temuan adalah **satu pola**: angka yang dihitung dari korpus/berkas yang kita sunting sendiri ditulis ke bukti permanen, lalu basi pada commit yang sama yang menuliskannya. Aturan meta sudah melarangnya (C5 "Bukti numerik permanen" + AT-16: dilarang dikutip **termasuk bila dipin ke SHA**) — run ini melanggar aturan yang justru sedang dikuatkan. Maka perbaikannya **bukan memperbarui angkanya** (itu hanya mengulang siklus), melainkan:
+
+1. **Buang** angka korpus dari dokumen permanen: indeks sistem di repo meta (area luar folder → ditulis sebagai provenance tanpa backtick), `REKAM-KLINIK.md`, dan transkrip ini. Yang dikutip = verdict (`PASS`, `0 warning`, `0 unresolved`) + perintah reproduksi.
+2. **Buang** total byte eksak `skills/` dari `skills/README.md` (3 tempat) + `_cadangan-claude/RINGKASAN_…` — besaran itu bergerak tiap kali README-nya disunting. Yang tetap: `du -sh` kasar, jumlah direktori (ditegakkan validator terhadap hitungan nyata), jumlah berkas, dan perintah ukur.
+3. **Buang** klaim ukuran `AGENT_SYSTEM.md` dari Log Keputusan `PANDUAN_PENGGUNA.md` (bukan diganti angka lain).
+4. **Tanam gerbang** supaya pola ini tidak bisa kembali: cek ke-6 `check_no_volatile_corpus_numbers` (angka korpus + transisi jumlah baris dilarang di 11 dokumen keadaan; transkrip append-only dikecualikan karena riwayat ter-merge tidak boleh ditulis ulang) dan cek ke-7 `check_7_atribut_di_aturan_agent` (kalimat aturan Tahap 5 + **tiap task contoh** wajib memuat 7 atribut).
+
+### Perbaikan 2 catatan pra-ada (di luar temuan reviewer, ikut dikerjakan)
+
+- `SYSTEM_MANIFEST.md` baris Acceptance masih menyebut "(0.1.0 / Siap dipakai — G-Rencana 2026-09-15)" padahal Versi = 0.2.0 → disegarkan (riwayat 0.1.0 tetap disebut sebagai sebelumnya).
+- `AGENT_SYSTEM.md` Tahap 5: **contoh inline task hanya memuat 6 atribut** (tanpa `Tujuan`) dan kalimat aturannya juga hanya menyebut 6 — bertentangan dengan butir 3 di berkas yang sama ("WAJIB punya 7 atribut lengkap") → contoh ditulis ulang ke bentuk 7 atribut per task (selaras `_sistem/templates/ROADMAP.md`) + kalimat aturan menyebut ketujuhnya. Ini keluarga C-07 (dokumen bertentangan dengan dirinya sendiri).
+
+### Hasil Skenario (diulang penuh pada keadaan final)
+
+| Skenario | Hasil | Bukti |
+|---|---|---|
+| AT-08 Copy → Repo Standalone | **PASS** | `cp -r` ke `/tmp/at` + `rm _Notes.md` + `git init` + commit → validator lokal **exit 0 tanpa `tools/`**; 56 direktori `skills/`; `du -sh` 26M; **1.832 berkas** (di luar `.git`); `.git` 14M; `tools/`, `_meta/`, `PROJECT_STATE.md` TIDAK ada; **rujukan konkret menggantung = 0**; `git status --porcelain` bersih setelah semua mutasi dipulihkan |
+| AT-09 Anti-Pedoman-Usang-Hidup | **PASS — 8/8 mutasi terdeteksi + kontrol negatif lolos** | M1 penanda arsip dihapus → GAGAL · M2 header 56→52 dirs → GAGAL · M3 klaim satu berkas disuntik → GAGAL · M4 rujukan ber-backtick ke alat master → GAGAL · M5 atribut template ROADMAP dihapus → GAGAL · **M6 angka korpus disuntik ke manifest → GAGAL (cek baru)** · **M7 `Tujuan` dihapus dari satu task contoh → GAGAL (cek baru, per-task)** · **M8 kalimat aturan jadi 6 atribut → GAGAL (cek baru)** · **M9 kontrol negatif: verdict "0 rujukan menggantung" tetap PASS** (bukan positif palsu) |
+
+### Verifikasi Alat (putaran 2, keadaan final)
+
+- `python3 _sistem/validate_system.py` → `SYSTEM-BUILDING-APLIKASI VALIDATOR: PASS`, exit 0 (9 berkas wajib + **7 cek** anti-cacat)
+- `python3 tools/validate_repo.py` → `VALIDATION PASSED`, `WARNINGS: none`, **0 unresolved**, `SYSTEMS CHECKED: 4 registered + pilot excluded by design` — angka coverage tidak dikutip (C5/AT-16)
+- `python3 tools/check_selfcontained.py --semua` → `HASIL AKHIR: PASS`
+- `python3 tools/test_failure_injection.py` → `FAILURE-INJECTION TESTS PASSED: 72 scenarios`
+- `python3 sistem/sistem-klinik/_sistem/validate_system.py` → `SYSTEM-KLINIK VALIDATOR: PASS`
+
+### Kesalahan agent pada putaran ini (dicatat, bukan dihaluskan)
+
+1. Draf pertama transkrip putaran 2 mengutip path area meta dengan backtick → **2 temuan validator** → ditulis ulang sebagai provenance.
+2. Spesifikasi AT-09 di `ACCEPTANCE_TESTS.md` sempat **memuat literal terlarang** (kalimat klaim satu berkas, nama berkas alat master, contoh angka korpus) sehingga melanggar ceknya sendiri — paradoks swarujuk. Diperbaiki: spesifikasi menyebut **pola** mutasinya saja, perintah persisnya hidup di transkrip ini.
+3. Skrip uji mutasi pertama punya bug pemulihan (`cp` menimpa ke root, bukan ke path asal) sehingga M2 tidak pernah dipulihkan dan 4 mutasi berikutnya melaporkan temuan yang salah. Diperbaiki: pemulihan lewat `git checkout -- . && git clean -fdq`, lalu seluruh suite diulang dari salinan bersih.
+4. Riwayat git lokal sempat **hilang** (sandbox di-restore: HEAD jatuh ke base, commit lokal lenyap) sementara working tree utuh. Dipulihkan dengan `git fetch origin <branch>` + verifikasi isi identik + `git reset FETCH_HEAD` — **tanpa** force-push dan tanpa kehilangan satu pun perubahan.
+
+### Catatan append-only (putaran 2)
+
+Bagian run ke-1 di berkas ini masih mengutip angka coverage (`102 docs/327 refs`) dan bagian run ke-2 putaran 1 sempat mengutip `354`. Entri putaran 1 **dikoreksi di tempat** karena PR-nya **belum di-merge** (masih satu unit kerja yang sama, bukan riwayat pihak lain); baris run ke-1 **tidak disentuh** karena sudah ter-merge di `main` — penyimpangan lama itu dilaporkan ke pemilik sebagai housekeeping meta.

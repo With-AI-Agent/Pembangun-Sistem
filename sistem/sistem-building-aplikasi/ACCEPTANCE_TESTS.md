@@ -46,12 +46,26 @@
 
 ### AT-09 — Tidak Ada Pedoman Usang yang Hidup Tanpa Penanda
 - **Tujuan:** mencegah terulangnya cacat K-1 (run klinik ke-2): dokumen yang sudah digantikan tetap hidup dan memberi instruksi yang bertentangan dengan dokumen berlaku — pemilik mengikuti yang lama dan tersesat di pemakaian pertama.
-- **Langkah:** `python3 _sistem/validate_system.py` (cek `check_penanda_arsip` + `check_tidak_adaklaim_satu_berkas` + `check_area_luar_tanpa_backtick` + `check_klaim_jumlah_dir_skills` + `check_template_roadmap_7_atribut`), lalu uji mutasi: (a) hapus penanda arsip di `PANDUAN_PEMAKAIAN.md`, (b) ubah klaim jumlah direktori `skills/`, (c) suntik kalimat "yang masuk ke repo hanya AGENT_SYSTEM.md" ke dokumen aktif, (d) suntik rujukan ber-backtick ke berkas di `tools/`, (e) hapus satu atribut task di `_sistem/templates/ROADMAP.md` — tiap mutasi harus membuat validator GAGAL, lalu kembalikan.
-- **Lolos bila:** kondisi bersih exit 0 **dan** kelima mutasi terdeteksi (validator GAGAL) — bukti bahwa gerbangnya benar-benar menyala, bukan hijau karena tidak memeriksa apa pun.
+- **Langkah:** `python3 _sistem/validate_system.py` (7 cek anti-cacat: `check_penanda_arsip`, `check_tidak_adaklaim_satu_berkas`, `check_area_luar_tanpa_backtick`, `check_klaim_jumlah_dir_skills`, `check_template_roadmap_7_atribut`, `check_no_volatile_corpus_numbers`, `check_7_atribut_di_aturan_agent`), lalu jalankan **8 mutasi** — tiap mutasi harus membuat validator GAGAL, lalu kembalikan:
+  1. hapus penanda arsip di `PANDUAN_PEMAKAIAN.md`
+  2. ubah klaim jumlah direktori di header `skills/README.md` (56 → 52)
+  3. suntik ke `START_DI_SINI.md` kalimat yang mengklaim hanya satu berkas sistem yang masuk repo baru (pola K-1)
+  4. suntik ke `STATUS.md` rujukan ber-backtick ke salah satu berkas alat milik repo meta (area yang tidak ikut ter-copy)
+  5. hapus satu atribut task (`**Verifikasi:**`) di `_sistem/templates/ROADMAP.md`
+  6. suntik ke `SYSTEM_MANIFEST.md` **angka korpus** — jumlah dokumen aktif / jumlah rujukan path keluaran `validate_repo` — yang dilarang C5/AT-16
+  7. hapus satu atribut (`**Tujuan:**`) dari **satu task contoh** di Tahap 5 `AGENT_SYSTEM.md`
+  8. ringkas kalimat aturan Tahap 5 di `AGENT_SYSTEM.md` jadi 6 atribut (jatuhkan satu atribut wajib)
+
+  Perintah mutasi persisnya (sed/python) **tidak ditulis di sini** — ia memuat literal yang justru
+  dilarang oleh cek-cek itu sendiri (paradoks swarujuk). Transkrip perintah + keluaran ada di
+  `ACCEPTANCE_TEST_LOG.md` run bersangkutan; spesifikasi ini hanya menyebut pola mutasinya.
+- **Kontrol negatif (wajib tetap LOLOS):** verdict berbentuk `0 rujukan berprefix yang menggantung` di AT-08 **bukan** angka korpus — harus tidak terdeteksi, supaya cek 6 tidak jadi positif palsu yang membungkam verdict sah.
+- **Lolos bila:** kondisi bersih exit 0, **kedelapan** mutasi terdeteksi (validator GAGAL), dan kontrol negatif tetap PASS — bukti bahwa gerbangnya benar-benar menyala, bukan hijau karena tidak memeriksa apa pun.
 
 ## Log Keputusan
 
 | Tanggal | Perubahan | Alasan |
 |---|---|---|
+| 2026-09-16 (putaran 2) | AT-09 diperluas: 5 → **8 mutasi** + 1 kontrol negatif; 2 cek validator baru (`check_no_volatile_corpus_numbers`, `check_7_atribut_di_aturan_agent`) | Review independen PR #63 putaran 1 MERAH: bukti permanen mengutip angka korpus yang tidak cocok commit mana pun (354/360 vs nyata 361) dan `AGENT_SYSTEM.md` Tahap 5 mencontohkan task 6 atribut padahal butir 3-nya mewajibkan 7. Keduanya ditanam jadi gerbang, bukan sekadar diperbaiki sekali |
 | 2026-09-16 | AT-08 (copy → repo standalone, bukti perilaku) + AT-09 (anti-pedoman-usang-hidup, dengan uji mutasi) ditambahkan; 5 cek baru ditanam di `_sistem/validate_system.py` | Run klinik ke-2: pemilik tersesat oleh `PANDUAN_PEMAKAIAN.md` (arsip tanpa penanda) dan bukti kesiapan sebelumnya struktural saja (pola F-8 — AT dijalankan penulis perubahan). AT-08 memberi bukti perilaku jalur pemakaian nyata; AT-09 + uji mutasi membuat cacat sejenis tidak bisa lolos diam-diam |
 | 2026-09-15 | Skrip lahir pada run klinik pertama (kit v0.2.0) — 7 skenario, stdlib-only, tanpa angka volatil | W-06: sistem belum punya QA 3-lapis; AT harus berbasis struktur/exit code, bukan hitung baris |

@@ -34,7 +34,7 @@
 - `docs/README.md` — placeholder `docs/`; 6 dokumen Fondasi dibuat di repo aplikasi saat Tahap 1-6
 - `_salinan-meta/PLATFORM_LMARENA.md` — salinan berlabel fakta platform (W-07); **jangan diedit** (harus tetap = master + 3 baris label)
 - `REKAM-KLINIK.md` — jejak perawatan Klinik: run 1 (2026-09-15, cap kit v0.2.0) + run 2 (2026-09-16, cap kit v0.2.0)
-- `skills/` — vendor-local, **terukur 2026-09-16: `du -sh` 26M, 56 direktori, 1.802 berkas** (23.099.842 bytes apparent). Lihat `skills/README.md` (tabel A–F + § Update & Discoverability + § Keamanan + § Registrasi + **§ Integritas vendor**)
+- `skills/` — vendor-local, **terukur 2026-09-16: `du -sh` 26M, 56 direktori, 1.802 berkas** (total byte eksak tidak dikutip — volatil terhadap suntingan README di dalam folder itu sendiri). Lihat `skills/README.md` (tabel A–F + § Update & Discoverability + § Keamanan + § Registrasi + **§ Integritas vendor**)
 
 ## Kapabilitas terpasang (ringkas — detail & ukuran per folder di `skills/README.md`)
 - **Keluarga ui-ux (reinstall penuh via `npx`):** `ui-ux-pro-max`, `ui-styling`, `design`, `design-system`, `brand`, `banner-design`, `slides`

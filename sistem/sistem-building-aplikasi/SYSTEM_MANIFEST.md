@@ -98,7 +98,7 @@ Status butir 03_KONTRAK_WARISAN untuk sistem ini — default SEMUA diterapkan (G
 
 - [x] Semua dokumen wajib tersedia (AGENT_SYSTEM.md + PANDUAN_PENGGUNA.md + PROMPT_ENTRI_UNIVERSAL.md + START_DI_SINI.md + manifest/status/log/qa/profil — daftar persisnya = `REQUIRED` di `_sistem/validate_system.py`; `PANDUAN_PEMAKAIAN.md` = **arsip**, bukan dokumen wajib)
 - [x] Semua dependency valid (sesi agent + git/gh + akses internet riset — dinyatakan, bukan asumsi terbukti)
-- [x] Status dan versi sudah diperbarui (0.1.0 / Siap dipakai — G-Rencana 2026-09-15)
+- [x] Status dan versi sudah diperbarui (**0.2.0** / `Siap dipakai` sebagai template — run klinik ke-2, 2026-09-16; sebelumnya 0.1.0 / Siap dipakai — G-Rencana 2026-09-15)
 - [x] Approval yang diperlukan sudah ada (run 1: G-Rencana borongan 1-9 disetujui 2026-09-15, PR #59 MERGED 2026-09-16 00:59 UTC `1963712`; run 2: G-Rencana 12 item + perluasan scope "periksa semua berkas" disetujui pemilik 2026-09-16)
 - [x] Audit terakhir tercatat (run klinik pertama — diagnosis katalog + kontrak tanaman + verifikasi)
 - [x] Ringkasan cadangan sinkron (disegarkan 2026-09-16 run klinik ke-2: 26M/56 dirs, ukuran berkas aktual, 10 template, PR #59 MERGED)

@@ -202,6 +202,86 @@ def check_template_roadmap_7_atribut(errs):
 
 
 
+
+# ---- cek run klinik ke-2 putaran 2 (review PR #63): angka korpus & 7 atribut di aturan agent ----
+
+# Dokumen KEADAAN (bukan transkrip): dilarang mengutip angka yang dihitung dari korpus dokumen.
+# Dasar: _meta/00_CARA_KERJA_META.md § "Bukti numerik permanen (C5)" + _meta/ACCEPTANCE_TESTS.md AT-16
+# ("dilarang dikutip dalam sel Bukti, termasuk jika ditemani atau dipin ke SHA").
+# REKAM-KLINIK.md & ACCEPTANCE_TEST_LOG.md SENGAJA dikecualikan: keduanya transkrip append-only —
+# baris riwayat yang sudah ter-merge tidak boleh ditulis ulang, jadi kepatuhan di sana dijaga
+# oleh kebijakan penulisan (entri baru tanpa angka korpus), bukan oleh cek ini.
+DOK_KEADAAN = ("AGENT_SYSTEM.md", "SYSTEM_MANIFEST.md", "STATUS.md", "PANDUAN_PENGGUNA.md",
+               "PROMPT_ENTRI_UNIVERSAL.md", "START_DI_SINI.md", "10_LOG_SESI.md",
+               "ACCEPTANCE_TESTS.md", "PROFIL_PENGGUNA.md", "docs/README.md", "skills/README.md")
+POLA_ANGKA_KORPUS = (
+    re.compile(r"\b[1-9]\d*\s*(?:docs|refs?\b|rujukan|path references|active documents|dokumen aktif)", re.I),
+    re.compile(r"\b\d+\s*(?:→|->)\s*\d+\s*baris\b"),
+)
+KUNCI_7_ATRIBUT = ("Tujuan", "Ref", "File", "DoD", "Kompleksitas", "Risiko & mitigasi", "Verifikasi")
+
+
+def check_no_volatile_corpus_numbers(errs):
+    """Angka korpus (jumlah dokumen aktif / rujukan path / transisi jumlah baris) dilarang di
+    dokumen keadaan.
+
+    Alasan: angka itu berubah tiap kali ada dokumen atau entri log baru — run klinik ke-2
+    membuktikannya sendiri (hitungan nyata 339 → 361 antar-commit, sementara draf bukti sempat
+    mengutip 354 dan 360 yang tidak cocok commit mana pun; temuan reviewer R-1/R-2 PR #63).
+    Yang boleh dikutip = verdict (PASS, 0 warning, 0 unresolved) + perintah reproduksi, dan angka
+    yang stabil terhadap penulisan dokumen (jumlah berkas wajib, jumlah direktori skills/).
+    Total byte eksak sebuah folder yang isinya kita sunting juga termasuk volatil (R-3).
+    """
+    for rel in DOK_KEADAAN:
+        p = SYS_DIR / rel
+        if not p.is_file():
+            continue
+        for i, baris in enumerate(p.read_text(encoding="utf-8").splitlines(), 1):
+            for pola in POLA_ANGKA_KORPUS:
+                m = pola.search(baris)
+                if m:
+                    errs.append(f"{rel}:{i}: angka korpus '{m.group(0).strip()}' dilarang di dokumen keadaan (C5/AT-16: berubah tiap penulisan dokumen/log) — tulis verdict + perintah ukur, bukan angkanya")
+
+
+def check_7_atribut_di_aturan_agent(errs):
+    """Kalimat aturan + contoh format task di AGENT_SYSTEM.md Tahap 5 wajib memuat 7 atribut
+    yang sama dengan _sistem/templates/ROADMAP.md.
+
+    Review PR #63 (putaran 1) menemukan contoh inline di AGENT_SYSTEM.md hanya memuat 6 atribut
+    (tanpa Tujuan) dan kalimat aturannya pun hanya menyebut 6 — berkas itu bertentangan dengan
+    butir 3-nya sendiri ("WAJIB punya 7 atribut lengkap"). Keluarga cacat C-07.
+    """
+    p = SYS_DIR / "AGENT_SYSTEM.md"
+    if not p.is_file():
+        return
+    text = p.read_text(encoding="utf-8")
+    kalimat = [b for b in text.splitlines() if b.startswith("Setiap task **harus** punya")]
+    if not kalimat:
+        errs.append("AGENT_SYSTEM.md: kalimat aturan 'Setiap task **harus** punya' tidak ditemukan — jangan hapus aturan 7 atribut Tahap 5")
+    else:
+        hilang = [a for a in KUNCI_7_ATRIBUT if a.lower() not in kalimat[0].lower()]
+        if hilang:
+            errs.append(f"AGENT_SYSTEM.md: kalimat aturan task belum menyebut atribut {hilang} — wajib 7, sama dengan _sistem/templates/ROADMAP.md")
+    # Contoh format task = blok berpagar yang memuat "## Fase 1:" — semua 7 label wajib ada DI DALAMNYA
+    # (menghitung kemunculan di seluruh berkas terbukti terlalu lemah: satu contoh bisa dihapus
+    # tanpa mengurangi jumlah kemunculan di bawah ambang).
+    label_wajib = ("**Tujuan:**", "**Ref:**", "**File:**", "**DoD:**", "**Kompleksitas:**",
+                   "**Risiko & mitigasi:**", "**Verifikasi:**")
+    blok = [b for b in re.split(r"```", text) if "## Fase 1:" in b]
+    if not blok:
+        errs.append("AGENT_SYSTEM.md: contoh format ROADMAP (blok berpagar berisi '## Fase 1:') tidak ditemukan — jangan hapus contohnya")
+    else:
+        # per TASK, bukan per blok: satu task contoh yang kehilangan atribut tetap cacat walau
+        # task contoh lain memuatnya (pembaca menyalin bentuk task yang di depannya).
+        for tugas in re.split(r"\n(?=- \[ \] Task )", blok[0]):
+            if not tugas.startswith("- [ ] Task"):
+                continue
+            hilang = [a for a in label_wajib if a not in tugas]
+            if hilang:
+                errs.append(f"AGENT_SYSTEM.md: contoh '{tugas.splitlines()[0][:45]}' kehilangan atribut {hilang} — tiap task contoh wajib memuat 7 atribut, sama dengan _sistem/templates/ROADMAP.md")
+
+
+
 def main():
     errs = []
     check_file_exists(errs)
@@ -214,6 +294,8 @@ def main():
     check_area_luar_tanpa_backtick(errs)
     check_klaim_jumlah_dir_skills(errs)
     check_template_roadmap_7_atribut(errs)
+    check_no_volatile_corpus_numbers(errs)
+    check_7_atribut_di_aturan_agent(errs)
     if errs:
         print("SYSTEM-BUILDING-APLIKASI VALIDATOR: GAGAL")
         for e in errs:

@@ -346,15 +346,29 @@ Setelah user bilang cukup, tulis `ROADMAP.md` **sedetail mungkin** dengan format
 
 ```markdown
 ## Fase 1: Fondasi & Setup (FONDASI_TAHAP_5)
-- [ ] Task 1 — Setup repo + env (ref: TECH_SPEC § Struktur Folder, file: README.md, .env.example, .gitignore, DoD: `npm run dev` jalan, verifikasi: `ls -la`, kompleksitas: kecil, ⚠️ -)
+- [ ] Task 1 — Setup repo + env
+  - **Tujuan:** repo bisa dijalankan lokal sejak commit pertama (fondasi semua task lain)
+  - **Ref:** TECH_SPEC § Struktur Folder; PRD § Non-Goals
+  - **File:** `README.md`, `.env.example`, `.gitignore`, `package.json`
+  - **DoD:** `npm install && npm run dev` jalan tanpa error
+  - **Kompleksitas:** kecil (1 jam)
+  - **Risiko & mitigasi:** env var bocor ke git → `.gitignore` memuat `.env*`, hanya `.env.example` yang di-commit
+  - **Verifikasi:** `ls -la` + URL dev server terbuka; `git status` bersih
 
 ## Fase 2: Database & Auth (Area Berisiko Tinggi)
-- [ ] Task 2 — Migration tabel users + RLS (ref: TECH_SPEC § Data Model users, PRD § Fitur Auth, file: supabase/migrations/001_users.sql, DoD: anon tidak bisa baca users lain (test RLS), verifikasi: `psql` + `npm test:rls`, kompleksitas: besar, ⚠️ wajib update DECISIONS_LOG.md — Area: RLS/Auth)
+- [ ] Task 2 — Migration tabel users + RLS
+  - **Tujuan:** setiap user hanya bisa membaca barisnya sendiri (syarat keamanan inti)
+  - **Ref:** TECH_SPEC § Data Model users; PRD § Fitur Auth
+  - **File:** `supabase/migrations/001_users.sql`, `src/lib/supabase.ts`
+  - **DoD:** policy RLS aktif; `SELECT * FROM users` sebagai anon tidak mengembalikan baris user lain
+  - **Kompleksitas:** besar (4 jam)
+  - **Risiko & mitigasi:** ⚠️ wajib update DECISIONS_LOG.md — Area: RLS/Auth
+  - **Verifikasi:** `psql` uji 2 role + `npm run test:rls` lulus
 
 ## Fase 3: Fitur Inti ...
 ```
 
-Setiap task **harus** punya `ref`, `file`, `DoD`, `verifikasi`, `kompleksitas`, dan `⚠️` jika relevan — **tidak boleh singkat** seperti `ref: ..., kompleksitas: ...` saja. Jika agent di sesi Coding menemukan task yang ternyata masih ambigu/kurang DoD → STOP, diskusikan, update ROADMAP dulu (catat di Log Keputusan), baru lanjut.
+Setiap task **harus** punya **7 atribut** — `Tujuan`, `Ref`, `File`, `DoD`, `Kompleksitas`, `Risiko & mitigasi`, `Verifikasi` — persis seperti butir 3 di atas dan seperti `_sistem/templates/ROADMAP.md`. **Tidak boleh singkat** (mis. hanya `ref: ..., kompleksitas: ...`), dan **tidak boleh kurang satu atribut pun** — contoh inline di berkas ini dulu hanya memuat 6 atribut (tanpa `Tujuan`) dan bertentangan dengan butir 3-nya sendiri; diperbaiki run klinik ke-2 setelah ditemukan review independen PR #63. Jika agent di sesi Coding menemukan task yang ternyata masih ambigu/kurang DoD → STOP, diskusikan, update ROADMAP dulu (catat di Log Keputusan), baru lanjut.
 
 Setelah user setujui: commit ke `/docs/ROADMAP.md`, update `PROJECT_STATE.md` jadi `STATUS: FONDASI_TAHAP_6_CROSS_CHECK`.
 
