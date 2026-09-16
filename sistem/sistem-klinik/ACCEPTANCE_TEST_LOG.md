@@ -114,3 +114,51 @@ Reviewer putaran 1 memutuskan MERAH dengan 7 temuan + 1 hal tak terverifikasi. S
 - `python3 tools/build_template.py` → **TEMPLATE CLEAN BUILD PASSED**
 - `python3 tools/check_selfcontained.py --semua --report` → **HASIL AKHIR: PASS** (semua sistem; rujukan historis tidak ditegakkan — wajar)
 - Sinkron master→kit: 6/6 `kit/aturan/*` stamp `versi-kit 0.2.0` dengan sha = blob master aktual; `kit/VERSI.txt` = `0.2.0` = field Versi manifest.
+
+## Panen C-07 + rilis kit v0.2.1 — 2026-09-16 (sesi arena/01a0a7d3-pembangun-sistem, PR #63)
+
+**Konteks:** Tahap F (panen) run klinik ke-2 pada Sistem Building Aplikasi. Dua hal dikerjakan di sistem ini sendiri: (1) usulan C-07 dinaikkan dari katalog jadi **aturan tanam**; (2) cacat yang ditemukan di tengah jalan — **kit basi** — ditutup dengan gerbang, bukan hanya diperbaiki sekali.
+
+### Temuan: kit BASI karena panen C-07 menyunting master tanpa sync
+
+- Panen C-07 menambah butir `### C-07` ke master `_sistem/02_KATALOG_CACAT.md` (commit di PR #63) **tanpa** menyinkron `kit/aturan/02_KATALOG_CACAT.md`.
+- Bukti mekanis (diukur sebelum perbaikan): blob SHA master `4e34ae99fa5bf297ea9e393c8b0b2bd36518dd36` ≠ SHA di stamp kit `8f6b199c761f33510f6fc669cee0623f0b7fdc1f`. Lima aturan lain masih sinkron; hanya katalog yang tertinggal.
+- **Tidak ada gerbang yang menyala.** `python3 _sistem/validate_system.py` PASS, `python3 tools/validate_repo.py` PASS, `python3 tools/check_selfcontained.py --semua` PASS — karena AT-KL-02 hanya prosedur manual dan `check_kit()` hanya memeriksa **bentuk** stamp, bukan **isinya**. Ini pelanggaran 06_RITME_KIT §2 yang lolos diam-diam = persis pola C-07 (aturan tanpa gerbang) + F-8 (hijau karena tidak memeriksa apa pun).
+- Ditemukan oleh **penulis perubahan sendiri** saat memverifikasi proposal C-07, bukan oleh alat — jadi celahnya nyata.
+
+### Tindakan
+
+1. `_sistem/03_KEBIJAKAN_LEBUR.md` Aturan 2: butir **"Pensiunkan, jangan hapus"** + baris tabel Benar/Salah + checklist butir 2 diperluas (jumlah butir checklist tetap).
+2. `_sistem/04_KONTRAK_TANAMAN.md`: W-01 syarat pensiunkan dokumen lama yang digantikan; W-04 satu sumber angka terukur + klaim jumlah dibandingkan hitungan nyata oleh validator target, dibuktikan uji mutasi.
+3. `_sistem/validate_system.py`: cek baru **`check_kit_segarkan`** — blob SHA dihitung **tanpa memanggil git** (`sha1("blob <len>\0" + isi)`, stdlib) supaya validator tetap portabel di panggung suntik/rawat inap.
+4. `kit/` disinkron ulang 6/6 (stamp: sha blob master aktual, tanggal 2026-09-16, versi-kit 0.2.1) + `kit/VERSI.txt` → `0.2.1`; `SYSTEM_MANIFEST.md` Versi → `0.2.1` + Log Evolusi + field Status disegarkan.
+
+### AT-KL-02 langkah 4-5 (invarian struktural + uji mutasi) — LULUS
+
+Uji mutasi dijalankan di **salinan** `/tmp/klin` (pohon repo tidak disentuh), 10 skenario:
+
+| # | Mutasi | Hasil |
+|---|---|---|
+| K1 | sunting master `_sistem/05_TAWARAN_KAPABILITAS.md` tanpa sync kit | **GAGAL** — "kit/aturan/05_TAWARAN_KAPABILITAS.md BASI: sha di stamp … != blob sha master saat ini" |
+| K2 | `kit/VERSI.txt` → 0.1.9 | **GAGAL** — "kit BASI terhadap manifest: VERSI.txt = 0.1.9 tetapi manifest Versi = 0.2.1" |
+| K3 | stamp `versi-kit` di satu turunan → 0.2.0 | **GAGAL** — "stamp versi-kit 0.2.0 != kit/VERSI.txt 0.2.1 — satu rilis kit = satu versi" |
+| K4 | hapus `kit/aturan/06_RITME_KIT.md` | **GAGAL** — "turunan hilang — setiap aturan master wajib punya turunan berstempel" |
+| K5 | ubah satu kata isi turunan ("Anatomi Perakitan" → "Anatomi Rakit") | **GAGAL** — "isi turunan tidak identik dengan master" |
+| K6 | arahkan stamp turunan 01 ke sumber 06 | **GAGAL** — "stamp menunjuk sumber _sistem/06_RITME_KIT.md — seharusnya _sistem/01_ALUR_RUN.md" |
+| K7 | rusak satu karakter sha di stamp | **GAGAL** — sha tidak cocok blob master |
+| K8 | naikkan Versi manifest ke 0.3.0 tanpa rilis kit | **GAGAL** — "kit BASI terhadap manifest" |
+| K9 | keadaan benar (kontrol negatif) | **PASS** |
+| K10 | hapus folder `kit/` = panggung rawat inap (kontrol negatif) | **PASS** — cek melompat, sesuai K-11 (kit tidak ada di panggung rawat inap) |
+
+### AT-KL-02 langkah 1-3 (keputusan agent, manual) — TIDAK DIJALANKAN ulang di putaran ini
+
+Alasan (jujur, pola F-8 diumumkan): langkah 1-3 menguji **keputusan agent** pada panggung suntik dan butuh sandbox fixture + agen kedua; yang berubah di putaran ini adalah bagian **struktural** (langkah 4-5), dan itu yang diuji + dimutasi. Run suntik nyata berikutnya wajib menjalankan langkah 1-3 penuh dengan kit v0.2.1.
+
+### Verifikasi struktural (tanpa angka korpus — C5/AT-16)
+
+- `python3 _sistem/validate_system.py` → **PASS** (sebelum sync: **GAGAL** dengan 3 temuan kit basi — bukti ceknya menyala)
+- `python3 tools/validate_repo.py` → **PASS, WARNINGS: none, 0 unresolved**
+- `python3 tools/check_selfcontained.py --semua` → **HASIL AKHIR: PASS**
+- `python3 tools/test_failure_injection.py` → **PASSED: 72 skenario**
+- `python3 sistem/sistem-building-aplikasi/_sistem/validate_system.py` → **PASS** (target yang dipanen tetap hijau)
+- Invarian rilis kit: 6/6 turunan berstamp sha blob master aktual, tanggal 2026-09-16, versi-kit 0.2.1; `kit/VERSI.txt` = `0.2.1` = field Versi manifest.

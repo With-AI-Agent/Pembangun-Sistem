@@ -1,3 +1,7 @@
+> **ARSIP — SUDAH DIGANTIKAN, JANGAN DIPAKAI.** Artefak prompt review independen untuk run reinstall npx (branch arena/01a0a48f, HEAD 6acf7b3). Pin commit/branch di dalamnya **basi sejak saat itu juga** (paradoks yang dikatalogkan sebagai C-07): sumber otoritatif prompt review adalah yang **dibangkitkan saat review dibutuhkan**, bukan berkas yang disimpan — jalankan `python3 tools/review_prompt.py --pr <nomor>` di repo master. Dipindah dari root repo ke sini 2026-09-16 oleh sesi `arena/01a0a7d3-pembangun-sistem` (mandat pemilik: bereskan housekeeping yang tertunda); **isi asli di bawah baris ini tidak disunting sama sekali** (pensiunkan, jangan hapus — Kebijakan Lebur Aturan 2).
+
+---
+
 # Prompt Review Independen — Sistem Building Aplikasi (2026-09-16, 26M 56 dirs)
 
 > Salin SELURUH blok ini ke sesi agent BARU yang independen (bukan sesi ini). Agent baru harus di branch `arena/...` yang terpisah dan tidak boleh push ke branch sesi ini. Hasil review: laporan temuan + saran perbaikan (Critical/Minor) + bukti validator.

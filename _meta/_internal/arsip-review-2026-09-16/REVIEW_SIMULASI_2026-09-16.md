@@ -1,3 +1,7 @@
+> **ARSIP — SUDAH DIGANTIKAN, JANGAN DIPAKAI.** Artefak catatan review simulasi penulis untuk HEAD 1e64e45 di branch yang sama. Pin commit/branch di dalamnya **basi sejak saat itu juga** (paradoks yang dikatalogkan sebagai C-07): sumber otoritatif prompt review adalah yang **dibangkitkan saat review dibutuhkan**, bukan berkas yang disimpan — jalankan `python3 tools/review_prompt.py --pr <nomor>` di repo master. Dipindah dari root repo ke sini 2026-09-16 oleh sesi `arena/01a0a7d3-pembangun-sistem` (mandat pemilik: bereskan housekeeping yang tertunda); **isi asli di bawah baris ini tidak disunting sama sekali** (pensiunkan, jangan hapus — Kebijakan Lebur Aturan 2).
+
+---
+
 # REVIEW SIMULASI KAMI — 2026-09-16 (paralel, HEAD 1e64e45)
 
 **Branch:** `arena/01a0a48f-pembangun-sistem` — 16 commits sejak base `aad8da6`

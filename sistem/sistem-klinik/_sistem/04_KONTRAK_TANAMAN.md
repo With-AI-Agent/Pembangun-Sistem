@@ -16,6 +16,7 @@
 - **Apa yang ditanam:** File `PANDUAN_PENGGUNA.md` dan `PROMPT_ENTRI_UNIVERSAL.md` yang memuat aturan orientasi agent untuk repo target.
 - **Bentuk sederhana (Sistem Mini):** Disatukan menjadi satu file `README.md` (atau `PANDUAN_PENGGUNA.md` tunggal) yang sudah mencakup blok prompt pembuka di paragraf pertama.
 - **Cara Verifikasi per Tanaman:** Agent mengecek keberadaan file pegangan utama, dan memastikan terdapat header/instruksi yang secara eksplisit meminta agent baru membaca file tersebut. (Misal `grep "Prompt Pembuka" PANDUAN_PENGGUNA.md`).
+- **Syarat tambahan (panen C-07, 2026-09-16):** bila target sudah punya dokumen pegangan/pemakaian **lama yang digantikan** tanaman ini, dokumen lama WAJIB dipensiunkan — penanda arsip di kepalanya + penunjuk dokumen yang berlaku, isi asli di bawah penanda tidak disunting (Kebijakan Lebur Aturan 2 butir "Pensiunkan, jangan hapus"). Verifikasi tambahan: `grep -c "SUDAH DIGANTIKAN" <dokumen lama target>` minimal 1, dan dokumen lama itu **tidak** lagi menyebut instruksi yang bertentangan dengan dokumen berlaku.
 
 ### W-02: Pencatatan Sesi (LOG_SESI)
 - **Apa yang ditanam:** Folder `_log-sesi/` dengan konvensi penamaan `LOG_SESI_YYYY-MM-DD.md` dan aturan status (`OPEN`/`CLOSED`).
@@ -31,6 +32,7 @@
 - **Apa yang ditanam:** File `SYSTEM_MANIFEST.md` berisi kartu identitas, versi, tahap, dan bentuk sistem (Flat/Siklus/dll).
 - **Bentuk sederhana (Sistem Mini):** Tidak diubah, tetap satu file `SYSTEM_MANIFEST.md` yang disederhanakan isinya (cukup Nama, Tujuan, dan Versi).
 - **Cara Verifikasi per Tanaman:** Uji keberadaan `SYSTEM_MANIFEST.md` dan parsing field Versi (`grep "Versi:" SYSTEM_MANIFEST.md`).
+- **Syarat tambahan (panen C-07, 2026-09-16):** angka terukur di manifest (ukuran folder, jumlah direktori/berkas, jumlah template, daftar dokumen wajib) wajib punya **SATU sumber kanonik** — dokumen lain **menunjuk** ke sana, bukan menyalin angkanya; dan setiap klaim jumlah dibandingkan dengan **hitungan nyata** oleh validator target (bukan angka beku yang bisa basi). Angka yang dihitung dari korpus dokumen repo induk dilarang masuk bukti permanen (aturan meta C5). Verifikasi tambahan: validator target memuat cek pembanding klaim-vs-hitungan-nyata, dan cek itu **dibuktikan menyala dengan uji mutasi** (ubah klaimnya → validator GAGAL); gerbang hijau tanpa uji mutasi bisa jadi hijau karena tidak memeriksa apa pun (pola F-8).
 
 ### W-05: Log Keputusan
 - **Apa yang ditanam:** Tabel "Log Keputusan" yang mengikat riwayat asitektur. Biasanya diletakkan di akhir setiap dokumen aturan/ living document.
@@ -63,4 +65,5 @@
 
 | Tanggal | Perubahan | Alasan |
 |---|---|---|
+| 2026-09-16 | W-01 + W-04 diberi **"Syarat tambahan (panen C-07)"**: pensiunkan dokumen target yang digantikan (penanda arsip) dan satu sumber angka terukur + klaim jumlah dibandingkan hitungan nyata oleh validator target yang dibuktikan uji mutasi | Panen C-07 run klinik ke-2 (PR #63): manifest target menyebut jumlah template dan ukuran folder yang tidak cocok kenyataan, angka salinannya bertentangan antar dokumen, dan **tidak ada gerbang** yang membandingkannya dengan hitungan nyata. Resepnya dinaikkan jadi kontrak tanaman supaya run berikutnya menanam gerbangnya, bukan hanya mengoreksi angkanya sekali |
 | 2026-09-13 | Inisialisasi draf Kontrak Tanaman (W-01..W-09) | Memenuhi kebutuhan Tahap C (Tindakan) dalam rencana kerangka Klinik, menjabarkan bentuk proporsional untuk target besar maupun kecil. |

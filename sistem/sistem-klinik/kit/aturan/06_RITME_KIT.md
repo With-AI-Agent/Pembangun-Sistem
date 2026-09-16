@@ -1,4 +1,4 @@
-> Sumber: _sistem/06_RITME_KIT.md sha 0a7f3d3d13c908972a3db4e9780b08e84a387d05 tanggal 2026-09-14 versi-kit 0.2.0
+> Sumber: _sistem/06_RITME_KIT.md sha 0a7f3d3d13c908972a3db4e9780b08e84a387d05 tanggal 2026-09-16 versi-kit 0.2.1
 
 # Ritme dan Perakitan Kit Klinik
 

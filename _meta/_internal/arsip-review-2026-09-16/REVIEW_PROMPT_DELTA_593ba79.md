@@ -1,3 +1,7 @@
+> **ARSIP — SUDAH DIGANTIKAN, JANGAN DIPAKAI.** Artefak prompt delta review untuk HEAD 593ba79 (verifikasi 5 Critical fix) di branch yang sama. Pin commit/branch di dalamnya **basi sejak saat itu juga** (paradoks yang dikatalogkan sebagai C-07): sumber otoritatif prompt review adalah yang **dibangkitkan saat review dibutuhkan**, bukan berkas yang disimpan — jalankan `python3 tools/review_prompt.py --pr <nomor>` di repo master. Dipindah dari root repo ke sini 2026-09-16 oleh sesi `arena/01a0a7d3-pembangun-sistem` (mandat pemilik: bereskan housekeeping yang tertunda); **isi asli di bawah baris ini tidak disunting sama sekali** (pensiunkan, jangan hapus — Kebijakan Lebur Aturan 2).
+
+---
+
 # Prompt Delta Review — 593ba79 (5 Critical fix verification)
 
 > Paste SELURUH blok ini ke sesi reviewer independen yang sama (branch arena/01a0a797). Cukup verifikasi delta, tidak perlu full 8 langkah.

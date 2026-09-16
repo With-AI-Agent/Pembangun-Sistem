@@ -1,5 +1,11 @@
 # Tawaran Kapabilitas + Audit Skill — Sistem Building Aplikasi (Susulan K-10, 2026-09-15)
 
+> **[ARSIP BER-tanggal — angka di bawah adalah keadaan 2026-09-15, bukan keadaan sekarang]**
+> Koreksi 2026-09-16 (run klinik ke-2): `skills/` kini **26M / 56 direktori** setelah reinstall
+> penuh via `npx` — kalimat "yang ikut adalah `skills/` 8.1M hasil selective" di bagian A sudah
+> tidak berlaku. Isi arsip di bawah **tidak diubah** (append-only); keadaan terkini ada di
+> `skills/README.md` § Registrasi + `SYSTEM_MANIFEST.md` § Dependency.
+
 > Pengganti tawaran 2-kandidat stub sebelumnya (yang tanpa web_search) — disempurnakan maksimal sesuai `05_TAWARAN_KAPABILITAS.md` (W-08, meta v1.14.0 §b).
 > **Riset wajib web_search 3-5 kandidat telah dilakukan**: 2026-09-15 query `building full-stack applications Claude Code skills + best Claude Code skills` → sumber [wasp.sh][1], [designrevision][2], [claudecodeguides][3], [nimbalyst][4], [medium/stack AI founders][5].
 

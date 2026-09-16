@@ -1,3 +1,35 @@
+# ⚠️ VERSI LAMA — SUDAH DIGANTIKAN, JANGAN DIIKUTI
+
+> **Berkas ini arsip.** Ditulis sebagai "Panduan Pemakaian (v3)" sebelum folder ini
+> dijadikan template mandiri (run klinik 2026-09-15). **Pedoman yang berlaku sekarang:
+> `PANDUAN_PENGGUNA.md`** (untuk pemilik) + `PROMPT_ENTRI_UNIVERSAL.md` (prompt pembuka)
+> + `START_DI_SINI.md` (navigasi agent).
+>
+> **Koreksi paling penting (isi arsip di bawah SALAH di titik ini):**
+>
+> | Berkas ini (lama, v3) | Yang BENAR sekarang |
+> |---|---|
+> | "Jangan dimasukkan ke repo GitHub … **yang masuk ke repo hanya `AGENT_SYSTEM.md`**" | **SELURUH isi folder `sistem-building-aplikasi/` yang di-copy ke repo baru** — `cp -r sistem/sistem-building-aplikasi/* my-app-baru/` |
+> | Panduan pemilik disimpan di Obsidian, di luar repo | Pedoman pemilik (`PANDUAN_PENGGUNA.md` + `PROMPT_ENTRI_UNIVERSAL.md`) **ikut di dalam folder/repo** — sudah diberi penanda `agent_instruction: IGNORE for execution — USER GUIDE ONLY` supaya agent tidak menjadikannya instruksi kerja |
+> | Agent cukup baca `AGENT_SYSTEM.md` + `PROJECT_STATE.md` | Agent WAJIB baca juga `PROFIL_PENGGUNA.md` (LANGKAH 0), `SYSTEM_MANIFEST.md`, `STATUS.md`, `LOG_SESI` terbaru, `skills/README.md` + `skills/` (56 dirs) |
+>
+> **Kenapa "hanya `AGENT_SYSTEM.md`" tidak lagi benar:** folder ini sekarang
+> self-contained — `AGENT_SYSTEM.md` merujuk `PROFIL_PENGGUNA.md` (LANGKAH 0 wajib),
+> `skills/` (kewajiban pakai skill), `_sistem/templates/` (10 template Fondasi),
+> `_sistem/validate_system.py` (audit hidup), `10_LOG_SESI.md`, `START_DI_SINI.md`.
+> Kalau hanya satu berkas yang di-copy, semua rujukan itu putus dan sistem pincang.
+> Cara copy yang benar + apa saja yang ikut/ tidak ikut: **`PANDUAN_PENGGUNA.md`
+> § "Cara Pakai Sebagai Template"**.
+>
+> **Status perawatan:** cacat ini ditemukan pemilik 2026-09-16 dan diperbaiki pada
+> run klinik ke-2 (rawat inap, kit v0.2.0) — lihat `REKAM-KLINIK.md` + `ACCEPTANCE_TEST_LOG.md`.
+> Berkas ini sengaja TIDAK dihapus: isi aslinya diawetkan di bawah sebagai jejak sejarah
+> desain (append-only, pola arsip repo ini). **Jangan ikuti instruksi di bawah garis ini.**
+
+---
+
+# ARSIP — isi asli "Panduan Pemakaian (v3)" (SUDAH TIDAK BERLAKU)
+
 # Panduan Pemakaian — Sistem Kerja Fondasi Aplikasi (v3)
 
 > **File ini untuk KAMU, bukan untuk agent.** Jangan dimasukkan ke repo GitHub.

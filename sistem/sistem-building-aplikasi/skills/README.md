@@ -4,18 +4,37 @@ Folder ini berisi **skill/plugin vendor-local** untuk Building Aplikasi. Semanti
 
 ## Ringkasan terpasang (2026-09-16 — REINSTALL MAKSIMAL via npx — semua 10 publik fresh HEAD)
 
-**Total: 26M** (hemat 85% vs unzip semua `Input-Pengguna` 53,813,128 bytes di repo meta + Vercel 2.3M penuh — `Input-Pengguna` **tidak ikut** saat copy template, yang ikut hanya `skills/` 26M + catalog index ini). Sisa katalog besar di repo meta tetap sebagai zip/index, di repo baru fetch via `npx skills add` bila butuh — tidak dibengkakkan penuh. **Agent ADAPTIF**: baca `AGENT_SYSTEM.md` tabel panduan, pilih skill yang paling tepat per task (Cloudflare vs Vercel, Supabase vs generic DB, Gmail vs Drive etc.).
+**Total terukur 2026-09-16:** `du -sh skills` = **26M**, **56 direktori**, 1.802 berkas.
+
+Dua jenis angka **sengaja tidak dikutip** di berkas ini (pelajaran C-04 Katalog Cacat: bukti volatil, ditegaskan reviewer PR #63 putaran 1):
+1. **Persentase "hemat X%"** — turunan tanpa pembanding yang stabil.
+2. **Total byte eksak folder ini** — ia berubah setiap kali berkas di dalam `skills/` disunting, **termasuk README ini sendiri**: kutipan byte total di run klinik ke-2 jadi basi oleh suntingan README pada commit yang sama (temuan R-3). Angka beku untuk besaran yang bergerak = jaminan basi.
+
+Yang dikutip hanya fakta yang **stabil terhadap penulisan dokumen** (jumlah direktori & berkas — dan jumlah direktori ditegakkan validator terhadap hitungan nyata) + perintah mengukur sendiri:
+
+```bash
+du -sh skills                                        # ukuran kasar, mis. 26M
+du -sb skills                                        # total byte (apparent) — UKUR SAAT BUTUH, jangan kutip angka beku
+find skills -mindepth 1 -maxdepth 1 -type d | wc -l   # jumlah direktori (ditegakkan validator)
+find skills -type f | wc -l                          # jumlah berkas
+```
+
+**Yang sengaja TIDAK dipasang penuh** (tetap katalog 8K, fetch on-demand): `agent-skills-hub` (787 skill valid / 797 direktori — penuh ±71M) dan `agent-skills` (248 skills — penuh ±25M). Input-Pengguna/ (10 zip, 53.813.128 bytes) **tidak ikut** saat copy template — ia provenance audit di repo meta. **Agent ADAPTIF**: baca `AGENT_SYSTEM.md` tabel panduan, pilih skill yang paling tepat per task (Cloudflare vs Vercel, Supabase vs generic DB, Gmail vs Drive etc.).
 
 ### A. Inti dari 10 zip Input-Pengguna di repo meta (scan virus aman 2026-09-15) — sudah terpasang selective di `skills/` ini, zip asli tidak ikut template
 
 | # | Skill | Sumber | Ukuran | Folder | Fungsi |
 |---|---|---|---|---|---|
-| 1 | **frontend-designer** v3.0.1 | `frontend-designer-skill-main.zip` 80K→24K | Apache-2.0 | `frontend-designer/` | Design-system tokens/CSS/a11y |
-| 2 | **excalidraw-diagram** | `excalidraw-diagram-skill-main.zip` 19K→57K | MIT | `excalidraw-diagram/` | Diagram argue-visually + Playwright render |
-| 3 | **ui-ux-pro-max** core | `ui-ux-pro-max-skill-main.zip` 8.1M→1.7M selective (prune 1.9M font) | — | `ui-ux-pro-max/` | Reasoning lintas-stack |
-| 4 | **design** | subset ui-ux | — | `design/` | Logo/brand/banner |
-| 5 | **design-system** | subset | — | `design-system/` | Tokens Tailwind |
-| 6 | **ui-styling** | subset | — | `ui-styling/` | Shadcn/Tailwind |
+| 1 | **frontend-designer** v3.0.1 | `frontend-designer-skill-main.zip` → reinstall `npx` | Apache-2.0 | `frontend-designer/` **24K** | Design-system tokens/CSS/a11y |
+| 2 | **excalidraw-diagram** | `excalidraw-diagram-skill-main.zip` → reinstall `npx` | MIT | `excalidraw-diagram/` **57K** | Diagram argue-visually + Playwright render |
+| 3 | **ui-ux-pro-max** (full via npx) | `ui-ux-pro-max-skill-main.zip` → reinstall `npx` fresh HEAD | — | `ui-ux-pro-max/` **3.6M** | Reasoning lintas-stack |
+| 4 | **design** | keluarga ui-ux (npx) | — | `design/` **348K** | Logo/brand/banner |
+| 5 | **design-system** | keluarga ui-ux (npx) | — | `design-system/` **260K** | Tokens Tailwind |
+| 6 | **ui-styling** | keluarga ui-ux (npx) | — | `ui-styling/` **5.8M** | Shadcn/Tailwind |
+| 6b | **brand** · **banner-design** · **slides** | keluarga ui-ux (npx) | — | `brand/` **140K**, `banner-design/` **16K**, `slides/` **36K** | Aset brand/banner/slides |
+| 6c | **frontend-designer-lite** | `frontend-designer-skill-main.zip` (npx) | Apache-2.0 | `frontend-designer-lite/` **8K** | Varian ringan frontend-designer |
+
+> **Koreksi nama folder (audit 2026-09-16):** folder banner bernama **`banner-design/`**, bukan `banner/`. Ukuran di atas adalah hasil `du -sh` per folder pada 2026-09-16 (setelah reinstall penuh via `npx`), menggantikan angka "selective/prune" lama (ui-ux 1.7M, design-system/ui-styling kecil) yang sudah tidak berlaku.
 
 ### B. Vercel 16 skill (audit 26 skill 9 kategori, buka sempurna vercel.com + 5 skills.sh, CLI --copy)
 
@@ -42,13 +61,15 @@ Folder ini berisi **skill/plugin vendor-local** untuk Building Aplikasi. Semanti
 
 | # | Skill | Sumber | Ukuran | Folder | Catatan |
 |---|---|---|---|---|---|
-| 23 | **alibaba-java** | `alibaba-java-coding-guidelines-skill-main.zip` 32K | 44K | `alibaba-java/` | Java/Spring/MyBatis guideline |
-| 24 | **ai-agent-skills** (18 skills) | `ai-agent-skills-main.zip` 328K | 256K | `ai-agent-skills/` | ask-questions-if-underspecified, backend-development, database-design — rancangan & Fondasi gate |
-| 25 | **ios-agent** v3.3.0 | `ios-agent-skill-main.zip` 2.0M→252K | MIT | `ios-agent/` | iOS/SwiftUI (templates multiplatform) |
-| 26 | **tsbs-benchmark** | `tsbs-benchmark-agent-skill-main.zip` 18K | 28K | `tsbs-benchmark/` | QuestDB time-series benchmark |
-| 27 | **awesome-agent-skills** | `awesome-agent-skills-main.zip` 60K→224K | MIT | `awesome-agent-skills/` | Katalog 100+ community skills |
-| 28 | **agent-skills** | `agent-skills-main.zip` 6.6M→10K catalog (di repo meta) | MIT | `agent-skills/` | Hub 248 skills — zip asli di repo meta, catalog index di sini (hindari 6.6M bengkak, di repo baru pakai `npx skills add`) |
-| 29 | **agent-skills-hub** | `agent-skills-hub-main.zip` 35M→8.5K catalog | — | `agent-skills-hub/` | Hub 42k files — zip kept, catalog 30 SKILL sample di sini |
+| 23 | **alibaba-java** | `alibaba-java-coding-guidelines-skill-main.zip` → npx | 85K | `alibaba-java/` | Java/Spring/MyBatis guideline (`name:` upstream = `alibaba-java-coding-guidelines-skill`) |
+| 24 | **ai-agent-skills** (**17 sub-skill valid** — 18 di zip termasuk 1 meta) | `ai-agent-skills-main.zip` 328K | 256K | `ai-agent-skills/` | ask-questions-if-underspecified, backend-development, database-design — rancangan & Fondasi gate |
+| 25 | **ios-agent** v3.3.0 (full docs) | `ios-agent-skill-main.zip` → npx | **9.9M** | `ios-agent/` | iOS/SwiftUI + templates multiplatform + MCP (`name:` upstream = `ios-agent-skill`) |
+| 26 | **tsbs-benchmark** (claude+codex) | `tsbs-benchmark-agent-skill-main.zip` → npx | 60K | `tsbs-benchmark/` | QuestDB time-series benchmark (`name:` upstream = `questdb-tsbs-benchmark`) |
+| 27 | **awesome-agent-skills** | `awesome-agent-skills-main.zip` 60K | **16K** | `awesome-agent-skills/` | **Katalog curated list** komunitas (`README.md` + `CONTRIBUTING.md` + `LICENSE`, **tanpa `SKILL.md`**) — indeks referensi, bukan skill yang dijalankan |
+| 28 | **agent-skills** | `agent-skills-main.zip` 6.6M (zip di repo meta) | **8K** katalog | `agent-skills/` | Katalog **248 skills** (penuh ±25M) — `CATALOG.md` + `README.md`, fetch via `npx skills add PracticalSwan/agent-skills --skill <nama>` |
+| 29 | **agent-skills-hub** | `agent-skills-hub-main.zip` 35M (zip di repo meta) | **8K** katalog | `agent-skills-hub/` | Katalog **787 skill valid dari 797 direktori** (penuh ±71M) — `CATALOG.md` sample 50 + `README.md`, fetch via `npx skills add agent-skills-hub/agent-skills-hub --skill <nama>` |
+
+> **Koreksi audit 2026-09-16 (angka lama salah):** `alibaba-java` 44K→**85K**, `ios-agent` 252K→**9.9M** (reinstall penuh via npx, bukan selective), `tsbs-benchmark` 28K→**60K**, `awesome-agent-skills` 224K→**16K** (angka 224K tidak pernah benar; isi nyata 3 berkas = 8.417 bytes), `ai-agent-skills` "18 skills"→**17 valid**, `agent-skills`/`agent-skills-hub` "10K/8.5K"→**8K** masing-masing, dan hub "42k files/35M"→**71M penuh, 787 skill valid**.
 
 ### D. Rancangan aplikasi — riset fitur/fungsi (baru, untuk Tahap 1-2 Fondasi)
 
@@ -119,7 +140,7 @@ Cara pilih adaptif: Deploy? → `cloudflare+wrangler` jika user bilang Cloudflar
 `npx skills update` atau `npx skills add <owner/repo> --skill <nama>` (contoh: `npx skills add cloudflare/skills --skill cloudflare`, `npx skills add supabase/agent-skills --skill supabase`). Registry: `skills.sh` + `officialskills.sh`. Google butuh OAuth `python scripts/auth.py login` dulu. `find-skills` (8K) tetap ada untuk discover skill baru publik kapanpun (lihat `AGENT_SYSTEM.md` § ADAPTIF). 
 > **REINSTALL 2026-09-16 (maksimal konsisten):** 10 skill Input-Pengguna yang sebelumnya selective (zip) **sudah diganti install ulang via `npx` fresh HEAD** — hash IDENTIK dengan `npx skills add` (bukti audit 1-1 + npx update 24 skills). Hasil: `ios-agent` 252K→9.9M (full docs 8.1M), `ui-ux-pro-max` family full 9.8M (ui-ux 3.6M + ui-styling 5.8M + design 348K + design-system 260K + brand 140K + banner 16K + slides 36K), `frontend-designer` + `frontend-designer-lite` (24K+8K), `tsbs-benchmark` 60K (claude+codex), `ai-agent-skills` 256K 17 sub-skills fresh, `excalidraw` 57K & `alibaba` 85K identik. Total `skills/` 8.1M→**26M** (naik 18M untuk maksimal tanpa prune, masih ratusan MB aman — konsisten dengan `cloudflare` 1.5M & `vercel` yang memang full via npx). 2 hub besar (`agent-skills` 248 skills 25M, `hub` 797 skills 71M) tetap **katalog 8K** (tidak diinstall full 1000 skills — fetch on-demand via `npx skills add --skill <nama>` bila butuh, sama seperti praktik npx katalog).
 
-Agent **punya dan bisa pakai** `npx skills find/add` + 52 dirs lokal kapanpun tanpa npx.
+Agent **punya dan bisa pakai** `npx skills find/add` + **56 direktori** lokal kapanpun tanpa npx.
 
 ## Cara pakai (WAJIB ADAPTIF — lihat AGENT_SYSTEM.md § Kewajiban + Prinsip Adaptif)
 
@@ -141,4 +162,14 @@ Semua via **CLI `npx skills add --copy -y --agent "*"` + copy vendor-local** (pe
 
 ## Registrasi
 
-Terdaftar di `SYSTEM_MANIFEST.md` Dependency + Log Keputusan — total **8.1M, 52 dirs** (cloudflare 1.5M + supabase 188K + google 330K baru).
+Terdaftar di `SYSTEM_MANIFEST.md` Dependency + Log Keputusan — **total terukur 2026-09-16: `du -sh` 26M / 56 direktori / 1.802 berkas** (total byte eksak tidak dikutip — lihat § Ringkasan terpasang). Riwayat: 2.1M (15 Sep, selective 3 skill) → 2.9M (Vercel 10 inti) → 6.0M/31 group (semua sisa) → 8.1M/52 dirs (Cloudflare/Supabase/Google) → **26M/56 dirs** (reinstall penuh via `npx`, 2026-09-16).
+
+## Integritas vendor & catatan update (audit run klinik ke-2, 2026-09-16)
+
+Aturan ini ada supaya jaminan "byte-identik dengan `npx`" tetap benar:
+
+1. **Jangan menambah, mengedit, atau menghapus berkas di dalam direktori skill vendor.** Isinya dijaga identik dengan sumber publiknya agar `npx skills add/update` tetap bisa dipakai dan audit hash tetap bermakna. Catatan navigasi/inventaris milik kita tempatnya **hanya di berkas ini** (`skills/README.md`) dan di `AGENT_SYSTEM.md` § Kewajiban Penggunaan Skill.
+2. **`skills/vercel-deploy/Archive.zip` (11.314 bytes) SENGAJA DIPERTAHANKAN** walau isinya snapshot lama (SKILL.md versi sebelumnya + `__MACOSX/._*`). Ia **bagian dari repo upstream** vercel-labs/agent-skills di path skills/deploy-to-vercel/Archive.zip (ukuran identik 11.314 bytes) — **itu path upstream, bukan path lokal**: folder kita bernama `vercel-deploy/`, jadi berkasnya ada di `skills/vercel-deploy/Archive.zip` — menghapusnya akan membuat salinan kita **tidak lagi byte-identik** dengan hasil `npx`. **Jangan diekstrak/dipakai**; pakai `SKILL.md` + `resources/deploy.sh` yang aktif.
+3. **5 folder di-rename terhadap `name:` di SKILL.md upstream** — `vercel-deploy` (`deploy-to-vercel`), `alibaba-java` (`alibaba-java-coding-guidelines-skill`), `ios-agent` (`ios-agent-skill`), `tsbs-benchmark` (`questdb-tsbs-benchmark`), dan `product-discovery`/`product-management` (direktori agregat berisi banyak sub-skill). **Konsekuensi:** `npx skills update`/`add` bisa memasang ulang dengan nama folder upstream sehingga muncul **duplikat** (mis. `deploy-to-vercel/` di samping `vercel-deploy/`). Bila itu terjadi: pakai salah satu, hapus yang duplikat, dan catat di `LOG_SESI` — jangan biarkan dua salinan hidup.
+4. **1 direktori tanpa frontmatter `SKILL.md`:** `verification-loop/SKILL.md` tidak punya blok `---name/description---` (gaya dokumen dari `WorldFlowAI/everything-claude-code`) → **tidak terpasang lewat CLI**, tapi tetap berguna: baca sebagai dokumen referensi QA. Sisanya (49 dari 50 direktori ber-`SKILL.md`) punya frontmatter valid; `vercel-composition-patterns` & `vercel-react-native-skills` memakai `description:` multi-baris YAML (valid).
+5. **6 direktori agregat/katalog tanpa `SKILL.md` di akarnya:** `product-discovery` (7 sub-skill), `product-management` (8), `ai-agent-skills` (nested `skills/`, 17 valid), `agent-skills` (katalog 248), `agent-skills-hub` (katalog 787 valid), `awesome-agent-skills` (curated list). **Resolve dengan `find skills/<nama> -name SKILL.md`** — jangan menyimpulkan "skill tidak ada" (aturan lengkap: `AGENT_SYSTEM.md` § Catatan path).
