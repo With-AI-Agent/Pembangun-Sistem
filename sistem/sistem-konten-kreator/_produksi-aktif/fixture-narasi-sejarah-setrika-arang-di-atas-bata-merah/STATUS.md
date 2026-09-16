@@ -38,8 +38,8 @@
   - `G1 Tahap 5 (Generate/Acquire Assets):` belum
   - `G2 konten final + metadata (Tahap 6):` belum
   - `G3 merge:` belum
-- **Commit terakhir:** `421dddb79a716900d8e2521c75a6ec7a76bef67d` — penyimpanan state unit (sudah masuk `main`: HEAD `7d1b5a8` = merge PR #67); pembaruan verifikasi sesi lanjutan 2026-09-16 di-commit setelah baris ini ditulis, sha-nya dicatat di `_log-sesi/LOG_SESI_2026-09-16_6.md`
-- **PR terkait:** PR #67 (persiapan state unit produksi lanjutan) — **MERGED** 2026-09-16T14:12:28Z, merge commit `7d1b5a8189d68252c5e718a620c329455e3f81c6`; PR sesi lanjutan dari branch `arena/01a0aaa2-pembangun-sistem` — waktu pembukaannya ditanyakan ke pemilik, tanpa auto-merge
+- **Commit terakhir:** `bf6e1610db7fd269c58ada19560fad7880c67d51` — penutupan sesi (STATUS ini + LOG_SESI `CLOSED`); satu commit penunjuk menyusul sesudahnya hanya untuk mengisi nomor PR + sha ini. Riwayat branch `arena/01a0aaa2-pembangun-sistem`: `2226987` (verifikasi state + pemeriksaan pra-G2 + permintaan G2) → `f1dcc0b` (catat sha + regresi ke log) → `bf6e161` (penutupan). Riwayat sebelumnya: `421dddb` (penyimpanan state unit oleh sesi yang terputus) → masuk `main` sebagai `7d1b5a8` via merge PR #67
+- **PR terkait:** **PR #68** — https://github.com/With-AI-Agent/Pembangun-Sistem/pull/68 — `OPEN`, bukan draft, `MERGEABLE`, **`autoMergeRequest` null (tanpa auto-merge, diverifikasi via GraphQL bukan diasumsikan)**; base `main`, head `arena/01a0aaa2-pembangun-sistem`, head sha saat dibuka `bf6e1610db7fd269c58ada19560fad7880c67d51`. Merge = keputusan pemilik (**G3**) di UI. Riwayat: PR #67 (persiapan state unit) **MERGED** 2026-09-16T14:12:28Z, merge commit `7d1b5a8189d68252c5e718a620c329455e3f81c6`
 - **Pekerjaan belum tersimpan:** Tidak ada
 - **Risiko atau blocker:**
   - **BLOCKER AKTIF (berlaku sampai G2 diberikan):** G2 naskah final **TIDAK diberikan** 2026-09-16 → unit tetap `blocked`, produksi berhenti di Tahap 3, Tahap 4 tidak boleh dimulai. Sesi berikutnya wajib membuka dengan permintaan G2 ulang; selama G2 belum ada, `naskah-draft.md` tetap draft r1 dan belum boleh dipindah ke `arsip-naskah/`.
