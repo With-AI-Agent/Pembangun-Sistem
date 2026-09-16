@@ -282,6 +282,45 @@ def check_7_atribut_di_aturan_agent(errs):
 
 
 
+# ---- cek ke-8 (2026-09-16, putaran 3): scan rujukan AT-08 ditanam jadi gerbang permanen ----
+# Rujukan ber-backtick dengan prefix INTERNAL wajib nyata ada di dalam folder ini: saat folder
+# di-copy jadi repo standalone (AT-08), rujukan yang menggantung mengarahkan pembaca ke berkas
+# yang tidak ada. Sebelumnya kelas ini HANYA tertangkap saat AT-08 dijalankan manual, dan sudah
+# tiga kali lolos dari prose penulis sendiri di run ini — terakhir: teks koreksi di
+# ACCEPTANCE_TEST_LOG.md mengutip log sesi level repo meta dengan backtick (AT-08 menangkapnya,
+# validator tidak). Menanamnya di sini membuat gerbang menyala tiap `validate_system`.
+PREFIX_INTERNAL = ("_sistem/", "skills/", "docs/", "_log-sesi/", "_salinan-meta/")
+# Cakupan pindai = dokumen aktif + dokumen bukti/arsip milik folder ini. Vendor TIDAK dipindai
+# (kecuali README kita sendiri): rujukan di dalam skill adalah urusan internal skill itu, bukan
+# janji terhadap tata letak folder ini — memindainya hanya menghasilkan positif palsu.
+DOK_SCAN_RUJUKAN = DOK_AKTIF + ("ACCEPTANCE_TEST_LOG.md", "PANDUAN_PEMAKAIAN.md", "REKAM-KLINIK.md",
+                                "docs/README.md", "_sistem/templates/ROADMAP.md",
+                                "_sistem/templates/AGENT_OPERATING_GUIDE.md")
+# Token yang jelas bukan path (pola/placeholder/perintah), bukan janji satu berkas ada.
+TOKEN_BUKAN_PATH = ("*", "<", ">", "{", "}", "|", "$", "=", "%", "..")
+
+
+def check_no_dangling_internal_refs(errs):
+    """Rujukan ber-backtick berprefix internal wajib ADA di dalam folder (scan AT-08, versi gerbang)."""
+    for rel in DOK_SCAN_RUJUKAN:
+        p = SYS_DIR / rel
+        if not p.is_file():
+            continue
+        for i, baris in enumerate(p.read_text(encoding="utf-8").splitlines(), 1):
+            for tok in re.findall(r"`([^`\s]+)`", baris):
+                if not tok.startswith(PREFIX_INTERNAL):
+                    continue
+                if any(c in tok for c in TOKEN_BUKAN_PATH):
+                    continue
+                target = SYS_DIR / tok.rstrip("/")
+                ada = target.is_dir() if tok.endswith("/") else target.exists()
+                if not ada:
+                    errs.append(
+                        f"{rel}:{i}: rujukan ber-backtick `{tok}` tidak ada di dalam folder — di repo "
+                        "standalone (AT-08) ini jadi rujukan menggantung; perbaiki path-nya atau tulis "
+                        "sebagai provenance tanpa backtick (berkas level repo meta tidak ikut ter-copy)")
+
+
 def main():
     errs = []
     check_file_exists(errs)
@@ -296,6 +335,7 @@ def main():
     check_template_roadmap_7_atribut(errs)
     check_no_volatile_corpus_numbers(errs)
     check_7_atribut_di_aturan_agent(errs)
+    check_no_dangling_internal_refs(errs)
     if errs:
         print("SYSTEM-BUILDING-APLIKASI VALIDATOR: GAGAL")
         for e in errs:

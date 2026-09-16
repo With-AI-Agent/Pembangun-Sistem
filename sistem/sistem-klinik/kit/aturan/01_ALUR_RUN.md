@@ -1,4 +1,4 @@
-> Sumber: _sistem/01_ALUR_RUN.md sha ef3efa7abb0e9bf971a681c6e1646c4439016842 tanggal 2026-09-14 versi-kit 0.2.0
+> Sumber: _sistem/01_ALUR_RUN.md sha ef3efa7abb0e9bf971a681c6e1646c4439016842 tanggal 2026-09-16 versi-kit 0.2.1
 
 # 01 — Alur Run (Siklus Kunjungan Klinik)
 

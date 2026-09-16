@@ -10,6 +10,7 @@ Aturan yang ditegakkan DI SINI adalah aturan sistem ini sendiri (bukan salinan
 validator meta) — supaya folder ini tetap bisa diverifikasi saat berdiri sendiri
 (prinsip folder-mandiri; provenance aturan: sistem regresi meta di repo induk).
 """
+import hashlib
 import re
 import sys
 from pathlib import Path
@@ -94,6 +95,73 @@ def check_kit(errs):
                 errs.append(f"kit/aturan/{f.name}: baris pertama wajib label "
                             "'> Sumber: <berkas master> sha <40> tanggal <YYYY-MM-DD> versi-kit <x.y.z>'")
 
+# Aturan master yang wajib punya turunan di kit/aturan/ (06_RITME_KIT §1).
+ATURAN_KIT = ("01_ALUR_RUN.md", "02_KATALOG_CACAT.md", "03_KEBIJAKAN_LEBUR.md",
+              "04_KONTRAK_TANAMAN.md", "05_TAWARAN_KAPABILITAS.md", "06_RITME_KIT.md")
+STAMP = re.compile(r"^> Sumber: (\S+) sha ([0-9a-f]{40}) tanggal (\d{4}-\d{2}-\d{2}) versi-kit (\S+)$")
+
+
+def _blob_sha(path):
+    """Blob SHA git dihitung TANPA memanggil git: sha1("blob <len>\0" + isi) — stdlib saja,
+    supaya validator ini tetap portabel (panggung rawat inap/suntik bisa tanpa git)."""
+    b = path.read_bytes()
+    return hashlib.sha1(b"blob %d\0" % len(b) + b).hexdigest()
+
+
+def check_kit_segarkan(errs):
+    """Kit TIDAK BOLEH BASI terhadap master — 06_RITME_KIT §2: "Jika aturan master `_sistem/`
+    berubah, pemilik atau agent wajib mensinkronisasi ke `kit/` sebelum melakukan PR rilis";
+    "Cek Kit Basi: ... Jika basi, build harus *fail-closed*".
+
+    Sampai 2026-09-16 aturan itu hanya ditegakkan AT-KL-02 sebagai **prosedur manual**, sehingga
+    panen C-07 (run ke-2 Building Aplikasi, PR #63) menyunting master katalog tanpa sync dan
+    TIDAK ADA gerbang yang menyala — persis pola yang dikatalogkan C-07 (aturan tanpa gerbang)
+    dan F-8 (hijau karena tidak memeriksa apa pun). Yang ditegakkan cek ini: kelengkapan 6
+    turunan, sha blob master vs sha di stamp, isi turunan identik master, versi-kit stamp vs
+    kit/VERSI.txt, dan kit/VERSI.txt vs field Versi manifest.
+    """
+    kit = SYS_DIR / "kit"
+    if not kit.is_dir():
+        return  # panggung rawat inap / target suntik: kit tidak ada di pohon (K-11)
+    versi_file = kit / "VERSI.txt"
+    versi = versi_file.read_text(encoding="utf-8").strip() if versi_file.is_file() else None
+    if versi is None:
+        errs.append("kit/VERSI.txt tidak ada — versi kit tidak terbaca (06_RITME_KIT §2)")
+    man = SYS_DIR / "SYSTEM_MANIFEST.md"
+    if man.is_file() and versi:
+        m = re.search(r"^- \*\*Versi:\*\* `?([0-9]+(?:\.[0-9]+)*)`?", man.read_text(encoding="utf-8"), re.MULTILINE)
+        if not m:
+            errs.append("SYSTEM_MANIFEST.md: field Versi tidak terbaca — kesegaran kit tidak bisa dibandingkan")
+        elif m.group(1) != versi:
+            errs.append(f"kit BASI terhadap manifest: kit/VERSI.txt = {versi} tetapi SYSTEM_MANIFEST.md Versi = {m.group(1)} "
+                        "(06_RITME_KIT §2: kit tidak boleh tertinggal manifest — sinkronkan kit lalu samakan versinya)")
+    for nama in ATURAN_KIT:
+        turunan = kit / "aturan" / nama
+        master = SYS_DIR / "_sistem" / nama
+        if not master.is_file():
+            errs.append(f"_sistem/{nama}: berkas master tidak ada — kit/aturan/{nama} tidak punya sumber")
+            continue
+        if not turunan.is_file():
+            errs.append(f"kit/aturan/{nama} hilang — setiap aturan master wajib punya turunan berstempel (06_RITME_KIT §1)")
+            continue
+        teks = turunan.read_text(encoding="utf-8")
+        baris = teks.splitlines()
+        m = STAMP.match(baris[0]) if baris else None
+        if not m:
+            continue  # bentuk stamp sudah ditegakkan check_kit()
+        sumber, sha, tanggal, vk = m.groups()
+        if sumber != f"_sistem/{nama}":
+            errs.append(f"kit/aturan/{nama}: stamp menunjuk sumber {sumber} — seharusnya _sistem/{nama}")
+        nyata = _blob_sha(master)
+        if sha != nyata:
+            errs.append(f"kit/aturan/{nama} BASI: sha di stamp {sha[:12]} != blob sha master saat ini {nyata[:12]} "
+                        f"(stamp tanggal {tanggal}, master sudah berubah; 06_RITME_KIT §2 wajib sync sebelum PR rilis)")
+        if versi and vk != versi:
+            errs.append(f"kit/aturan/{nama}: stamp versi-kit {vk} != kit/VERSI.txt {versi} — satu rilis kit = satu versi")
+        if teks != f"{baris[0]}\n\n" + master.read_text(encoding="utf-8"):
+            errs.append(f"kit/aturan/{nama}: isi turunan tidak identik dengan master (bentuk wajib: stamp + baris kosong + isi master verbatim)")
+
+
 def main():
     errs = []
     check_file_exists(errs)
@@ -101,6 +169,7 @@ def main():
     check_manifest(errs)
     check_no_meta_operational_refs(errs)
     check_kit(errs)
+    check_kit_segarkan(errs)
     if errs:
         print("SYSTEM-KLINIK VALIDATOR: GAGAL")
         for e in errs:

@@ -57,11 +57,14 @@ MAU MENANAM SESUATU KE TARGET
 
 **Wajib pada setiap overwrite yang diizinkan:** catat di rekam klinik — berkas, kondisi SEBELUM (kutipan/baris), kondisi SESUDAH, item rencana yang mengizinkan — supaya rollback bisa presisi (Quality & Evolution manifest: tidak pernah menghapus diam-diam).
 
+**Pensiunkan, jangan hapus (panen C-07, 2026-09-16).** Dokumen target yang **digantikan** oleh tanaman run ini (pedoman lama vs pegangan yang ditanam, catatan usang vs manifest yang disegarkan) TIDAK boleh dibiarkan hidup tanpa penanda — dan tidak boleh dihapus diam-diam. Yang wajib: sisipkan **penanda di kepala berkas** ("VERSI LAMA — SUDAH DIGANTIKAN, JANGAN DIIKUTI") + penunjuk dokumen yang berlaku + tabel koreksi per topik bila ada angka/instruksi yang bertentangan; **isi asli di bawah penanda tidak disunting** (append-only). Aturan 2 sudah melarang overwrite/hapus; butir ini menutup celah **sebaliknya** — dokumen lama tanpa penanda tidak menimpa satu byte pun, tetapi tetap merusak **keputusan** pembaca yang kebetulan membukanya.
+
 | Benar | Salah |
 |---|---|
 | Rencana item #3 menyebut eksplisit "ganti bagian X di `ATURAN.md` dengan Y" → disetujui → jalan + dicatat sebelum/sesudah | "Merapikan" kalimat/struktur target sekalian karena katanya lebih baik — TIDAK sah, bukan item rencana |
 | Hapus mekanisme mati yang disepakati item #5, dengan catatan rollback | Hapus karena "kelihatannya tak terpakai" tanpa izin |
 | Koreksi kecil melebihi lingkup item ditemukan → masuk borongan susulan K-10 | Menyelipkan koreksi "sekaliburasa" ke item lain |
+| Dokumen target yang digantikan diberi penanda arsip + penunjuk dokumen berlaku; isi aslinya utuh di bawah penanda | Dokumen lama dibiarkan hidup tanpa penanda (pembaca mengikuti aturan usang), atau dihapus karena "sudah ada penggantinya" tanpa izin item |
 
 **Kenapa:** ini wilayah pemilik; klinik tukang perbaikan, bukan pemilik rumah. Satu overwrite tak berizin cukup membuat seluruh hasil run tak bisa dipercaya.
 
@@ -124,7 +127,7 @@ MAU MENANAM SESUATU KE TARGET
 ## Checklist pra-penyerahan per artefak (5 cek cepat)
 
 1. Padanan sudah dicari — ini extend, bukan kembaran? (Aturan 1)
-2. Ada konten lama yang tertimpa/dihapus? → diizinkan per-item + tercatat sebelum/sesudah? (Aturan 2)
+2. Ada konten lama yang tertimpa/dihapus? → diizinkan per-item + tercatat sebelum/sesudah? Ada dokumen target yang **digantikan** tanaman ini? → sudah berpenanda arsip + penunjuk dokumen berlaku, isi asli utuh? (Aturan 2, butir "Pensiunkan, jangan hapus")
 3. Bahasa/nama/format/lokasi mengikuti target? (Aturan 3)
 4. Ada bagian kit yang nyasar ke pohon git target? (Aturan 4)
 5. Kosakatanya bersih dari istilah klinik (kecuali rekam itu sendiri)? (Aturan 5)
@@ -138,4 +141,5 @@ Gagal satu cek = kembali ke Tahap C untuk artefak itu (01 §7). Semua lolos → 
 | 2026-09-13 | Dokumen ditulis (urutan Langkah 2 rencana; pasangan 01_ALUR_RUN) | Ditetapkan 00_RENCANA_KERANGKA.md "Langkah setelah rencana merge"; keenam aturan sudah diputuskan di Discovery (jangkar konsistensi #2 + ide mentah kekhawatiran istilah) — dokumen [ATURAN], bukan [GENERATOR] |
 | 2026-09-13 | Aturan 2 & 4 dinyatakan absolut; konflik dgn konvensi target = berhenti fail-closed, bukan pengecualian | Tanpa ini, satu "konvensi aneh" bisa dipakai membuka lubang overwrite/commit-kit; jalur sahnya tetap ada (borongan K-10), bukan jalur diam-diam |
 | 2026-09-13 | Urutan konvensi bila target belum punya: tanaman run sebelumnya → template kit sebagai usulan bertanda | Menutup celah "target kosong konvensi" yang belum dijawab rencana; tetap memegang prinsip konvensi-target-menang dengan fallback yang bisa dikoreksi pemilik |
+| 2026-09-16 | Aturan 2 diberi butir **"Pensiunkan, jangan hapus"** + satu baris tabel Benar/Salah + checklist pra-penyerahan butir 2 diperluas (jumlah butir checklist tetap) | Panen C-07 run klinik ke-2 pada Sistem Building Aplikasi (PR #63): Kebijakan Lebur sudah melarang overwrite/hapus tanpa izin per-item, tetapi **tidak mewajibkan penanda arsip** pada dokumen target yang digantikan — 9 dari 20 temuan run itu satu keluarga ini (`PANDUAN_PEMAKAIAN.md` pra-standar hidup tanpa penanda dan menyuruh copy satu berkas; pemilik hampir mengikutinya di pemakaian pertama). Celah kit ditutup di aturannya, bukan hanya dikoreksi di target |
 | 2026-09-14 UTC / 15 Sep WIB | Sinkron K-11: header (panggung), Aturan 4 (bengkel → rawat inap: tidak ada salinan kit di panggung in-repo), Aturan 6 (kosakata: "bengkel" → "rawat inap") | Panggung bengkel dihapus — rawat inap kini alur standar meta; "kit tidak pernah di-git" tetap absolut untuk suntik, dan untuk rawat inap dinyatakan secara literal (tanpa salin kit) agar tidak ada keambiguhan |
