@@ -461,3 +461,227 @@ soal kompresi; yang dilihat pemilik hanyalah **tabel hasil: nama foto, layak cet
 | 2026-09-17 | Bagian J ditambahkan: bukti uji kompresi (9 varian, PSNR+SSIM) + perhitungan kelayakan cetak | Pemilik menyatakan tidak paham dan tidak bisa memastikan batas yang agent tetapkan → dijawab dengan angka terukur, bukan penegasan ulang |
 | 2026-09-17 | **Usulan agent "foto maks ~300 KB" DICABUT sebagai salah**; diganti aturan **dua tingkat aset + gerbang resolusi fail-closed** | Keberatan pemilik terbukti benar oleh aritmetika: foto 768 px kurang 2,4× untuk A5 full-bleed @300 DPI. Kompresi web dan kelayakan cetak adalah dua kebutuhan yang bertentangan, tidak bisa diatur satu angka |
 | 2026-09-17 | Batas kejujuran angka "hemat 95%" dicatat eksplisit | Bahan uji PNG lossless, bukan JPEG kiriman client; mengutipnya sebagai penghematan riil akan menyesatkan |
+
+---
+
+## Giliran 2 — 2026-09-17, tuntutan tambahan: MANUAL BOOK INDUK + MEKANISME REVIEW INDEPENDEN
+
+> **Kutipan UTUH tanpa suntingan** (ejaan, singkatan, tanda baca pemilik dipertahankan apa adanya).
+> Pemilik membuka giliran ini dengan: *"Ini chat panjang, pastikan ga ada yang terlupakan."*
+
+Ini chat panjang, pastikan ga ada yang terlupakan.
+
+
+
+aku mau di sistem ini ada satu file untuk pengguna yang betul-betul isinya lengkap. Ada segala hal yang perlu dijelaskan dan perlu dipahami pengguna, termasuk mekanisme audit dan pemeriksaan, dan juga ada semua prompt yang dibutuhkan. Memang boleh saja kita buat setiap mekanisme ada buku panduan nya tersendiri untuk pengguna. Tapi file pedoman pengguna yang udh ada dari awal sistem ini dipake, itu harus betul-betul jadi induk dan lengkap, sekiranya kapanpun pengguna mau pake dan mau cari tau cara melakukan sesuatu maka dia cukup liat buku panduan itu dan di dalam nya udh ada semuanya. Jadi semacam manual book gitu loh. Paham kan maksud aku?
+
+
+
+aku juga mau melakukan dan menanamkan mekanisme audit, pemeriksaan, analisis dan review independen yang sangat teliti dan sangat cerdas. Pastikan agent independen betul-betul jeli dan bisa betul-betul menemukan masalah (klo memang ada) dan betul betul melakukan secara sempurna tanpa terlewat hal sekecil apapun. Dan aku mau mekanisme ini betul-betul menyeluruh, bukan hanya file fondasi sistem, tapi juga termasuk file pendoman pengguna, dan juga semua file yang perlu untuk diperiksa, karena itu sangat penting untuk terus diperbaiki saat diperlukan. Klo ada skill yang bisa mendukung mekanisme ini, pastikan agent independen menggunakan nya. Dan klo perlu riset di internet untuk ini, pastikan agent independen melakukan nya. kamu harus tanamkan mekanisme ini dalam sistem ini, tapi tentunya harus dimatangkan dulu. Maka klo untuk membuat mekanisme ini perlu riset mendalam dan searching di internet, silahkan lakukan. Aku mau setelah mekanisme ini tertanam, di panduan pengguna dijelaskan cara ketika aku mau melakukan ini. Paham kan maksud aku? Tapi sebelum eksekusi, kamu harus pastikan dulu, apakah ide aku bagus atau tidak. Jika tidak, jangan lakukan
+
+## Peta tuntutan tambahan (ekstraksi agent)
+
+| # | Tuntutan pemilik | Sumber kalimat | Catatan agent |
+|---|---|---|---|
+| T16 | **SATU berkas pedoman pengguna yang jadi INDUK dan LENGKAP** — berisi segala hal yang perlu dijelaskan & dipahami pengguna, **termasuk mekanisme audit/pemeriksaan**, dan **semua prompt yang dibutuhkan** | paragraf 1 | Bersinggungan langsung dengan butir warisan **W-01** (sudah wajib) — jadi ini **penguatan**, bukan hal baru |
+| T17 | Pedoman per-mekanisme **boleh** ada tersendiri, **tetapi** induknya harus lengkap: kapan pun pengguna mau melakukan sesuatu, **cukup lihat satu buku itu** dan semuanya ada di dalamnya — *"semacam manual book"* | paragraf 1 | ⚠️ **Berpotensi bentrok dengan norma anti-dokumen-kembar** yang berlaku di repo ini — harus diselesaikan secara struktural, bukan diabaikan |
+| T18 | **Tanamkan mekanisme audit, pemeriksaan, analisis, dan review independen** yang sangat teliti dan sangat cerdas | paragraf 2 | Repo ini **SUDAH PUNYA** `_meta/PROTOKOL_REVIEW_INDEPENDEN.md` + `tools/review_prompt.py` yang sudah terpakai nyata di puluhan PR → jawaban yang benar **mewarisi & mengadaptasi**, bukan mengarang baru |
+| T19 | Agent independen harus **betul-betul jeli**, menemukan masalah kalau memang ada, dan bekerja **"sempurna tanpa terlewat hal sekecil apapun"** | paragraf 2 | ⚠️ **Rumusan tidak bisa diuji (unfalsifiable)** — harus diterjemahkan jadi cakupan + checklist + perintah yang bisa direproduksi |
+| T20 | Cakupan review **menyeluruh**: bukan hanya file fondasi sistem, **tetapi juga pedoman pengguna** dan semua file yang perlu diperiksa, karena penting untuk terus diperbaiki | paragraf 2 | Setuju arah, tapi **wajib berjenjang risiko** — kalau tidak, perubahan kecil memicu review raksasa dan sistem jadi tidak terpakai |
+| T21 | Kalau ada **skill** yang bisa mendukung mekanisme ini, agent independen **wajib memakainya** | paragraf 2 | Kandidat terpasang: `security-review`, `verification-before-completion`, `verification-loop`, `systematic-debugging`, `web-design-guidelines`, `agent-browser`, `tdd-workflow` |
+| T22 | Kalau perlu **riset internet**, agent independen **wajib melakukannya** | paragraf 2 | Perlu aturan: riset oleh reviewer **read-only terhadap branch yang direview**, dan sumber wajib dikutip (bukan diingat) |
+| T23 | Mekanisme ini **harus dimatangkan dulu**; kalau butuh riset mendalam + searching internet untuk membuatnya, **silakan lakukan** | paragraf 2 | Mandat riset untuk **merancang** mekanismenya — diberikan sebelum eksekusi |
+| T24 | Setelah mekanisme tertanam, **cara memakainya dijelaskan di pedoman pengguna** | paragraf 2 | Mengikat T16 dengan T18: manual book wajib memuat cara menjalankan review independen |
+| T25 | **GERBANG: "sebelum eksekusi, kamu harus pastikan dulu, apakah ide aku bagus atau tidak. Jika tidak, jangan lakukan"** | paragraf 2 | **Pemilik meminta penilaian kritis, bukan pelaksanaan.** Agent **DILARANG** mengeksekusi sebelum memberi verdict jujur per ide. Ini juga sejalan dengan permintaan giliran sebelumnya: *"Aku mau kamu kritisi, bukan asal meng-iya-kan saja"* |
+
+## Log Keputusan (lanjutan)
+
+| Tanggal | Perubahan | Alasan |
+|---|---|---|
+| 2026-09-17 | Tuntutan T16–T25 dicatat + kutipan verbatim giliran 2 disimpan | Permintaan eksplisit pemilik: "pastikan ga ada yang terlupakan". T25 dicatat sebagai **gerbang**: agent tidak boleh mengeksekusi sebelum verdict jujur disampaikan |
+
+---
+
+# K. VERDICT JUJUR atas T16–T25 (gerbang T25: "pastikan dulu apakah ide aku bagus, jika tidak jangan lakukan")
+
+> Bagian ini adalah **penilaian**, bukan pelaksanaan. Sesuai gerbang T25, **tidak ada mekanisme yang dieksekusi**
+> sebelum pemilik memutuskan atas koreksi yang diajukan di sini.
+
+## K.0 Fakta yang mengubah jawaban: repo ini SUDAH punya mekanismenya
+
+Sebelum menilai, agent memeriksa apa yang sudah ada — supaya tidak mengarang mekanisme baru yang lebih lemah
+dari yang sudah teruji. Hasilnya:
+
+| Sudah ada | Isi | Bukti terpakai nyata |
+|---|---|---|
+| `_meta/PROTOKOL_REVIEW_INDEPENDEN.md` (46 baris) | **8 prinsip inti** + **level trigger L1/L2/L3** + **anatomi prompt reviewer (6 bagian wajib)** + aturan penulisan hasil + **cara diwariskan ke sistem domain (3 langkah)** | Dipakai di puluhan PR; verdict MERAH/HIJAU per putaran tercatat di banyak LOG_SESI |
+| `tools/review_prompt.py` (**653 baris**) | Prompt review **dibangkitkan alat, bukan dikarang** — nomor PR, base sha, head sha, daftar berkas diambil dari data PR GitHub + pohon kerja; **deterministik**; **gagal keras (exit non-zero)** daripada mencetak prompt dengan sha kosong | Menjadi sumber resmi sejak disetujui pemilik 8 Sep 2026 |
+| `_meta/QUALITY_ASSURANCE_AND_EVOLUTION.md` (225 baris) | QA & evolusi **3 lapis** (butir W-06) | — |
+| Salinan berlabel di sistem domain | `sistem/sistem-konten-kreator/PROTOKOL_REVIEW_INDEPENDEN.md`, `sistem/sistem-presentasi/_salinan-meta/PROTOKOL_REVIEW_INDEPENDEN.md` | Preseden **cara mewarisi** ke sistem baru |
+
+**Delapan prinsip yang sudah ada (ringkas):** (1) pemutus eksternal — yang mengerjakan tidak memutus;
+(2) reviewer memverifikasi **dari artefak** (git tree, commit, log, API), **bukan dari narasi** pihak yang direview —
+klaim pihak reviewed = **objek pemeriksaan, bukan bukti**; (3) reviewer tidak merge atas namanya sendiri kecuali
+diizinkan eksplisit, **tidak pernah auto-merge**; (4) read-only terhadap branch orang lain; (5) batas jendela 6d;
+(6) **proporsional — kedalaman mengikuti trigger, review bukan ritual untuk pekerjaan remeh**; (7) **maksimal 2
+putaran**, putaran ke-2 gagal = **eskalasi ke pemilik**; (8) **append-only**, termasuk RED FLAG dan verdict yang
+merevisi verdict sebelumnya — jangan dihaluskan.
+
+**Konsekuensi untuk T18:** jawaban yang benar adalah **MEWARISI + MENGADAPTASI** protokol ini ke folder
+`sistem-undangan/` (salinan berlabel, self-contained), lalu **MEMPERKUAT**nya dengan temuan riset di K.2 —
+**BUKAN** menulis mekanisme baru dari nol. Mengarang baru berisiko menghasilkan mekanisme yang lebih lemah
+dari yang sudah teruji di puluhan PR.
+
+## K.1 VERDICT T16–T17 (manual book induk): **BAGUS — dilaksanakan, dengan 1 koreksi struktural**
+
+**Bagus, dan bukan hal baru:** ini persis butir **W-01** (sudah wajib default), dan `_meta/PANDUAN_PENGGUNA_TEMPLATE.md`
+sudah menetapkan **7 bagian wajib**: (1) pembuka + penanda `agent_instruction: IGNORE for execution — USER GUIDE ONLY`,
+(2) **Prompt Pembuka Universal** di paling atas, (3) **Prompt Penutup Sesi**, (4) istilah versi awam, (5) kalimat
+pembuka per situasi (minimal 3), (6) cara review & merge, (7) kebiasaan yang dijaga. Preseden nyata:
+`PANDUAN_PENGGUNA.md` root repo (**209 baris**). Jadi permintaan pemilik = **penguatan W-01**, bukan pekerjaan tambahan.
+
+**⚠️ KOREKSI STRUKTURAL (wajib, kalau tidak akan menimbulkan cacat yang sudah pernah terjadi di repo ini):**
+Rumusan *"cukup liat buku panduan itu dan di dalamnya udah ada semuanya"* kalau diartikan **semua ISI disalin ke
+satu berkas** akan **bertabrakan dengan norma anti-dokumen-kembar** yang berlaku di repo ini. Buktinya bukan teoretis:
+- Template pegangan sendiri mencatat **insiden nyata**: *"`PROMPT_ENTRI_UNIVERSAL.md` dan blok prompt di
+  `PANDUAN_PENGGUNA.md` §2 **wajib identik** (dua file, satu sumber); **selisih diam-diam pernah terjadi dan jadi
+  temuan audit**"*.
+- INDEKS mencatat norma yang sama untuk mekanisme lain: *"Sumber mekanisme tunggal: … **sengaja tidak ada salinan
+  kedua di `_meta/`** (norma anti-dokumen-kembar)"*.
+
+Dua salinan isi yang sama **pasti** menyimpang seiring waktu, dan versi yang menyimpang itu yang akan diikuti
+pengguna. **Jadi "lengkap" harus didefinisikan ulang tanpa mengorbankan maksud pemilik:**
+
+> **Manual book = LENGKAP sebagai SATU-SATUNYA TEMPAT MENCARI, bukan sebagai satu-satunya tempat MENYIMPAN.**
+
+Bentuk konkretnya (ini yang akan dibangun):
+1. **Daftar isi + tabel "kalau kamu mau X → lihat bagian Y"** di paling atas — satu lompatan ke jawaban.
+2. **SEMUA PROMPT yang dibutuhkan pemilik ada UTUH di dalam manual** (pembuka, penutup, per-situasi, prompt review
+   independen) — ini bagian yang **wajib disalin utuh**, karena prompt adalah yang paling sering dibutuhkan mendadak.
+   **Aturan penjaga:** prompt yang juga ada di berkas lain **wajib byte-identik** dan **dicek alat**, bukan diingat.
+3. **Tiap mekanisme: ringkasan cukup untuk bertindak (kapan dipakai, apa hasilnya, apa risikonya) + pointer ke
+   dokumen detailnya.** Isi teknis detail **tidak disalin** — ditunjuk.
+4. **Setiap pointer wajib bisa diselesaikan** (tidak ada rujukan menggantung) — dicek alat, konsisten dengan cara
+   `tools/validate_repo.py` memeriksa 369 rujukan path di repo ini.
+5. **Cara menjalankan audit/review independen dijelaskan di manual** (T24) — sebagai bagian "kalau kamu mau X",
+   lengkap dengan perintah dan prompt siap tempel.
+
+**Keputusan agent:** T16–T17 **DITERIMA dengan koreksi di atas**. Maksud pemilik ("kapan pun mau cari tahu, cukup
+buka satu buku") **terpenuhi sepenuhnya**; yang ditolak hanya bentuk implementasi yang akan menciptakan dokumen kembar.
+
+## K.2 VERDICT T18–T22 (review independen sangat teliti): **ARAHNYA BENAR — tapi 3 rumusan HARUS dikoreksi**
+
+**T18 (tanamkan mekanisme review independen): DITERIMA** — dengan cara **mewarisi** protokol yang sudah ada (K.0).
+
+**⚠️ T19 ("sempurna tanpa terlewat hal sekecil apapun"): DITOLAK sebagai rumusan, dan ini penolakan berbasis bukti.**
+
+Bukan karena agent tidak mau bekerja keras, tetapi karena **rumusan itu tidak bisa diuji** dan **kalau dipaksakan
+akan merusak sistemnya**. Bukti dari riset (pemilik memberi mandat riset di T23):
+
+1. **Bias reviewer AI itu SISTEMATIS, bukan kebetulan.** Penelitian menyimpulkan bias-bias ini *"not random noise but
+   systematic artefacts of training"*: **position bias** (memihak yang disebut lebih dulu), **verbosity bias**
+   (menganggap jawaban panjang = lebih baik), **self-preference bias** (menilai keluaran sendiri lebih tinggi —
+   terdokumentasi pada GPT-4o dan Claude 3.5 Sonnet), dan **family bias** (memihak model satu penyedia).
+2. **Hakim AI papan atas GAGAL menjaga konsistensi di ±25% kasus sulit** — melanggar transitivitas logika
+   (memilih A>B dan B>C, lalu memilih C>A). **Flip rate 20–35%**, kesalahan verbosity >20%.
+3. **Perubahan kecil pada susunan kata prompt bisa mengubah hasil** (sensitivitas in-context learning).
+4. **Uji akademis independen: semua alat review AI melewatkan sebagian besar kerentanan nyata.** Dan
+   **71% developer tetap tidak mau merge kode AI tanpa review manusia.** Tidak ada benchmark yang mendukung
+   kesimpulan bahwa review AI bisa menggantikan review manusia.
+5. **⚠️ BAHAYA TERBESAR dari menuntut "jangan sampai ada yang terlewat": EFEK SERIGALA MENANGIS (cry-wolf).**
+   Ini terdokumentasi sebagai *"the most common reason teams abandon these tools"*. Mekanismenya: supaya terlihat
+   teliti, reviewer memperbanyak temuan → **positif palsu naik** → pemilik belajar **mengabaikan semua temuan tanpa
+   membaca** → **masalah yang asli ikut terlewat**. Sebagai pembanding nyata: generasi awal alat review AI
+   menghasilkan **9 positif palsu untuk setiap 1 bug asli**, dan itu *"destroys trust"*. Analisis statis mentah bisa
+   mencapai **>90% positif palsu** di beberapa benchmark akademis.
+
+**Konflik dengan aturan repo yang sudah terbukti (WAJIB dilaporkan, tidak boleh ditebak/ditimpa diam-diam):**
+T19 versi harfiah **bertentangan langsung** dengan prinsip **#6 (Proporsional — "review bukan ritual untuk pekerjaan
+remeh")** dan **#7 (maksimal 2 putaran, lalu eskalasi ke pemilik)** pada `PROTOKOL_REVIEW_INDEPENDEN.md` yang sudah
+teruji di puluhan PR. Aturan repo sendiri memerintahkan: *"konflik tetap harus dilaporkan, bukan ditebak"*.
+**Agent tidak akan menimpa prinsip #6/#7 tanpa keputusan eksplisit pemilik.**
+
+**✅ PENGGANTI yang mencapai MAKSUD pemilik (ketelitian nyata) tanpa bahayanya:**
+"Tanpa terlewat" diterjemahkan dari **kata sifat** menjadi **cakupan yang dideklarasikan dan bisa diverifikasi ulang**:
+- Reviewer **wajib melaporkan cakupan satu-satu**: berkas apa saja yang diperiksa, pemeriksaan apa yang dijalankan,
+  dan **hasilnya apa** — bukan kesimpulan umum "sudah saya periksa semua".
+- Reviewer **wajib menyatakan yang TIDAK diperiksa beserta alasannya.** Kejujuran cakupan menggantikan klaim kesempurnaan.
+- Setiap temuan **wajib disertai perintah reproduksi** (sudah jadi aturan repo: "merah → laporkan + perintah reproduksi").
+- **Kedalaman berjenjang risiko** (L1/L2/L3 diwarisi, lalu diberi isi konkret untuk domain undangan — lihat K.3).
+
+**⚠️ T20 (cakupan menyeluruh termasuk pedoman pengguna): DITERIMA — dan ini justru menutup GAP nyata di protokol yang ada.**
+Daftar L1 protokol saat ini berfokus pada aturan/manifest/riwayat; **pedoman pengguna tidak disebut eksplisit**.
+Permintaan pemilik **benar dan bernilai**, karena **instruksi yang salah di manual lebih berbahaya daripada dokumen
+salah di tempat lain** — pengguna **bertindak** berdasarkan manual. Insiden "selisih diam-diam" dua berkas prompt
+(K.1) membuktikan risiko ini nyata, bukan hipotetis. **Maka: pedoman pengguna MASUK cakupan L1**, dengan 2 pemeriksaan
+khusus yang bisa dimekanisasi: (a) **prompt di manual byte-identik dengan sumbernya**, (b) **setiap pointer di manual
+bisa diselesaikan**.
+
+**✅ T21 (wajib pakai skill yang mendukung): DITERIMA.** Kandidat dari 56 skill terpasang: `security-review`
+(auth, input pengguna, secrets, endpoint, pembayaran), `verification-before-completion` (**melarang klaim sukses
+sebelum menjalankan verifikasi** — persis anti-klaim kosong), `verification-loop`, `systematic-debugging`,
+`web-design-guidelines` (audit aksesibilitas/UX), `agent-browser` (**bukti runtime**: screenshot undangan di
+berbagai ukuran layar), `tdd-workflow`/`test-driven-development`. Riset skill tambahan digabung ke scope riset 8 gap.
+
+**✅ T22 (wajib riset internet bila perlu): DITERIMA, dengan 2 pagar** — (a) riset reviewer **read-only terhadap
+branch yang direview** (prinsip #4 yang sudah ada), (b) **sumber wajib dikutip sebagai URL dan disimpan ke berkas**,
+bukan diingat dan bukan diringkas bebas (preseden: bagian A–J berkas ini).
+
+## K.3 EMPAT penguatan dari riset yang akan ditanam (ini jawaban atas "supaya betul-betul jeli")
+
+Ketelitian **tidak bisa diperintahkan lewat kata sifat**; yang bisa adalah **memberi alat + memaksa verifikasi**.
+Empat mekanisme dengan bukti terkuat:
+
+1. **VERIFIKASI ADVERSARIAL — reviewer WAJIB mencoba MEMBANTAH temuannya sendiri dulu.** Ini temuan paling
+   berdampak: hanya temuan yang **selamat dari pembantahan** yang boleh masuk laporan. Bukti angkanya: generasi awal
+   alat AI menghasilkan **9 positif palsu per 1 bug asli**; dengan lapisan verifikasi, positif palsu yang ditolak
+   developer turun ke **<1%**. Diterjemahkan ke aturan sistem: *setiap temuan wajib diuji ulang dengan perintah/berkas
+   nyata sebelum dilaporkan; kalau tidak bisa direproduksi, temuan itu DIBUANG, bukan dilemahkan.*
+2. **AI paling terbukti berguna untuk MEMBUNUH DERAU, bukan untuk mendeteksi.** Bukti terkuat: penyaringan ulang
+   oleh LLM memangkas positif palsu analisis statis dari **>92% menjadi serendah 6,3%**. Maka reviewer dipakai sebagai
+   **lapis saring** atas keluaran alat mekanis (validator, preflight, screenshot) — bukan sebagai sumber kebenaran tunggal.
+3. **HAKIM HARUS DARI KELUARGA MODEL YANG BERBEDA dari pembuatnya** — mitigasi terdokumentasi untuk self-preference
+   dan family bias. Aturan repo sudah mewajibkan **sesi berbeda**; yang **ditambahkan**: **model reviewer dicatat di
+   verdict**, supaya bias satu-keluarga bisa dikenali kemudian. (Pemilik bisa memilih model di Arena.)
+4. **VERIFIKASI RUNTIME MENGALAHKAN REVIEW BACA-SAJA.** Bukti: review yang hanya membaca kode **melewatkan** masalah
+   yang baru terlihat saat alur dijalankan, dan **menuduh** hal yang tampak berbahaya tapi sebenarnya tidak bisa
+   dieksploitasi. Diterjemahkan ke domain undangan: reviewer **WAJIB menjalankan** validator/preflight dan **MEMBUKA**
+   undangan yang sudah dirender (screenshot HP + tablet + PC via `agent-browser`), **bukan hanya membaca dokumen**.
+   Ini juga yang membuat prinsip #2 ("verifikasi dari artefak, bukan narasi") jadi konkret dan bisa ditaati.
+
+**Tambahan: temuan wajib menjelaskan MENGAPA, bukan hanya BAHWA.** Alat yang menampilkan alasan (*"explaining why a
+pattern is problematic, not just that it is"*) mendapat tingkat penyelesaian temuan **jauh lebih tinggi**; tanpa itu,
+pengguna tidak nyaman mengandalkan temuan yang konsekuensial.
+
+## K.4 SATU hal yang tidak diminta pemilik tetapi WAJIB diwarisi: pengecualian pengadil
+
+Kalau yang diubah adalah **mekanisme review itu sendiri**, reviewer **dilarang merge** walau seluruh pemeriksaan lulus.
+Preseden nyata di repo ini: **PR #56 dibiarkan `OPEN` bukan karena cacat** — verdict review putaran 2/2 **nihil temuan**
+— melainkan **semata-mata karena PR itu menyentuh alat pengadil** (`tools/review_prompt.py`,
+`tools/test_failure_injection.py`); merge tetap keputusan pemilik. **Alasannya kausal:** pengadil tidak boleh
+memutuskan nasib aturan yang memberi wewenang kepada pengadil itu. **Wajib diwarisi ke sistem-undangan.**
+
+## K.5 RINGKASAN VERDICT (untuk keputusan pemilik)
+
+| Tuntutan | Verdict | Yang berubah |
+|---|---|---|
+| T16 manual book induk lengkap | ✅ **BAGUS — dilaksanakan** | Sudah = W-01 + template 7 bagian; **diperkuat** jadi manual induk |
+| T17 "semuanya ada di dalam satu buku" | ⚠️ **BAGUS maksudnya, SALAH bentuknya** | Dikoreksi: **lengkap sebagai tempat MENCARI, bukan tempat MENYIMPAN** — semua **prompt** utuh di dalam, isi teknis **ditunjuk** bukan disalin (norma anti-dokumen-kembar + insiden selisih diam-diam yang sudah pernah jadi temuan audit) |
+| T18 tanamkan review independen | ✅ **BAGUS — dilaksanakan** | **Mewarisi** protokol + alat yang sudah ada, **bukan** mengarang baru |
+| T19 "sempurna tanpa terlewat sekecil apa pun" | ❌ **DITOLAK sebagai rumusan** | Tidak bisa diuji; memicu **cry-wolf** (>90% positif palsu di alat mentah; 9 positif palsu per bug di generasi awal); **bertentangan dengan prinsip #6 & #7 yang sudah teruji**. Diganti: **cakupan terdefinisi + wajib menyatakan yang TIDAK diperiksa + perintah reproduksi per temuan** |
+| T20 cakupan termasuk pedoman pengguna | ✅ **BAGUS — menutup gap nyata** | Pedoman pengguna **masuk L1** + 2 cek mekanis (prompt byte-identik, pointer terselesaikan) |
+| T21 wajib pakai skill | ✅ **BAGUS** | 7 skill terpasang dipetakan; riset tambahan digabung ke 8 gap |
+| T22 wajib riset internet | ✅ **BAGUS + 2 pagar** | read-only terhadap branch yang direview; sumber dikutip sebagai URL dan disimpan ke berkas |
+| T23 matangkan dulu + mandat riset | ✅ **DILAKSANAKAN** | Bagian K ini adalah hasil maturasi + riset itu |
+| T24 cara pakai dijelaskan di manual | ✅ **BAGUS** | Mengikat T16 ↔ T18: manual wajib memuat cara menjalankan review |
+| T25 gerbang: nilai dulu sebelum eksekusi | ✅ **DIPATUHI** | **Tidak ada mekanisme yang dieksekusi.** Bagian K ini adalah verdict-nya; eksekusi menunggu keputusan pemilik |
+| *(tidak diminta)* pengecualian pengadil | ➕ **WAJIB diwarisi** | Preseden PR #56: pengadil tidak boleh memutus nasib aturan yang memberinya wewenang |
+
+## Log Keputusan (lanjutan)
+
+| Tanggal | Perubahan | Alasan |
+|---|---|---|
+| 2026-09-17 | Bagian K (verdict) ditulis; **T19 ditolak sebagai rumusan**, T17 dikoreksi bentuknya, sisanya diterima | Gerbang T25 pemilik: *"sebelum eksekusi, kamu harus pastikan dulu, apakah ide aku bagus atau tidak. Jika tidak, jangan lakukan"* — dan permintaan giliran sebelumnya: *"Aku mau kamu kritisi, bukan asal meng-iya-kan saja"* |
+| 2026-09-17 | Konflik T19 vs prinsip #6/#6–#7 `PROTOKOL_REVIEW_INDEPENDEN.md` **DILAPORKAN, tidak ditimpa** | Aturan repo: *"konflik tetap harus dilaporkan, bukan ditebak"*; menimpa prinsip yang sudah teruji di puluhan PR tanpa keputusan eksplisit pemilik = pelanggaran |
+| 2026-09-17 | Keputusan: **mewarisi** protokol + `tools/review_prompt.py`, bukan menulis mekanisme baru | Mekanisme yang ada lebih canggih dari yang dibayangkan (prompt dibangkitkan alat, deterministik, gagal keras, larangan pihak yang direview mengarang prompt pengadilnya sendiri); mengarang baru berisiko lebih lemah |
+| 2026-09-17 | 4 penguatan berbasis riset dicatat sebagai kandidat aturan: verifikasi adversarial, AI sebagai penyaring derau, model reviewer beda keluarga + dicatat, verifikasi runtime wajib | Semuanya punya bukti angka, bukan preferensi gaya |
