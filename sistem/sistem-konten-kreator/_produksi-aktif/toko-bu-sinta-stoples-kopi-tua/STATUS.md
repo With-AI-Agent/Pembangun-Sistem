@@ -3,15 +3,15 @@
 - **Status:** in-progress
 - **Channel:** Toko Bu Sinta (`channel-toko-bu-sinta`)
 - **Model konten:** Gambar Statis & Caption v1 (`model-konten/gambar-caption/brief.md`)
-- **Tahap terakhir selesai:** Tahap 4 — Breakdown Output (G1 & G2 disetujui 2026-09-17)
-- **Tahap berikutnya:** Tahap 5 — Generate/Acquire Assets (aset unit 1 selesai digenerate; menunggu G1 aset)
+- **Tahap terakhir selesai:** Tahap 5 — Generate/Acquire Assets (G1 aset disetujui 2026-09-17)
+- **Tahap berikutnya:** Tahap 6 — Assembly & Publish Prep (dihentikan sementara di Tahap 5 sesuai instruksi pemilik; menunggu arahan sesi berikutnya)
 - **Output resmi:**
   - `naskah-draft.md`
   - `breakdown-output.md`
   - `assets/unit-1-stoples-kopi-tua.png` (2.3 MB)
 - **Sumber konteks yang dibaca:** `channel-brief.md` v1 Approved, `model-konten/gambar-caption/brief.md` v1 Approved, `konsistensi-visual/bu-sinta/bank-konsistensi.md` Reference-Ready, `arsip-naskah/indeks.md` (kosong), `arsip-naskah/indeks-karakter.md` (kosong), `_sistem/05_CONTENT_PRODUCTION_PIPELINE.md`, `_sistem/06_PROMPT_LIBRARY.md`
 - **Sumber eksternal dipakai:** `Tidak ada` (murni fiksi slice-of-life orisinal; tanpa klaim faktual/sejarah/ilmiah)
-- **Keputusan baru:** Aset `unit-1-stoples-kopi-tua.png` berhasil digenerate menggunakan acuan utama Bu Sinta; konsistensi visual 100% terjaga.
+- **Keputusan baru:** Aset `unit-1-stoples-kopi-tua.png` berhasil digenerate menggunakan acuan utama Bu Sinta; konsistensi visual 100% terjaga dan lolos G1. Produksi dihentikan di Tahap 5 atas keputusan pemilik.
 - **Approval yang sudah diberikan:**
   - `G1 Tahap 1:` disetujui 2026-09-17
   - `G1 Tahap 2:` disetujui 2026-09-17
@@ -19,11 +19,10 @@
   - `G2 naskah final:` disetujui 2026-09-17
   - `G1 Tahap 4:` disetujui 2026-09-17
   - `G2 breakdown:` disetujui 2026-09-17
-  - `G1 Tahap 5:` belum
-  - `G1 Tahap 5:` belum
+  - `G1 Tahap 5:` disetujui 2026-09-17 — aset diterima
   - `G2 konten final + metadata:` belum
   - `G3 merge:` belum
-- **Commit terakhir:** `683e243`
+- **Commit terakhir:** `30f5b02`
 - **PR terkait:** belum dibuat
 - **Pekerjaan belum tersimpan:** Tidak ada
 - **Risiko atau blocker:** Tidak ada
