@@ -7,8 +7,8 @@
 ## Status: `Draft` → `Reviewed` → `Approved` → `Merged` → `Operational`
 
 - [x] **Draft** — digali via Model Konten Discovery 2026-09-17 (slot log 20)
-- [ ] **Reviewed** — disajikan untuk dibaca lengkap oleh pemilik via viewer
-- [ ] **Approved** — isi dikunci lewat gerbang **G2**
+- [x] **Reviewed** — disajikan untuk dibaca lengkap oleh pemilik via viewer
+- [x] **Approved** — isi dikunci lewat gerbang **G2** 2026-09-17 oleh pemilik
 - [ ] **Merged** — PR sudah lewat gerbang **G3** dan masuk ke `main`
 - [ ] **Operational** — sudah `Merged` DAN semua dependency wajibnya benar-benar ada
 
@@ -81,3 +81,4 @@
 |---|---|---|
 | 2026-09-17 | Inisiasi Model Konten Brief "Gambar Statis & Caption" (folder: `gambar-caption/`) | Format unggulan channel Toko Bu Sinta di Instagram feed. |
 | 2026-09-17 | Mode: Kerangka Standar dengan unit breakdown 1 Post Visual Tunggal | Alur linear dan sederhana, cocok untuk produksi feed harian berbasis 1 gambar + caption 3-6 baris. |
+| 2026-09-17 | G1 Lulus & G2 Approved — Model Konten Brief v1 dikunci resmi | Pemilik menyetujui penuh draft tanpa revisi. |
