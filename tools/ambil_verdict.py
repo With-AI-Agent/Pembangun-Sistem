@@ -46,6 +46,17 @@ from pathlib import Path
 ROOT = Path(__file__).resolve().parents[1]
 
 LABEL_ISSUE = "audit-independen"
+
+# KANAL BERKAS (git-based) — ditambahkan 17 Sep 2026 sesudah UJI NYATA membuktikan kanal Issue
+# DITOLAK di lingkungan produksi ini: `gh issue create` -> HTTP 403 "Resource not accessible by
+# integration (createIssue)", sementara `gh label create` BERHASIL dan `git push` BERHASIL.
+# Mekanisme tidak boleh bergantung pada kanal yang diblokir, jadi hasil audit juga sah diserahkan
+# sebagai berkas yang di-commit. Folder ini SENGAJA di bawah _meta/_internal/ karena folder itu
+# TIDAK ikut ke ekstrak template (diperiksa: build_template.py), sehingga artefak per-run tidak
+# bocor ke sistem anak.
+DIR_AUDIT = ROOT / "_meta" / "_internal" / "audit"
+JUDUL_BERKAS_RE = re.compile(r"^#\s*AUDIT\s+(?P<objek>\S+)\s+@(?P<sha>[0-9a-f]{7,40})\s*$",
+                             re.I | re.M)
 # Judul yang dibangkitkan tools/audit_prompt.py: "AUDIT <objek> @<sha7>"
 JUDUL_RE = re.compile(r"^AUDIT\s+(?P<objek>\S+)\s+@(?P<sha>[0-9a-f]{7,40})\s*$", re.I)
 
@@ -100,7 +111,10 @@ def daftar_kandidat(objek: str | None) -> list[dict]:
         "--json", "number,title,state,createdAt,labels",
     ])
     if code != 0:
-        raise ToolError(f"gagal mendaftar Issue (keluar {code}): {(err or out).strip()[:240]}")
+        # BUKAN kegagalan fatal: kanal Issue boleh tidak tersedia (token tanpa izin issues:write,
+        # gh tidak terpasang, jaringan diblokir). Kanal berkas tetap bisa menjawab. Yang dilarang
+        # adalah menyimpulkan "tidak ada hasil" dari ketidaktersediaan kanal.
+        return [], f"kanal Issue tidak tersedia (keluar {code}): {(err or out).strip()[:180]}"
     try:
         rows = json.loads(out or "[]")
     except json.JSONDecodeError as e:
@@ -130,7 +144,60 @@ def daftar_kandidat(objek: str | None) -> list[dict]:
             "via": ("label+judul" if via_label and via_judul else ("label" if via_label else "judul")),
         })
     cocok.sort(key=lambda x: (x.get("createdAt") or ""), reverse=True)
-    return cocok
+    return cocok, None
+
+
+def daftar_berkas(objek: str | None) -> tuple[list[dict], str | None]:
+    """Hasil audit yang diserahkan sebagai berkas ter-commit di DIR_AUDIT.
+
+    Metadata diambil dari baris judul `# AUDIT <objek> @<sha>` DI DALAM berkas — bukan dari nama
+    berkas — supaya satu sumber kebenaran dan pola judulnya sama dengan kanal Issue.
+    """
+    if not DIR_AUDIT.is_dir():
+        return [], None
+    cocok = []
+    for f in sorted(DIR_AUDIT.glob("*.md")):
+        try:
+            teks = f.read_text(encoding="utf-8", errors="replace")
+        except OSError as e:
+            return [], f"gagal membaca {f.name}: {e}"
+        m = JUDUL_BERKAS_RE.search(teks)
+        if not m:
+            continue  # bukan hasil audit kanal ini; jangan ditebak dari nama berkas
+        if objek:
+            obj_target = objek.strip().strip("/").replace("\\", "/")
+            if m.group("objek").strip("/") != obj_target and obj_target not in teks[:400]:
+                continue
+        cocok.append({
+            "number": None,
+            "title": m.group(0).lstrip("# ").strip(),
+            "state": "berkas",
+            "createdAt": __import__("datetime").datetime.fromtimestamp(
+                f.stat().st_mtime).astimezone().isoformat(timespec="seconds"),
+            "objek": m.group("objek"),
+            "sha": m.group("sha"),
+            "via": "berkas",
+            "path": str(f.relative_to(ROOT)),
+        })
+    cocok.sort(key=lambda x: x["createdAt"], reverse=True)
+    return cocok, None
+
+
+def cetak_berkas(path: Path) -> int:
+    if not path.is_file():
+        raise ToolError(f"berkas hasil audit tidak ada: {path}")
+    teks = path.read_text(encoding="utf-8", errors="replace")
+    m = JUDUL_BERKAS_RE.search(teks)
+    print("=" * 78)
+    print(f"HASIL AUDIT ISI (kanal BERKAS ter-commit) — {path.relative_to(ROOT)}")
+    print(f"Judul : {m.group(0).lstrip('# ').strip() if m else '(tidak berpola AUDIT <objek> @<sha>)'}")
+    print(f"Panjang: {len(teks.splitlines())} baris")
+    print("=" * 78)
+    print(teks)
+    print("=" * 78)
+    print(f"VERDICT TERBACA OTOMATIS: {simpulkan(teks)}")
+    print("Membaca verdict BUKAN menyetujuinya: bertindak atas temuan tetap butuh keputusan pemilik.")
+    return 0
 
 
 def ambil_pr(nomor: int) -> dict:
@@ -228,53 +295,78 @@ def main() -> int:
     g.add_argument("--issue", type=int, metavar="N", help="ambil Issue nomor N")
     g.add_argument("--pr", type=int, metavar="N", help="ambil hasil review PR nomor N (kanal lama)")
     g.add_argument("--daftar", action="store_true", help="daftar kandidat audit-isi tanpa mencetak isi")
+    g.add_argument("--berkas", metavar="PATH", help="ambil hasil audit dari berkas ter-commit (kanal git)")
     ap.add_argument("--objek", help="saring berdasarkan objek, mis. `_meta` atau `sistem/sistem-klinik`")
     a = ap.parse_args()
 
     try:
-        gh_tersedia()
+        # Kanal berkas TIDAK butuh gh sama sekali — itulah gunanya ada.
+        if a.berkas:
+            return cetak_berkas((ROOT / a.berkas).resolve()
+                                if not Path(a.berkas).is_absolute() else Path(a.berkas))
+        if a.pr or a.issue:
+            gh_tersedia()
         if a.pr:
             return cetak_pr(a.pr)
         if a.issue:
             return cetak_issue(a.issue)
 
-        kandidat = daftar_kandidat(a.objek)
+        berkas, err_berkas = daftar_berkas(a.objek)
+        if a.pr is None and a.issue is None:
+            try:
+                gh_tersedia()
+                kandidat, err_gh = daftar_kandidat(a.objek)
+            except ToolError as e:
+                kandidat, err_gh = [], str(e)
+        else:
+            kandidat, err_gh = [], None
+        for e in (err_gh, err_berkas):
+            if e:
+                print(f"[catatan kanal] {e}", file=sys.stderr)
+        semua = kandidat + berkas
         if a.daftar:
-            if not kandidat:
+            if not semua:
                 print("Tidak ada Issue yang cocok dengan kanal audit-isi"
                       + (f" untuk objek `{a.objek}`" if a.objek else "") + ".")
                 print(f"Kanal yang dikenali: label `{LABEL_ISSUE}` ATAU judul berpola `AUDIT <objek> @<sha>`.")
                 return 0
-            print(f"{len(kandidat)} kandidat audit-isi (terbaru di atas):")
-            for k in kandidat:
-                print(f"  #{k['number']:<4} {k['createdAt'][:19]}  {k['state']:<6} "
+            print(f"{len(semua)} kandidat audit-isi (terbaru di atas; kanal Issue + kanal berkas):")
+            for k in sorted(semua, key=lambda x: x["createdAt"], reverse=True):
+                idn = f"#{k['number']:<4}" if k.get("number") else "berkas"
+                print(f"  {idn:<6} {k['createdAt'][:19]}  {k['state']:<6} "
                       f"objek={k['objek']} sha={k['sha']} via={k['via']}")
-                print(f"         {k['title']}")
+                print(f"         {k.get('path') or k['title']}")
             return 0
 
-        # --terbaru
-        if not kandidat:
+        # --terbaru: dua kanal digabung, yang terbaru menang, tanpa menebak
+        if not semua:
             raise ToolError(
-                "tidak ditemukan hasil audit di kanal Issue"
+                "tidak ditemukan hasil audit di KEDUA kanal"
                 + (f" untuk objek `{a.objek}`" if a.objek else "") + ".\n"
-                f"  Kanal yang dikenali: label `{LABEL_ISSUE}` ATAU judul berpola `AUDIT <objek> @<sha>`.\n"
-                "  Kemungkinan: (a) audit memang belum diserahkan; (b) auditor menulisnya di tempat lain;\n"
-                f"  (c) labelnya belum dibuat — sekali saja: gh label create {LABEL_ISSUE}.\n"
+                f"  Kanal Issue : label `{LABEL_ISSUE}` ATAU judul `AUDIT <objek> @<sha>`"
+                + (f" — TIDAK TERSEDIA: {err_gh}" if err_gh else " — tersedia, kosong") + ".\n"
+                f"  Kanal berkas: `_meta/_internal/audit/*.md` berbaris judul `# AUDIT <objek> @<sha>`"
+                + (f" — {err_berkas}" if err_berkas else " — tersedia, kosong") + ".\n"
+                "  Kemungkinan: (a) audit memang belum diserahkan; (b) auditor menulisnya di tempat lain.\n"
+                "  PENTING (terverifikasi 17 Sep 2026): di lingkungan produksi ini `gh issue create`\n"
+                "  DITOLAK HTTP 403 'Resource not accessible by integration', jadi kanal Issue bisa jadi\n"
+                "  memang tidak pernah bisa dipakai di sini — pakai kanal berkas.\n"
                 "  Alat ini TIDAK menebak dan TIDAK menyimpulkan 'bersih' dari ketiadaan hasil.\n"
-                "  Periksa manual: gh issue list --state all --limit 30"
+                "  Periksa manual: gh issue list --state all --limit 30 ; ls _meta/_internal/audit/"
             )
-        if len(kandidat) > 1 and kandidat[0]["createdAt"] == kandidat[1]["createdAt"]:
-            nums = ", ".join(f"#{k['number']}" for k in kandidat[:5])
+        terurut = sorted(semua, key=lambda x: x["createdAt"], reverse=True)
+        if len(terurut) > 1 and terurut[0]["createdAt"] == terurut[1]["createdAt"]:
+            ids = ", ".join((f"#{k['number']}" if k.get("number") else k["path"]) for k in terurut[:5])
             raise ToolError(
-                f"ambigu: ada beberapa hasil audit dengan waktu pembuatan identik ({nums}).\n"
-                "  'Terbaru' TIDAK ditebak. Pilih eksplisit: python3 tools/ambil_verdict.py --issue <N>\n"
+                f"ambigu: ada beberapa hasil audit dengan waktu identik ({ids}).\n"
+                "  'Terbaru' TIDAK ditebak. Pilih eksplisit: --issue <N> atau --berkas <PATH>\n"
                 "  Lihat daftarnya: python3 tools/ambil_verdict.py --daftar"
             )
-        pilih = kandidat[0]
-        if len(kandidat) > 1:
-            print(f"[diambil yang terbaru: #{pilih['number']} · {pilih['createdAt']} · "
-                  f"{len(kandidat) - 1} kandidat lain lebih lama — lihat --daftar]\n")
-        return cetak_issue(pilih["number"])
+        pilih = terurut[0]
+        if len(terurut) > 1:
+            print(f"[diambil yang terbaru: {pilih.get('path') or '#' + str(pilih['number'])} · "
+                  f"{pilih['createdAt']} · {len(terurut) - 1} kandidat lain lebih lama — lihat --daftar]\n")
+        return cetak_berkas(ROOT / pilih["path"]) if pilih["via"] == "berkas" else cetak_issue(pilih["number"])
     except ToolError as e:
         print(f"ERROR: {e}", file=sys.stderr)
         return 2

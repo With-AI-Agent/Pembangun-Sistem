@@ -114,13 +114,68 @@ python3 tools/audit_prompt.py --objek _meta --out /tmp/prompt-audit.md
 
 ## Apa yang terjadi sesudahnya
 
-1. **Auditor** membuat Issue berjudul `AUDIT <objek> @<sha7>` berlabel `audit-independen`, isinya 6
-   bagian wajib: VERDICT satu baris → ringkasan angka → tabel temuan terklasifikasi → **temuan di luar
-   cakupan** → **kandidat yang dicabut** → **batasan audit**.
-2. **Putaran lanjutan ditambahkan sebagai komentar**, tidak pernah menyunting temuan putaran pertama
-   (append-only, jangan menghaluskan).
-3. **Sesi yang diaudit** mengambil sendiri dengan `ambil_verdict.py --terbaru`.
+1. **Auditor** menyerahkan laporan berjudul `AUDIT <objek> @<sha7>` lewat **salah satu dari dua kanal**
+   (lihat bagian "Dua kanal penyerahan" di bawah), isinya 6 bagian wajib: VERDICT satu baris → ringkasan
+   angka → tabel temuan terklasifikasi → **temuan di luar cakupan** → **kandidat yang dicabut** →
+   **batasan audit**.
+2. **Putaran lanjutan DITAMBAHKAN, tidak pernah menyunting temuan putaran pertama** (append-only, jangan
+   menghaluskan). Di kanal Issue = komentar baru. Di kanal berkas = **berkas baru** dengan sha baru, atau
+   bagian `## Putaran 2` yang ditambahkan di bawah — **jangan** menimpa isi putaran 1.
+3. **Sesi yang diaudit** mengambil sendiri dengan `ambil_verdict.py --terbaru`, yang mencari di **kedua
+   kanal sekaligus** dan mengambil yang terbaru tanpa menebak.
 4. **Pemilik** memutuskan apa yang ditindak. Tidak ada yang berubah di repo sebelum itu.
+
+## Dua kanal penyerahan (yang satu TERBUKTI DIBLOKIR di lingkungan ini)
+
+**Diubah 17 Sep 2026 sesudah uji nyata atas izin pemilik** (*"Ya, uji penuh sekarang"*). Sebelumnya
+protokol ini hanya punya satu kanal — GitHub Issue — dan kanal itu dinyatakan "belum diuji". **Sudah
+diuji, dan hasilnya membatalkan rancangan awalnya:**
+
+| Operasi | Hasil uji 17 Sep 2026 | Artinya |
+|---|---|---|
+| `gh issue create` | **HTTP 403** `Resource not accessible by integration (createIssue)` | **kanal Issue TIDAK BISA dipakai** di lingkungan produksi ini |
+| `gh api repos/.../permissions` | `{"admin":false,"maintain":false,"pull":false,"push":false,"triage":false}` | token bot **tidak punya izin repo tingkat API** sama sekali |
+| `gh label create audit-independen` | **BERHASIL** (label `#5319e7` kini ada di repo) | izin `labels:write` ADA walaupun `issues:write` tidak |
+| `gh issue list` / `gh pr list` / `gh api repos/...` | **BERHASIL** (baca) | kanal baca jalan; repo ini punya 73 PR dan **0 Issue** |
+| `git push` / `git ls-remote` | **BERHASIL** | **kanal git berfungsi dua arah** |
+
+**Kesimpulan yang diambil:** mekanisme ini **tidak boleh bergantung pada kanal yang diblokir**. Maka
+kanal penyerahan **utama** sekarang adalah **berkas yang di-commit**, dan Issue jadi **alternatif** yang
+langsung hidup kalau izin `issues:write` kelak diberikan.
+
+### Kanal A — berkas ter-commit (UTAMA, terbukti berfungsi)
+
+Auditor menulis laporannya ke:
+
+```
+_meta/_internal/audit/AUDIT_<objek-dengan-garis-bawah>_<sha7>.md
+```
+
+Baris **pertama** berkas wajib berpola persis `# AUDIT <objek> @<sha7>` — **baris itulah yang dibaca
+alat**, bukan nama berkasnya (satu sumber kebenaran, dan polanya identik dengan judul kanal Issue).
+Auditor lalu **commit + push**. Sesi yang diaudit mengambilnya dengan perintah yang sama seperti biasa:
+
+```bash
+python3 tools/ambil_verdict.py --terbaru
+```
+
+**Kenapa di `_meta/_internal/`:** folder itu **tidak ikut ke ekstrak template** (diperiksa lewat
+`build_template.py`), jadi artefak audit per-run **tidak bocor** ke sistem anak dan tidak menggeser pin
+peringatan template.
+
+### Kanal B — GitHub Issue (alternatif, terblokir saat ini)
+
+```bash
+gh issue create --title "AUDIT <objek> @<sha7>" --label "audit-independen" --body-file /tmp/hasil-audit.md
+```
+
+Kalau perintah ini mengembalikan **403**, itu **bukan kesalahan auditor** dan **bukan alasan untuk
+menyimpulkan audit gagal** — pindah ke Kanal A dan **catat 403-nya di dalam laporan**, supaya sesi
+berikutnya tidak menghabiskan waktu menemukan hal yang sama.
+
+`ambil_verdict.py` **mencari di kedua kanal** dan menggabungkan kandidatnya. Kanal Issue yang tidak
+tersedia dilaporkan sebagai **catatan**, bukan sebagai kegagalan fatal — karena ketidaktersediaan kanal
+**tidak pernah** boleh dibaca sebagai "tidak ada temuan".
 
 ## Kalau gagal
 
@@ -130,7 +185,9 @@ python3 tools/audit_prompt.py --objek _meta --out /tmp/prompt-audit.md
 | `ERROR: objek X TIDAK ADA di root repo` | salah eja, atau objeknya memang belum ada | periksa ejaan; daftar sistem ada di `INDEKS_SISTEM.md` |
 | `ERROR: sha pin tidak sah` | `--pin` diisi bukan 7–40 heksadesimal | hilangkan `--pin` (default HEAD), atau isi sha yang benar |
 | `ERROR: gh tidak tersedia / tidak terautentikasi` | kanal GitHub tidak bisa dibaca | periksa autentikasi GitHub; sementara, buka Issue-nya di browser dan salin manual |
-| `tidak ditemukan hasil audit di kanal Issue` | audit belum diserahkan, **atau** auditor menaruhnya di tempat lain, **atau** label belum dibuat | **jangan simpulkan "bersih"**. Tanya auditor/cek `gh issue list --state all`. Sekali saja buat labelnya: `gh label create audit-independen --description "hasil audit isi independen"` |
+| `tidak ditemukan hasil audit di KEDUA kanal` | audit belum diserahkan, **atau** auditor menaruhnya di tempat lain | **jangan simpulkan "bersih"**. Cek keduanya: `gh issue list --state all --limit 30` **dan** `ls _meta/_internal/audit/` |
+| `gh issue create` → **HTTP 403** `Resource not accessible by integration` | token tidak punya `issues:write` — **terverifikasi di lingkungan ini 17 Sep 2026** | **bukan kesalahan auditor.** Pindah ke **Kanal A** (berkas ter-commit) dan catat 403-nya di dalam laporan. Labelnya tetap boleh dibuat: `gh label create audit-independen --description "..."` — itu **berhasil** walaupun Issue tidak |
+| `ambil_verdict.py` mencetak `[catatan kanal] kanal Issue tidak tersedia` | gh tidak terpasang / tidak ada izin / jaringan diblokir | **bukan kegagalan.** Kanal berkas tetap menjawab. Yang dilarang: menyimpulkan "bersih" karena satu kanal mati |
 | `ambigu: beberapa hasil audit dengan waktu identik` | alat **sengaja menolak menebak** yang mana | `--daftar` lalu `--issue <N>` |
 | Auditor mengembalikan prompt yang sudah disunting | pelanggaran bagian "Sumber prompt" | **tolak**, bangkitkan ulang, dan catat sebagai temuan. Prompt yang disunting pihak yang diaudit bukan audit |
 
@@ -185,15 +242,30 @@ Daftar ini **sengaja diduplikasi** di `tools/review_prompt.py` (`ARBITER_PATH_RE
 **Kalau salah satunya bertambah, yang lain WAJIB ikut** — dua sumber yang saling menunjuk, dan
 ketidaksinkronannya adalah temuan audit.
 
-## Yang belum terbukti (jangan diklaim siap)
+## Yang sudah diuji, dan yang masih belum terbukti
 
-- **`gh issue create` belum diuji** di lingkungan ini — yang terbukti baru kemampuan **baca**
-  (`gh api rate_limit`, `gh issue list`, `gh pr view`). Menguji pengiriman berarti **membuat artefak
-  nyata di repo**, jadi butuh izin pemilik. **Sampai itu diuji, bagian "Cara menyerahkan hasil" adalah
-  rancangan yang masuk akal, bukan mekanisme terverifikasi.**
-- **Label `audit-independen` belum dibuat** di repo ini.
+**SUDAH DIUJI 17 Sep 2026** atas izin pemilik (*"Ya, uji penuh sekarang"*) — hasilnya di tabel bagian
+"Dua kanal penyerahan". Yang **terbukti berfungsi ujung-ke-ujung**: `audit_prompt.py` membangkitkan
+prompt ter-pin → laporan ditulis → diserahkan lewat **kanal berkas** → `ambil_verdict.py --terbaru`
+menemukannya sendiri, mencetak isinya, dan membaca verdictnya otomatis. **Rantai T30 pemilik terpenuhi
+lewat kanal git, bukan kanal Issue.**
+
+**MASIH BELUM TERBUKTI — jangan diklaim siap:**
+
+- **Kanal Issue belum pernah berhasil dipakai** untuk menyerahkan hasil. Labelnya ada, tapi isinya
+  **nol** karena `gh issue create` ditolak 403. Kalau izin kelak diberikan, **kanal ini harus diuji
+  ulang** — keberhasilannya membuat label **tidak** membuktikan keberhasilan membuat Issue.
+- **Independensi auditor belum pernah terpenuhi dalam uji ini.** Uji kanal 17 Sep 2026 dijalankan oleh
+  **sesi yang sama** yang membangun mekanisme dan yang objeknya diaudit, jadi verdict-nya
+  **PROVISIONAL** dan dinyatakan begitu di dalam laporannya sendiri. Yang terbukti adalah **rantai
+  penyerahan**, bukan kualitas penilaian.
+- **Kanal berkas belum diuji lintas-sesi.** Baru terbukti terbaca oleh sesi yang menulisnya. Yang belum
+  diuji: sesi **lain** di checkout **lain** mengambilnya sesudah `git pull`.
 - Presisi alat pemindai pendukung (`tools/check_manuals.py`) **tidak diketahui** di luar korpus
   penyetelannya — peringatannya tertulis di docstring alat itu sendiri.
+- **Append-only di kanal berkas belum ditegakkan alat.** Tidak ada pemeriksaan yang mencegah auditor
+  menimpa laporan putaran pertama. Di kanal Issue aturannya alami (komentar); di kanal berkas aturannya
+  **hanya imbauan** — ini **gap cek nyata**, tercatat di `_meta/DAFTAR_PEKERJAAN_TERBUKA.md`.
 
 ## Log Keputusan
 
@@ -202,3 +274,5 @@ ketidaksinkronannya adalah temuan audit.
 | 2026-09-17 | Protokol dibuat; `tools/audit_prompt.py` + `tools/ambil_verdict.py` dibangun | Tuntutan pemilik T29+T30. Sebelum ini repo hanya punya mekanisme review **PR**: `PROTOKOL_REVIEW_INDEPENDEN.md` mensyaratkan "nomor PR + SHA basis + SHA head" di anatomi butir 2, dan `review_prompt.py` hanya punya `--pr`/`--generic` (diperiksa di sumbernya, baris 616–618). **Klaim agent sebelumnya bahwa mekanisme review isi "sudah ada" dikoreksi sebagai over-claim** — yang sudah ada adalah mesin auditnya (QA 3 lapis, 7 lensa, klasifikasi, 8 arsip audit nyata, Sistem Klinik), tetapi **tidak ada prompt audit yang dibangkitkan alat**, sehingga prompt audit harus dikarang tangan: pihak yang diaudit menulis instruksi untuk pengadilnya sendiri. Ditemukan sebagai X-04/X-05 pada audit 17 Sep. Dokumen ini ditulis mengikuti **Standar Kelulusan Manual 5 syarat** yang ditambahkan di hari yang sama (6 bidang: apa/kapan/cara/prompt/sesudahnya/kalau gagal + tabel perintah 5 kolom) supaya tidak mengkhianati standarnya sendiri |
 | 2026-09-17 | **Induk dinyatakan sebagai objek audit yang sah** (`--objek _meta`, `--objek tools`) | Instruksi eksplisit pemilik 17 Sep 2026: *"mekanisme itu juga harus tertanam di meta sistem … bukan pada sistem-sistem yang dibangun nya saja, tapi juga pada induk sistem itu sendiri."* Audit atas induk menemukan pengecualian struktural nyata: induk tidak tunduk pada kontrak warisannya sendiri dan 3 butir (W-03, W-07, W-09) tidak diterapkan tanpa terdeteksi alat mana pun |
 | 2026-09-17 | Bagian "Yang belum terbukti" ditambahkan, termasuk bahwa **pengiriman via Issue belum diuji** | Menolak mengklaim mekanisme siap hanya karena rancangannya masuk akal. `gh issue create` membuat artefak nyata di repo sehingga butuh izin pemilik; yang terbukti baru kemampuan baca |
+| 2026-09-17 (siang) | **KANAL PENYERAHAN DIROMBAK: berkas ter-commit jadi UTAMA, Issue jadi alternatif.** Bagian "Dua kanal penyerahan" ditambahkan; `ambil_verdict.py` membaca **kedua kanal** dan ketidaktersediaan satu kanal jadi **catatan**, bukan kegagalan fatal | **Uji nyata atas izin pemilik membuktikan rancangan awal SALAH:** `gh issue create` → **HTTP 403** `Resource not accessible by integration`, dan `permissions` API menunjukkan **semua izin repo false**. Sebaliknya `gh label create` **berhasil** dan `git push` **berhasil**. Mekanisme yang bergantung pada kanal diblokir = mekanisme yang tidak jalan. Kanal berkas ditaruh di `_meta/_internal/audit/` karena folder itu **tidak ikut ekstrak template** (diperiksa), jadi artefak per-run tidak bocor ke sistem anak |
+| 2026-09-17 (siang) | **A-01/A-02 DITUTUP:** `_meta/PROTOKOL_AUDIT_ISI.md`, `_meta/PROTOKOL_REVIEW_INDEPENDEN.md`, `tools/audit_prompt.py`, `tools/ambil_verdict.py`, `tools/check_manuals.py` didaftarkan ke `CORE_REQUIRED` | Ditemukan oleh **audit yang dijalankan untuk menguji kanal itu sendiri**: menghapus ketiga artefak mekanisme audit-isi **tidak membuat alat mana pun gagal** (terverifikasi di salinan repo penuh `/tmp/full`, baseline hijau sebelum penghapusan). Prinsip *"kewajiban tidak diturunkan dari keberadaan"* ternyata tidak diterapkan pada mekanisme yang dibangun untuk menegakkannya. Sesudah didaftarkan, uji penghapusan yang sama **MERAH**: `- missing required file: tools/audit_prompt.py` |

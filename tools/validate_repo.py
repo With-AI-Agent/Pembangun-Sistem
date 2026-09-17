@@ -124,6 +124,47 @@ if _meta_manifest.is_file():
                     "tapi wajib dinyatakan sebagai baris, bukan disebut di prosa)"
                 )
 
+# --- Daftar Pekerjaan Terbuka: utang tidak boleh DITUTUP tanpa bukti ---------
+# Dibuat 17 Sep 2026 menjawab pertanyaan pemilik "nantinya semuanya diselesaikan dan
+# dimatangkan tanpa ada yang terlupakan kan?". Daftar yang hanya hidup di ingatan agent
+# atau tersebar di beberapa dokumen TIDAK bisa menjawab itu. Yang bisa: daftar yang
+# (a) tidak bisa dihapus tanpa validator protes — berkasnya ada di CORE_REQUIRED, dan
+# (b) tidak bisa ditutup tanpa bukti — dicek di sini.
+_daftar_path = ROOT / "_meta/DAFTAR_PEKERJAAN_TERBUKA.md"
+if _daftar_path.is_file():
+    _STATUS_SAH = {"TERBUKA", "TERTAHAN", "SELESAI", "DITOLAK"}
+    _dt = core.strip_code_fences(_daftar_path.read_text(encoding="utf-8"))
+    _ids: list[str] = []
+    for _ln, _l in enumerate(_dt.splitlines(), 1):
+        if not _l.lstrip().startswith("|"):
+            continue
+        _sel = [x.strip() for x in _l.strip().strip("|").split("|")]
+        if len(_sel) < 4 or not re.fullmatch(r"T-\d{2}", _sel[0]):
+            continue  # header, pemisah, atau baris non-item
+        _ids.append(_sel[0])
+        _status = next((x for x in _sel if x in _STATUS_SAH), "")
+        if not _status:
+            errors.append(
+                f"_meta/DAFTAR_PEKERJAAN_TERBUKA.md:{_ln}: item {_sel[0]} tidak punya status sah "
+                f"(salah satu {sorted(_STATUS_SAH)}) — item tanpa status tidak bisa dilacak"
+            )
+        elif _status == "SELESAI" and not re.search(r"\b[0-9a-f]{7,40}\b", _sel[-1]):
+            errors.append(
+                f"_meta/DAFTAR_PEKERJAAN_TERBUKA.md:{_ln}: item {_sel[0]} ber-status SELESAI tetapi "
+                "sel Bukti tidak menyebut sha commit — MENUTUP UTANG TANPA BUKTI dilarang "
+                "(kalau fix-nya belum di-commit, biarkan TERBUKA dan tulis sha-nya nanti)"
+            )
+    for _d in sorted({i for i in _ids if _ids.count(i) > 1}):
+        errors.append(
+            f"_meta/DAFTAR_PEKERJAAN_TERBUKA.md: ID {_d} dipakai lebih dari sekali — ID wajib unik "
+            "dan tidak boleh dipakai ulang, termasuk untuk item yang sudah ditutup"
+        )
+    if not _ids:
+        errors.append(
+            "_meta/DAFTAR_PEKERJAAN_TERBUKA.md tidak memuat satu pun baris item berpola `| T-nn …` — "
+            "daftar utang yang kosong tanpa deklarasi eksplisit tidak bisa dibedakan dari daftar yang rusak"
+        )
+
 # --- Index-driven system coverage (inheritance contract) -------------------
 INDEX_PATH = ROOT / "_meta/INDEKS_SISTEM.md"
 index_text = INDEX_PATH.read_text(encoding="utf-8") if INDEX_PATH.is_file() else ""

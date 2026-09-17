@@ -52,13 +52,16 @@ CORE_META_FILES = [
     "_meta/02_PRINSIP_UNIVERSAL.md",
     "_meta/03_KONTRAK_WARISAN.md",
     "_meta/ACCEPTANCE_TESTS.md",
+    "_meta/DAFTAR_PEKERJAAN_TERBUKA.md",
     "_meta/DEFINITION_OF_DONE.md",
     "_meta/FAILURE_INJECTION_TESTS.md",
     "_meta/INDEKS_SISTEM.md",
     "_meta/NEXT_SESSION_PROMPT.md",
     "_meta/PANDUAN_PENGGUNA_TEMPLATE.md",
     "_meta/PLATFORM_LMARENA.md",
+    "_meta/PROTOKOL_AUDIT_ISI.md",
     "_meta/PROTOKOL_CHECKPOINT_RECOVERY.md",
+    "_meta/PROTOKOL_REVIEW_INDEPENDEN.md",
     "_meta/QUALITY_ASSURANCE_AND_EVOLUTION.md",
     "_meta/SESSION_REPORT_TEMPLATE.md",
     "_meta/SYSTEM_MANIFEST.md",
@@ -75,6 +78,16 @@ CORE_TOOL_FILES = [
     "tools/build_template.py",
     "tools/check_selfcontained.py",
     "tools/review_prompt.py",
+    # Ditambahkan 17 Sep 2026 sesudah AUDIT menemukan A-01/A-02: ketiga artefak mekanisme audit-isi
+    # yang dibangun hari itu TIDAK terdaftar di inventaris ini, sehingga MENGHAPUSNYA tidak membuat
+    # alat mana pun gagal (terverifikasi: salinan repo penuh di /tmp/full, hapus 3 berkas,
+    # `validate_repo.py` tetap exit 0). Prinsip inventaris — "kewajiban tidak diturunkan dari
+    # keberadaan" — ternyata tidak diterapkan pada mekanisme yang dibangun untuk menegakkannya.
+    # `tools/build_template.py` sudah terdaftar sebelumnya; `check_manuals.py` menyusul di sini.
+    "tools/audit_prompt.py",
+    "tools/ambil_verdict.py",
+    "tools/check_manuals.py",
+    "tools/build_template.py",
 ]
 CORE_REQUIRED = CORE_META_FILES + CORE_ROOT_FILES + CORE_TOOL_FILES
 
