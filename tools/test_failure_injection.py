@@ -1017,6 +1017,62 @@ def run():
             rp_checks = review_prompt_scenarios(Path(d))
     checks += rp_checks
 
+    # --- D-2 (temuan R2 review PR #74): penjaga sinkron jumlah skenario vs dokumen ---
+    # Sebelumnya angka di _meta/FAILURE_INJECTION_TESTS.md adalah SALINAN TANGAN, sehingga
+    # menambah satu sistem terdaftar (yang menaikkan "unit nyata") membuat dokumen tertinggal
+    # TANPA terdeteksi alat apa pun. Sekarang selisihnya adalah kegagalan, bukan catatan.
+    # Mode DIDETEKSI DARI KEADAAN, bukan dari variabel lingkungan: di ekstrak template ketiga
+    # grup regresi tidak dijalankan, jadi ketiganya kosong. Versi pertama penjaga ini hanya
+    # membandingkan angka master (74) dan membuat smoke extract GAGAL karena di sana jumlahnya 16.
+    _di_ekstrak = not (reg or sc_checks or rp_checks)
+    if not os.environ.get("FI_SKIP_NESTED"):
+        doc = ROOT / "_meta" / "FAILURE_INJECTION_TESTS.md"
+        if not doc.is_file():
+            print("FAILURE-INJECTION TESTS FAILED")
+            print(f"- D-2: dokumen inventaris tidak ditemukan: {doc}")
+            raise SystemExit(1)
+        _teks_doc = doc.read_text(encoding="utf-8")
+        if _di_ekstrak:
+            m = re.search(r"(\d+)\s*di ekstrak template\s*\(([^)]*)\)", _teks_doc)
+            _pola = "**Jumlah:** ... N di ekstrak template (...)"
+        else:
+            m = re.search(r"^\*\*Jumlah:\*\*\s*(\d+)\s*skenario di master\s*\(([^)]*)\)",
+                          _teks_doc, re.M)
+            _pola = "**Jumlah:** N skenario di master (...)"
+        if not m:
+            print("FAILURE-INJECTION TESTS FAILED")
+            print(f"- D-2: baris '{_pola}' tidak ditemukan/tidak terparse "
+                  f"di _meta/FAILURE_INJECTION_TESTS.md")
+            raise SystemExit(1)
+        # Parsing PER KOMPONEN BERNAMEKA, bukan "ambil semua angka": versi pertama penjaga ini
+        # memakai re.findall(r"\d+") dan ikut menangkap angka 11 dari label "regresi review PR-11",
+        # sehingga penjaganya sendiri melaporkan selisih palsu. Tertangkap oleh uji pertamanya.
+        komponen = [("sintetis", n_synth), ("unit nyata", len(real))]
+        if not _di_ekstrak:
+            komponen += [("regresi review PR-11", len(reg)),
+                         ("regresi check_selfcontained", len(sc_checks)),
+                         ("regresi review_prompt", len(rp_checks))]
+        angka_doc, aktual, hilang = [], [], []
+        for label, nilai in komponen:
+            mm = re.search(rf"(\d+)\s+{re.escape(label)}", m.group(2))
+            if not mm:
+                hilang.append(label)
+            else:
+                angka_doc.append(int(mm.group(1)))
+            aktual.append(nilai)
+        if hilang:
+            print("FAILURE-INJECTION TESTS FAILED")
+            print(f"- D-2: komponen tidak ditemukan di baris '**Jumlah:**' dokumen: {hilang}. "
+                  f"Penjaga ini menolak menebak — perbaiki label di dokumen atau di penjaga.")
+            raise SystemExit(1)
+        if int(m.group(1)) != len(checks) or angka_doc != aktual:
+            print("FAILURE-INJECTION TESTS FAILED")
+            print(f"- D-2: jumlah skenario tidak sinkron dengan _meta/FAILURE_INJECTION_TESTS.md baris "
+                  f"'**Jumlah:**' — dokumen menulis {m.group(1)} ({angka_doc}), alat mencetak "
+                  f"{len(checks)} ({aktual}). Perbarui DOKUMENNYA dari cetakan alat; "
+                  f"JANGAN mengurangi skenario atau menggeser pin agar cocok dengan angka lama.")
+            raise SystemExit(1)
+
     failed = [name for name, ok in checks if not ok]
     if failed:
         print("FAILURE-INJECTION TESTS FAILED")

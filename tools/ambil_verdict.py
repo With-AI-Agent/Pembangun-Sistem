@@ -43,6 +43,9 @@ import subprocess
 import sys
 from pathlib import Path
 
+sys.path.insert(0, str(Path(__file__).resolve().parent))
+from checkpoint_core import strip_code_fences  # noqa: E402  (status tidak boleh diambil dari contoh di dalam pagar kode)
+
 ROOT = Path(__file__).resolve().parents[1]
 
 LABEL_ISSUE = "audit-independen"
@@ -60,9 +63,75 @@ JUDUL_BERKAS_RE = re.compile(r"^#\s*AUDIT\s+(?P<objek>\S+)\s+@(?P<sha>[0-9a-f]{7
 # Judul yang dibangkitkan tools/audit_prompt.py: "AUDIT <objek> @<sha7>"
 JUDUL_RE = re.compile(r"^AUDIT\s+(?P<objek>\S+)\s+@(?P<sha>[0-9a-f]{7,40})\s*$", re.I)
 
+# ---------------------------------------------------------------------------
+# Kosakata verdict. CACAT D-1 (ditemukan penulis atas PR #74, 17 Sep 2026):
+# sebelumnya HANYA kosakata audit-isi yang ada (BERSIH / ADA TEMUAN / ...),
+# padahal protokol review memakai HIJAU / MERAH — sehingga verdict review
+# "MERAH" TIDAK PERNAH bisa terbaca, dan `.search()` yang mengambil kecocokan
+# pertama DI MANA SAJA membuat kata "bersih" di dalam kalimat larangan
+# ("...agar diff menjadi bersih") terbaca sebagai verdict atas laporan MERAH.
+# Itu fail-open pada instrumen keselamatan: "Jangan merge" dilaporkan "BERSIH".
+#   review PR    : HIJAU / MERAH        (PROTOKOL_REVIEW_INDEPENDEN.md, Mekanika putusan)
+#   audit isi    : BERSIH / ADA TEMUAN / TIDAK BISA DISIMPULKAN
+#   state GitHub : APPROVE / REQUEST_CHANGES / COMMENT
 VERDICT_RE = re.compile(
-    r"\b(BERSIH|ADA\s+TEMUAN|TIDAK\s+BISA\s+DISIMPULKAN|APPROVE|REQUEST_CHANGES|COMMENT)\b", re.I
+    r"\b(MERAH|HIJAU|BERSIH|ADA\s+TEMUAN|TIDAK\s+BISA\s+DISIMPULKAN|APPROVE|REQUEST_CHANGES|COMMENT)\b",
+    re.I,
 )
+# Fail-closed — keputusan pemilik 17 Sep 2026: "Selagi ada yang merah, maka harus diperbaiki."
+# Yang dihitung hijau HANYA kata yang memang hijau; apa pun selain itu MENAHAN merge.
+HIJAU_SET = {"HIJAU", "BERSIH", "APPROVE"}
+# Baris yang layak jadi verdict: (a) deklarasi berpemarkah di AWAL baris, atau (b) judul Markdown.
+# Kata verdict di dalam PROSA tidak dihitung — itu penyebab D-1.
+PENANDA_RE = re.compile(r"^\s*(?:[-*>]\s*)?\*{0,2}(?:VERDICT|PUTUSAN|HASIL\s+REVIEW)\*{0,2}\s*[:=]", re.I)
+HEADING_RE = re.compile(r"^\s{0,3}#{1,6}\s")
+# Verdict dikeluarkan oleh pihak yang BUKAN penulis (prinsip protokol: pencatat != subjek).
+# Baris yang menyebut dirinya dari penulis bukan verdict.
+PENULIS_RE = re.compile(r"\b(penulis|koreksi terbuka|tanggapan penulis)\b", re.I)
+
+
+def simpulkan(teks: str) -> str:
+    """Verdict satu baris kalau ada; kalau tidak ada, katakan TIDAK DITEMUKAN (jangan menebak).
+
+    Tiga pagar yang ditambahkan setelah cacat D-1:
+      1. isi pagar kode dikosongkan dulu (memakai `strip_code_fences` dari checkpoint_core) —
+         status tidak boleh diambil dari contoh yang ditempel di dalam fence;
+      2. hanya baris berpemarkah di awal baris atau baris judul yang diperiksa —
+         kata verdict di prosa diabaikan;
+      3. baris yang menyebut dirinya dari penulis diabaikan — verdict bukan dari penulis.
+    """
+    if not teks:
+        return "TIDAK DITEMUKAN (badan/komentar kosong)"
+    for baris in strip_code_fences(teks).splitlines():
+        if PENULIS_RE.search(baris):
+            continue
+        if not (PENANDA_RE.match(baris) or HEADING_RE.match(baris)):
+            continue
+        m = VERDICT_RE.search(baris)
+        if m:
+            return re.sub(r"\s+", " ", m.group(1).upper())
+    return "TIDAK DITEMUKAN (tidak ada baris verdict; kata verdict di dalam prosa TIDAK dihitung)"
+
+
+def gabungkan(verdicts: list[str]) -> str:
+    """Agregasi FAIL-CLOSED atas banyak hakim (keputusan pemilik 17 Sep 2026).
+
+    Satu saja verdict yang bukan hijau -> gabungan MENAHAN merge. Tidak ada mayoritas,
+    tidak ada rata-rata: yang dicari reviewer independen adalah alasan untuk menolak,
+    bukan suara terbanyak. Verdict TIDAK DITEMUKAN juga menahan, karena "tidak terbaca"
+    bukan berarti "bersih".
+    """
+    sah = [v for v in verdicts if v and not v.startswith("TIDAK DITEMUKAN")]
+    if not verdicts:
+        return "BELUM ADA VERDICT — jangan merge, jangan simpulkan bersih"
+    merah = [v for v in sah if v not in HIJAU_SET]
+    tak_terbaca = [v for v in verdicts if v.startswith("TIDAK DITEMUKAN")]
+    if merah:
+        return f"MERAH — JANGAN MERGE ({len(merah)} dari {len(verdicts)} verdict bukan hijau: {', '.join(sorted(set(merah)))})"
+    if tak_terbaca:
+        return (f"MENAHAN — {len(tak_terbaca)} verdict TIDAK TERBACA dari {len(verdicts)}; "
+                "tidak terbaca BUKAN bersih")
+    return f"HIJAU — semua {len(sah)} verdict hijau ({', '.join(sorted(set(sah)))})"
 
 
 class ToolError(Exception):
@@ -213,14 +282,6 @@ def ambil_pr(nomor: int) -> dict:
         raise ToolError(f"jawaban `gh pr view` bukan JSON sah: {e}") from e
 
 
-def simpulkan(teks: str) -> str:
-    """Verdict satu baris kalau ada; kalau tidak ada, katakan TIDAK DITEMUKAN (jangan menebak)."""
-    if not teks:
-        return "TIDAK DITEMUKAN (badan/komentar kosong)"
-    m = VERDICT_RE.search(teks)
-    return m.group(1).upper() if m else "TIDAK DITEMUKAN (tidak ada kata verdict yang dikenali)"
-
-
 def cetak_issue(nomor: int) -> int:
     d = ambil_issue(nomor)
     body = d.get("body") or ""
@@ -244,7 +305,9 @@ def cetak_issue(nomor: int) -> int:
         for i, c in enumerate(comments, 1):
             cb = c.get("body") or ""
             print(f"\n### komentar {i} — {c.get('author', {}).get('login', '?')} @ {c.get('createdAt', '?')}")
-            print(f"VERDICT (terbaca otomatis): {simpulkan(cb)}")
+            v = simpulkan(cb)
+            kumpul.append(v)
+            print(f"VERDICT (terbaca otomatis): {v}")
             print(cb.strip())
     print("\n" + "=" * 78)
     print("CATATAN UNTUK SESI YANG MEMBACA INI:")
@@ -265,26 +328,143 @@ def cetak_pr(nomor: int) -> int:
     print(f"PR #{d.get('number')} — {d.get('title')}")
     print(f"state: {d.get('state')} · head: {(d.get('headRefOid') or '')[:12]} · base: {d.get('baseRefName')}")
     print("=" * 78)
+    kumpul: list[str] = []
     if reviews:
         print(f"\n----- {len(reviews)} REVIEW -----")
         for i, r in enumerate(reviews, 1):
             rb = r.get("body") or ""
             print(f"\n### review {i} — {r.get('author', {}).get('login', '?')} · state: {r.get('state')}")
             if rb.strip():
-                print(f"VERDICT (terbaca otomatis): {simpulkan(rb)}")
+                v = simpulkan(rb)
+                kumpul.append(v)
+                print(f"VERDICT (terbaca otomatis): {v}")
                 print(rb.strip())
     if comments:
         print(f"\n----- {len(comments)} KOMENTAR -----")
         for i, c in enumerate(comments, 1):
             cb = c.get("body") or ""
             print(f"\n### komentar {i} — {c.get('author', {}).get('login', '?')} @ {c.get('createdAt', '?')}")
-            print(f"VERDICT (terbaca otomatis): {simpulkan(cb)}")
+            v = simpulkan(cb)
+            kumpul.append(v)
+            print(f"VERDICT (terbaca otomatis): {v}")
             print(cb.strip())
     if not reviews and not comments:
         print("\nTIDAK ADA review maupun komentar pada PR ini.")
         print("Artinya verdict **belum diserahkan**, bukan verdict-nya bersih. Jangan disimpulkan sendiri.")
+        return 0
+    print("\n" + "=" * 78)
+    print("AGREGASI FAIL-CLOSED (aturan pemilik 17 Sep 2026: \"Selagi ada yang merah, maka harus diperbaiki\")")
+    print("=" * 78)
+    for i, v in enumerate(kumpul, 1):
+        print(f"  hakim {i}: {v}")
+    print(f"\n  >> HASIL GABUNGAN: {gabungkan(kumpul)}")
+    print("\n  Membaca verdict BUKAN menyetujuinya. Bertindak atas temuan tetap butuh keputusan pemilik,")
+    print("  dan PR yang mengubah alat pengadil tidak boleh di-merge oleh reviewer (konflik kepentingan).")
     return 0
 
+
+# ---------------------------------------------------------------------------
+# Uji-mutasi untuk perbaikan D-1 + agregasi fail-closed. Norma repo: mekanisme
+# baru wajib diuji dengan MUTASI, bukan hanya dijalankan sekali lalu terlihat hijau.
+# D-1 sendiri lahir dari alat yang TIDAK punya uji semacam ini.
+KASUS = [
+    # (nama, teks, harapan)
+    ("verdict review MERAH di judul",
+     "## Review independen — putaran 1 — MERAH (parsial, bukan persetujuan)\n\n**Jangan merge.**\n",
+     "MERAH"),
+    ("verdict review HIJAU di judul",
+     "## Review independen — putaran 2 — HIJAU\n\nBoleh merge atas izin pemilik.\n",
+     "HIJAU"),
+    ("deklarasi eksplisit VERDICT:",
+     "Laporan.\n\n**VERDICT:** MERAH\n\nRincian.\n",
+     "MERAH"),
+    ("D-1 REGRESI: kata 'bersih' di prosa tidak boleh mengalahkan MERAH di judul",
+     "## Review — MERAH\n\nJangan menghapus bukti historis agar diff menjadi bersih.\n",
+     "MERAH"),
+    ("D-1 REGRESI: prosa 'bersih' tanpa baris verdict = TIDAK DITEMUKAN",
+     "Laporan temuan.\n\nJangan menyunting bukti agar diff menjadi bersih.\n",
+     "TIDAK DITEMUKAN"),
+    ("baris penulis yang menyebut MERAH bukan verdict",
+     "## Tanggapan penulis atas verdict putaran 1 (MERAH)\n\nIsi.\n",
+     "TIDAK DITEMUKAN"),
+    ("isi pagar kode tidak dihitung walau berbentuk baris verdict",
+     "Laporan.\n\n```text\n## Review — HIJAU\n```\n\nSelesai.\n",
+     "TIDAK DITEMUKAN"),
+    ("audit isi: ADA TEMUAN tetap terbaca (kanal kedua tidak rusak)",
+     "# AUDIT objek @abc1234\n\n**VERDICT:** ADA TEMUAN\n",
+     "ADA TEMUAN"),
+]
+
+KASUS_GABUNG = [
+    ("fail-closed: 1 MERAH + 2 HIJAU = MERAH (bukan mayoritas)",
+     ["MERAH", "HIJAU", "HIJAU"], "MERAH"),
+    ("semua hijau = HIJAU", ["HIJAU", "HIJAU"], "HIJAU"),
+    ("belum ada verdict = menahan", [], "BELUM ADA"),
+    ("tidak terbaca BUKAN bersih", ["HIJAU", "TIDAK DITEMUKAN (x)"], "MENAHAN"),
+    ("audit: ADA TEMUAN menahan merge", ["BERSIH", "ADA TEMUAN"], "MERAH"),
+]
+
+
+def uji() -> int:
+    global VERDICT_RE, PENULIS_RE
+    gagal = 0
+    print("UJI-MUTASI pembaca verdict (D-1) + agregasi fail-closed")
+    for nama, teks, harap in KASUS:
+        got = simpulkan(teks)
+        ok = got.startswith(harap) if harap == "TIDAK DITEMUKAN" else got == harap
+        print(f"  [{'OK ' if ok else 'GAGAL'}] {nama}")
+        if not ok:
+            print(f"        harapan: {harap} · dapat: {got}")
+            gagal += 1
+    for nama, vs, harap in KASUS_GABUNG:
+        got = gabungkan(vs)
+        ok = got.startswith(harap)
+        print(f"  [{'OK ' if ok else 'GAGAL'}] {nama}")
+        if not ok:
+            print(f"        harapan awalan: {harap} · dapat: {got}")
+            gagal += 1
+
+    # MUTASI 1 — kembalikan kosakata lama (tanpa MERAH/HIJAU). Uji verdict review harus
+    # GAGAL; kalau tidak, uji ini tautologi (persis cacat RP5b yang pernah ditemukan di
+    # review PR #55: memeriksa teks ada, bukan perilakunya).
+    asli = VERDICT_RE
+    VERDICT_RE = re.compile(
+        r"\b(BERSIH|ADA\s+TEMUAN|TIDAK\s+BISA\s+DISIMPULKAN|APPROVE|REQUEST_CHANGES|COMMENT)\b", re.I)
+    mutasi = sum(1 for _, teks, harap in KASUS
+                 if harap in ("MERAH", "HIJAU") and simpulkan(teks) != harap)
+    VERDICT_RE = asli
+    print(f"  [{'OK ' if mutasi >= 4 else 'GAGAL'}] MUTASI kosakata lama terdeteksi "
+          f"({mutasi} uji verdict review jadi gagal; harus >=4)")
+    if mutasi < 4:
+        gagal += 1
+
+    # MUTASI 2 — matikan pagar PENULIS_RE: komentar penulis harus bocor jadi verdict.
+    asli_p = PENULIS_RE
+    PENULIS_RE = re.compile(r"(?!x)x")
+    bocor = simpulkan("## Tanggapan penulis atas verdict putaran 1 (MERAH)\n")
+    PENULIS_RE = asli_p
+    print(f"  [{'OK ' if bocor == 'MERAH' else 'GAGAL'}] MUTASI pagar penulis terdeteksi "
+          f"(tanpa pagar, komentar penulis terbaca: {bocor})")
+    if bocor != "MERAH":
+        gagal += 1
+
+    # MUTASI 3 — matikan strip_code_fences: isi fence harus bocor jadi verdict.
+    asli_f = globals()["strip_code_fences"]
+    globals()["strip_code_fences"] = lambda s: s
+    bocor2 = simpulkan("Laporan.\n\n```text\n## Review — HIJAU\n```\n")
+    globals()["strip_code_fences"] = asli_f
+    print(f"  [{'OK ' if bocor2 == 'HIJAU' else 'GAGAL'}] MUTASI pagar fence terdeteksi "
+          f"(tanpa pagar, isi fence terbaca: {bocor2})")
+    if bocor2 != "HIJAU":
+        gagal += 1
+
+    total = len(KASUS) + len(KASUS_GABUNG) + 3
+    if gagal:
+        print(f"\nHASIL: {gagal} GAGAL dari {total} pemeriksaan")
+        return 1
+    print(f"\nHASIL: PASS {total}/{total} pemeriksaan "
+          f"({len(KASUS)} pembacaan + {len(KASUS_GABUNG)} agregasi + 3 mutasi)")
+    return 0
 
 def main() -> int:
     ap = argparse.ArgumentParser(
@@ -294,6 +474,8 @@ def main() -> int:
     g.add_argument("--terbaru", action="store_true", help="ambil hasil audit-isi terbaru dari kanal Issue")
     g.add_argument("--issue", type=int, metavar="N", help="ambil Issue nomor N")
     g.add_argument("--pr", type=int, metavar="N", help="ambil hasil review PR nomor N (kanal lama)")
+    g.add_argument("--uji", action="store_true",
+                   help="uji-mutasi pembaca verdict (D-1) + agregasi fail-closed; tidak memanggil GitHub")
     g.add_argument("--daftar", action="store_true", help="daftar kandidat audit-isi tanpa mencetak isi")
     g.add_argument("--berkas", metavar="PATH", help="ambil hasil audit dari berkas ter-commit (kanal git)")
     ap.add_argument("--objek", help="saring berdasarkan objek, mis. `_meta` atau `sistem/sistem-klinik`")
@@ -306,6 +488,8 @@ def main() -> int:
                                 if not Path(a.berkas).is_absolute() else Path(a.berkas))
         if a.pr or a.issue:
             gh_tersedia()
+        if a.uji:
+            return uji()
         if a.pr:
             return cetak_pr(a.pr)
         if a.issue:

@@ -1439,3 +1439,57 @@ Untuk *"buat PR-nya"*: dikerjakan **persis** seperti yang dijanjikan di opsi itu
 3 pertanyaan sisanya (#2 7 hal konsisten, #3 tingkat risiko gerbang, #6 aset besar tidak masuk repo) dipakai
 sebagai usulan agent dan **dicatat sebagai penerimaan bersyarat**: pemilik masih boleh mengubahnya, dan
 revisinya wajib masuk Log Keputusan. **Tidak ditulis seolah-olah pemilik sudah menelaah ketiganya.**
+
+---
+
+## Giliran 13 (17 September 2026) — owner mengerahkan 3 hakim, dan verdict pertama MASUK
+
+**Pesan pemilik (verbatim):**
+> Review PR #74 sudah dijalankan. Aku mengerahkan 3 sesi agent untuk melakukan nya. Sekarang semuanya masih proses
+
+**Jawaban atas 3 pertanyaan (verbatim):**
+
+| Pertanyaan | Jawaban pemilik |
+|---|---|
+| *"Dua reviewer masih berjalan. Kapan koreksi dikerjakan?"* | **"Terserah kamu yang terbaik gimana. Yang penting semuanya harus dibereskan dan dimatangkan"** |
+| *"R1 dieskalasikan reviewer kepadamu: 2 warning karena pegangan pengguna (W-01) belum ada. Mana yang kamu pilih?"* | **"Aku kurang paham soal ini. Aku minta saran terbaik dari kamu"** |
+| *"Aturan 3 hakim belum ada. Bagaimana verdict yang berbeda harus diputuskan?"* | **"Selagi ada yang merah, maka harus diperbaiki"** |
+
+### Verdict hakim ke-1 (sudah masuk, head yang dinilai `3543612`)
+
+**MERAH — "Jangan merge"**, dan **menyatakan dirinya parsial** (*"ini laporan temuan terukur, bukan review
+lengkap"*). Tiga temuan, **semuanya terkonfirmasi oleh penulis**:
+
+| | Temuan | Status |
+|---|---|---|
+| **R1** | 2 warning validator vs syarat prompt "PASS, 0 warning" | **benar**; dieskalasikan ke pemilik → item **T-33** |
+| **R2** | alat mencetak 74 skenario, dokumen menulis 73 | **benar, kesalahan penulis** → diperbaiki giliran ini |
+| **R3** | pembangkit prompt mencampur diff merge-base dengan diff langsung base→head (selisih 4 berkas) | **benar**; reviewer **tidak** menuduh penulis menghapus bukti → item **T-34** |
+
+### Dua cacat tambahan yang ditemukan penulis sendiri (di luar cakupan verdict)
+
+**D-1 — `tools/ambil_verdict.py` membaca verdict MERAH ini sebagai "BERSIH".** Reproduksinya terukur:
+kata yang cocok adalah `bersih` pada **karakter 5646 dari 6315**, di dalam kalimat larangan
+*"…agar diff menjadi bersih"*, sedangkan kata **MERAH ada di karakter 35**. Dua penyebab: kosakata regex
+**tidak memuat MERAH/HIJAU sama sekali** (hanya kosakata audit-isi), dan `.search()` mengambil kecocokan
+**pertama di mana saja**. **Fail-open pada instrumen keselamatan**: "Jangan merge" dilaporkan "BERSIH".
+
+**D-2 — tidak ada penjaga sinkronisasi jumlah skenario FI.** `grep -n "Jumlah" tools/test_failure_injection.py`
+**tidak mengembalikan apa pun**, jadi angka di dokumen adalah **salinan tangan**. **R2 bukan salah ketik —
+R2 adalah gejala dari tidak adanya penjaga**, dan akan terulang setiap kali sistem baru ditambahkan.
+
+### INSIDEN #5 — platform meng-CLONE ULANG repo di tengah sesi
+
+| Tahap | Fakta |
+|---|---|
+| Gejala | HEAD lokal jatuh ke `eff7afa` (titik cabang awal), **37 berkas** tampak belum di-commit |
+| Diagnosa | reflog **hanya 2 entri**: `clone` lalu `checkout: moving from main to arena/…`. `shallow=true`, `rev-list count = 1`, **objek `17ada02` tidak ada lokal**. Jadi `.git` **dibangun ulang dari awal** dan branch lokal dibuat dari **base yang salah** |
+| Yang utuh | **working tree** — 31 berkas baru ada di disk sebagai *untracked*, 6 termodifikasi |
+| Pemulihan | `git fetch --unshallow --prune` → `git fetch origin <branch>:refs/remotes/origin/<branch>` → **verifikasi remote = 17ada02** → `git reset --mixed origin/<branch>` (**bukan** `--hard`, **bukan** rebase) |
+| Hasil | HEAD = remote = `17ada02` · shallow false · 616 commit · **0 berkas kotor** · **0 berkas berbeda isi** · 9 alat PASS |
+| Yang hilang | **tidak ada** |
+
+**Ini kejadian ke-5 pola riwayat-git-rusak dalam satu hari**, dan yang **paling parah**: sebelumnya hanya
+`.git/shallow` yang muncul, kali ini **seluruh riwayat lokal diganti**. **Aturan yang sudah ada terbukti
+benar** — periksa riwayat **sebelum dan sesudah** operasi, dan jangan pernah `--hard`/rebase/
+`--allow-unrelated-histories`.

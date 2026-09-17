@@ -1,4 +1,4 @@
-> Salinan turunan. Sumber: _meta/PROTOKOL_REVIEW_INDEPENDEN.md sha 40422f0f7c9cd2c2a750275f6686565c2d1a240f tanggal 2026-09-09 versi-meta 1.12.0
+> Salinan turunan. Sumber: _meta/PROTOKOL_REVIEW_INDEPENDEN.md sha 56c72a925dbe65de743a0326cd2a514d5ef84d0f tanggal 2026-09-17 versi-meta 1.19.0
 > Perbedaan: tidak ada
 > Pemakaian: protokol yang dirujuk bagian "Review independen (sesi lain)" di ACCEPTANCE_TESTS.md sistem ini; dipakai saat penutupan gate acceptance dan klaim permanen (level L1).
 # Protokol Review Independen (Sesi Lain)
@@ -47,3 +47,45 @@ Alasan perubahan: **mekanisme harus bisa dipakai tanpa perantara sesi.** Sebelum
 
 ## Warisan ke sistem domain
 Setiap sistem yang dibangun meta ini mengemban Protokol Review Independen dengan cara: (1) mendaftar L1/L2/L3 versinya di dokumen QA sistemnya; (2) menyebut "review independen" sebagai langkah wajib pada alur yang menutup klaim DONE/gate; (3) menyiapkan varian 1-baris trigger review di PROMPT_ENTRI/panduan penggunanya ("untuk [kategori pekerjaan], buka sesi baru dan tempel prompt reviewer sesuai protokol"). Sistem boleh menurunkan level hanya dengan override tercatat di manifest.
+
+---
+
+## Beberapa hakim sekaligus (ditambahkan 17 Sep 2026 atas keputusan pemilik)
+
+**Sebab bagian ini ada:** pemilik mengerahkan **3 sesi agent** untuk mereview PR #74, dan protokol ini
+**tidak punya satu pun ketentuan** tentang beberapa hakim atau verdict yang bertentangan — terhitung
+**0 sebutan** untuk kata "beberapa / multi / tiga / bertentangan / konflik / quorum / mayoritas".
+Aturan yang tidak ada akan diimprovisasi **sesudah** verdict masuk, yaitu saat paling buruk untuk
+mengarang aturan. Jadi ditulis **sebelum** verdict ke-2 dan ke-3 tiba.
+
+**Keputusan pemilik (verbatim):** *"Selagi ada yang merah, maka harus diperbaiki."*
+
+1. **Agregasi FAIL-CLOSED.** Beberapa verdict digabung dengan aturan: **satu saja bukan hijau → gabungan
+   MENAHAN merge.** **Tidak ada mayoritas, tidak ada rata-rata, tidak ada "2 dari 3 setuju".** Yang dicari
+   dari reviewer independen adalah **alasan untuk menolak**, bukan suara terbanyak — dua hakim yang puas
+   tidak membatalkan temuan terukur hakim ketiga.
+2. **"Tidak terbaca" BUKAN bersih.** Verdict yang tidak bisa ditentukan statusnya **menahan** merge,
+   sama seperti verdict merah. Alasannya sama dengan aturan repo yang lain: *ketiadaan bukti bukan bukti
+   ketiadaan masalah.*
+3. **Cakupan parsial tidak bisa dinaikkan jadi hijau oleh verdict lain.** Kalau seorang hakim menyatakan
+   laporannya **parsial** ("bukan review lengkap"), bagian yang belum diperiksanya **tetap belum
+   diverifikasi** — tidak menjadi hijau karena hakim lain lulus. Statusnya: **belum terverifikasi**.
+4. **Setiap verdict WAJIB menyebut SHA head yang dinilainya.** Head bisa bergerak selama review berjalan
+   (terjadi nyata di PR #74: reviewer menilai `3543612` sementara head sudah `17ada02`). Verdict tanpa
+   SHA head **tidak bisa dipetakan** ke keadaan mana pun dan harus diperlakukan sebagai **belum terverifikasi**.
+5. **Koreksi DITUNGGU sampai semua hakim masuk, lalu SATU putaran.** Alasannya: butir 7 di atas membatasi
+   **maksimal 2 putaran**. Mengoreksi tiap kali satu verdict masuk akan menghabiskan jatah putaran dan
+   membuat objek review hakim lain basi. Pengecualian: **perbaikan pada instrumen pengukur verdict itu
+   sendiri boleh segera** (kalau alatnya salah membaca, semua verdict berikutnya ikut salah terbaca).
+6. **Format verdict WAJIB terbaca mesin.** Putusan ditulis pada **baris judul Markdown** atau pada
+   **baris deklarasi eksplisit** berbentuk `**VERDICT:** MERAH` / `**VERDICT:** HIJAU`.
+   **Jangan menggantungkan putusan pada kata di dalam prosa.**
+   **Sebab aturan ini ada (cacat D-1, nyata terjadi):** alat penjemput verdict mengambil kecocokan
+   **pertama di mana saja**, dan kosakatanya **tidak memuat kata MERAH/HIJAU sama sekali** — akibatnya
+   laporan berjudul *"MERAH … Jangan merge"* terbaca sebagai **BERSIH** karena kata "bersih" muncul di
+   dalam **kalimat larangan** pada karakter ke-5646, sedangkan kata "MERAH" ada di karakter ke-35.
+   **Itu fail-open pada instrumen keselamatan.** Sudah diperbaiki + **diuji-mutasi**
+   (`python3 tools/ambil_verdict.py --uji`).
+7. **Alatnya:** `python3 tools/ambil_verdict.py --pr <N>` mencetak verdict per hakim **dan agregasi
+   fail-closed**-nya. **Membaca verdict ≠ menyetujuinya** — bertindak atas temuan tetap butuh keputusan
+   pemilik, dan PR yang mengubah alat pengadil **tidak boleh di-merge oleh reviewer**.
