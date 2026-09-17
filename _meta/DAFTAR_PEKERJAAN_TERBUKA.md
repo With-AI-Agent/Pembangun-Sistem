@@ -54,6 +54,7 @@ gaya, atau utang yang tidak menghalangi · `P4` usulan.
 | T-13 | **Klaim inventaris inti di `03_KONTRAK_WARISAN.md` perlu dikualifikasi** | Klaim bahwa inventaris inti mencegah *"validator lupa didaftarkan"* **terlalu luas**: yang dicegah adalah **sistem** baru lupa didaftarkan, **bukan berkas inti** baru (lihat T-12) | P3 | TERBUKA | — |
 | T-14 | **Presisi `tools/check_manuals.py` tidak diketahui di luar korpus penyetelannya** | Ambang batas disetel pada berkas-berkas repo ini. **Peringatan overfitting sudah tertulis di docstring alatnya**, tetapi belum ada korpus uji kedua untuk mengukur positif-palsu secara nyata | P3 | TERBUKA | — |
 | T-15 | **A-03: konvensi prefiks rujukan tidak konsisten** | `_meta/PROTOKOL_REVIEW_INDEPENDEN.md` baris 4 merujuk `QUALITY_ASSURANCE_AND_EVOLUTION.md` **tanpa prefiks**, sementara baris lain di berkas yang sama memakai prefiks root-relative. **Bukan rujukan mati** (resolve sefolder, validator tidak men-flag), jadi murni keterbacaan | P3 | TERBUKA | ditemukan audit 17 Sep 2026 |
+| T-26 | **Masukan pemilik yang TIDAK PERNAH DICATAT tidak bisa dideteksi alat** | Cek validator hanya menegakkan *"yang tercatat wajib direspons"*. Kalau sebuah instruksi pemilik muncul di chat dan **tidak pernah** ditulis ke DISKUSI_MENTAH maupun ledger, **tidak ada alat yang bisa tahu** — karena alat tidak bisa membaca chat. **Gap nyata, bukan hypothetical**: instruksi S-15 hari ini nyaris hanya hidup di riwayat chat; yang menyelamatkannya adalah agent menulisnya ke ledger secara manual. **Usulan mitigasi:** jadikan "tulis masukan pemilik ke ledger SEBELUM mengerjakan apa pun" sebagai langkah wajib di awal sesi (sudah sebagian: sub-butir langkah 7), dan tambah pemeriksaan silang antara log sesi dan ledger — kalau log sesi mengutip kalimat pemilik yang tidak punya baris ledger, peringatkan | P2 | TERBUKA | — |
 
 ---
 
@@ -88,7 +89,7 @@ utang meta dikerjakan kalau pembangunan benar-benar membutuhkannya.
 | T-22 | **GAP M-2: manifest induk tidak punya bagian Batasan Platform (W-07)** | P2 | SELESAI | `f48bd5c` |
 | T-23 | **Induk dikecualikan dari kontrak warisannya sendiri** (3 butir tidak terdeteksi alat mana pun) | P1 | SELESAI | `f48bd5c` |
 | T-24 | **Cek validator baru menghasilkan PASS palsu** (prosa memenuhi `\bW-nn\b`) | P1 | SELESAI | `f48bd5c` |
-| T-25 | **Instruksi pemilik S-15: yang tercatat harus DIBACA + DIRESPONS/DIEKSEKUSI, bukan cuma dicatat** | P1 | TERBUKA | mekanisme dibangun di working tree (`_meta/TANGGAPAN_MASUKAN_PEMILIK.md` + cek validator 4 lapis + 2 langkah wajib baca di `_meta/NEXT_SESSION_PROMPT.md`); **sha menyusul di baris ini pada commit berikutnya** — aturan "SELESAI wajib sha" dipatuhi, bukan dilonggarkan |
+| T-25 | **Instruksi pemilik S-15: yang tercatat harus DIBACA + DIRESPONS/DIEKSEKUSI, bukan cuma dicatat** | P1 | SELESAI | `926bd36` — ledger `_meta/TANGGAPAN_MASUKAN_PEMILIK.md` (31 tuntutan + 15 instruksi berdiri) + 4 cek validator **diuji mutasi 6/6 terdeteksi, kontrol hijau** + 2 sub-butir wajib-baca di langkah 7 `_meta/NEXT_SESSION_PROMPT.md` + ledger masuk `CORE_REQUIRED` |
 
 ---
 
