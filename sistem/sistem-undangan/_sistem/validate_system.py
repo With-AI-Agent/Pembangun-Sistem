@@ -20,7 +20,13 @@ import sys
 from pathlib import Path
 
 FOLDER = Path(__file__).resolve().parents[1]
-WAJIB = ["00_RENCANA_KERANGKA.md", "SYSTEM_MANIFEST.md"]
+# W-01 (pegangan pengguna 2 file) DITEGAKKAN DI SINI, bukan hanya di validator level repo.
+# Alasannya: folder sistem ini harus tetap berdiri sendiri waktu diunduh jadi repo tersendiri,
+# dan di keadaan itu tidak ada validator level repo yang menegur kalau pegangannya hilang.
+# Daftar ini juga menyamakan diri dengan validator benih yang dibangkitkan build_template.py,
+# yang sudah lebih dulu mewajibkan kedua berkas itu - benih sempat LEBIH KETAT dari sistem nyata.
+WAJIB = ["00_RENCANA_KERANGKA.md", "SYSTEM_MANIFEST.md",
+         "PANDUAN_PENGGUNA.md", "PROMPT_ENTRI_UNIVERSAL.md"]
 DOC_KERANGKA = [
     "01_IDENTITAS_PEMILIK.md", "02_PROFIL_JENIS_ACARA.md", "03_TEMPLATE_DATA_ACARA.md",
     "04_TEMPLATE_BRIEF_UNDANGAN.md", "05_DISCOVERY_DESAIN_PROMPT.md",

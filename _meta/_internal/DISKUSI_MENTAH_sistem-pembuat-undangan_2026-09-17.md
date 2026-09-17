@@ -1564,3 +1564,98 @@ reflog 2 entri, objek `ac25de0` **tidak ada lokal**, 40 berkas tampak berubah. P
 `fetch --unshallow --prune` → verifikasi remote = head yang didorong → `reset --mixed` (**bukan** `--hard`)
 → **0 berkas kotor, 0 berkas berbeda isi, 617 commit**. **Tidak ada yang hilang.**
 **Yang berubah dari insiden #5: kali ini terdeteksi oleh pemeriksaan rutin, bukan oleh kegagalan.**
+
+## Giliran 15 (18 September 2026) — pemilik tidak paham arahannya, dan itu temuan tentang cara agent melapor
+
+**Pesan pemilik, VERBATIM:**
+
+> Maaf, aku kurang paham. Sekarang aku harus apa? Klo aku harus buka 3 sesi hakim yang sebelumnya, aku
+> merasa sulit, karena itu tidak semuanya aku yang buka. Ada yang dibuka sama temen aku. Jadi klo emang
+> perlu, aku mending ngulang buka sesi hakim dari awal. Tapi aku ga paham sebenernya yang kamu arahkan
+> itu sekarang aku harus apa
+
+### Ini kesalahan komunikasi agent, bukan kekurangan pemilik
+
+Laporan giliran sebelumnya berisi tabel 6 baris pemeriksaan git, istilah *ref*, *blob*, *force-push*,
+*shallow*, dan sha. Pemilik sudah menyatakan sejak awal **"jujur, aku ga punya basic di coding"** dan
+menuntut **bahasa awam**. Jadi pertanyaan *"sekarang aku harus apa?"* adalah **bukti bahwa laporan itu
+gagal pada satu-satunya pembaca yang harus bisa memakainya**. Yang diperbaiki bukan penjelasannya —
+**strukturnya**:
+
+| Sebelum | Sesudah |
+|---|---|
+| kesimpulan di akhir, sesudah bukti | **satu baris keputusan lebih dulu**: "sekarang kamu tidak perlu melakukan apa-apa" |
+| semua langkah campur (milik agent dan milik pemilik) | **tabel 3 langkah dengan kolom "Siapa"**, jadi langkah milik pemilik kelihatan satu |
+| istilah git di badan jawaban | istilah dipindah ke bagian penjelasan, bukan ke instruksi |
+
+### Tiga hal yang diputuskan dari pesan ini
+
+1. **"Mending ngulang buka sesi hakim dari awal" → dikonfirmasi sebagai jalan yang LEBIH BAIK, bukan
+   sekadar diizinkan.** Alasannya disebut, bukan hanya disetujui: sesi baru masing-masing dapat branch
+   sendiri jadi tidak mungkin saling menimpa · yang dinilai versi yang sudah dikoreksi, bukan head basi
+   `3543612` · tidak perlu mencari atau memahami sesi lama. **Agent tidak boleh mengiyakan pilihan
+   pemilik tanpa menilai** (tuntutan lama: *"Aku mau kamu kritisi, bukan asal meng-iya-kan saja"*) —
+   dalam hal ini pilihannya memang benar, dan alasannya diberikan.
+2. **"Ada yang dibuka sama temen aku" → tidak mengubah tindakan apa pun.** Siapa pun yang membuka sesi
+   hanya menempel teks yang sama. Justru ini memperkuat alasan aturan baru butir 8 (verdict wajib
+   mendarat sebagai komentar PR): kalau orang lain yang membuka sesinya, satu-satunya tempat hasilnya
+   bisa dipastikan sampai adalah kanal repo, bukan chat pribadi.
+3. **Putaran koreksi dimulai tanpa menunggu**, karena pemilik sudah mendelegasikan urutan (giliran 13)
+   dengan syarat "semuanya harus dibereskan dan dimatangkan". Menunggu konfirmasi tambahan hanya
+   menambah giliran tanpa menambah informasi.
+
+### Yang dikerjakan giliran ini: temuan R1 DITUTUP
+
+**Jalan yang dipilih: (b) membuat pegangan penggunanya, bukan (a) melonggarkan syarat "0 peringatan".**
+Dua berkas baru di folder sistem-undangan: PANDUAN_PENGGUNA.md (331 baris, 12 bagian) dan
+PROMPT_ENTRI_UNIVERSAL.md (54 baris). **Blok prompt keduanya identik karena dibangkitkan dari satu
+variabel yang sama dan di-`assert`**, bukan karena dilihat mata — aturan template adalah dua-file-satu-
+sumber, dan selisih diam-diam antar keduanya pernah jadi temuan audit di repo ini.
+
+**Hasil pada alat penilai: `tools/validate_repo.py` berubah dari 2 warning menjadi `WARNINGS: none`.**
+Warning-nya hilang **karena pegangannya ada**, bukan karena syaratnya dilonggarkan — persis yang
+diminta reviewer waktu memperingatkan *"jangan sekadar menyembunyikan warning atau membuat manual kosong
+demi lolos"*.
+
+**Tiga hal yang ditemukan di sela pekerjaan ini, dan semuanya dieksekusi:**
+
+- **Alat penjaring manual melaporkan 0 kandidat pada kedua berkas baru — dan angka itu tidak dipercaya
+  begitu saja.** Dijalankan **kontrol positif** bersamaan: pegangan sistem-building-aplikasi tetap
+  menjaring **2** kandidat, sistem-klinik **4**, sistem-presentasi (yang sudah lulus audit manusia) **0**.
+  Tanpa kontrol, "0" tidak bisa dibedakan dari "alatnya tidak memeriksa apa-apa".
+- **Benih lebih ketat dari sistem nyata.** Validator **benih** yang dibangkitkan `tools/build_template.py`
+  **sudah mewajibkan** kedua berkas manual, sedangkan validator sistem nyata hanya mewajibkan 2 berkas.
+  Daftar wajib validator mandiri diperketat 2 → 4 berkas, supaya **W-01 ditegakkan dari dalam folder
+  sendiri** — penting justru saat sistem diunduh jadi repo tersendiri dan validator level repo tidak ikut.
+  **Diuji mutasi:** satu manual dipindah keluar → `exit 1` menyebut berkasnya; dikembalikan → `exit 0`.
+- **Janji pengukuran di docstring alat penjaring ditutup dengan hasilnya.** Alat itu menulis bahwa
+  pengukuran yang sah adalah dijalankan pada korpus yang **belum dipakai menyetel**, "misalnya pegangan
+  sistem-undangan saat sistem itu dibangun nanti", dan sampai itu terjadi presisinya dianggap tidak
+  diketahui. **Saat itu tiba.** Hasilnya dicatat **beserta batasnya**: 0 kandidat pada korpus baru
+  **tidak mengukur presisi maupun recall** — bisa berarti bersih, bisa berarti cacatnya jenis yang tidak
+  terjaring, dan alat tidak bisa membedakan keduanya tanpa manusia.
+
+**Yang SENGAJA TIDAK DIKLAIM:** kelulusan pegangan. Syarat 4 Standar Kelulusan Manual **melarang penulis
+menyatakan standarnya sendiri terpenuhi**, jadi tidak ada dokumen yang menulis "pegangan ini sudah lulus".
+Yang dicatat adalah keadaannya (sudah dibuat, 0 kandidat dengan kontrol positif) dan yang masih kurang
+(audit lensa kemudahan pakai oleh sesi independen + **uji pemakaian nyata oleh pemilik** — kalau pemilik
+harus bertanya saat memakainya, standarnya belum lulus dan pertanyaannya adalah temuan).
+
+### Tiga kegagalan buatan sendiri yang tertangkap alat repo giliran ini
+
+| # | Kesalahan | Yang menangkap |
+|---|---|---|
+| 8 | Menulis rujukan **ber-backtick** ke path di dalam folder sistem dari dokumen `_meta/` — path itu tidak ada di ekstrak template, jadi **pin R7 bergeser dari 5 ke 6**. Ini pola yang **sudah pernah terjadi 7 kali** dan aturannya sudah tertulis | `test_failure_injection.py` (R7) |
+| 9 | Mengutip **angka korpus** ("497 rujukan", "122 dokumen aktif") di sel Bukti Log Evolusi — angka itu bergerak setiap kali log sesi ditulis, jadi tidak bisa jadi bukti permanen | `validate_repo.py` |
+| 10 | Menandai **T-33 SELESAI padahal commit-nya belum ada** — menutup utang tanpa sha | `validate_repo.py`, dengan pesan yang menyebut jalan keluarnya: *"kalau fix-nya belum di-commit, biarkan TERBUKA dan tulis sha-nya nanti"* |
+
+Ketiganya **diperbaiki mengikuti petunjuk alatnya**, bukan dengan melonggarkan alatnya: backtick dihapus
+(provenance tanpa backtick), angka korpus dihapus dari sel Bukti, dan **T-33 dikembalikan ke TERBUKA**
+untuk ditutup di commit berikutnya beserta sha-nya.
+
+### Yang masih terbuka
+
+**Temuan R3 (T-34) BELUM dikerjakan dan dinyatakan belum** — rombak pembangkit prompt review supaya
+memisahkan diff PR-terhadap-merge-base dari diff langsung base-tip→head, dan menyebut head yang hendak
+diputuskan secara eksplisit. **Hakim tidak boleh diulang sebelum ini selesai**, karena mengulang sekarang
+berarti membuang satu dari maksimal dua putaran untuk temuan yang sudah diketahui.

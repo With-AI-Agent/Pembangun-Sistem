@@ -8,7 +8,7 @@
 - **Tujuan utama:** mengubah **info acara + identitas pemilik** menjadi undangan **multi-format** (laman web, video, flyer, siap cetak) yang **konsisten dari satu sumber data**, sampai **terbit dan diserahkan ke client** — dipandu agent supaya pemilik yang tidak punya latar coding tidak perlu memikirkan hal teknis.
 - **Pengguna/consumer:** pemilik repo (operator, **tidak punya basic coding**) + **client** penerima akhir undangan (tamu melihat hasilnya).
 - **Pemilik keputusan:** pemilik repo.
-- **Versi:** `0.1.0`
+- **Versi:** `0.2.0`
 - **Tahap:** kerangka — ubah ke `siap-pakai` saat sistem siap dipakai (cek W-01/W-02/W-03 kembali ketat; lihat `03_KONTRAK_WARISAN.md` bagian "Tahap pembangunan")
 - **Status:** `Proposed`
 - **Tanggal dibuat:** 2026-09-17
@@ -25,13 +25,13 @@
 
 ## Dokumen Navigasi
 
-- **Entry point:** `00_RENCANA_KERANGKA.md` **sementara** — akan diganti `PROMPT_ENTRI_UNIVERSAL.md` (W-01) saat sistem naik ke `siap-pakai`
+- **Entry point:** `PROMPT_ENTRI_UNIVERSAL.md` (W-01) — **sudah dibuat 18 Sep 2026**, jadi entry point tidak lagi sementara. Untuk memakai sistem: tempel blok prompt di berkas itu. Untuk memahami rancangan sistem: `00_RENCANA_KERANGKA.md` + `STATUS.md`. Untuk pegangan lengkap: `PANDUAN_PENGGUNA.md`
 - **Dokumen instruksi aktif:** **belum ada** — di tahap kerangka semua dokumen masih berupa kerangka
 - **Living documents:** `01_IDENTITAS_PEMILIK.md`, `02_PROFIL_JENIS_ACARA.md`, `03_TEMPLATE_DATA_ACARA.md`, `06_SPESIFIKASI_ASET_DAN_RESOLUSI.md`, `10_ARSITEKTUR_WEBSITE_INDUK.md`
 - **Log keputusan:** bagian **"Log Keputusan"** di `00_RENCANA_KERANGKA.md` (W-05)
 - **Ringkasan cadangan:** **belum ada** — W-09 dikerjakan saat sistem mendekati `siap-pakai`
 - **Laporan audit:** **belum ada** — mekanisme tersedia dari meta (tools/audit_prompt.py --objek sistem/sistem-undangan); turunan self-contained di dalam folder belum ada (W-10, item **T-07** di _meta/DAFTAR_PEKERJAAN_TERBUKA.md)
-- **Pegangan pengguna:** **BELUM DIBUAT** — `PANDUAN_PENGGUNA.md` + `PROMPT_ENTRI_UNIVERSAL.md` wajib ada **sebelum** sistem dianggap siap dipakai, mengikuti _meta/PANDUAN_PENGGUNA_TEMPLATE.md (termasuk Standar Kelulusan Manual 5 syarat). Sengaja tidak dibuat setengah jadi di tahap kerangka
+- **Pegangan pengguna:** **SUDAH DIBUAT 18 Sep 2026** — `PANDUAN_PENGGUNA.md` (12 bagian: keadaan sistem dinyatakan terus terang masih kerangka, prompt pembuka, prompt penutup, istilah awam, 3 lapis, 7 tahap + 6 gerbang, bahan milik pemilik, 6 situasi masing-masing dengan 6 bidang, cara review & merge, tabel perintah 5 kolom, kebiasaan, catatan kualitas + Log Keputusan) dan `PROMPT_ENTRI_UNIVERSAL.md` (blok prompt **identik** dengan §2 pegangan — dua file satu sumber, diverifikasi programatik). Ditulis mengikuti Standar Kelulusan Manual 5 syarat. **KELULUSANNYA BELUM DINYATAKAN dan memang tidak boleh dinyatakan di sini** — Syarat 4 melarang penulis menilai sendiri: wajib audit sesi independen (lensa kemudahan pakai) **dan** uji pemakaian nyata oleh pemilik; kalau pemilik harus bertanya saat memakai, standarnya belum lulus dan pertanyaan itu adalah temuan. Alat penjaring repo induk melaporkan **0 kandidat** pada kedua berkas, dengan **kontrol positif** (berkas sistem lain yang pernah bermalasah tetap menjaring 2 dan 4 kandidat) sehingga angka 0 itu bermakna, bukan hampa
 
 ## Prinsip
 

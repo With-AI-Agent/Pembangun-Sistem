@@ -33,6 +33,17 @@ menghasilkan angka yang terlihat bagus tetapi tidak berlaku di tempat lain.
 misalnya pegangan `sistem-undangan` saat sistem itu dibangun nanti. Sampai itu dilakukan,
 anggap presisi alat ini **tidak diketahui**, dan perlakukan tiap keluarannya sebagai kandidat.
 
+**KORPUS BARU PERTAMA ITU KINI ADA (18 Sep 2026) dan hasilnya dicatat, bukan dilewatkan:**
+pegangan `sistem-undangan` (PANDUAN_PENGGUNA.md 331 baris + PROMPT_ENTRI_UNIVERSAL.md 54 baris)
+dijalankan lewat --berkas dan menjaring **0 kandidat**. Kontrol positif dijalankan bersamaan:
+pegangan sistem-building-aplikasi tetap menjaring **2** kandidat dan pegangan sistem-klinik **4**,
+jadi angka 0 itu **bukan** tanda alatnya tidak memeriksa apa-apa.
+**Tetapi angka 0 ini TIDAK mengukur presisi maupun recall.** Pada korpus baru, 0 kandidat bisa berarti
+"bersih" dan bisa berarti "cacatnya jenis yang tidak dijaring" — alat ini tidak bisa membedakan keduanya
+tanpa manusia. Yang tetap berlaku: **presisi alat tidak diketahui**, kelulusan pegangan itu **belum
+dinyatakan** (Syarat 4 Standar Kelulusan Manual melarang penulis menilai sendiri), dan penilaian
+sesungguhnya menunggu audit lensa kemudahan pakai oleh sesi independen + uji pemakaian nyata oleh pemilik.
+
 Yang diperiksa (semuanya turunan aturan yang sudah ada, bukan aturan baru karangan alat):
   K1  W-01   kedua berkas pegangan ada (PANDUAN_PENGGUNA.md + PROMPT_ENTRI_UNIVERSAL.md)
   K2  W-01   penanda `agent_instruction` ada dalam bentuk yang bisa dibaca mesin (frontmatter)
