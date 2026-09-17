@@ -55,7 +55,21 @@ PIN_DEFINITION_RE = re.compile(
 ARBITER_PATH_REASONS = {
     "tools/test_failure_injection.py": "alat injeksi kegagalan dan pin regresi",
     "_meta/PROTOKOL_REVIEW_INDEPENDEN.md": "protokol review independen",
+    # Alasan di bawah ini DIPIN oleh uji regresi RP1 di tools/test_failure_injection.py
+    # (tuple persis ("tools/review_prompt.py", True, "pembangkit prompt pengadil")).
+    # 17 Sep 2026: string ini sempat diubah jadi "pembangkit prompt pengadil (kanal PR)"
+    # untuk kejelasan, dan RP1 langsung MERAH. Yang dikembalikan adalah SUNTINGANNYA,
+    # BUKAN pin-nya — menggeser pin agar cocok dengan suntingan kosmetik akan
+    # menghancurkan alasan pin itu ada (mendeteksi perubahan diam-diam pada pengadil).
     "tools/review_prompt.py": "pembangkit prompt pengadil",
+    # Ditambahkan 17 Sep 2026: mekanisme AUDIT ISI (kanal non-PR) lahir. Alat dan
+    # protokolnya adalah pengadil juga — PR yang mengubahnya tidak boleh dieksekusi
+    # oleh pengadil yang diubahnya. Daftar ini SELARAS dengan ARBITER_PATHS di
+    # tools/audit_prompt.py; kalau salah satunya bertambah, yang lain WAJIB ikut
+    # (dua sumber yang saling menunjuk; ketidaksinkronannya = temuan audit).
+    "tools/audit_prompt.py": "pembangkit prompt pengadil (kanal audit isi)",
+    "tools/ambil_verdict.py": "pengambil hasil pengadil dari GitHub",
+    "_meta/PROTOKOL_AUDIT_ISI.md": "protokol audit isi",
 }
 ARBITER_PATHS = tuple(ARBITER_PATH_REASONS)
 

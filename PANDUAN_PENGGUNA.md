@@ -1,6 +1,12 @@
+---
+agent_instruction: IGNORE for execution — USER GUIDE ONLY
+user_guide_only: true
+purpose: Pegangan pengguna meta-sistem Pembangun Sistem — dokumen ini untuk manusia/pengguna, bukan instruksi eksekusi agent; agent membacanya hanya jika diminta eksplisit oleh pengguna. Prompt eksekusi lintas-sesi tetap sah ditempel dari bagian 1 dan bagian Prompt Penutup (sumber: PROMPT_ENTRI_UNIVERSAL.md).
+---
+
 # Panduan Pengguna — Meta-Sistem Pembangun Sistem
 
-### Dokumen ini UNTUK KAMU sendiri — bukan bagian dari `_meta/`, boleh ikut repo (ditandai jelas ini bukan instruksi kerja untuk agent). Kalau bingung mulai dari mana, baca dokumen ini duluan.
+### Dokumen ini UNTUK KAMU sendiri — bukan bagian dari `_meta/`, boleh ikut repo (ditandai jelas ini bukan instruksi kerja untuk agent — dan sejak 17 Sep 2026 juga ditandai secara machine-readable di frontmatter, menyamakan dengan 4 sistem anak; sebelumnya niat ini hanya ada dalam prosa sehingga tidak bisa digrep andal: temuan audit F-06). Kalau bingung mulai dari mana, baca dokumen ini duluan.
 
 ---
 
@@ -115,6 +121,109 @@ python3 tools/review_prompt.py --generic
 
 Isi panduan ini sengaja tidak menyalin teks promptnya: satu-satunya salinan yang tidak pernah basi adalah
 keluaran alatnya sendiri.
+
+---
+
+## Minta Audit Isi, Bukan Review PR
+
+**Ditambahkan 17 Sep 2026.** Dua pekerjaan berbeda, dua mekanisme berbeda — dan mencampuradukkannya
+pernah terjadi di repo ini:
+
+| | **Review PR** (bagian sebelumnya) | **Audit isi** (bagian ini) |
+|---|---|---|
+| Pertanyaannya | *"bolehkah ini di-merge?"* | *"sehatkah isi ini?"* |
+| Objeknya | satu PR | **satu jalur** di repo: `_meta`, `tools`, sebuah sistem, atau satu berkas |
+| Keluarannya | verdict + keputusan merge | **laporan temuan** — tidak ada merge |
+| Alatnya | `python3 tools/review_prompt.py --pr N` | `python3 tools/audit_prompt.py --objek <path>` |
+| Hasilnya ditaruh di | komentar PR | **GitHub Issue** berjudul `AUDIT <objek> @<sha7>` |
+| Aturannya | `_meta/PROTOKOL_REVIEW_INDEPENDEN.md` | `_meta/PROTOKOL_AUDIT_ISI.md` |
+
+**Kapan pakai yang ini:** sesudah membangun sesuatu dan sebelum menyatakannya siap; untuk pemeriksaan
+berkala; kalau kamu minta *"periksa semuanya"* tanpa menunjuk PR; atau kalau kamu mencurigai satu
+**jenis** cacat yang mungkin tersebar di banyak tempat.
+
+### Cara — 5 langkah
+
+1. **Buka sesi agent BARU.** Jangan pakai sesi yang sedang mengerjakan objek itu — auditor yang
+   mengaudit pekerjaannya sendiri tidak bisa independen.
+2. Di sesi baru itu, minta agent membangkitkan prompt auditnya. **Contoh yang bisa kamu salin:**
+
+   ```
+   Bangkitkan prompt audit isi untuk objek `_meta` dengan kedalaman mendalam, lalu berhenti dan
+   tunjukkan keluarannya ke aku. Jangan menulis prompt audit sendiri — pakai alatnya.
+   ```
+
+   Perintah yang akan dijalankan agent:
+
+   ```bash
+   python3 tools/audit_prompt.py --objek _meta --kedalaman mendalam
+   ```
+
+3. **Tempel seluruh keluaran perintah itu** ke **sesi auditor** (sesi ketiga, yang benar-benar mengaudit)
+   sebagai pesan pertamanya.
+4. Tunggu. Auditor menyerahkan hasilnya ke sebuah GitHub Issue.
+5. Kembali ke sesi yang sedang bekerja, dan **cukup bilang**: *"audit sudah selesai."* Sesi itu
+   mengambil hasilnya sendiri:
+
+   ```bash
+   python3 tools/ambil_verdict.py --terbaru
+   ```
+
+   **Kamu tidak perlu menyalin, meringkas, atau melaporkan apa pun.** Ini yang diminta pemilik
+   17 Sep 2026 dan sekarang sudah jadi mekanisme.
+
+### Perintah yang dipakai
+
+| Perintah | Fungsi | Kapan dipakai | Keluaran diharapkan | Kalau gagal |
+|---|---|---|---|---|
+| `python3 tools/audit_prompt.py --objek <path>` | membangkitkan prompt audit yang **ter-pin** ke satu sha — **bukan** dikarang tangan | langkah 2 di atas | prompt 13 bagian + inventaris berkas yang diambil dari pohon kerja | exit 2 + pesan sebabnya (objek tak ada / sha tak sah / objek keluar repo). **Perbaiki argumennya; jangan menulis prompt tangan** |
+| `python3 tools/audit_prompt.py --generic` | melihat bentuk prompt tanpa objek sungguhan | kalau mau memeriksa alatnya dulu | prompt dengan `<OBJEK>` dan `<SHA PIN>` | — |
+| `python3 tools/ambil_verdict.py --terbaru` | mengambil hasil audit terbaru **tanpa perlu diberi tahu nomornya** | langkah 5 | badan Issue + semua komentar + verdict terbaca otomatis | exit 2: tidak ditemukan, atau ambigu. **Alat ini tidak pernah menyimpulkan "bersih" dari ketiadaan hasil** |
+| `python3 tools/ambil_verdict.py --daftar` | melihat semua kandidat hasil audit | untuk memilih mana yang dimaksud | daftar terbaru di atas, dengan objek + sha | kosong = memang belum ada audit diserahkan |
+| `gh label create audit-independen --description "hasil audit isi independen"` | membuat label kanalnya (**sekali saja**, di awal) | sebelum audit pertama | label terbuat | kalau label sudah ada, `gh` memberi tahu — itu bukan masalah |
+
+### Apa yang terjadi sesudahnya
+
+Auditor menulis Issue berisi 6 bagian wajib: **VERDICT** satu baris → **ringkasan angka** (berapa berkas
+diperiksa, berapa kandidat, berapa dicabut) → **tabel temuan** terklasifikasi (`B`/`A`/`G`/`N`/`P` +
+prioritas + bukti) → **temuan DI LUAR CAKUPAN** → **kandidat yang DICABUT** → **batasan audit**.
+Putaran lanjutan ditambahkan sebagai **komentar**, tidak pernah menyunting temuan putaran pertama.
+
+**Sesi yang diaudit kemudian membaca semuanya sendiri** — termasuk bagian "di luar cakupan" dan
+"kandidat yang dicabut", karena keduanya bagian dari laporan, bukan sampah. **Membaca verdict ≠
+menyetujuinya:** bertindak atas temuan tetap butuh keputusanmu.
+
+### Satu aturan yang wajib kamu tahu
+
+> **Cakupan membatasi apa yang DICARI dan apa yang boleh DIKLAIM. Cakupan TIDAK PERNAH membatasi
+> apa yang dilaporkan.**
+
+Artinya: kalau auditor menemukan masalah di luar objek yang kamu minta, ia **wajib tetap melaporkannya**
+(dilabeli "di luar cakupan"), dan **tidak boleh** membuangnya supaya laporan terlihat rapi. Ia juga
+**tidak boleh** mengklaim sudah memeriksa lebih dari yang benar-benar diperiksa, dan **tidak boleh**
+memperbaiki temuan di luar cakupan tanpa mandatmu. Aturan lengkap: `_meta/QUALITY_ASSURANCE_AND_EVOLUTION.md`
+bagian ATURAN CAKUPAN.
+
+### Kalau gagal
+
+| Gejala | Sebab | Langkah pertama |
+|---|---|---|
+| `ERROR: tidak ada --objek` | alat **sengaja menolak menebak** objeknya | sebut objeknya. Menebak = mengaudit sesuatu yang tidak kamu minta |
+| `ERROR: objek X TIDAK ADA` | salah eja | daftar sistem ada di `_meta/INDEKS_SISTEM.md` |
+| `tidak ditemukan hasil audit di kanal Issue` | audit belum diserahkan, **atau** auditor menaruhnya di tempat lain, **atau** label belum dibuat | **jangan simpulkan "bersih"**. Cek `gh issue list --state all`; buat labelnya sekali kalau belum |
+| `ambigu: beberapa hasil audit` | alat **sengaja menolak menebak** | `--daftar` lalu `--issue <N>` |
+| auditor mengembalikan prompt yang sudah disunting | pelanggaran aturan "prompt tidak boleh dikarang" | **tolak**, bangkitkan ulang, catat sebagai temuan |
+
+**Kenapa prompt audit tidak boleh ditulis tangan:** kalau pihak yang diaudit boleh menulis instruksi untuk
+pengadilnya sendiri, hasil audit mengukur **kepandaian menulis prompt**, bukan **kesehatan isi**. Alasan
+yang sama kenapa `review_prompt.py` ada untuk PR.
+
+**Yang belum terbukti (jangan dianggap sudah):** pengiriman hasil lewat `gh issue create` **belum diuji**
+di lingkungan ini — yang terverifikasi baru kemampuan **membaca** (`gh issue list`, `gh pr view`,
+`gh api`). Menguji pengiriman berarti **membuat Issue nyata di repo ini**, jadi butuh izin pemilik lebih
+dulu. Sampai itu terjadi, bagian "cara menyerahkan hasil" adalah **rancangan yang masuk akal, bukan
+mekanisme terverifikasi** — dan dinyatakan begitu di `_meta/PROTOKOL_AUDIT_ISI.md` bagian
+"Yang belum terbukti".
 
 ---
 

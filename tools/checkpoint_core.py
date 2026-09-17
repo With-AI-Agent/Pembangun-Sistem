@@ -227,7 +227,7 @@ def unit_status_files(sys_dir: Path):
 # dokumen kontrak: penurunan otomatis membuat butir baru langsung mewajibkan
 # kepatuhan sebelum butir itu bisa ditanam (alatnya belum ada) — kontrak aturan 3
 # menuntut penonaktifan/penundaan diputuskan sadar, bukan jatuh sebagai error.
-WARISAN_ITEMS = [f"W-{i:02d}" for i in range(1, 10)]
+WARISAN_ITEMS = [f"W-{i:02d}" for i in range(1, 11)]
 OVERRIDE_LABELS = ("alasan:", "dampak:", "tanggal:", "approval:")
 
 

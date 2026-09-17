@@ -77,6 +77,7 @@ MINI_MANIFEST = """# System Manifest — Sistem Uji Kerangka (skenario FI)
 | W-07 fakta platform | diterapkan | bagian di atas | |
 | W-08 approval bertingkat | direncanakan | | |
 | W-09 ringkasan cadangan | direncanakan | | |
+| W-10 audit isi + pengiriman hasil | direncanakan | | |
 """
 
 
