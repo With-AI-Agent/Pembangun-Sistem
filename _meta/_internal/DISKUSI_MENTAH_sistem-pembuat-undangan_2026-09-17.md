@@ -1354,3 +1354,88 @@ dijalankan terisolasi, kalau tidak hasilnya hilang semua dan yang terlihat hanya
 | 2026-09-17 | **Klaim mutu ke client DITURUNKAN** — tidak boleh disebut "peningkatan AI" tanpa penjelasan | Keuntungan terukur atas lanczos4 hanya **+0,28 s.d. +0,55 dB** pada foto dan SSIM praktis identik. Menjanjikan lebih dari itu ke client = menjanjikan hal yang tidak didukung bukti |
 | 2026-09-17 | **Langkah 0 naik status dari anjuran menjadi kesimpulan terukur** | PSNR guratan tipis **20,8–22,6** untuk semua metode, di bawah ambang 32 milik repo sendiri. Klaim riset "upscaling mangle text" kini **terkonfirmasi terukur di lingkungan ini**, bukan sekadar dikutip |
 | 2026-09-17 | **Bobot model diusulkan di-vendor (124 KB), TIDAK di-commit pada giliran ini** | Rencana Kerangka **belum final** dan pemilik belum menyetujui desain G3 yang baru. Menaruh biner sebelum desainnya disetujui = membuat artefak yang mungkin harus dicabut. Provenance-nya (URL codeload + sha256 + ukuran) **sudah dicatat di sini**, jadi keputusan menunda tidak menghilangkan kemampuan mereproduksi |
+
+## P.6 T-30 DIUKUR (bukan ditunda) — dan hasilnya MEMBALIK sebagian rencana
+
+Pemilik mendelegasikan (*"Aku ikut yang terbaik menurut kamu"*). Yang terbaik bukan memilih salah satu
+dari dua pilihan yang kutawarkan, melainkan **mengukurnya sekarang** — tooling masih terpasang di sesi ini.
+
+| Kondisi | Metode | PSNR dB | SSIM |
+|---|---|---|---|
+| **FOTO 150 DPI (2,0×)** | lanczos4 | 36,91 | 0,9281 |
+| | FSRCNN → lanczos | 37,09 | 0,9263 |
+| | ESPCN → lanczos | 37,19 | 0,9266 |
+| **FOTO 200 DPI (1,5×)** | **lanczos4** | **39,28** | **0,9566** |
+| | FSRCNN → lanczos | 39,14 | 0,9524 |
+| | ESPCN → lanczos | 39,02 | 0,9514 |
+| **GARIS 150 DPI (2,0×)** | lanczos4 | 24,18 | 0,9431 |
+| | FSRCNN → lanczos | **25,67** | **0,9551** |
+| **GARIS 200 DPI (1,5×)** | lanczos4 | 26,11 | 0,9657 |
+| | FSRCNN → lanczos | **28,10** | **0,9752** |
+
+### ⚠️ Confound metodologis yang WAJIB dinyatakan (ditemukan saat membandingkan dua run)
+
+Angka **GARIS di tabel ini TIDAK BISA dibandingkan** dengan angka GARIS di P.2 (20,85–22,61). Dua sebab:
+(a) run ini menambah **langkah resize akhir** yang menghaluskan sehingga **menaikkan** PSNR secara artifisial;
+(b) dimensinya ganjil (511/255 vs 512/256). **Angka GARIS yang sah untuk disimpulkan adalah yang di P.2**
+(perbandingan langsung, tanpa resize tambahan): **20,8–22,6 dB, di bawah ambang 32**. Angka GARIS di P.6
+hanya sah untuk **membandingkan antar-metode di dalam tabel yang sama**.
+**Angka FOTO justru konsisten antar-run** (lanczos4 = 36,91/0,9281 di kedua run) → **sah disimpulkan**.
+
+### Tiga kesimpulan yang mengubah rencana
+
+1. **Memperketat 150 → 200 DPI BERHARGA BESAR untuk foto: +2,37 dB dan SSIM 0,9281 → 0,9566.** Tapi
+   **masih di bawah 0,97** ("sangat baik" versi repo). **Satu-satunya cara mencapai ≥0,97 adalah tidak
+   upscale sama sekali** — yaitu jalur **LOLOS** (sumber ≥300 DPI).
+2. **AI TIDAK MEMBERI KEUNTUNGAN PADA FOTO — di kedua kondisi.** Pada 2,0×: PSNR naik +0,18/+0,28 dB tetapi
+   **SSIM justru TURUN** (0,9281 → 0,9263/0,9266). Pada 1,5×: **AI lebih buruk di kedua metrik**
+   (39,28/0,9566 → 39,14/0,9524 dan 39,02/0,9514).
+3. **AI hanya unggul pada GARIS HALUS (+1,5 s.d. +2,0 dB)** — **tetapi justru konten itu DILARANG oleh
+   Langkah 0** (dan di P.2 terbukti tetap di bawah ambang 32 untuk semua metode).
+
+### Keputusan T-30 (berdasarkan bukti di atas)
+
+> **AI upscaling KELUAR dari jalur kritis. G3 jalur "LOLOS BERSYARAT" diimplementasikan dengan `Lanczos4`,
+> ambang DIPERKETAT dari ≥150 ke ≥200 DPI, dan kenaikan dibatasi ≤1,5×.**
+
+Alasannya, dalam satu kalimat: **AI tidak membantu pada satu-satunya jenis isi yang boleh masuk gerbang
+(foto), dan hanya membantu pada jenis isi yang dilarang (garis halus).**
+
+**Konsekuensi yang menguntungkan (tidak direncanakan, muncul dari bukti):**
+- **T-29 turun prioritas**: bobot model jadi **OPSIONAL**, bukan kebutuhan jalur kritis → **tidak perlu
+  vendor biner ke repo**, dan **ketergantungan `pip install` hilang dari jalur kritis** (Lanczos4 tersedia
+  di Pillow/OpenCV dasar). Sistem jadi **lebih tahan** terhadap lingkungan yang paketnya tidak persisten.
+- Waktu proses turun dari 2–4 dtk jadi **0,01 dtk** per aset.
+- **AI tetap dipertahankan sebagai penyempurnaan opsional** untuk foto di pita 200–300 DPI, **dilabeli
+  jujur** bahwa keuntungannya tidak terukur berarti — tidak boleh dijual sebagai peningkatan mutu.
+
+**Yang belum diukur dan dinyatakan sadar:** sumber **≥250 DPI**; perilaku pada foto client yang sudah
+terkompresi JPEG berat; dan **font sungguhan** (font sistem kosong — yang teruji guratan tipis).
+
+---
+
+## Giliran 12 (17 September 2026) — jawaban pemilik, VERBATIM
+
+Disimpan apa adanya sesuai instruksi berdiri *"Aku ga mau ada satu hal pun yang terlupakan… simpan chat aku ini"*.
+
+**Pesan pemilik (verbatim):**
+> Lanjutkan sesuai yang menurutmu terbaik
+
+**Jawaban atas 2 pertanyaan review (verbatim, lewat komponen pilihan):**
+
+| Pertanyaan yang diajukan | Jawaban pemilik |
+|---|---|
+| *"Rencana Kerangka sudah lengkap dan sudah dikoreksi oleh hasil uji. Apakah ini sudah final sehingga folder sistem boleh dibuat?"* | memilih **"Setuju — finalisasi dan buat PR-nya"** *(opsi: aku buat `sistem/sistem-undangan/` + `00_RENCANA_KERANGKA.md` + `SYSTEM_MANIFEST.md` (Tahap: kerangka) + skeleton folder + daftar di INDEKS, semuanya dalam SATU PR tanpa auto-merge; 3 pertanyaan sisanya kupakai usulanku)* |
+| *"T-30: ambang foto untuk jalur 'ditingkatkan AI'. SSIM terukur 0,93, di bawah ambang 'sangat baik' repo (0,97)."* | **jawaban bebas (verbatim):** *"Aku ikut yang terbaik menurut kamu"* |
+
+### Apa yang dilakukan atas delegasi itu
+
+Delegasi *"yang terbaik menurut kamu"* **tidak** diartikan sebagai izin memilih yang paling mudah. Untuk T-30
+yang terbaik adalah **mengukur**, karena tooling masih terpasang di sesi yang sama — menunda satu giliran
+hanya akan membuat keputusan diambil tanpa angka. Hasilnya di bagian **P.6** dan **membalik sebagian rencana**:
+AI upscaling **keluar dari jalur kritis**, ambang **diperketat**.
+
+Untuk *"buat PR-nya"*: dikerjakan **persis** seperti yang dijanjikan di opsi itu — satu PR, tanpa auto-merge,
+3 pertanyaan sisanya (#2 7 hal konsisten, #3 tingkat risiko gerbang, #6 aset besar tidak masuk repo) dipakai
+sebagai usulan agent dan **dicatat sebagai penerimaan bersyarat**: pemilik masih boleh mengubahnya, dan
+revisinya wajib masuk Log Keputusan. **Tidak ditulis seolah-olah pemilik sudah menelaah ketiganya.**
