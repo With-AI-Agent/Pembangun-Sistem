@@ -685,3 +685,336 @@ memutuskan nasib aturan yang memberi wewenang kepada pengadil itu. **Wajib diwar
 | 2026-09-17 | Konflik T19 vs prinsip #6/#6–#7 `PROTOKOL_REVIEW_INDEPENDEN.md` **DILAPORKAN, tidak ditimpa** | Aturan repo: *"konflik tetap harus dilaporkan, bukan ditebak"*; menimpa prinsip yang sudah teruji di puluhan PR tanpa keputusan eksplisit pemilik = pelanggaran |
 | 2026-09-17 | Keputusan: **mewarisi** protokol + `tools/review_prompt.py`, bukan menulis mekanisme baru | Mekanisme yang ada lebih canggih dari yang dibayangkan (prompt dibangkitkan alat, deterministik, gagal keras, larangan pihak yang direview mengarang prompt pengadilnya sendiri); mengarang baru berisiko lebih lemah |
 | 2026-09-17 | 4 penguatan berbasis riset dicatat sebagai kandidat aturan: verifikasi adversarial, AI sebagai penyaring derau, model reviewer beda keluarga + dicatat, verifikasi runtime wajib | Semuanya punya bukti angka, bukan preferensi gaya |
+
+---
+
+## Giliran 3 — 2026-09-17: persetujuan bersyarat + KOREKSI PEMILIK atas klaim agent + 2 tuntutan baru + 1 anekdot
+
+> **Kutipan UTUH tanpa suntingan.** Pemilik membuka dengan: *"Jawaban nya panjang, pastikan ga ada yang
+> terlupakan dan terlewat."* Tanda kutip ganda di dalam kutipan adalah milik pemilik (menyoroti klaim agent).
+
+Jawaban nya panjang, pastikan ga ada yang terlupakan dan terlewat.
+
+1. Klo memang itu yang terbaik, aku setuju. Tapi aku harus sampaikan sebuah info. DI sebuah sistem lain, aku pernah mengalami hal berikut. Aku udh liat buku panduan pengguna. Aku berterimakasih karena dia udh membuatnya lebih lengkap. Tapi harus aku katakan bahwa isi nya masih banyak kurang dan cacat. Di antara nya adalah banyak hal berkaitan cara tidak disertakan di situ. Misalnya cara jika pengguna mau melakukan audit independen (dia hanya nyediakan prompt tapi ga ngasih panduan nya), cara ketika auditor independen udh ngasih hasil (dia juga cuma ngasih prompt nya), cara ketika mau pekerjaan lama diulang (dia juga cuma tulis prompt nya), ada juga Perintah mesin yang boleh pengguna minta agent jalankan (disebut dan ditulis rapi dalam tabel tapi ga dijelasin fungsi dan cara pake nya). Bahkan aku juga merasa curiga, aku menduga ada beberapa prompt yang justru isi kata-katanya bukan ditujukan untuk agent, melainkan untuk pengguna. Dan masih banyak lagi masalah yang lain. Sehingga waktu itu Aku minta dia baca ulang semuanya dan perbaiki lagi semuanya. Pastikan lebih sistematis, lebih mudah dipahami, semua fungsi dan tujuan serta caranya dijelasin dengan bahasa yang mudah buat aku pahami.
+2. Aku kurang paham soal hal tersebut. Aku minta yang terbaik dari kamu.
+3. Ya, lakukan yang terbaik.
+
+
+
+Kamu bilang "**Hal pertama yang harus kamu tahu: mekanisme ini SUDAH ADA di repomu, dan lebih canggih dari yang kamu gambarkan**". Tapi yang aku tau, yang udh ada itu mekanisme review PR. Dan memang aku mau itu juga ditanam. Tapi yang aku maksud saat ini adalah mekanisme review isi repo, isi sistem, dan semua hal yang perlu diperiksa. Bukan soal PR dan bukan soal merge. Paham kan maksud aku? Apakah aku salah? Klo salah sampaikan aja. Aku lebih suka diluruskan jika memang salah, dan dibenarkan jika memang benar, bukan asal diiyakan saja. 
+
+Dan untuk mekanisme audit ini (baik audit/review PR maupun yang bukan PR), aku mau itu dibuat otomatis terkirim ke github, sehingga ketika review/audit udh selesai, aku ga perlu laporin hasilnya ke agent sesi yang lagi jalan (yang meniapan review/audit independen), melainkan aku cukup bilang bahwa review/audit udh selesai, dan dia otomatis tau semua hasilnya.
+
+
+
+Aku juga mau ceritakan satu hal. Sempat terjadi di sebuah sesi,..
+
+salah satu sesi review independen bilang begini:
+
+```
+Saya baca dulu aturan pemeriksa laporan supaya laporannya memenuhi syarat tanpa melebih-lebihkan cakupan.
+```
+
+Aku merasa janggal. Aku rasa seharusnya jika memang ada yang perlu dilaporkan maka seharusnya itu tetap dilaporkan biarpun tidak masuk dalam cakupan yang diminta. Iya kan? Apakah aku yang salah paham atau gimana ya? Coba tolong pastikan.
+
+## Peta tuntutan giliran 3 (ekstraksi agent)
+
+| # | Tuntutan/pernyataan pemilik | Catatan agent |
+|---|---|---|
+| T26 | **T17 disetujui** ("Klo memang itu yang terbaik, aku setuju") — **tetapi disertai bukti pengalaman nyata** dari sistem lain: pedoman yang "sudah lebih lengkap" pun **masih banyak kurang dan cacat** | Ini **bukti empiris** bahwa koreksi agent di K.1 **belum cukup**. Daftar cacat yang dilaporkan pemilik jadi **daftar periksa wajib** untuk manual sistem-undangan |
+| T26a | Cacat #1: **banyak "cara" tidak disertakan** — contoh konkret: cara melakukan audit independen (**hanya diberi prompt, tanpa panduan**), cara ketika auditor sudah memberi hasil (**hanya prompt**), cara mengulang pekerjaan lama (**hanya prompt**) | Pola cacatnya spesifik: **prompt tanpa prosedur**. Prompt = apa yang ditempel; prosedur = langkah sebelum/sesudah, apa yang diharapkan, apa yang dilakukan kalau gagal |
+| T26b | Cacat #2: **perintah mesin yang boleh diminta pengguna** ditulis rapi dalam tabel **tetapi tidak dijelaskan fungsi dan cara pakainya** | Tabel perintah tanpa kolom "untuk apa" + "kapan dipakai" + "apa yang terjadi kalau gagal" = tidak bisa dipakai orang awam |
+| T26c | Cacat #3 (kecurigaan pemilik): **ada prompt yang kata-katanya justru ditujukan untuk PENGGUNA, bukan untuk AGENT** | ⚠️ Cacat serius dan **bisa dideteksi mekanis**: prompt yang ditempel ke agent wajib berkalimat perintah ke agent ("baca…", "verifikasi…", "laporkan…"), bukan kalimat ke manusia ("kamu bisa…", "silakan…") |
+| T26d | **Instruksi pemilik:** agent wajib **baca ulang semuanya dan perbaiki semuanya** — lebih sistematis, lebih mudah dipahami, **semua fungsi + tujuan + cara dijelaskan dengan bahasa yang mudah dipahami pemilik** | Standar kelulusan manual: **bukan "lengkap"**, tetapi **"bisa dipakai orang awam tanpa bertanya lagi"** |
+| T27 | Poin 2 (keputusan atas penolakan T19 / override prinsip #6&#7) **didelegasikan**: *"Aku kurang paham soal hal tersebut. Aku minta yang terbaik dari kamu."* | Agent memutuskan; wajib melaporkan alasan + tetap boleh dibalik pemilik |
+| T28 | Poin 3 **disetujui**: *"Ya, lakukan yang terbaik."* → riset 8 gap skill + skill pendukung audit dijalankan | Scope riset diperluas: termasuk skill pendukung mekanisme audit/review (T21) |
+| T29 | **KOREKSI PEMILIK atas klaim agent:** yang sudah ada itu **mekanisme review PR**; yang pemilik maksud adalah **mekanisme review ISI repo, ISI sistem, dan semua hal yang perlu diperiksa — bukan soal PR dan bukan soal merge**. Pemilik meminta dinilai jujur: *"Apakah aku salah? Klo salah sampaikan aja. Aku lebih suka diluruskan jika memang salah, dan dibenarkan jika memang benar, bukan asal diiyakan saja."* | ⚠️ **Klaim agent di K.0 harus diuji ulang terhadap dokumen, bukan dibela.** Agent wajib membaca `QUALITY_ASSURANCE_AND_EVOLUTION.md`, `_meta/ACCEPTANCE_TESTS.md`, `_meta/FAILURE_INJECTION_TESTS.md`, arsip `AUDIT_*`, dan mekanisme audit Sistem Klinik sebelum menjawab |
+| T30 | **TUNTUTAN BARU:** hasil audit/review (**baik PR maupun non-PR**) **otomatis terkirim ke GitHub**, sehingga pemilik **tidak perlu melaporkan hasil ke sesi yang sedang berjalan** — cukup bilang "review/audit sudah selesai", dan sesi itu **otomatis tahu semua hasilnya** | Butuh: kanal publikasi hasil + **mekanisme penemuan otomatis** oleh sesi penulis. Sebagian kecil sudah dipraktikkan (verdict sebagai komentar PR), tetapi **pengambilan otomatis oleh sesi penulis belum ada** |
+| T31 | **ANEKDOT + permintaan verifikasi:** sebuah sesi review independen berkata *"Saya baca dulu aturan pemeriksa laporan supaya laporannya memenuhi syarat tanpa melebih-lebihkan cakupan."* Pemilik merasa **janggal**: *"seharusnya jika memang ada yang perlu dilaporkan maka seharusnya itu tetap dilaporkan biarpun tidak masuk dalam cakupan yang diminta. Iya kan? Apakah aku yang salah paham atau gimana ya? Coba tolong pastikan."* | Harus dijawab tegas: **pemilik benar atau salah?** Agent wajib memilah dua makna kalimat itu dan memberi aturan yang tidak ambigu |
+
+## Log Keputusan (lanjutan)
+
+| Tanggal | Perubahan | Alasan |
+|---|---|---|
+| 2026-09-17 | Giliran 3 disimpan verbatim + T26–T31 dipetakan | Permintaan pemilik: "pastikan ga ada yang terlupakan dan terlewat" |
+| 2026-09-17 | **T29 dicatat sebagai KOREKSI atas klaim agent di K.0** — agent wajib menguji ulang klaimnya terhadap dokumen sebelum menjawab, dan **wajib mengakui kalau over-claim** | Pemilik meminta diluruskan kalau salah; norma repo: konflik/kesalahan dilaporkan, bukan dihaluskan (prinsip #8 append-only, "jangan menghaluskan") |
+
+---
+
+# L. VERDICT atas T26–T31 — termasuk KOREKSI atas klaim agent sendiri
+
+## L.1 T29 — **PEMILIK BENAR. Klaim agent di K.0 OVER-CLAIM dan dikoreksi di sini.**
+
+Agent menulis: *"mekanisme ini SUDAH ADA di repomu, dan lebih canggih dari yang kamu gambarkan"* sambil menunjuk
+`PROTOKOL_REVIEW_INDEPENDEN.md` + `tools/review_prompt.py`. **Itu keliru untuk maksud pemilik**, dan pemilik
+benar menangkapnya. Bukti dari dokumen, bukan dari ingatan:
+
+- **Protokol itu memang terikat PR.** Bagian "Anatomi prompt reviewer (wajib berisi)" butir 2 mensyaratkan
+  **"Objek ter-pin: nomor PR + SHA basis + SHA head"**. Butir mekanika putusannya berbicara tentang **merge**.
+- **Alatnya juga terikat PR.** `tools/review_prompt.py` hanya punya `--pr <N>`, `--generic`, `--out`
+  (diperiksa langsung dari `add_argument` di baris 616–618). **Tidak ada mode audit isi.** Kalau tidak ada PR,
+  alat itu bahkan berhenti dan menyuruh menulis nomor PR manual (baris 198–220).
+
+**Jadi: untuk "review ISI repo/sistem, bukan PR dan bukan merge", mekanisme yang agent tunjuk TIDAK berlaku.
+Pemilik tidak salah paham. Agent yang menyamakan dua hal berbeda.**
+
+### Tetapi — supaya koreksinya juga akurat: mekanisme audit ISI **memang ada**, hanya **tidak terpadu**
+
+Ini bagian yang tetap benar dari K.0, dan penting supaya tidak dibangun duplikat:
+
+| Sudah ada untuk audit ISI | Isi | Bukti pernah dijalankan |
+|---|---|---|
+| `_meta/QUALITY_ASSURANCE_AND_EVOLUTION.md` (226 baris) | **QA 3 lapis**: (1) meta-sistem, (2) sistem domain memeriksa dirinya, (3) verifikasi output. **Kedalaman berbasis risiko**: Ringan / Sedang / Mendalam. **7 LENSA AUDIT** (dikodifikasi 5 Sep 2026, temuan M-08). **Klasifikasi temuan WAJIB**: `B` bug / `A` ambiguitas / `G` gap proses / `N` kebutuhan baru / `P` preferensi-housekeeping, **+ prioritas P1–P3 + dasar bukti**. **Batasan anti-recursion**: objek, trigger, kedalaman, acceptance criteria, **kondisi berhenti**, pemilik approval. **Regression check wajib** 7 pertanyaan. **Rollback** 7 langkah | 8 arsip audit nyata di `_meta/_internal/`: `AUDIT_META_SISTEM_2026-09-03/05/09`, `AUDIT_SISTEM_KONTEN_KREATOR_2026-09-03`, `AUDIT_SISTEM_PRESENTASI_2026-09-05`, `BEHAVIORAL_AUDIT_2026-09-03`, `BEHAVIORAL_AUDIT_2026-09-04_PILOT_002`, `REGRESSION_AUDIT_2026-09-03` |
+| `_meta/ACCEPTANCE_TESTS.md` + `_meta/FAILURE_INJECTION_TESTS.md` + `_meta/DEFINITION_OF_DONE.md` | uji perilaku, uji jalur gagal, kriteria selesai | dijalankan alat: `test_failure_injection.py` (73 skenario, PASS di sesi ini) |
+| `tools/` (5 alat) | `validate_repo.py` · `check_selfcontained.py` · `test_failure_injection.py` · `build_template.py` · `backup_verify.py` | semua PASS diukur di sesi ini |
+| **Sistem Klinik** (`sistem/sistem-klinik/_sistem/`) | `01_ALUR_RUN.md` · **`02_KATALOG_CACAT.md`** · `03_KEBIJAKAN_LEBUR.md` · `04_KONTRAK_TANAMAN.md` · `05_TAWARAN_KAPABILITAS.md` · `06_RITME_KIT.md` · `validate_system.py` | run ke-2 = **"audit menyeluruh seluruh berkas folder atas permintaan pemilik"** (PR #63) |
+
+**Catatan penting untuk T26:** lensa audit **#5** sudah persis tentang keluhan pemilik —
+**"Kemudahan pakai (kacamata pengguna awam) — cukup satu prompt? Apakah dokumen yang ditempel pengguna adalah
+versi terbaru?"**, dengan contoh nyata terdokumentasi: *"prompt pembuka PANDUAN vs entry point 00 berbeda langkah
+— M-05/M-15"*. **Jadi repo ini SUDAH punya lensanya; sistem lain yang pemilik ceritakan gagal MENERAPKANNYA.**
+
+### Yang BENAR-BENAR BELUM ADA (permintaan pemilik valid dan baru)
+
+1. **Tidak ada prompt audit-isi yang DIBANGKITKAN ALAT.** `review_prompt.py` membangkitkan prompt review **PR**;
+   **tidak ada padanannya untuk audit isi** yang mem-pin objek (folder/sistem, sha commit, daftar berkas).
+   **Akibatnya fatal dan persis yang alat itu dibuat untuk mencegah:** hari ini prompt audit isi harus **dikarang
+   tangan** — artinya **pihak yang diaudit menulis instruksi untuk pengadilnya sendiri**. Prinsip yang sudah ada
+   (*"pihak yang direview TIDAK boleh mengarang/menambah/memotong/menyunting prompt review untuk dirinya sendiri"*)
+   **tidak bisa ditaati** untuk audit isi karena alatnya belum ada.
+2. **Tidak ada pengiriman/pengambilan hasil secara otomatis (T30)** — baik untuk PR maupun non-PR. Praktik yang
+   ada: verdict diterbitkan sebagai **satu komentar PR** (terdokumentasi di `_log-sesi/LOG_SESI_2026-09-16_7.md`),
+   tetapi **pengambilan otomatis oleh sesi penulis belum ada** — pemilik yang harus memberi tahu.
+3. **Sistem Klinik terlalu berat untuk kebutuhan ini.** Klinik adalah **run perawatan** (diagnosis → rencana →
+   tindakan → verifikasi → catatan → panen) dengan gerbang **G-Rencana** & **G-Final** dan katalog cacat — dirancang
+   untuk **MEMPERBAIKI** sistem. Yang pemilik mau juga mencakup mode **ringan**: "audit isi → laporkan temuan",
+   tanpa wajib masuk jalur tindakan.
+
+**Keputusan agent:** warisi **7 lensa + klasifikasi B/A/G/N/P + prioritas P1–P3 + kedalaman berbasis risiko +
+batas anti-recursion** dari protokol QA yang sudah ada, lalu **BANGUN 3 hal yang belum ada** di atas.
+**Bukan** menulis mekanisme audit baru dari nol (itu akan lebih lemah dari yang sudah teruji), dan **bukan**
+mengklaim yang sudah ada itu cukup (itu over-claim yang sudah dikoreksi).
+
+## L.2 T30 — hasil audit otomatis terkirim ke GitHub: **DITERIMA, rancangan konkret**
+
+**Yang sudah ada (sebagian):** verdict sebagai **satu komentar PR** — sudah jadi praktik nyata.
+**Yang belum ada:** (a) **pengambilan otomatis** oleh sesi yang sedang berjalan, (b) **kanal untuk audit non-PR**.
+
+**Rancangan yang diusulkan (belum dieksekusi — menunggu keputusan pemilik):**
+
+1. **Kanal audit non-PR = GitHub ISSUE, satu issue per run audit.** Alasan memilih issue (bukan branch/gist):
+   `api.github.com` **terjangkau dan terautentikasi** dari sandbox (diverifikasi: `gh api rate_limit` → sisa 4.984),
+   punya **URL permanen** yang bisa pemilik buka, mendukung **komentar append** (cocok untuk putaran 2),
+   dan **bisa diambil mekanis** dengan `gh issue view --comments`.
+2. **Konvensi penemuan otomatis** supaya tidak perlu diberi tahu: **label tetap** (mis. `audit-independen`) +
+   **pola judul tetap** yang memuat **objek + sha** (mis. `AUDIT sistem-undangan @<sha>`). Dengan konvensi itu,
+   sesi penulis cukup mengambil **verdict terbaru** tanpa pemilik menyebutkan nomor/URL.
+3. **Alat pengambil** (analog `review_prompt.py`, mis. `tools/ambil_verdict.py --terbaru`): mencetak verdict +
+   seluruh temuan + status putaran. **Alur pemilik jadi satu kalimat**: pemilik bilang *"review/audit sudah selesai"*
+   → sesi menjalankan alat itu → **otomatis tahu semua hasilnya**, tanpa pemilik menyalin apa pun. **Ini persis
+   yang diminta T30.**
+4. **Untuk audit PR:** tetap pakai komentar PR (sudah terbukti), dan alat pengambil yang sama membaca
+   `gh pr view --comments`. **Satu alat, dua kanal** — menghindari dokumen/alat kembar.
+5. **Pagar yang WAJIB ikut diwarisi:** prinsip **#5 batas jendela (6d)** tetap berlaku — selama jendela run/uji
+   terbuka, artefak yang dipublikasikan reviewer **tidak boleh memuat rumusan jawaban/kriteria yang belum tertutup
+   uji**; pakai pointer SHA+baris. Kanal otomatis **tidak boleh** jadi jalan bocor untuk itu.
+6. **Batas kejujuran:** `gh issue create` **belum diuji** di sesi ini (menguji = membuat artefak nyata di repo,
+   butuh izin pemilik). Yang sudah diverifikasi baru **kemampuan baca** (`gh api`, `gh pr view`).
+
+## L.3 T31 — anekdot "tanpa melebih-lebihkan cakupan": **PEMILIK BENAR.**
+
+Kalimat reviewer itu: *"Saya baca dulu aturan pemeriksa laporan supaya laporannya memenuhi syarat tanpa
+melebih-lebihkan cakupan."* Kalimat ini **ambigu**, dan **kejanggulan pemilik sah**:
+
+- **Makna terbaik (benar):** reviewer tidak mau **MENGKLAIM** cakupan lebih luas dari yang benar-benar dikerjakan.
+  Itu disiplin kejujuran yang **memang diwajibkan** repo ini.
+- **Makna terburuk (berbahaya):** reviewer akan **menyaring/membuang** temuan supaya laporan "muat" dalam cakupan
+  yang diminta. **Ini yang pemilik khawatirkan, dan kekhawatiran itu benar.**
+
+Agent **tidak bisa memastikan niat reviewer** dari satu kalimat — jadi yang agent putuskan adalah **aturannya**,
+supaya ambiguitas ini tidak bisa muncul lagi:
+
+> ### ATURAN CAKUPAN (dikunci sebagai calon aturan sistem)
+> **Cakupan membatasi RENCANA PENCARIAN dan KLAIM. Cakupan TIDAK PERNAH membatasi LAPORAN.**
+>
+> - **Yang dibatasi cakupan:** apa yang dicari **secara sistematis** (checklist wajib), dan apa yang boleh
+>   **DIKLAIM** sudah diperiksa.
+> - **Yang TIDAK BOLEH dibatasi cakupan:** apa yang boleh **DILAPORKAN**.
+> - **WAJIB:** temuan di luar cakupan **tetap dilaporkan**, diberi label **"di luar cakupan"**, lengkap dengan
+>   klasifikasi `B/A/G/N/P` + prioritas `P1–P3` + **dasar bukti**.
+> - **DILARANG:** (a) **mengklaim** cakupan lebih luas dari yang dikerjakan; (b) **membuang atau menghaluskan**
+>   temuan karena tidak diminta; (c) **bertindak/memperbaiki** atas temuan di luar cakupan **tanpa mandat**
+>   — karena **menemukan ≠ memperbaiki** (prinsip QA #2: *"Pemeriksaan tidak sama dengan perubahan"*).
+> - **WAJIB:** kalau reviewer menyadari telah membaca sesuatu di luar jalur yang diizinkan → **ungkapkan
+>   (disclosure)**, jangan disembunyikan.
+
+**Aturan ini bukan karangan agent — repo ini sudah mempraktikkannya, dan itu bukti terkuat bahwa pemilik benar:**
+
+| Preseden di repo ini | Apa yang terjadi |
+|---|---|
+| `_log-sesi/LOG_SESI_2026-09-15_3.md` | *"Log OPEN-basi milik sesi lain **DITEMUKAN tapi TIDAK DISENTUH** (aturan sesi ini): hanya **dicatat di log ini + dilaporkan**"* → temuan di luar cakupan **dilaporkan**, tidak dibuang, tidak ditindak |
+| `_log-sesi/LOG_SESI_2026-09-16_11.md` + body PR #35 | **"disklor paparan"**: sesi **mengungkapkan** bahwa ia membuka berkas di luar jalur baca wajib **sebelum** keputusan pertama ter-commit → **diungkapkan, bukan disembunyikan** |
+| `_meta/_internal/HOUSEKEEPING_2026-09-16.md` | Sesi menemukan **5 branch diverged + log OPEN milik sesi lain** di luar mandatnya → **dilaporkan lengkap dengan rekomendasi**, tanpa menghapus/menindak apa pun |
+| `QUALITY_ASSURANCE_AND_EVOLUTION.md` | *"Temuan tanpa bukti terverifikasi **dicatat sebagai 'dugaan'** dan tidak boleh langsung jadi perbaikan"* → temuan lemah pun **dicatat**, bukan dibuang |
+| Skema klasifikasi `B/A/G/N/P` | Adanya kategori **`N` (kebutuhan baru)** dan **`P` (preferensi/housekeeping)** = **slot struktural** untuk temuan yang bukan objek utama. Skema ini **hanya masuk akal** kalau temuan di luar cakupan memang **ditampung** |
+| Prinsip #8 protokol review | **append-only**, *"jangan menghapus riwayat, **jangan menghaluskan**"* |
+
+**Kesimpulan untuk pemilik: kamu TIDAK salah paham. Prinsipmu benar dan sudah jadi praktik di repo ini.**
+Yang salah adalah **kalimat reviewer itu** — paling ringan: **dirumuskan buruk** sehingga terdengar seperti
+penyaringan; paling berat: **sinyal bahwa temuan akan disaring**. Dua-duanya layak dijadikan temuan.
+
+## L.4 T26 — bukti lapangan pemilik jadi **DAFTAR PERIKSA WAJIB** manual book
+
+Koreksi agent di K.1 ("lengkap = tempat mencari, bukan menyimpan") **belum cukup**. Pengalaman pemilik di sistem
+lain membuktikan ada **kelas cacat yang tidak tertangkap** oleh koreksi itu. Keempat cacat yang dilaporkan pemilik
+diubah jadi **syarat kelulusan**:
+
+| Cacat yang dilaporkan pemilik (bukti lapangan) | Syarat kelulusan yang ditanam | Bisa dicek mekanis? |
+|---|---|---|
+| **Prompt tanpa prosedur** — cara audit independen, cara setelah auditor memberi hasil, cara mengulang pekerjaan lama: **hanya diberi prompt** | **Setiap mekanisme wajib punya 6 bidang:** (1) **Apa** itu, (2) **Kapan** dipakai, (3) **Cara** — langkah bernomor, (4) **Prompt siap tempel**, (5) **Apa yang terjadi sesudahnya**, (6) **Kalau gagal bagaimana**. Prompt tanpa 5 bidang lainnya = **cacat** | ✅ sebagian — kehadiran 6 bidang bisa dihitung alat |
+| **Tabel perintah tanpa penjelasan** — ditulis rapi tapi **fungsi dan cara pakainya tidak dijelaskan** | **Setiap perintah mesin wajib punya 5 kolom:** perintah · **fungsi (untuk apa)** · **kapan dipakai** · **keluaran yang diharapkan** · **kalau gagal** | ✅ kehadiran kolom bisa dihitung alat |
+| **Prompt yang kata-katanya ditujukan ke PENGGUNA, bukan ke AGENT** (kecurigaan pemilik) | **Aturan arah bicara:** blok prompt yang akan **ditempel ke agent** wajib berkalimat **perintah ke agent** ("baca…", "verifikasi…", "laporkan…", "jangan…"). **Dilarang** berkalimat ke manusia ("kamu bisa…", "silakan…", "anda akan…"). **Alasan kausal:** prompt yang salah arah membuat agent mengira sedang membaca penjelasan, bukan instruksi — dan agent bisa **tidak mengerjakan apa pun** | ✅ **bisa dideteksi lint** (pola kata) — kandidat cek validator baru |
+| *"dan masih banyak lagi masalah yang lain"* | **Standar kelulusan manual BUKAN "lengkap", melainkan: "bisa dipakai orang awam tanpa bertanya lagi."** Dan **tidak boleh dinyatakan sendiri oleh penulisnya** — wajib **diaudit sesi independen dengan lensa #5** (kacamata pengguna awam) | ⚠️ sebagian — sisanya penilaian manusia |
+
+**Instruksi pemilik yang mengikat (T26d):** *"baca ulang semuanya dan perbaiki lagi semuanya … lebih sistematis,
+lebih mudah dipahami, semua fungsi dan tujuan serta caranya dijelasin dengan bahasa yang mudah buat aku pahami."*
+→ Ini jadi **gerbang G0-manual**: manual tidak boleh dinyatakan selesai sebelum (a) 4 syarat di atas lulus,
+(b) **diuji pakai nyata** oleh pemilik dengan menjalankan 1 alur dari manual tanpa bertanya, dan (c) **diaudit
+lensa #5 oleh sesi independen**.
+
+## L.5 T27 — keputusan agent atas delegasi pemilik (prinsip #6 & #7)
+
+**KEPUTUSAN: prinsip #6 (Proporsional) dan #7 (maksimal 2 putaran, lalu eskalasi ke pemilik) TETAP DIPERTAHANKAN.
+Agent TIDAK memakai delegasi pemilik untuk menimpanya.**
+
+Alasan (berbasis bukti di K.2, bukan preferensi):
+1. Kedalaman tak terbatas **tidak menghasilkan kebenaran lebih**, melainkan **derau** — cry-wolf terdokumentasi
+   sebagai penyebab utama alat review ditinggalkan; generasi awal menghasilkan **9 positif palsu per 1 bug asli**.
+2. Hakim AI papan atas **gagal konsisten di ±25% kasus sulit** dengan **flip rate 20–35%** — menambah putaran
+   tanpa batas berarti menambah **peluang verdict berubah-ubah**, bukan menambah ketepatan.
+3. Prinsip #7 (eskalasi ke pemilik) justru **pengaman terakhir**: keputusan final tetap di manusia, sesuai bukti
+   bahwa **71% developer tidak mau merge kode AI tanpa review manusia**.
+4. **Ketelitian dinaikkan lewat 4 penguatan di K.3 (verifikasi adversarial, saring derau, model beda keluarga,
+   verifikasi runtime) — yaitu di DALAM batas #6/#7, bukan dengan membongkarnya.**
+
+**Satu penegasan yang menghubungkan T27 dengan T31 (penting, supaya tidak salah dibaca):**
+> **Batas 2 putaran membatasi LOOP review, BUKAN cakupan laporan.** Putaran boleh habis, tetapi
+> **temuan di luar cakupan tetap wajib dilaporkan** (aturan cakupan L.3). Keduanya tidak bertentangan.
+
+---
+
+# M. TEMUAN LINGKUNGAN yang MENGUBAH ARSITEKTUR — allowlist jaringan sandbox
+
+Ditemukan saat mengerjakan T28 (riset skill). **Ini temuan paling berdampak di sesi ini**, karena sebagian
+rekomendasi agent di bagian H **tidak memperhitungkannya**.
+
+## M.1 `find-skills` TIDAK BERFUNGSI di sandbox ini — dan agent hampir salah menyimpulkan
+
+`npx skills find` mengembalikan **"No skills found"** untuk `audit`, `code review`, `security audit`,
+`documentation`, `accessibility`. **Agent tidak langsung menyimpulkan "tidak ada skill audit"**, melainkan
+menjalankan **uji kontrol** dengan kueri yang pasti ada hasilnya:
+
+- `npx skills find react` → **"No skills found"**
+- `npx skills find nextjs` → **"No skills found"**
+
+**Uji kontrol gagal → alatnya yang rusak, bukan hasilnya yang kosong.** Penyebabnya teridentifikasi:
+**`skills.sh` TERBLOKIR** (`curl: (35) OpenSSL SSL_connect: SSL_ERROR_SYSCALL`, HTTP 000).
+
+**Kesimpulan yang jujur: agent TIDAK BISA mengklaim "tidak ada skill untuk audit".** Yang benar:
+**mekanisme pencarian skill resmi tidak bisa dijalankan dari lingkungan ini**, jadi pencarian skill harus
+lewat jalur lain (GitHub / npm) atau lewat alat platform.
+
+## M.2 Peta jangkauan jaringan (diukur dengan `curl`, bukan diasumsikan)
+
+| ✅ TERJANGKAU | HTTP | ❌ TERBLOKIR (SSL_ERROR_SYSCALL) |
+|---|---|---|
+| `registry.npmjs.org` | 200 | `skills.sh` (registry skill) |
+| `pypi.org` | 200 | `raw.githubusercontent.com` |
+| `api.github.com` (`gh api`, sisa rate 4.984) | 200 | `fonts.google.com`, `fonts.gstatic.com` |
+| `github.com` (web + git clone/push/fetch) | 200 | `developers.cloudflare.com`, `api.cloudflare.com`, `dash.cloudflare.com` |
+| — | — | `api.supabase.com`, `api.vercel.com` |
+| — | — | `api.whatsapp.com`, `graph.facebook.com`, `midtrans.com` |
+| — | — | `unpkg.com`, `cdn.jsdelivr.net`, `objects.githubusercontent.com` |
+| — | — | `google.com` (dan situs umum lain) |
+
+**Pola yang terbaca: sandbox ini hanya mengizinkan registry paket (npm, PyPI) + GitHub.** Semua situs/API lain
+diblokir di tingkat TLS. **Alat platform `web_search` / `fetch_page` TETAP berfungsi** (dipakai sepanjang sesi ini)
+karena jalurnya berbeda dari `curl` proses sandbox.
+
+## M.3 ENAM koreksi arsitektur yang WAJIB (akibat langsung M.2)
+
+1. **PUBLIKASI = lewat GIT, bukan lewat API.** `api.cloudflare.com` **terblokir** → `wrangler deploy`
+   **tidak bisa dijalankan agent dari sandbox**. **Jalur yang tetap hidup:** Cloudflare Pages/Vercel/Netlify
+   **terhubung ke repo GitHub dan membangun otomatis setiap push** — dan `git push` ke `github.com` **berfungsi**.
+   Jadi: **agent push → platform hosting membangun → situs tayang.** Penyambungan awal (hosting ↔ GitHub) adalah
+   **setup sekali oleh pemilik di browser**, bukan kerja agent. **Ini menyelamatkan seluruh arsitektur bagian H.**
+2. **WAKTU-PAKAI ≠ WAKTU-BANGUN.** API yang terblokir bagi **agent** tidak terblokir bagi **tamu**. Saat undangan
+   tayang, yang berbicara ke Supabase/Cloudflare/WhatsApp adalah **browser tamu**, bukan sandbox agent.
+   **Jadi RSVP, buku tamu, dan analitik tetap berfungsi** walau `api.supabase.com` terblokir dari sandbox.
+   **Konsekuensi:** provisioning (bikin DB, pasang secret) = **tindakan pemilik di browser**; agent hanya
+   menyiapkan kode + migrasi + instruksi.
+3. **SEMUA ASET HARUS DIBUNDEL LOKAL — DILARANG bergantung CDN.** `unpkg.com`, `cdn.jsdelivr.net`,
+   `fonts.gstatic.com` **terblokir** → undangan yang memuat font/lib dari CDN **akan rusak saat dibangun di sandbox**.
+   **Jalur font yang terbukti hidup:** paket npm **`@fontsource/*`** — diverifikasi `npm view @fontsource/playfair-display version`
+   → **5.3.0 tersedia**. Ini sekaligus **jalan keluar dari `fonts.google.com` yang terblokir**, dan memang
+   **self-hosting yang disarankan** (bagian F: lebih cepat + menghindari isu privasi GDPR).
+4. **QR CODE dibuat LOKAL, bukan lewat API.** `api.qrserver.com` **terblokir** → pakai `qrcode` dari **PyPI**
+   (terjangkau; unduhan uji berhasil di sesi ini) atau `qrcode` dari npm. **Lebih baik juga secara privasi:**
+   data tamu tidak pernah dikirim ke pihak ketiga hanya untuk membuat gambar QR.
+5. **WhatsApp & pembayaran TANPA API.** `api.whatsapp.com`, `graph.facebook.com`, `midtrans.com` **terblokir** →
+   konfirmasi **desain yang sudah dipilih di bagian A**: distribusi lewat **tautan `wa.me` + teks pesan siap kirim**
+   (persis pola pasar: "template pesan WhatsApp siap pakai"), dan **amplop digital = nomor rekening + gambar QRIS
+   statis + tombol konfirmasi tercatat**. **Nol kebutuhan API, nol biaya.** Gateway pembayaran = fitur premium
+   yang **memang tidak bisa** dijalankan dari sandbox.
+6. **T22 (riset internet oleh reviewer) HARUS lewat alat platform, bukan `curl`.** Karena situs umum terblokir,
+   aturan "agent independen wajib riset internet" **wajib dirumuskan sebagai**: riset dijalankan dengan
+   **alat `web_search`/`fetch_page` milik platform**, dan **hasilnya disimpan ke berkas beserta URL sumbernya**.
+   **Dilarang** merancang mekanisme yang bergantung pada `curl`/`wget` ke situs umum — **itu akan gagal diam-diam
+   atau keras di lingkungan nyata**. (Semua riset di bagian A–K sesi ini memang dijalankan lewat alat platform,
+   jadi ini sudah terbukti bisa.)
+
+**Kandidat skill tambahan yang belum terverifikasi:** `npx skills add <owner/repo@skill>` **mungkin** tetap berfungsi
+karena ia mengambil dari **GitHub** (terjangkau), bukan dari `skills.sh`. **BELUM DIUJI** — pengujian berarti
+memasang sesuatu, jadi butuh izin pemilik. Jalur cadangan yang **sudah terbukti hidup**: `git clone` langsung dari
+`github.com` (persis cara 10 ZIP di `Input-Pengguna/` dulu diproses).
+
+## M.4 TEMUAN platform ke-3: clone **jadi shallow LAGI** di tengah sesi
+
+Saat hendak merge `origin/main`, git menolak: **"refusing to merge unrelated histories"**. Diagnosis:
+`.git/shallow` **muncul kembali** (82 byte, stempel waktu di antara giliran) → `origin/main` **hanya terlihat
+1 commit**, `git merge-base HEAD origin/main` **kosong**, dan `eff7afa` **tidak lagi terbaca sebagai leluhur**
+`origin/main`. **Pemulihan:** `git fetch --unshallow --prune` → 583/584 commit terbaca, merge-base = `eff7afa`,
+lalu merge **bersih 0 konflik**.
+
+**Aturan kerja yang diperbarui (menggantikan pelajaran insiden #1 dan #2):**
+> **SEBELUM operasi apa pun yang bergantung riwayat** (merge, rebase, `merge-base`, cek leluhur, `git log` lintas-branch),
+> **WAJIB periksa 3 hal:** (1) `git rev-parse --is-shallow-repository` harus `false`, (2) HEAD lokal harus
+> **mengandung** sha remote branch (`git ls-remote`), (3) `git rev-list --count origin/main` masuk akal (ratusan, bukan 1).
+> Kalau salah satu gagal → **pulihkan dulu** (`git fetch --unshallow`, atau `git reset --mixed <sha remote>`),
+> **baru** lanjut. **Jangan pernah** `merge --allow-unrelated-histories` untuk mengatasi gejala ini.
+
+## M.5 KOREKSI atas laporan awal sesi ini: temuan #3 sudah BASI
+
+Laporan awal (giliran entry point) melaporkan unit `fixture-narasi-sejarah-setrika-arang-di-atas-bata-merah`
+sebagai **`blocked` menunggu G2**. **Itu sudah tidak berlaku.** `main` bergerak saat sesi ini berjalan:
+**PR #71 MERGED** (`b6a4b7e`), dan sesi lain (`arena/01a0ae4c`, log slot `_14`) mencatat:
+**G2 naskah final, G1 Tahap 4, dan G2 breakdown SEMUA DIBERIKAN pemilik 2026-09-17**, lalu **produksi dihentikan
+pemilik sebelum Tahap 5**. Keadaan unit akhir: **`abandoned`** — berhenti **sadar** di Tahap 4 dengan gerbang valid
+sampai tahap itu (**bukan kegagalan, bukan kelalaian**). **T-3 tetap tanpa mandat.** Log sesi lain **tidak disentuh**
+(79 baris, utuh setelah merge).
+
+**Pelajaran yang dicatat:** laporan awal adalah **snapshot pada sha tertentu** (`eff7afa`). Karena `main` bisa
+bergerak selama sesi berjalan, **temuan tentang state unit/PR wajib diberi sha acuannya** dan **dicek ulang
+sebelum dipakai mengambil keputusan** — bukan dipercaya dari laporan awal sesi.
+
+## Log Keputusan (lanjutan)
+
+| Tanggal | Perubahan | Alasan |
+|---|---|---|
+| 2026-09-17 | **Klaim agent di K.0 DIKOREKSI sebagai over-claim**; T29 diputuskan **pemilik benar** | Bukti dokumen: protokol + alat review terikat PR (anatomi butir 2, `--pr`/`--generic` saja). Agent menyamakan review PR dengan audit isi — dua hal berbeda |
+| 2026-09-17 | T31 diputuskan **pemilik benar**; **ATURAN CAKUPAN** dirumuskan (cakupan membatasi pencarian & klaim, **tidak pernah** membatasi laporan) | Kalimat reviewer ambigu; 6 preseden repo membuktikan temuan di luar cakupan **dilaporkan, tidak dibuang, tidak ditindak** |
+| 2026-09-17 | T26 (4 cacat manual) diubah jadi **syarat kelulusan mekanis** + gerbang G0-manual | Bukti lapangan pemilik dari sistem lain; lensa #5 QA sudah ada tapi gagal diterapkan di sana |
+| 2026-09-17 | T27 diputuskan: prinsip **#6 & #7 DIPERTAHANKAN**, tidak ditimpa walau pemilik mendelegasikan | Bukti cry-wolf + flip rate 20–35% + 25% gagal transitivitas; ketelitian dinaikkan **di dalam** batas lewat 4 penguatan K.3. Delegasi umum **tidak dipakai** untuk membongkar pengaman yang sudah teruji |
+| 2026-09-17 | **6 koreksi arsitektur (M.3) diwajibkan** setelah peta jaringan diukur | `api.cloudflare.com` dll terblokir → rekomendasi bagian H **tidak lengkap** tanpa koreksi ini. Publikasi harus lewat **git push**, aset harus **dibundel lokal**, font lewat **`@fontsource` npm**, QR **lokal**, WA/pembayaran **tanpa API** |
+| 2026-09-17 | **Agent TIDAK mengklaim "tidak ada skill audit"** | Uji kontrol (`react`, `nextjs`) ikut kosong → alatnya rusak karena `skills.sh` terblokir, bukan hasilnya kosong. Menyimpulkan "tidak ada" dari alat rusak = klaim palsu |
+| 2026-09-17 | Temuan #3 laporan awal **DICABUT sebagai basi** | PR #71 merged saat sesi berjalan; unit jadi `abandoned` di Tahap 4 dengan gerbang valid |
