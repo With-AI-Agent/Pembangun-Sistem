@@ -1,4 +1,4 @@
-> Salinan turunan. Sumber: _meta/PROTOKOL_REVIEW_INDEPENDEN.md sha 56c72a925dbe65de743a0326cd2a514d5ef84d0f tanggal 2026-09-17 versi-meta 1.19.0
+> Salinan turunan. Sumber: _meta/PROTOKOL_REVIEW_INDEPENDEN.md sha 57e50f922c90a29b8ef552a59ad7de066f09f128 tanggal 2026-09-18 versi-meta 1.21.0
 > Perbedaan: tidak ada
 > Pemakaian: protokol yang dirujuk bagian "Review independen (sesi lain)" di ACCEPTANCE_TESTS.md sistem ini; dipakai saat penutupan gate acceptance dan klaim permanen (level L1).
 # Protokol Review Independen (Sesi Lain)
@@ -89,3 +89,27 @@ mengarang aturan. Jadi ditulis **sebelum** verdict ke-2 dan ke-3 tiba.
 7. **Alatnya:** `python3 tools/ambil_verdict.py --pr <N>` mencetak verdict per hakim **dan agregasi
    fail-closed**-nya. **Membaca verdict ≠ menyetujuinya** — bertindak atas temuan tetap butuh keputusan
    pemilik, dan PR yang mengubah alat pengadil **tidak boleh di-merge oleh reviewer**.
+8. **Verdict WAJIB mendarat di kanal tahan lama — komentar di utas PR — sebelum sesi hakim ditutup.**
+   **Sebab aturan ini ada (kejadian nyata 18 Sep 2026):** pemilik mengerahkan **3 hakim** untuk PR #74,
+   tetapi **hanya 1 verdict yang sampai ke GitHub**. Pencarian menyeluruh di **63 ref** (semua branch)
+   tidak menemukan jejak dua verdict lainnya: tidak ada komentar, tidak ada review resmi, tidak ada
+   komentar baris, tidak ada commit, tidak ada berkas log sesi. Hakim yang menyimpan laporannya hanya di
+   `/tmp` dan di chat sesinya **tidak meninggalkan bukti yang bisa diverifikasi oleh siapa pun** —
+   termasuk oleh pemiliknya sendiri, dan termasuk oleh sesi berikutnya yang harus menindaklanjuti.
+9. **Kuorum DIHITUNG, bukan diasumsikan.** Yang mengumpulkan verdict WAJIB menjalankan
+   `python3 tools/ambil_verdict.py --pr <N> --harapkan <jumlah hakim yang dikerahkan>`. Bila slot yang
+   terbaca kurang dari jumlah itu, alat melaporkan **KUORUM BELUM TERPENUHI** dan hasilnya **tidak pernah
+   hijau** — hakim yang tidak menyerahkan laporan **bukan hakim yang puas**.
+   **Sebab aturan ini ada (cacat D-3, nyata terjadi):** alat lama menganggap **setiap komentar sebagai
+   slot hakim**, jadi 3 komentar penulis PR #74 ikut terhitung dan keluarannya berbunyi *"1 dari 4 verdict
+   bukan hijau"*. Itu terdengar seperti tiga hakim lain tidak menemukan apa-apa; yang sebenarnya terjadi
+   adalah **2 verdict hilang**. **Keheningan terbaca sebagai persetujuan** — persis kebalikan fail-closed.
+   Perbaikannya diuji-mutasi, dan `--uji` kini **memanggil fungsi kanal sungguhan** (regresi D-4: kanal
+   `--issue` dan kanal utama `--terbaru` dulu **crash `NameError`** setiap kali isunya punya komentar, dan
+   lolos dari `--uji` karena uji lama hanya menguji fungsi murni, tidak pernah fungsi kanal).
+10. **Verdict yang hilang = pekerjaan belum dilakukan, dan WAJIB diulang pada head yang berlaku.** Tidak
+    ada jalur "dianggap hijau karena tidak ada kabar", dan tidak ada jalur "sudah terlanjur, pakai yang
+    ada". Bila dua hakim memakai **branch atau slot log yang sama**, push yang datang kemudian **menimpa**
+    yang lebih dulu — karena itu tiap hakim wajib memakai branch/slot lognya sendiri, dan **menempel
+    verdictnya sebagai komentar PR sebelum sesi ditutup** (butir 8), supaya hasilnya tidak bergantung pada
+    umur branch mana pun.

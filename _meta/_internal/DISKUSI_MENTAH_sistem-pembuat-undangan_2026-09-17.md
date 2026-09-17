@@ -1493,3 +1493,61 @@ R2 adalah gejala dari tidak adanya penjaga**, dan akan terulang setiap kali sist
 `.git/shallow` yang muncul, kali ini **seluruh riwayat lokal diganti**. **Aturan yang sudah ada terbukti
 benar** — periksa riwayat **sebelum dan sesudah** operasi, dan jangan pernah `--hard`/rebase/
 `--allow-unrelated-histories`.
+
+## Giliran 14 (18 September 2026) — pemilik melaporkan 3 hakim selesai; yang sampai ke GitHub hanya 1
+
+**Pesan pemilik, VERBATIM:**
+
+> Semua hakim sudah selesai. Namun sayang nya salah satu dari 3 hakim itu melakukan nya di branch yang sama
+> dengan hakim lain, jading mungkin tertimpa. Coba tolong periksa
+
+### Yang diperiksa (bukan diiyakan, diukur)
+
+| # | Pertanyaan | Cara memeriksa | Hasil terukur |
+|---|---|---|---|
+| 1 | Berapa verdict yang benar-benar ada di PR #74? | daftar komentar + review resmi + komentar baris lewat API | **4 komentar** = 3 milik penulis + **1 verdict** (hakim ke-1, MERAH, 17:37Z). **Review resmi: 0. Komentar baris: 0.** |
+| 2 | Apakah verdict ke-2/ke-3 nyasar ke PR lain? | 30 komentar terbaru di **seluruh repo** | Yang baru hanya verdict **PR #75 (HIJAU)** dan **PR #76 (MERAH)** — keduanya sistem-konten-kreator |
+| 3 | Apakah ada branch berisi pekerjaan review PR #74? | fetch **63 ref** (tanpa `--depth`, supaya tidak shallow) lalu `git log --all` + `git grep` isi berkas per tip | Sebutan review PR #74 **hanya ada di branch penulis sendiri**. **Nol** di 62 ref lain |
+| 4 | Apakah ada bukti branch tertimpa/di-force-push? | bandingkan blob tiap berkas log sesi reviewer (slot 19–23) di semua ref | Tiap slot ada di **tepat satu branch** dengan **satu versi blob**. **Tidak ada dua versi bersaing** |
+| 5 | Apakah branch PR #74 disusupi commit asing? | daftar 33 commit PR + penulisnya | **33/33 milik penulis**; head tetap `ac25de0` = `refs/pull/74/head` |
+| 6 | Siapa pemilik slot 21/22/23? | baca log sesi di branch masing-masing | **Reviewer PR #75**, **pencatat Run 21**, **reviewer PR #76** — semuanya sistem-konten-kreator. Slot 21 menulis eksplisit: *"#74 di luar scope sesi ini, tidak disentuh"* |
+
+### Kesimpulan, termasuk batasnya
+
+**Terkonfirmasi:** hanya **1 dari 3** verdict yang sampai. **Tidak terkonfirmasi:** dugaan penimpaan branch —
+**tidak ada jejaknya** di sisi repo. **Batas kejujuran:** kalau ada hakim yang mendorong ke branch bersama
+lalu tertimpa push berikutnya **tanpa pernah membuka PR**, objeknya jadi tak terjangkau dan **GitHub tidak
+membukanya** — jadi "tidak ada jejak" **tidak membuktikan** "tidak pernah terjadi". Yang bisa dipastikan:
+**tidak ada yang bisa dipulihkan dari sisi penulis.**
+
+### Yang lahir dari pemeriksaan ini (dieksekusi, bukan dicatat)
+
+- **D-3 — keheningan terbaca sebagai persetujuan.** Alat menghitung **setiap komentar** sebagai slot hakim,
+  jadi 3 komentar penulis ikut terhitung dan keluarannya berbunyi *"1 dari 4 verdict bukan hijau"* — terdengar
+  seperti tiga hakim lain tidak menemukan apa-apa, padahal yang terjadi **2 verdict hilang**. Diperbaiki:
+  klasifikasi slot (judul menyebut penulis → bukan slot, diperiksa **lebih dulu** dari token laporan) +
+  **kuorum `--harapkan N`**. Pada PR nyata kini tercetak **"KUORUM BELUM TERPENUHI (1/3 slot terbaca,
+  2 hakim belum menyerahkan atau tidak terbaca) — MENAHAN merge"**.
+- **D-4 — kanal utama alat ini crash dan uji sendiri tidak tahu.** `cetak_issue` memakai `kumpul` yang
+  **tidak pernah didefinisikan** di fungsi itu → `NameError` setiap kali isu punya komentar. Kanal `--terbaru`
+  (kanal **utama**) ikut lewat fungsi itu. **`--uji` tidak menangkapnya karena hanya menguji fungsi murni,
+  tidak pernah fungsi kanal.** Diperbaiki + **smoke test kanal** ditambahkan.
+- **Kedua perbaikan dibuktikan load-bearing dengan merusak kodenya sungguhan:** mengembalikan cacat D-4 →
+  uji **GAGAL** dengan `NameError`; mematikan saringan slot → **7 GAGAL**. Lalu dipulihkan byte-identik.
+  `--uji` kini **29/29**.
+- **Protokol butir 8–10:** verdict **wajib mendarat sebagai komentar PR sebelum sesi hakim ditutup** (laporan
+  yang hanya hidup di `/tmp` dan di chat sesi **tidak bisa diverifikasi siapa pun**, termasuk pemiliknya);
+  **kuorum dihitung, bukan diasumsikan**; **verdict hilang = pekerjaan belum dilakukan dan wajib diulang**,
+  tidak ada jalur "dianggap hijau karena tidak ada kabar".
+- **T-35 dibuka** (TERTAHAN): ulangi 2 hakim pada head hasil koreksi, bukan `3543612`.
+- **T-33 diputuskan atas delegasi pemilik:** jalan **(b)** — buat pegangan W-01 sungguhan. Status TERTAHAN →
+  TERBUKA. Pemilik boleh membatalkan.
+
+### INSIDEN #6 — re-clone platform, kedua kalinya
+
+Ditemukan **karena pemeriksaan ini membandingkan remote dengan lokal**, bukan karena gejala: `HEAD` lokal
+= `eff7afa` (titik cabang awal) sementara remote = `ac25de0`, `shallow=true`, `rev-list count = 1`,
+reflog 2 entri, objek `ac25de0` **tidak ada lokal**, 40 berkas tampak berubah. Pemulihan:
+`fetch --unshallow --prune` → verifikasi remote = head yang didorong → `reset --mixed` (**bukan** `--hard`)
+→ **0 berkas kotor, 0 berkas berbeda isi, 617 commit**. **Tidak ada yang hilang.**
+**Yang berubah dari insiden #5: kali ini terdeteksi oleh pemeriksaan rutin, bukan oleh kegagalan.**

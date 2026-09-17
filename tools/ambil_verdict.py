@@ -37,6 +37,8 @@ Pemakaian:
 from __future__ import annotations
 
 import argparse
+import contextlib
+import io
 import json
 import re
 import subprocess
@@ -88,6 +90,13 @@ HEADING_RE = re.compile(r"^\s{0,3}#{1,6}\s")
 # Verdict dikeluarkan oleh pihak yang BUKAN penulis (prinsip protokol: pencatat != subjek).
 # Baris yang menyebut dirinya dari penulis bukan verdict.
 PENULIS_RE = re.compile(r"\b(penulis|koreksi terbuka|tanggapan penulis)\b", re.I)
+# D-3: penanda bahwa sebuah komentar adalah LAPORAN REVIEW, bukan komentar penulis PR.
+# Sengaja KETAT: kata "temuan"/"review" saja tidak cukup, karena komentar penulis di PR #74
+# memuat kata-kata itu di judulnya dan akan ikut terhitung sebagai slot hakim.
+LAPORAN_RE = re.compile(
+    r"(review\s+independen|verdict|putaran\s*\d|jangan\s+merge|\bMERAH\b|\bHIJAU\b|\bBLOCKER\b)",
+    re.I,
+)
 
 
 def simpulkan(teks: str) -> str:
@@ -113,25 +122,62 @@ def simpulkan(teks: str) -> str:
     return "TIDAK DITEMUKAN (tidak ada baris verdict; kata verdict di dalam prosa TIDAK dihitung)"
 
 
-def gabungkan(verdicts: list[str]) -> str:
+def slot_hakim(teks: str) -> bool:
+    """Apakah komentar/review ini SLOT HAKIM, bukan komentar penulis PR (perbaikan D-3).
+
+    Keputusan hanya dari BARIS BERPARKAH PERTAMA (judul):
+      1. judul menyebut dirinya dari penulis -> BUKAN slot (diperiksa LEBIH DULU);
+      2. judul memuat token laporan review   -> slot;
+      3. selain itu                          -> BUKAN slot.
+
+    Fail-closed dijaga: laporan review yang verdictnya tidak terbaca TETAP jadi slot, karena
+    TIDAK DITEMUKAN menahan merge. Risiko sisa — laporan hakim yang judulnya tidak memuat
+    token apa pun ikut terlewat — dikompensasi oleh `--harapkan N`: slot yang kurang muncul
+    sebagai KUORUM BELUM TERPENUHI, bukan sebagai keheningan.
+    """
+    for baris in strip_code_fences(teks or "").splitlines():
+        if not (PENANDA_RE.match(baris) or HEADING_RE.match(baris)):
+            continue
+        if PENULIS_RE.search(baris):
+            return False
+        return bool(LAPORAN_RE.search(baris))
+    return False
+
+
+def gabungkan(verdicts: list[str], diharapkan: int | None = None) -> str:
     """Agregasi FAIL-CLOSED atas banyak hakim (keputusan pemilik 17 Sep 2026).
 
     Satu saja verdict yang bukan hijau -> gabungan MENAHAN merge. Tidak ada mayoritas,
     tidak ada rata-rata: yang dicari reviewer independen adalah alasan untuk menolak,
     bukan suara terbanyak. Verdict TIDAK DITEMUKAN juga menahan, karena "tidak terbaca"
     bukan berarti "bersih".
+
+    `diharapkan` = KUORUM (D-3): jumlah hakim yang sungguh dikerahkan pemilik. Bila slot yang
+    terbaca kurang dari itu, hasilnya TIDAK PERNAH hijau — hakim yang tidak menyerahkan laporan
+    bukan hakim yang puas. Lahir dari kejadian nyata 18 Sep 2026: 3 hakim dikerahkan untuk
+    PR #74, hanya 1 verdict yang sampai ke GitHub, dan alat lama melaporkan "1 dari 4 verdict
+    bukan hijau" tanpa sedikit pun menandakan bahwa 2 verdict HILANG — malah menghitung 3
+    komentar penulis PR sebagai slot hakim.
     """
     sah = [v for v in verdicts if v and not v.startswith("TIDAK DITEMUKAN")]
+    kurang = diharapkan - len(verdicts) if diharapkan is not None and diharapkan > len(verdicts) else None
     if not verdicts:
-        return "BELUM ADA VERDICT — jangan merge, jangan simpulkan bersih"
-    merah = [v for v in sah if v not in HIJAU_SET]
-    tak_terbaca = [v for v in verdicts if v.startswith("TIDAK DITEMUKAN")]
-    if merah:
-        return f"MERAH — JANGAN MERGE ({len(merah)} dari {len(verdicts)} verdict bukan hijau: {', '.join(sorted(set(merah)))})"
-    if tak_terbaca:
-        return (f"MENAHAN — {len(tak_terbaca)} verdict TIDAK TERBACA dari {len(verdicts)}; "
-                "tidak terbaca BUKAN bersih")
-    return f"HIJAU — semua {len(sah)} verdict hijau ({', '.join(sorted(set(sah)))})"
+        dasar = "BELUM ADA VERDICT — jangan merge, jangan simpulkan bersih"
+    else:
+        merah = [v for v in sah if v not in HIJAU_SET]
+        tak_terbaca = [v for v in verdicts if v.startswith("TIDAK DITEMUKAN")]
+        if merah:
+            dasar = (f"MERAH — JANGAN MERGE ({len(merah)} dari {len(verdicts)} slot bukan hijau: "
+                     f"{', '.join(sorted(set(merah)))})")
+        elif tak_terbaca:
+            dasar = (f"MENAHAN — {len(tak_terbaca)} verdict TIDAK TERBACA dari {len(verdicts)}; "
+                     "tidak terbaca BUKAN bersih")
+        else:
+            dasar = f"HIJAU — semua {len(sah)} verdict hijau ({', '.join(sorted(set(sah)))})"
+    if kurang:
+        return (f"KUORUM BELUM TERPENUHI ({len(verdicts)}/{diharapkan} slot terbaca, {kurang} hakim "
+                f"belum menyerahkan atau tidak terbaca) — MENAHAN merge. Dasar: {dasar}")
+    return dasar
 
 
 class ToolError(Exception):
@@ -282,10 +328,15 @@ def ambil_pr(nomor: int) -> dict:
         raise ToolError(f"jawaban `gh pr view` bukan JSON sah: {e}") from e
 
 
-def cetak_issue(nomor: int) -> int:
+def cetak_issue(nomor: int, diharapkan: int | None = None) -> int:
     d = ambil_issue(nomor)
     body = d.get("body") or ""
     comments = d.get("comments") or []
+    # D-4: `kumpul` dulu TIDAK PERNAH didefinisikan di fungsi ini padahal dipakai di bawah ->
+    # NameError setiap kali isu punya komentar. Kanal --terbaru ikut lewat sini, jadi kanal UTAMA
+    # alat ini crash dan --uji tidak menangkapnya karena tidak pernah memanggil fungsi kanal.
+    kumpul: list[str] = []
+    bukan_slot = 0
     labels = ", ".join(sorted(l.get("name", "") for l in (d.get("labels") or []))) or "(tanpa label)"
     print("=" * 78)
     print(f"ISSUE #{d.get('number')} — {d.get('title')}")
@@ -305,10 +356,23 @@ def cetak_issue(nomor: int) -> int:
         for i, c in enumerate(comments, 1):
             cb = c.get("body") or ""
             print(f"\n### komentar {i} — {c.get('author', {}).get('login', '?')} @ {c.get('createdAt', '?')}")
+            if not slot_hakim(cb):
+                bukan_slot += 1
+                print("BUKAN SLOT HAKIM (komentar penulis/non-laporan) — tidak dihitung sebagai verdict.")
+                print(cb.strip())
+                continue
             v = simpulkan(cb)
             kumpul.append(v)
             print(f"VERDICT (terbaca otomatis): {v}")
             print(cb.strip())
+    kumpul.insert(0, simpulkan(body))  # verdict badan isu = slot pertama
+    print("\n" + "=" * 78)
+    print("AGREGASI FAIL-CLOSED (aturan pemilik 17 Sep 2026)")
+    print("=" * 78)
+    for i, v in enumerate(kumpul, 1):
+        print(f"  hakim {i}: {v}")
+    print(f"\n  slot terbaca: {len(kumpul)} · komentar bukan slot (penulis/non-laporan): {bukan_slot}")
+    print(f"\n  >> HASIL GABUNGAN: {gabungkan(kumpul, diharapkan)}")
     print("\n" + "=" * 78)
     print("CATATAN UNTUK SESI YANG MEMBACA INI:")
     print("- Temuan di bagian 'DI LUAR CAKUPAN' **wajib ikut dilaporkan** ke pemilik, jangan disaring")
@@ -320,7 +384,7 @@ def cetak_issue(nomor: int) -> int:
     return 0
 
 
-def cetak_pr(nomor: int) -> int:
+def cetak_pr(nomor: int, diharapkan: int | None = None) -> int:
     d = ambil_pr(nomor)
     comments = d.get("comments") or []
     reviews = d.get("reviews") or []
@@ -329,6 +393,7 @@ def cetak_pr(nomor: int) -> int:
     print(f"state: {d.get('state')} · head: {(d.get('headRefOid') or '')[:12]} · base: {d.get('baseRefName')}")
     print("=" * 78)
     kumpul: list[str] = []
+    bukan_slot = 0
     if reviews:
         print(f"\n----- {len(reviews)} REVIEW -----")
         for i, r in enumerate(reviews, 1):
@@ -344,6 +409,11 @@ def cetak_pr(nomor: int) -> int:
         for i, c in enumerate(comments, 1):
             cb = c.get("body") or ""
             print(f"\n### komentar {i} — {c.get('author', {}).get('login', '?')} @ {c.get('createdAt', '?')}")
+            if not slot_hakim(cb):
+                bukan_slot += 1
+                print("BUKAN SLOT HAKIM (komentar penulis/non-laporan) — tidak dihitung sebagai verdict.")
+                print(cb.strip())
+                continue
             v = simpulkan(cb)
             kumpul.append(v)
             print(f"VERDICT (terbaca otomatis): {v}")
@@ -357,7 +427,11 @@ def cetak_pr(nomor: int) -> int:
     print("=" * 78)
     for i, v in enumerate(kumpul, 1):
         print(f"  hakim {i}: {v}")
-    print(f"\n  >> HASIL GABUNGAN: {gabungkan(kumpul)}")
+    print(f"\n  slot hakim terbaca: {len(kumpul)} · komentar bukan slot (penulis/non-laporan): {bukan_slot}")
+    if diharapkan is None:
+        print("  (bila pemilik mengerahkan N hakim, jalankan dengan `--harapkan N`: verdict yang")
+        print("   TIDAK SAMPAI akan terbaca sebagai KUORUM BELUM TERPENUHI, bukan sebagai hening)")
+    print(f"\n  >> HASIL GABUNGAN: {gabungkan(kumpul, diharapkan)}")
     print("\n  Membaca verdict BUKAN menyetujuinya. Bertindak atas temuan tetap butuh keputusan pemilik,")
     print("  dan PR yang mengubah alat pengadil tidak boleh di-merge oleh reviewer (konflik kepentingan).")
     return 0
@@ -404,6 +478,57 @@ KASUS_GABUNG = [
     ("audit: ADA TEMUAN menahan merge", ["BERSIH", "ADA TEMUAN"], "MERAH"),
 ]
 
+# D-3: komentar penulis PR BUKAN slot hakim. Semua kasus di bawah diambil dari komentar NYATA
+# di PR #74, yaitu kasus yang membuat alat lama melaporkan "1 dari 4 verdict".
+KASUS_SLOT = [
+    ("D-3 NYATA: 'Koreksi terbuka dari penulis PR' bukan slot",
+     "## ⚠️ Koreksi terbuka dari penulis PR — harap dibaca sebelum mereview\n\nIsi.\n", False),
+    ("D-3 NYATA: 'Tanggapan penulis atas verdict putaran 1 (MERAH)' bukan slot "
+     "(penulis diperiksa SEBELUM token laporan)",
+     "## Tanggapan penulis atas verdict putaran 1 (MERAH) + 2 cacat tambahan\n", False),
+    ("D-3 NYATA: deklarasi head penulis bukan slot walau judul memuat kata 'temuan'",
+     "## Head yang hendak diputuskan sekarang: `ac25de0` — dan status tiap temuan\n", False),
+    ("D-3 NYATA: laporan hakim ke-1 PR #74 = slot",
+     "## Review independen — putaran 1 — MERAH (parsial, bukan persetujuan)\n", True),
+    ("D-3: laporan verdict berpemarkah = slot",
+     "# VERDICT: HIJAU — Review Independen Putaran 1/2 (PR #75)\n", True),
+    ("D-3 fail-closed: laporan yang verdictnya tak terbaca TETAP slot",
+     "## Review independen — putaran 1\n\nLaporan tanpa kata verdict.\n", True),
+]
+
+# D-3: kuorum. Hakim yang tidak menyerahkan laporan BUKAN hakim yang puas.
+KASUS_GABUNG2 = [
+    ("D-3: kuorum kurang + ada MERAH -> KUORUM", ["MERAH"], 3, "KUORUM"),
+    ("D-3: kuorum kurang walau SEMUA hijau -> tetap bukan HIJAU", ["HIJAU", "HIJAU"], 3, "KUORUM"),
+    ("D-3: kuorum kurang + belum ada verdict sama sekali -> KUORUM", [], 3, "KUORUM"),
+    ("D-3: kuorum terpenuhi -> tidak menyebut KUORUM", ["MERAH", "HIJAU", "HIJAU"], 3, "MERAH"),
+    ("D-3: tanpa --harapkan perilaku lama tetap", ["HIJAU", "HIJAU"], None, "HIJAU"),
+]
+
+# D-4: fixture untuk smoke test KANAL. --uji dulu hanya menguji fungsi murni, jadi NameError di
+# cetak_issue (kanal --issue DAN --terbaru) lolos dari uji sendiri.
+FIX_ISU = {
+    "number": 901, "title": "AUDIT _meta @abc1234567", "state": "OPEN", "createdAt": "2026-09-18T00:00:00Z",
+    "labels": [{"name": "audit-independen"}],
+    "body": "# AUDIT _meta @abc1234567\n\n**VERDICT:** ADA TEMUAN\n",
+    "comments": [
+        {"author": {"login": "bot"}, "createdAt": "2026-09-18T00:01:00Z",
+         "body": "## Tanggapan penulis atas verdict (MERAH)\n"},
+        {"author": {"login": "bot"}, "createdAt": "2026-09-18T00:02:00Z",
+         "body": "## Review independen — putaran 1 — MERAH\n"},
+    ],
+}
+FIX_PR = {
+    "number": 902, "title": "PR uji", "state": "OPEN", "headRefOid": "ac25de0" * 5,
+    "baseRefName": "main", "reviews": [],
+    "body": "",
+    "comments": [
+        {"author": {"login": "bot"}, "createdAt": "1", "body": "## ⚠️ Koreksi terbuka dari penulis PR\n"},
+        {"author": {"login": "bot"}, "createdAt": "2", "body": "## Review independen — putaran 1 — MERAH\n"},
+        {"author": {"login": "bot"}, "createdAt": "3", "body": "## Head yang hendak diputuskan: `ac25de0`\n"},
+    ],
+}
+
 
 def uji() -> int:
     global VERDICT_RE, PENULIS_RE
@@ -418,6 +543,19 @@ def uji() -> int:
             gagal += 1
     for nama, vs, harap in KASUS_GABUNG:
         got = gabungkan(vs)
+        ok = got.startswith(harap)
+        print(f"  [{'OK ' if ok else 'GAGAL'}] {nama}")
+        if not ok:
+            print(f"        harapan awalan: {harap} · dapat: {got}")
+            gagal += 1
+    for nama, teks, harap in KASUS_SLOT:
+        got = slot_hakim(teks)
+        print(f"  [{'OK ' if got == harap else 'GAGAL'}] {nama}")
+        if got != harap:
+            print(f"        harapan slot={harap} · dapat slot={got}")
+            gagal += 1
+    for nama, vs, n, harap in KASUS_GABUNG2:
+        got = gabungkan(vs, n)
         ok = got.startswith(harap)
         print(f"  [{'OK ' if ok else 'GAGAL'}] {nama}")
         if not ok:
@@ -458,12 +596,52 @@ def uji() -> int:
     if bocor2 != "HIJAU":
         gagal += 1
 
-    total = len(KASUS) + len(KASUS_GABUNG) + 3
+    # MUTASI 4 (D-3) — matikan PENULIS_RE di slot_hakim: komentar penulis harus BOCOR jadi slot.
+    # Ini yang menguji bahwa URUTAN pemeriksaan (penulis lebih dulu dari token laporan) load-bearing.
+    asli_p2 = PENULIS_RE
+    PENULIS_RE = re.compile(r"(?!x)x")
+    bocor4 = sum(1 for _, teks, harap in KASUS_SLOT if slot_hakim(teks) != harap)
+    PENULIS_RE = asli_p2
+    print(f"  [{'OK ' if bocor4 >= 1 else 'GAGAL'}] MUTASI pagar penulis di slot_hakim terdeteksi "
+          f"({bocor4} kasus klasifikasi jadi salah; harus >=1)")
+    if bocor4 < 1:
+        gagal += 1
+
+    # REGRESI D-4 — smoke KANAL NYATA: panggil cetak_issue dan cetak_pr dengan fixture.
+    # Dulu keduanya TIDAK PERNAH dipanggil --uji, jadi NameError `kumpul` di cetak_issue
+    # (kanal --issue DAN kanal utama --terbaru) lolos dari uji sendiri.
+    asli_ii, asli_ap = globals()["ambil_issue"], globals()["ambil_pr"]
+    globals()["ambil_issue"] = lambda n: FIX_ISU
+    globals()["ambil_pr"] = lambda n: FIX_PR
+    cacat = []
+    for nama, fn in (("cetak_issue", lambda: cetak_issue(901, 3)), ("cetak_pr", lambda: cetak_pr(902, 3))):
+        buf = io.StringIO()
+        try:
+            with contextlib.redirect_stdout(buf):
+                rc = fn()
+            out = buf.getvalue()
+            if rc != 0:
+                cacat.append(f"{nama}: rc={rc}")
+            if "KUORUM BELUM TERPENUHI" not in out:
+                cacat.append(f"{nama}: kuorum tidak dilaporkan")
+            if "BUKAN SLOT HAKIM" not in out:
+                cacat.append(f"{nama}: komentar penulis tidak disaring")
+        except Exception as e:  # NameError D-4 mendarat di sini
+            cacat.append(f"{nama}: {type(e).__name__}: {e}")
+    globals()["ambil_issue"], globals()["ambil_pr"] = asli_ii, asli_ap
+    print(f"  [{'OK ' if not cacat else 'GAGAL'}] REGRESI D-4 smoke kanal (cetak_issue + cetak_pr "
+          f"dipanggil sungguhan, kuorum + saringan penulis terlihat)")
+    for c in cacat:
+        print(f"        {c}")
+        gagal += 1
+
+    total = len(KASUS) + len(KASUS_GABUNG) + len(KASUS_SLOT) + len(KASUS_GABUNG2) + 5
     if gagal:
         print(f"\nHASIL: {gagal} GAGAL dari {total} pemeriksaan")
         return 1
     print(f"\nHASIL: PASS {total}/{total} pemeriksaan "
-          f"({len(KASUS)} pembacaan + {len(KASUS_GABUNG)} agregasi + 3 mutasi)")
+          f"({len(KASUS)} pembacaan + {len(KASUS_GABUNG) + len(KASUS_GABUNG2)} agregasi "
+          f"+ {len(KASUS_SLOT)} klasifikasi slot + 4 mutasi + 1 smoke kanal)")
     return 0
 
 def main() -> int:
@@ -479,6 +657,9 @@ def main() -> int:
     g.add_argument("--daftar", action="store_true", help="daftar kandidat audit-isi tanpa mencetak isi")
     g.add_argument("--berkas", metavar="PATH", help="ambil hasil audit dari berkas ter-commit (kanal git)")
     ap.add_argument("--objek", help="saring berdasarkan objek, mis. `_meta` atau `sistem/sistem-klinik`")
+    ap.add_argument("--harapkan", type=int, metavar="N",
+                    help="KUORUM (D-3): jumlah hakim yang sungguh dikerahkan pemilik. Slot terbaca "
+                         "< N = KUORUM BELUM TERPENUHI dan hasil tidak pernah hijau")
     a = ap.parse_args()
 
     try:
@@ -491,9 +672,9 @@ def main() -> int:
         if a.uji:
             return uji()
         if a.pr:
-            return cetak_pr(a.pr)
+            return cetak_pr(a.pr, a.harapkan)
         if a.issue:
-            return cetak_issue(a.issue)
+            return cetak_issue(a.issue, a.harapkan)
 
         berkas, err_berkas = daftar_berkas(a.objek)
         if a.pr is None and a.issue is None:
@@ -550,7 +731,7 @@ def main() -> int:
         if len(terurut) > 1:
             print(f"[diambil yang terbaru: {pilih.get('path') or '#' + str(pilih['number'])} · "
                   f"{pilih['createdAt']} · {len(terurut) - 1} kandidat lain lebih lama — lihat --daftar]\n")
-        return cetak_berkas(ROOT / pilih["path"]) if pilih["via"] == "berkas" else cetak_issue(pilih["number"])
+        return cetak_berkas(ROOT / pilih["path"]) if pilih["via"] == "berkas" else cetak_issue(pilih["number"], a.harapkan)
     except ToolError as e:
         print(f"ERROR: {e}", file=sys.stderr)
         return 2
