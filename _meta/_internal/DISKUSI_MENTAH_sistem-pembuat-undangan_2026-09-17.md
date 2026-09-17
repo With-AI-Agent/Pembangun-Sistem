@@ -1203,3 +1203,154 @@ keputusan G3, bukan dari daftar awal).
 | 2026-09-17 | **Kebijakan domain DIKUNCI 3 fase** | Kalimat pemilik sendiri: subdomain gratis untuk percobaan → satu domain saat rilis → client yang mau domain sendiri menanggung biayanya |
 | 2026-09-17 | **G3 TIDAK dijawab "ya" mentah-mentah; diriset dulu dan hasilnya MENGOREKSI sebagian ide pemilik** | Pemilik bertanya *"Gimana menurut kamu?"* — itu permintaan penilaian. Instruksi berdiri S-03: *"Aku mau kamu kritisi, bukan asal meng-iya-kan saja."* Riset menunjukkan upscaling **jalan untuk foto** tetapi **mengarang detail untuk teks dan garis halus**, dan undangan didominasi keduanya |
 | 2026-09-17 | **Jalur pemasangan skill = git clone + vendor project-scoped ke dalam repo**, bukan `/plugin` dan bukan mengandalkan `npx skills` | `/plugin` tidak bisa dijalankan dari sini; `npx skills find` punya **preseden GAGAL-DIAM** di repo ini; git clone **satu-satunya yang terbukti**. Vendor ke repo juga satu-satunya yang **persisten antar sesi** |
+
+---
+
+# P. UJI T-28: kelayakan & mutu upscale AI untuk gerbang G3 — DIUKUR, bukan diasumsikan
+
+**Kenapa bagian ini ada.** Rencana Kerangka menjanjikan jalur **"LOLOS BERSYARAT"** (foto kurang resolusi
+→ ditingkatkan AI) atas permintaan pemilik. Janji itu **ditulis sebelum kemampuannya diuji**. Aturan yang
+dibuat hari yang sama berkata yang begitu tidak boleh dibiarkan. Jadi diuji.
+
+**Skrip ujinya disimpan supaya bisa direproduksi:** `_meta/_internal/uji/uji_upscaling.py` (metrik PSNR +
+SSIM Gaussian 11×11 σ=1.5 per kanal — **mengikuti preseden repo bagian J.1**, bukan metrik karangan baru).
+
+## P.1 Ketersediaan komponen (jawaban: BISA, dengan satu pengecualian penting)
+
+| Komponen | Hasil | Waktu pasang |
+|---|---|---|
+| `numpy` 2.4.6, `pillow` 12.3.0 | ✅ terpasang dari PyPI | 6,5 dtk |
+| `opencv-contrib-python-headless` → **cv2 5.0.0, `dnn_superres` TERSEDIA** | ✅ | 5,3 dtk |
+| `vtracer` (raster → SVG) | ✅ | 2,2 dtk |
+| `svgwrite` 1.4.3 | ✅ | <1 dtk |
+| **Bobot model super-resolution** | ✅ **tetapi lewat jalur tidak terduga** | lihat bawah |
+
+**Temuan jaringan yang menentukan:** `raw.githubusercontent.com` dan `objects.githubusercontent.com`
+**DIBLOKIR** (HTTP `000`, gagal dalam 0,03–0,05 dtk = koneksi ditolak, bukan timeout). Yang **terbuka**:
+`github.com`, `api.github.com`, **`codeload.github.com`**, `registry.npmjs.org`, `pypi.org`.
+**Akibatnya:** model tidak bisa diunduh dari URL langsung seperti yang lazim didokumentasikan, tetapi
+**bisa diambil lewat tarball repo di codeload**:
+
+```
+curl -sL https://codeload.github.com/Saafke/FSRCNN_Tensorflow/tar.gz/refs/heads/master | tar xz
+curl -sL https://codeload.github.com/fannymonori/TF-ESPCN/tar.gz/refs/heads/master | tar xz
+```
+
+**Provenance model (dicatat supaya bisa direproduksi tanpa jaringan):**
+
+| Model | Ukuran | sha256 (16 awal) | Layak di-vendor ke repo? |
+|---|---|---|---|
+| `FSRCNN_x2.pb` | **39 KB** | `366b33f0084c7b3f…` | **YA** — kecil |
+| `ESPCN_x2.pb` | **85 KB** | `59f77351e1d7c005…` | **YA** — kecil |
+| `EDSR_x2.pb` | **37 MB** | `585623221baa0702…` | **TIDAK** — berat, dan ternyata **tidak bisa jalan** (P.3) |
+
+**⚠️ `pip install` TIDAK bertahan antar sesi** di lingkungan ini (sudah terbukti sebelumnya, dan
+dikonfirmasi lagi: semua paket di atas **tidak ada** saat giliran ini dimulai). Jadi total **~14 detik
+pemasangan ulang harus dianggarkan tiap sesi**, dan langkahnya **wajib tertulis** di dokumen sistem.
+
+## P.2 Mutu pada 2× upscale — FOTO vs GARIS HALUS (inti temuannya)
+
+Bahan foto: **foto nyata dari repo** (`S5-aspal-kosong.jpg`), ground truth 900×900, sumber rendah
+450×450 (= simulasi **150 DPI untuk target 300 DPI**). Bahan garis: gambar uji guratan 6/4/3/2/1 piksel
++ bentuk mirip huruf ber-serif + grid halus, ground truth 512×512 dari sumber 256×256.
+
+**FOTO** (lebih tinggi lebih baik):
+
+| Metode | PSNR dB | SSIM | Waktu |
+|---|---|---|---|
+| bicubic (bukan AI) | 36,64 | 0,9262 | 0,00 dtk |
+| lanczos4 (bukan AI) | 36,91 | 0,9281 | 0,01 dtk |
+| **fsrcnn (AI)** | 37,09 | 0,9263 | 0,23 dtk |
+| **espcn (AI)** | 37,19 | 0,9266 | 0,16 dtk |
+| edsr (AI) | **37,76** | **0,9307** | **105,9 dtk** |
+
+**GARIS HALUS / bentuk mirip teks:**
+
+| Metode | PSNR dB | SSIM | Waktu |
+|---|---|---|---|
+| bicubic | **20,85** | 0,9137 | 0,00 dtk |
+| lanczos4 | 20,84 | 0,9091 | 0,00 dtk |
+| **fsrcnn (AI)** | **22,61** | **0,9358** | 0,08 dtk |
+| espcn (AI) | 21,96 | 0,9317 | 0,05 dtk |
+| edsr (AI) | 21,82 | 0,9283 | 35,0 dtk |
+
+**Skala penilaian yang dipakai repo ini sendiri (bagian J.1):** PSNR ≥40 & SSIM ≥0,99 = nyaris tak
+terbedakan · PSNR 35–40 & **SSIM 0,97–0,99** = sangat baik · **PSNR <32 = degradasi mulai terlihat**.
+
+### Empat kesimpulan yang mengubah desain
+
+1. **Untuk FOTO, keuntungan AI atas Lanczos ternyata KECIL.** ESPCN +0,55 dB, FSRCNN +0,28 dB atas
+   lanczos4; SSIM-nya **praktis identik** (0,9263–0,9266 vs 0,9281). Satu-satunya yang unggul berarti
+   adalah **EDSR (+1,12 dB)** — dan EDSR **tidak bisa dipakai** (P.3). **Konsekuensi: sistem ini TIDAK
+   BOLEH menjual "peningkatan AI" sebagai perubahan mutu.** Yang jujur: *"ditingkatkan dengan
+   super-resolution; keuntungannya kecil dibanding resampling berkualitas tinggi"*.
+2. **Ambang "≥150 DPI + ≤2×" MENGHASILKAN SSIM 0,93 — DI BAWAH ambang "sangat baik" repo sendiri (0,97).**
+   Jadi jalur LOLOS BERSYARAT **tidak boleh dilabeli "sangat baik"**. Label yang sesuai bukti: **"baik,
+   dengan risiko terlihat lembut pada cetakan dekat"**. **Konsekuensi: cetak uji (proof) wajib untuk
+   SEMUA kasus LOLOS BERSYARAT, bukan hanya oplah besar** — ini memperketat draft, bukan melonggarkan.
+3. **Untuk GARIS HALUS, SEMUA metode GAGAL menurut skala repo: PSNR 20,8–22,6, jauh di bawah 32
+   ("degradasi mulai terlihat").** AI memang paling baik di antara yang buruk (FSRCNN +1,76 dB, SSIM
+   0,9137→0,9358), tetapi **tidak ada metode yang membuat guratan tipis jadi layak cetak**.
+   **Klaim riset "upscaling mangle text" TERBUKTI SECARA TERUKUR di lingkungan ini.** → **Langkah 0
+   (teks wajib dari font, ornament wajib vektor) kini bukan lagi anjuran desain, melainkan KESIMPULAN
+   TERUKUR.** Ini penguatan terpenting dari seluruh uji ini.
+4. **Vektorisasi: cocok untuk gambar datar, tidak untuk foto — terukur.** `vtracer` pada gambar
+   garis/ornament 512×512 → **SVG 23,0 KB** (wajar). Pada **foto nyata** → **SVG 6,4 MB** (tidak
+   berguna). Jadi aturan "ornament wajib vektor" **bisa dijalankan**, tetapi **jangan pernah**
+   memvektorkan foto.
+
+## P.3 Plafon kinerja & memori — EDSR GUGUR
+
+Memori lingkungan: **3.939 MB total, 3.761 MB tersedia.** Uji pada ukuran cetak nyata, tiap ukuran di
+**proses terpisah** supaya satu OOM tidak menghapus hasil lain:
+
+| Model | 400×566 | **874×1240 (A5@300 dari 150 DPI)** | **1240×1754 (A4@300 dari 150 DPI)** |
+|---|---|---|---|
+| **FSRCNN_x2** | 0,3 dtk | **2,0 dtk** → 1748×2480 | **3,7 dtk** → 2480×3508 |
+| **ESPCN_x2** | 0,3 dtk | **0,9 dtk** | **2,0 dtk** |
+| **EDSR_x2** | **126,4 dtk** | **OOM-KILL** | **OOM-KILL** |
+
+**EDSR gugur untuk dua alasan yang saling menguat:** terlalu lambat (126 dtk untuk gambar *setengah* A5)
+dan **dibunuh kehabisan memori** pada ukuran cetak sungguhan. Padahal EDSR satu-satunya yang unggul
+berarti pada foto. **Jadi model terbaik tidak tersedia, dan yang tersedia keuntungannya kecil** — inilah
+alasan kesimpulan P.2 butir 1.
+
+**Percobaan pertama uji ini sendiri KENA OOM-KILL** (satu proses mengerjakan semua ukuran sekaligus).
+Diulang dengan **satu proses per ukuran** — pelajaran: uji yang bisa menghabiskan memori **wajib**
+dijalankan terisolasi, kalau tidak hasilnya hilang semua dan yang terlihat hanya "Killed".
+
+## P.4 Keputusan untuk G3 berdasarkan bukti di atas
+
+| Unsur draft | Sebelum uji | Sesudah uji |
+|---|---|---|
+| Ketersediaan jalur LOLOS BERSYARAT | belum diketahui (T-28) | **TERSEDIA** — FSRCNN/ESPCN, 2–4 dtk untuk A4@300 |
+| Alat yang dipakai | "Upscayl/Real-ESRGAN" (dari riset web) | **DIGANTI: `cv2.dnn_superres` + FSRCNN_x2 / ESPCN_x2.** Real-ESRGAN butuh PyTorch (ratusan MB–GB) dan bobotnya dari GitHub Releases; **EDSR yang terdekat pun OOM** |
+| Klaim mutu ke client | "ditingkatkan AI" | **DITURUNKAN jadi jujur**: keuntungan kecil atas resampling berkualitas; **bukan** pemulihan detail asli |
+| Cetak uji (proof) | wajib untuk oplah besar | **WAJIB UNTUK SEMUA LOLOS BERSYARAT** — karena SSIM terukur 0,93, di bawah ambang "sangat baik" repo (0,97) |
+| Langkah 0 (teks=font, ornament=vektor) | anjuran desain berbasis riset | **NAIK STATUS jadi kesimpulan terukur**: PSNR guratan tipis 20,8–22,6 < 32 untuk **semua** metode |
+| Bobot model | belum diputuskan | **FSRCNN_x2 (39 KB) + ESPCN_x2 (85 KB) diusulkan di-vendor ke repo** — total 124 KB, karena `raw.githubusercontent.com` **diblokir** sehingga mengandalkan unduhan tiap sesi itu rapuh |
+
+## P.5 Yang masih BELUM teruji (jangan diklaim dari angka di atas)
+
+- **Font sungguhan tidak diuji** — font sistem kosong di lingkungan ini. Yang diuji **guratan tipis dan
+  bentuk mirip huruf**, jadi kesimpulan "teks" berlaku untuk **bentuk bergaris tipis**, bukan pengukuran
+  pada tipografi nyata. Ini **melemahkan sebagian** kesimpulan P.2 butir 3 dan dinyatakan sadar.
+- **Mutu cetak fisik tidak terukur** — tidak ada printer di sini. PSNR/SSIM adalah **proksi**, bukan
+  pengganti proof fisik. Justru karena itu cetak uji diwajibkan.
+- **Sumber ≥200 DPI belum diukur.** Kalau ambang LOLOS BERSYARAT kelak diperketat dari ≥150 ke ≥200 DPI,
+  **angkanya harus diukur ulang**, tidak boleh diekstrapolasi dari tabel di atas.
+- **CMYK/bleed/PDF-X tidak disentuh upscaling sama sekali** — riset: *"Upscaling fixes resolution only."*
+  Gerbang prepress lain tetap berdiri sendiri.
+- **Perilaku pada foto kiriman client yang sudah terkompresi JPEG berat belum diuji** (bahan ujinya PNG/JPEG
+  berkualitas baik dari repo). Preseden J.1 sudah memperingatkan hal serupa soal angka "hemat".
+
+## Log Keputusan (lanjutan)
+
+| Tanggal | Keputusan | Alasan |
+|---|---|---|
+| 2026-09-17 | **T-28 DIUJI Sungguhan, bukan diperkirakan** — skrip disimpan di `_meta/_internal/uji/uji_upscaling.py` | Janji "LOLOS BERSYARAT" sudah tertulis di Rencana Kerangka sebelum kemampuannya diuji. Aturan yang dibuat hari yang sama melarang itu. Skrip disimpan supaya **bisa direproduksi**, sesuai tuntutan T19 (rumusan yang bisa diuji, bukan yang terdengar sempurna) |
+| 2026-09-17 | **EDSR dan Real-ESRGAN DIBUANG dari rencana; FSRCNN_x2 + ESPCN_x2 yang dipakai** | EDSR **OOM-KILL** pada A5@300 dan 126 dtk pada setengah A5; Real-ESRGAN butuh PyTorch + bobot dari host yang terblokir. Memilih model terbaik yang **tidak bisa jalan** lebih buruk daripada model sederhana yang jalan dalam 2–4 detik |
+| 2026-09-17 | **Cetak uji diwajibkan untuk SEMUA LOLOS BERSYARAT** (memperketat draft, bukan melonggarkan) | SSIM terukur **0,93**, sedangkan skala repo sendiri menyebut "sangat baik" baru di **≥0,97**. Melabeli hasil ini "sangat baik" akan mengutip skala repo untuk klaim yang tidak didukung angkanya |
+| 2026-09-17 | **Klaim mutu ke client DITURUNKAN** — tidak boleh disebut "peningkatan AI" tanpa penjelasan | Keuntungan terukur atas lanczos4 hanya **+0,28 s.d. +0,55 dB** pada foto dan SSIM praktis identik. Menjanjikan lebih dari itu ke client = menjanjikan hal yang tidak didukung bukti |
+| 2026-09-17 | **Langkah 0 naik status dari anjuran menjadi kesimpulan terukur** | PSNR guratan tipis **20,8–22,6** untuk semua metode, di bawah ambang 32 milik repo sendiri. Klaim riset "upscaling mangle text" kini **terkonfirmasi terukur di lingkungan ini**, bukan sekadar dikutip |
+| 2026-09-17 | **Bobot model diusulkan di-vendor (124 KB), TIDAK di-commit pada giliran ini** | Rencana Kerangka **belum final** dan pemilik belum menyetujui desain G3 yang baru. Menaruh biner sebelum desainnya disetujui = membuat artefak yang mungkin harus dicabut. Provenance-nya (URL codeload + sha256 + ukuran) **sudah dicatat di sini**, jadi keputusan menunda tidak menghilangkan kemampuan mereproduksi |

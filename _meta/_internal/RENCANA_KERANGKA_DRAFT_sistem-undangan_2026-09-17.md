@@ -212,7 +212,7 @@ Ini bagian yang paling penting, dan **tidak diminta siapa pun**:
 | Hasil | Syarat | Yang terjadi |
 |---|---|---|
 | **LOLOS** | sumber **≥300 DPI** pada ukuran cetak akhirnya | lanjut tanpa catatan |
-| **LOLOS BERSYARAT** *(jalur yang diminta pemilik)* | konten **fotografis** (wajah, gedung, dekorasi foto) **DAN** sumber **≥150 DPI** pada ukuran akhir **DAN** kenaikan yang dibutuhkan **≤2×** | ** upscale AI (Upscayl/Real-ESRGAN) → lanjut**, tetapi **wajib ketiganya**: (a) tercatat di Log Keputusan unit + provenance aset ditandai **"detail hasil sintesis AI, bukan detail asli"**; (b) **cetak uji diwajibkan** untuk oplah besar sebelum oplah penuh; (c) **client diberi tahu dalam bahasa awam** bahwa detailnya hasil peningkatan AI |
+| **LOLOS BERSYARAT** *(jalur yang diminta pemilik — **TERBUKSI BISA**, lihat 4.4)* | konten **fotografis** (wajah, gedung, dekorasi foto) **DAN** sumber **≥150 DPI** pada ukuran akhir **DAN** kenaikan **≤2×** **DAN** **bukan** format besar (baliho/banner) | upscale dengan **`cv2.dnn_superres` + FSRCNN_x2 atau ESPCN_x2** → lanjut, tetapi **wajib keempatnya**: (a) tercatat di Log Keputusan unit + provenance aset ditandai **"detail hasil sintesis, bukan detail asli"**; (b) **CETAK UJI (proof) WAJIB untuk SEMUA kasus**, bukan hanya oplah besar; (c) client diberi tahu dalam bahasa awam bahwa detailnya hasil peningkatan dan **keuntungannya kecil**; (d) **dilarang** melabeli hasilnya "sangat baik" — label yang sesuai bukti: **"baik, berisiko terlihat lembut pada cetakan jarak dekat"** |
 | **DITOLAK** | **selain itu**: sumber <150 DPI · butuh kenaikan >2× · aset **berisi teks/garis halus/logo** · format besar (baliho/banner, *"no upscaling tool creates the 155 megapixels needed from a 1-megapixel source"*) · atau **masih kurang sesudah di-upscale** | **ditolak + dilaporkan dengan angka kekurangannya**, dan **wajib ditawarkan 3 jalan keluar**: (1) minta foto lebih besar ke client, (2) ganti aset, (3) **batalkan format cetak saja** — web & video tetap jalan karena tingkat asetnya berbeda |
 
 #### Yang TIDAK ikut dilonggarkan
@@ -229,10 +229,46 @@ di-upscale **bisa mengubah nama orang** jadi huruf karangan, dan itu **tidak bis
 dicetak**. Gerbang yang membedakan ancaman **lebih ketat** dari gerbang yang seragam, bukan lebih longgar.
 
 **Skill yang dibutuhkan** (permintaan pemilik: *"Klo butuh skill untuk ini, kamu bisa siapkan skill nya"*):
-upscaling raster + vectorization → ditambah sebagai **gap #9** di bagian 6. **Kelayakannya di lingkungan
-ini BELUM DIUJI** dan dicatat sebagai utang (item **T-28**), bukan diklaim siap: `pip install` tidak
-bertahan antar sesi, tidak ada ffmpeg/ImageMagick-PDF, dan **semua API eksternal terblokir** — jadi jalur
-cloud seperti LetsEnhance **gugur sejak awal**.
+upscaling raster + vectorization → **gap #9** di bagian 6. **Kelayakannya SUDAH DIUJI 17 Sep 2026** — hasilnya
+di bagian **4.4** dan rincian lengkapnya di DISKUSI_MENTAH bagian **P**.
+
+#### 4.4 Hasil uji T-28 — apa yang terbukti, dan apa yang harus dikoreksi dari draft ini
+
+**Skrip ujinya disimpan** di `_meta/_internal/uji/uji_upscaling.py` supaya **bisa direproduksi**; metriknya
+PSNR + SSIM Gaussian 11×11 σ=1.5 — **mengikuti preseden repo bagian J.1**, bukan metrik karangan baru.
+
+| Pertanyaan | Jawaban terukur |
+|---|---|
+| **Bisakah dijalankan di lingkungan ini?** | **BISA.** `opencv-contrib-python-headless` → cv2 5.0.0 dengan `dnn_superres`; `vtracer`; `svgwrite`. Total pemasangan **~14 detik** — tetapi **`pip install` tidak bertahan antar sesi**, jadi langkahnya **wajib tertulis** di dokumen sistem |
+| **Bobot model dari mana?** | **`raw.githubusercontent.com` DIBLOKIR** (HTTP 000 dalam 0,03 dtk). Yang terbuka: `github.com`, `api.github.com`, **`codeload.github.com`**, npm, PyPI. Jadi model diambil lewat **tarball repo di codeload**. Provenance (URL + sha256 + ukuran) dicatat di DISKUSI_MENTAH P.1 |
+| **Cepat enough untuk ukuran cetak nyata?** | **YA untuk FSRCNN/ESPCN**: A4@300 DPI dari sumber 150 DPI = **3,7 dtk** (FSRCNN) / **2,0 dtk** (ESPCN). **TIDAK untuk EDSR**: **OOM-KILL** pada A5@300, dan 126 dtk pada *setengah* A5 |
+
+**Empat hal yang MENGOREKSI draft ini sendiri:**
+
+1. **Alat diganti.** Draft semula menyebut "Upscayl/Real-ESRGAN" (dari riset web). **Real-ESRGAN butuh
+   PyTorch** (ratusan MB–GB) dan bobotnya dari GitHub Releases; **EDSR — model terdekat yang bisa dimuat —
+   justru OOM.** Yang dipakai: **`cv2.dnn_superres` + FSRCNN_x2 (39 KB) / ESPCN_x2 (85 KB)**.
+2. **Keuntungan AI atas resampling biasa ternyata KECIL, jadi klaimnya diturunkan.** Terukur pada foto:
+   ESPCN **+0,55 dB** dan FSRCNN **+0,28 dB** atas lanczos4; **SSIM praktis identik** (0,9263–0,9266 vs
+   0,9281). Satu-satunya yang unggul berarti (EDSR +1,12 dB) **tidak bisa jalan**. **Maka sistem ini DILARANG
+   menjual "peningkatan AI" sebagai perubahan mutu.**
+3. **Cetak uji jadi wajib untuk SEMUA LOLOS BERSYARAT** (semula hanya oplah besar). Alasannya angka: pada
+   kondisi ambang (150 DPI, 2×) SSIM terukur **0,93**, sedangkan skala repo sendiri menyebut "sangat baik"
+   baru di **≥0,97**. Melabeli hasil ini "sangat baik" = mengutip skala repo untuk klaim yang tidak
+   didukung angkanya. **Ini memperketat draft, bukan melonggarkan.**
+4. **Langkah 0 NAIK STATUS dari anjuran menjadi KESIMPULAN TERUKUR.** Pada guratan tipis/bentuk mirip huruf,
+   **SEMUA metode** menghasilkan PSNR **20,8–22,6 dB** — jauh di bawah ambang **32** milik repo sendiri
+   ("degradasi mulai terlihat"). AI memang terbaik di antara yang buruk (FSRCNN 22,61; SSIM 0,9137→0,9358),
+   tetapi **tidak ada metode yang membuat guratan tipis layak cetak**. Jadi "teks wajib dari font, ornament
+   wajib vektor" **bukan preferensi desain — itu satu-satunya pilihan yang tersisa**.
+
+**Vektorisasi terkonfirmasi bisa, dengan batas yang jelas:** `vtracer` pada gambar garis/ornament 512×512 →
+**SVG 23,0 KB** (wajar); pada **foto nyata** → **SVG 6,4 MB** (tidak berguna). **Jangan pernah memvektorkan foto.**
+
+**Yang masih belum teruji dan dinyatakan sadar:** font sungguhan (font sistem kosong — yang diuji **guratan
+tipis**, bukan tipografi nyata) · mutu cetak fisik (tidak ada printer; PSNR/SSIM hanya **proksi**) · sumber
+**≥200 DPI** (kalau ambang kelak diperketat, **wajib diukur ulang**, tidak boleh diekstrapolasi) · foto client
+yang sudah terkompresi JPEG berat · dan **CMYK/bleed/PDF-X sama sekali tidak disentuh upscaling**.
 
 ---
 
@@ -274,7 +310,7 @@ pemetaannya di DISKUSI_MENTAH bagian **G**. Yang paling relevan sebagai **gerban
 | 7 | **pembayaran / amplop digital** | fitur amplop digital | diputuskan **rekening + QRIS statis** — **tanpa payment gateway**, jadi **tanpa biaya per transaksi dan tanpa biaya bulanan** |
 | 8 | **i18n + kaligrafi Islami** | khitanan/pernikahan Muslim, multi-bahasa | bagian F |
 
-| 9 | **upscaling raster + vectorization** *(BARU — lahir dari keputusan G3, bukan dari daftar awal)* | mitigasi foto kurang resolusi + membuat ornament jadi vektor | **Upscayl / Real-ESRGAN = gratis & open-source.** **Kelayakan di lingkungan ini BELUM DIUJI** → item **T-28** |
+| 9 | **upscaling raster + vectorization** *(BARU — lahir dari keputusan G3, bukan dari daftar awal)* | mitigasi foto kurang resolusi + membuat ornament jadi vektor | **TERUJI 17 Sep: `cv2.dnn_superres` + FSRCNN_x2 (39 KB) / ESPCN_x2 (85 KB) BISA**, 2–4 dtk untuk A4@300. **Real-ESRGAN & EDSR GUGUR** (butuh PyTorch / OOM-KILL). `vtracer` untuk vektorisasi gambar datar ✅ (23 KB), ❌ untuk foto (6,4 MB). Rincian: bagian 4.4 + DISKUSI_MENTAH P |
 
 ### 6.1 Cara memasang skill — **DIKUNCI** (jawab atas delegasi pemilik)
 
@@ -449,3 +485,5 @@ dokumen-dokumen di bagian 7, plus **T-06** terjawab lewat pertanyaan review #7.
 | 2026-09-17 (sore) | **Kebijakan domain 3 fase DIKUNCI**, dan agent menambahkan syarat **PATH stabil lintas fase** | Kalimat pemilik sendiri. Syarat path stabil **tambahan dari agent**: kalau path berubah saat naik fase, semua tautan yang sudah disebar ke tamu mati dan **tidak bisa diperbaiki setelah undangan beredar** |
 | 2026-09-17 (sore) | **Cara pasang skill DIKUNCI: git clone + vendor project-scoped**, dengan 4 aturan keamanan wajib | Delegasi + mandat riset pemilik. `/plugin` tidak bisa dijalankan dari lingkungan ini; `npx skills` punya preseden **gagal-diam** di repo ini; vendor ke repo satu-satunya yang **persisten antar sesi** dan sesuai filosofi self-contained |
 | 2026-09-17 (sore) | **Gap skill jadi 9 butir** — upscaling raster + vectorization ditambahkan | Kebutuhan ini **lahir dari keputusan G3**, bukan ada di daftar awal. Mencatatnya sebagai gap baru lebih jujur daripada menyelipkannya ke butir "generate gambar" |
+| 2026-09-17 (malam) | **G3 jalur LOLOS BERSYARAT DIPERTAHANKAN, tetapi alatnya diganti, klaim mutunya diturunkan, dan cetak uji diwajibkan untuk semua kasus** | **Hasil uji T-28, bukan pendapat.** EDSR OOM-KILL; Real-ESRGAN butuh PyTorch; FSRCNN/ESPCN jalan 2–4 dtk. Keuntungan AI atas lanczos4 hanya +0,28…+0,55 dB dengan SSIM praktis identik → **menjanjikan lebih dari itu ke client = menjanjikan hal yang tidak didukung bukti** |
+| 2026-09-17 (malam) | **Langkah 0 naik status jadi kesimpulan terukur** | PSNR guratan tipis **20,8–22,6 dB untuk SEMUA metode**, di bawah ambang 32 milik repo sendiri. Teks/ornament **tidak punya jalur raster yang layak cetak** — jadi mewajibkan font+vektor bukan soal selera |
