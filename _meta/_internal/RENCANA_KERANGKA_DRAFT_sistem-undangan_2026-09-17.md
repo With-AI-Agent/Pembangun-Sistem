@@ -69,9 +69,12 @@ mengunci ke pernikahan**: jenis acara adalah **data di Lapis 2**, bukan asumsi d
 
 ---
 
-## 2. Bentuk Dasar — **GABUNGAN: BERTINGKAT 3 lapis + SIKLUS 7 tahap**
+## 2. Bentuk Dasar — **GABUNGAN: BERTINGKAT 3 lapis + SIKLUS 7 tahap** ✅ DIKUNCI
 
-> **Rekonstruksi — belum pernah tertulis. Butuh review paling teliti.**
+> **DIKUNCI oleh pemilik 17 Sep 2026** (pertanyaan review #1: *"Setuju — kunci bentuk ini"*).
+> Sebelumnya bagian ini rekonstruksi yang belum pernah tertulis; sekarang sudah disetujui, jadi statusnya
+> naik dari usulan menjadi keputusan. Yang **masih** perlu review teliti: bagian **3** (7 hal konsisten)
+> dan **4** (gerbang + tingkat risiko) — pemilik belum memutuskannya eksplisit.
 
 ### 2.1 Kenapa gabungan, dan bukan salah satu
 
@@ -169,16 +172,67 @@ semua undangan kembar.
 | **SEDANG** | bisa dibalik dengan kerja nyata | **G1, G3, G4**; menambah field baru di L2 | konfirmasi ringkas + catatan |
 | **KECIL** | gampang diperbaiki, dampak lokal | teks ucapan, urutan galeri, tweak warna turunan | agent boleh lanjut, dicatat di log unit |
 
-### 4.3 **G3 wajib fail-closed** — keputusan yang lahir dari koreksi pemilik
+### 4.3 G3 — gerbang aset: **3 hasil, dialihkan menurut jenis isi**
 
-Bagian J.3 DISKUSI_MENTAH mencatat bahwa **usulan agent sendiri ("foto maks ~300 KB") DICABUT sebagai
-salah** setelah pemilik keberatan dan aritmetikanya diperiksa: kompresi web dan kelayakan cetak adalah
-**dua kebutuhan yang bertentangan** dan tidak bisa diatur satu angka.
+> **DIUBAH 17 Sep 2026 atas masukan pemilik.** Rumusan semula **2 hasil** (lolos / tolak, fail-closed
+> mutlak). Pemilik keberatan: *"jangan terlalu ketat, tapi bukan berarti ngentengin … kita kan bisa
+> mensiasati nya, misalnya dengan melakukan upscaling dan penjernihan dan enhanchement dengan tenaga ai.
+> Iya kan? … Gimana menurut kamu?"* — dan **meminta penilaian**, bukan persetujuan.
+>
+> **Verdict agent (sesuai gerbang T25 dan instruksi berdiri *"kritisi, jangan asal meng-iya-kan"*): ide
+> pemilik DITERIMA SEBAGIAN dan DIPERTAJAM — bukan ditolak, bukan diiyakan mentah-mentah.** Riset lengkap
+> dengan 6 sumber: DISKUSI_MENTAH bagian **N**.
 
-Maka aturannya: **kalau sumber aset tidak memenuhi resolusi yang dibutuhkan ukuran cetak akhirnya,
-format cetak DITOLAK** — agent **dilarang** menurunkan kualitas diam-diam, dilarang menjanjikan "siap
-cetak" untuk aset yang tidak lolos, dan **wajib** melaporkan ke pemilik bahwa format cetak tidak bisa
-dipenuhi beserta angka kekurangannya. **Gerbang yang bisa ditawar bukan gerbang.**
+**Yang membenarkan pemilik:** untuk **konten fotografis**, *"a 150 DPI photo upscaled 2x with AI tools can
+often reach acceptable quality at 300 DPI for most print uses"*. Alat gratisnya ada: **Upscayl**
+(open-source, berbasis Real-ESRGAN). Jadi menolak mutlak memang **terlalu kaku** untuk foto.
+
+**Yang mengoreksi pemilik:** *"Fine text, logos with thin strokes, and geometric line art upscale poorly
+… can introduce artefacts or rounded edges on letterforms"*, dan lebih keras lagi: *"AI upscalers can
+mangle text, turning legible words into AI-hallucinated gibberish."* **Undangan justru didominasi teks
+dan ornament garis halus** — nama pengantin, tanggal, kaligrafi, bingkai. Menaikkan resolusi di sana
+bukan memperbaiki, melainkan **mengarang**, dan yang dikarang bisa **nama orang**.
+
+#### Langkah 0 — hapus masalahnya secara STRUKTUR, sebelum gerbang apa pun
+
+Ini bagian yang paling penting, dan **tidak diminta siapa pun**:
+
+| Jenis isi | Aturan | Akibatnya |
+|---|---|---|
+| **Teks** | **WAJIB di-render dari font**, dilarang ditempel sebagai gambar | **tidak pernah masuk gerbang resolusi** — teks vektor tajam di ukuran berapa pun |
+| **Ornament, logo, garis, bingkai** | **WAJIB vektor (SVG)**, atau divektorkan | *"For flat graphics and logos, vectorization is a complete fix — the output is infinitely scalable."* Tes praktis: zoom 400%, tepi bersih = bisa divektorkan |
+| **Foto** | satu-satunya yang boleh raster | **hanya foto yang butuh gerbang resolusi** |
+
+**Jadi gerbang ini menyempit dengan sengaja:** alih-alih "semua aset harus 300 DPI", aturannya jadi
+"teks dan ornament **tidak boleh** raster, hanya foto yang diuji". Masalahnya bukan diselesaikan —
+**tidak pernah muncul** untuk dua dari tiga jenis isi.
+
+#### Lalu, untuk tiap aset FOTO, salah satu dari 3 hasil
+
+| Hasil | Syarat | Yang terjadi |
+|---|---|---|
+| **LOLOS** | sumber **≥300 DPI** pada ukuran cetak akhirnya | lanjut tanpa catatan |
+| **LOLOS BERSYARAT** *(jalur yang diminta pemilik)* | konten **fotografis** (wajah, gedung, dekorasi foto) **DAN** sumber **≥150 DPI** pada ukuran akhir **DAN** kenaikan yang dibutuhkan **≤2×** | ** upscale AI (Upscayl/Real-ESRGAN) → lanjut**, tetapi **wajib ketiganya**: (a) tercatat di Log Keputusan unit + provenance aset ditandai **"detail hasil sintesis AI, bukan detail asli"**; (b) **cetak uji diwajibkan** untuk oplah besar sebelum oplah penuh; (c) **client diberi tahu dalam bahasa awam** bahwa detailnya hasil peningkatan AI |
+| **DITOLAK** | **selain itu**: sumber <150 DPI · butuh kenaikan >2× · aset **berisi teks/garis halus/logo** · format besar (baliho/banner, *"no upscaling tool creates the 155 megapixels needed from a 1-megapixel source"*) · atau **masih kurang sesudah di-upscale** | **ditolak + dilaporkan dengan angka kekurangannya**, dan **wajib ditawarkan 3 jalan keluar**: (1) minta foto lebih besar ke client, (2) ganti aset, (3) **batalkan format cetak saja** — web & video tetap jalan karena tingkat asetnya berbeda |
+
+#### Yang TIDAK ikut dilonggarkan
+
+*"Upscaling fixes resolution only — color mode, bleed, and dimensions are separate issues."* Maka
+**CMYK + profil ICC, bleed 3 mm, safe zone, crop marks, batas tinta, dan PDF/X tetap gerbang terpisah
+yang berdiri sendiri.** Meloloskan resolusi **tidak** meloloskan prepress.
+
+#### Kenapa ini bukan "ngentengin"
+
+Yang harus ditolak **tetap ditolak**, dan penolakannya kini **spesifik per jenis isi** karena ancamannya
+memang berbeda: foto yang di-upscale 2× dari 150 DPI **tidak** berisiko mengubah isi; teks yang
+di-upscale **bisa mengubah nama orang** jadi huruf karangan, dan itu **tidak bisa diperbaiki setelah
+dicetak**. Gerbang yang membedakan ancaman **lebih ketat** dari gerbang yang seragam, bukan lebih longgar.
+
+**Skill yang dibutuhkan** (permintaan pemilik: *"Klo butuh skill untuk ini, kamu bisa siapkan skill nya"*):
+upscaling raster + vectorization → ditambah sebagai **gap #9** di bagian 6. **Kelayakannya di lingkungan
+ini BELUM DIUJI** dan dicatat sebagai utang (item **T-28**), bukan diklaim siap: `pip install` tidak
+bertahan antar sesi, tidak ada ffmpeg/ImageMagick-PDF, dan **semua API eksternal terblokir** — jadi jalur
+cloud seperti LetsEnhance **gugur sejak awal**.
 
 ---
 
@@ -192,6 +246,7 @@ dipenuhi beserta angka kekurangannya. **Gerbang yang bisa ditawar bukan gerbang.
 | **Tidak bisa push setelah PR merge/close** (platform cabut akses) | **checkpoint wajib di tiap gerbang**, bukan di akhir; pekerjaan yang belum ter-commit saat PR ditutup **hilang** |
 | Sesi bisa crash kapan saja | turunan **`LOG_SESI` self-contained** (W-02) + `STATUS.md` per unit (W-03) + langkah recovery di prompt pembuka |
 | **Semua API layanan eksternal terblokir** (hanya npm, PyPI, github.com) | **deploy harus Git-based**; tidak ada panggilan API runtime ke layanan AI/pihak ketiga dari dalam sesi |
+| **Kebijakan domain 3 fase** (keputusan pemilik 17 Sep 2026, verbatim: *"Untuk masa percobaan gpp pake subdomain dulu yang gratis. Nanti waktu bener bener mulai rilis, baru pake domain yang cukup satu domin untuk semua undangan, kecuali klo client nya mau domain sendiri maka dia yang tanggung biaya nya") | **Fase 1 percobaan:** subdomain gratis bawaan platform (`nama.pages.dev/<undangan>`) — nol biaya. **Fase 2 rilis:** **satu domain untuk semua undangan** + subpath. **Fase 3 pengecualian:** client yang mau domain sendiri **menanggung biayanya sendiri** → sistem **wajib mendukung custom domain per undangan sebagai OPSI, bukan asumsi**. **Konsekuensi rancangan yang mengikat:** **PATH wajib stabil lintas fase** (`/<nama-undangan>` sama di ketiga fase, hanya host yang berubah). Kalau path ikut berubah saat naik fase, **semua tautan yang sudah disebar ke tamu jadi mati** — dan itu tidak bisa diperbaiki setelah undangan beredar |
 | **T12 — fakta pembatas yang mengunci arah:** lmarena tidak menyediakan API key | **AI-nya = agent di sesi, BUKAN layanan runtime di website.** Website hasil bersifat **statik**; tidak ada fitur "AI menjawab tamu" di situs yang diserahkan ke client |
 | Plafon artefak sesi (±128 MB / 10.000 berkas) | **aset besar TIDAK disimpan di repo.** Repo menyimpan **resep + sumber berukuran kecil + catatan provenance**; aset produksi di penyimpanan eksternal (R2) atau dihasilkan ulang dari resep |
 
@@ -219,8 +274,49 @@ pemetaannya di DISKUSI_MENTAH bagian **G**. Yang paling relevan sebagai **gerban
 | 7 | **pembayaran / amplop digital** | fitur amplop digital | diputuskan **rekening + QRIS statis** — **tanpa payment gateway**, jadi **tanpa biaya per transaksi dan tanpa biaya bulanan** |
 | 8 | **i18n + kaligrafi Islami** | khitanan/pernikahan Muslim, multi-bahasa | bagian F |
 
-**Mekanisme penawarannya** mengikuti preseden repo: pola `05_TAWARAN_KAPABILITAS.md` di
-`sistem/sistem-klinik/_sistem/` — **WAJIB-BERTAJUK dan boleh ditolak**, bukan dipasang diam-diam.
+| 9 | **upscaling raster + vectorization** *(BARU — lahir dari keputusan G3, bukan dari daftar awal)* | mitigasi foto kurang resolusi + membuat ornament jadi vektor | **Upscayl / Real-ESRGAN = gratis & open-source.** **Kelayakan di lingkungan ini BELUM DIUJI** → item **T-28** |
+
+### 6.1 Cara memasang skill — **DIKUNCI** (jawab atas delegasi pemilik)
+
+Pemilik: *"Aku kurang paham… akan lebih baik klo kamu melakukan riset di internet mengenai cara pasng
+skill dan plugin yang paling maksimal dan terbik."* Riset lengkap: DISKUSI_MENTAH bagian **O**.
+
+**Jalur yang dipilih: `git clone` + salin folder skill-nya saja + VENDOR ke dalam repo (project-scoped).**
+
+| Jalur yang tersedia | Dipakai? | Alasan |
+|---|---|---|
+| `/plugin marketplace add` + `/plugin install` | **TIDAK** | slash command Claude Code CLI — **tidak bisa dijalankan agent dari shell di lingkungan ini** |
+| `npx skills add` / `npx skillstore add` | **TIDAK sebagai jalur utama** | npm terjangkau, tetapi repo ini punya **preseden buruk: `npx skills find` GAGAL-DIAM** (skills.sh terblokir). Tidak boleh dipercaya tanpa diuji |
+| **`git clone` + vendor ke repo** | **YA** | **satu-satunya yang sudah terbukti** di lingkungan ini (github.com terjangkau) |
+| ZIP manual | cadangan | provenance-nya lebih lemah (tidak ada sha sumber) |
+
+**Kenapa di-vendor ke dalam repo, bukan dipasang di `~/.claude/skills/`:**
+
+1. **Bertahan antar sesi** — pemasangan di luar repo (dan `pip install`) **terbukti tidak persisten** di
+   lingkungan ini. Skill yang hilang tiap sesi = mekanisme yang tidak bisa diandalkan.
+2. **Self-contained** — sesuai filosofi repo ini (W-07 + `check_selfcontained.py`).
+3. **Bisa diaudit dan di-rollback** — versinya tercatat di git, bukan "terpasang suatu hari".
+4. **Preseden yang sudah berjalan**: `sistem/sistem-building-aplikasi/skills/` berisi 56 skill.
+5. **Standar Agent Skills lintas alat** (`agentskills.io`): `SKILL.md` dipakai bersama oleh Claude Code,
+   Codex CLI, OpenCode, Cursor — tidak mengunci ke satu alat.
+
+**Aturan keamanan yang WAJIB** (sumber: *"Skills can execute arbitrary code in Claude's environment. Only
+install skills from trusted sources. Review SKILL.md and all scripts before enabling"*):
+
+1. **Baca `SKILL.md` + semua skripnya SEBELUM di-commit** — bukan sesudah.
+2. **Catat provenance per skill**: repo sumber, **sha commit** yang disalin, tanggal, **lisensi**. Tanpa
+   sha, "skill X terpasang" tidak bisa direproduksi.
+3. **Tolak skill yang meminta akses data sensitif** atau memanggil layanan eksternal — semua API eksternal
+   **terblokir** di sini, jadi skill semacam itu **memang tidak akan jalan**.
+4. **Skill yang gagal diuji tidak boleh dinyatakan terpasang** — statusnya *"ada di repo, belum terbukti
+   jalan"*, ditulis apa adanya.
+
+**Alurnya untuk 9 gap:** agent **mengusulkan per butir** (repo sumber + lisensi + alasan) → pemilik
+**setujui atau ganti** → agent **clone + review + vendor + catat provenance + uji** → baru dinyatakan
+terpasang. **Tidak ada yang dipasang diam-diam.**
+
+**Mekanisme penawarannya** tetap mengikuti preseden repo: pola `05_TAWARAN_KAPABILITAS.md` di
+`sistem/sistem-klinik/_sistem/` — **WAJIB-BERTAJUK dan boleh ditolak**.
 
 ---
 
@@ -303,13 +399,16 @@ Ini **kategori BESAR**, jadi aku tidak menguncinya sendiri. Urut dari yang palin
 
 | # | Pertanyaan | Usulanku | Kenapa |
 |---|---|---|---|
-| **1** | **Bentuk dasar: BERTINGKAT 3 lapis + SIKLUS 7 tahap** — setuju? | **setuju** | kamu delegasikan di giliran 3; alasannya di 2.1 dan **bisa diuji** (ubah L1 → semua undangan belum-G2 ikut berubah, yang sudah terbit tidak) |
+| **1** | ~~Bentuk dasar~~ → **DIJAWAB PEMILIK: "Setuju — kunci bentuk ini"** ✅ | **DIKUNCI** | kamu delegasikan di giliran 3; alasannya di 2.1 dan **bisa diuji** (ubah L1 → semua undangan belum-G2 ikut berubah, yang sudah terbit tidak) |
 | **2** | **7 hal yang harus konsisten** (bagian 3) — ada yang kurang atau berlebih? | pertahankan 7 | yang **sengaja tidak** dikunci juga sudah kusebut, supaya tidak semua undangan jadi kembar |
 | **3** | **6 gerbang + tingkat risikonya** — setuju **G0, G2, G5 dan perubahan L1 = review isi lengkap olehmu**? | setuju | sisanya bisa diwakilkan agent supaya kamu tidak kelelahan menyetujui hal-hal kecil |
-| **4** | **G3 fail-closed**: kalau aset kurang resolusi, **format cetak DITOLAK** dan dilaporkan — bukan diturunkan diam-diam. Setuju? | **setuju, dan ini yang paling penting** | lahir dari koreksimu sendiri (bagian J.3). Gerbang yang bisa ditawar bukan gerbang |
-| **5** | **Website induk: satu domain + undangan sebagai subpath**, hosting di **akun client**, repo Git sebagai database | setuju | pola yang terbukti di pasar (bagian A/B) dan **nol biaya bulanan**. **Konsekuensi yang harus kamu terima: client (atau kamu) harus membeli domain** — itu satu-satunya biaya yang tidak bisa nol |
+| **4** | ~~G3 fail-closed~~ → **DIJAWAB PEMILIK: jangan terlalu ketat, siasati dengan upscaling AI** ✅ | **DIROMBAK jadi 3 hasil + pengalihan menurut jenis isi** (4.3) | ide pemilik **diterima sebagian dan dipertajam**: upscaling **sah untuk foto ≤2× dari ≥150 DPI**, tetapi **mengarang detail untuk teks/garis halus** dan undangan didominasi keduanya. Ditambah **langkah 0** yang menghapus masalahnya secara struktur: teks wajib dari font, ornament wajib vektor → hanya foto yang masuk gerbang |
+| **5** | ~~Website induk / domain~~ → **DIJAWAB PEMILIK: subdomain gratis dulu, satu domain saat rilis, client yang mau domain sendiri menanggung biayanya** ✅ | **DIKUNCI sebagai kebijakan 3 fase** (bagian 5) | usulan agent semula ("harus beli domain") **dikoreksi pemilik** dan koreksinya **lebih baik**: fase percobaan jadi benar-benar nol biaya. **Konsekuensi rancangan yang mengikat dan kutambahkan sendiri: PATH wajib stabil lintas fase**, supaya tautan yang sudah disebar ke tamu tidak mati saat naik fase |
 | **6** | **Aset besar TIDAK masuk repo** (resep + sumber kecil saja yang masuk) | setuju | plafon artefak sesi ±128 MB / 10.000 berkas; melanggar ini membuat pekerjaan **tidak bisa di-commit** |
-| **7** | **8 gap skill** (T-06): kamu kirim link, atau izinkan aku pilih dan pasang? | **kirim link dulu untuk yang kamu punya**, sisanya aku usulkan per butir sebelum memasang | kamu bilang akan mengirim link; dan memasang skill = memasukkan kode pihak ketiga, jadi **tidak kulakukan diam-diam** |
+| **7** | ~~8 gap skill~~ → **DIJAWAB PEMILIK: delegasi + mandat riset cara pasang** ✅ | **DIKUNCI: git clone + vendor project-scoped ke repo**, usul per butir sebelum memasang (6.1) | riset menunjukkan `/plugin` **tidak bisa dijalankan dari sini** dan `npx skills` punya **preseden gagal-diam** di repo ini; vendor ke repo **satu-satunya yang persisten antar sesi**. Daftar gap jadi **9 butir** (upscaling+vektorisasi ditambah dari keputusan #4) |
+
+**Sisa yang belum kamu putuskan (kalau tidak ada keberatan, kupakai usulanku):** #2 (7 hal konsisten),
+#3 (6 gerbang + tingkat risikonya), #6 (aset besar tidak masuk repo).
 
 **Satu hal yang tidak kutanyakan karena sudah kamu putuskan:** acara pertama = **pernikahan**, nama =
 **`sistem-undangan`**, skala = **solo/≤3 orang**. Ketiganya kupakai sebagai masukan tetap.
@@ -345,3 +444,8 @@ dokumen-dokumen di bagian 7, plus **T-06** terjawab lewat pertanyaan review #7.
 | 2026-09-17 | **Tahap Serah Terima dipisahkan dari Terbit** (7 tahap, bukan 6) | Keduanya punya pemilik risiko berbeda: Terbit = tindakan teknis, Serah Terima = **perpindahan kepemilikan akun**. Mencampurnya adalah cara paling umum client kehilangan akses ke situsnya sendiri |
 | 2026-09-17 | **Tidak ada prinsip universal yang di-override**, dan prinsip "tidak universal" (visual vs non-visual) **dipakai dengan alasan eksplisit** | Dokumen sumbernya sendiri memerintahkan menggali jenis konsistensi yang analog **sendiri**, bukan mewarisi definisi konten kreator. Hasil galiannya di bagian 3: domain ini butuh **keduanya** |
 | 2026-09-17 | **W-10 ditulis "diterapkan, dengan catatan jujur"**, bukan "diterapkan" | Turunan self-contained belum ada di sistem anak mana pun (item T-07). Mengklaim penuh akan mengulangi **persis** kesalahan yang ditemukan di induk: mengklaim kepatuhan tanpa artefak |
+| 2026-09-17 (sore) | **Bentuk dasar DIKUNCI** — BERTINGKAT 3 lapis + SIKLUS 7 tahap | Persetujuan eksplisit pemilik pada pertanyaan review #1 |
+| 2026-09-17 (sore) | **G3 DIROMBAK dari 2 hasil jadi 3 hasil + pengalihan menurut jenis isi**, dan ditambah **langkah 0** (teks wajib dari font, ornament wajib vektor) | Masukan pemilik + riset 6 sumber. **Bukan melonggarkan gerbang**: yang ditolak tetap ditolak, tetapi ancamannya kini dibedakan karena memang berbeda — foto yang di-upscale 2× tidak berisiko mengubah isi, teks yang di-upscale **bisa mengubah nama orang**. Langkah 0 membuat dua dari tiga jenis isi **tidak pernah masuk gerbang sama sekali** |
+| 2026-09-17 (sore) | **Kebijakan domain 3 fase DIKUNCI**, dan agent menambahkan syarat **PATH stabil lintas fase** | Kalimat pemilik sendiri. Syarat path stabil **tambahan dari agent**: kalau path berubah saat naik fase, semua tautan yang sudah disebar ke tamu mati dan **tidak bisa diperbaiki setelah undangan beredar** |
+| 2026-09-17 (sore) | **Cara pasang skill DIKUNCI: git clone + vendor project-scoped**, dengan 4 aturan keamanan wajib | Delegasi + mandat riset pemilik. `/plugin` tidak bisa dijalankan dari lingkungan ini; `npx skills` punya preseden **gagal-diam** di repo ini; vendor ke repo satu-satunya yang **persisten antar sesi** dan sesuai filosofi self-contained |
+| 2026-09-17 (sore) | **Gap skill jadi 9 butir** — upscaling raster + vectorization ditambahkan | Kebutuhan ini **lahir dari keputusan G3**, bukan ada di daftar awal. Mencatatnya sebagai gap baru lebih jujur daripada menyelipkannya ke butir "generate gambar" |

@@ -1018,3 +1018,188 @@ sebelum dipakai mengambil keputusan** — bukan dipercaya dari laporan awal sesi
 | 2026-09-17 | **6 koreksi arsitektur (M.3) diwajibkan** setelah peta jaringan diukur | `api.cloudflare.com` dll terblokir → rekomendasi bagian H **tidak lengkap** tanpa koreksi ini. Publikasi harus lewat **git push**, aset harus **dibundel lokal**, font lewat **`@fontsource` npm**, QR **lokal**, WA/pembayaran **tanpa API** |
 | 2026-09-17 | **Agent TIDAK mengklaim "tidak ada skill audit"** | Uji kontrol (`react`, `nextjs`) ikut kosong → alatnya rusak karena `skills.sh` terblokir, bukan hasilnya kosong. Menyimpulkan "tidak ada" dari alat rusak = klaim palsu |
 | 2026-09-17 | Temuan #3 laporan awal **DICABUT sebagai basi** | PR #71 merged saat sesi berjalan; unit jadi `abandoned` di Tahap 4 dengan gerbang valid |
+
+---
+
+# Giliran 11 — jawaban pemilik atas pertanyaan review Rencana Kerangka (VERBATIM)
+
+Disimpan verbatim atas instruksi berdiri pemilik (S-01: *"Aku ga mau ada satu hal pun yang terlupakan…
+simpan chat aku ini"*). Empat pertanyaan diajukan; tiga dijawab dengan kalimat sendiri.
+
+**Pertanyaan 1 — Bentuk dasar (BERTINGKAT 3 lapis + SIKLUS 7 tahap):** pemilik memilih **"Setuju — kunci
+bentuk ini"**. → **DIKUNCI.**
+
+**Pertanyaan 2 — Gerbang resolusi cetak G3 fail-closed:** pemilik menjawab dengan kalimat sendiri
+(verbatim):
+
+> "Aku rasa sebaiknya jangan terlalu ketat, tapi bukan berarti ngentengin. Artinya begini, kita memang
+> perlu tekankan agar foto atau video yang diinput adalah yang berkualitas. Tapi kalaupun ternyata dia
+> tidak punya itu, kita kan bisa mensiasati nya, misalnya dengan melakukan upscaling dan penjernihan dan
+> enhanchement dengan tenaga ai. Iya kan? Klo butuh skill untuk ini, kamu bisa siapkan skill nya.
+> Gimana menurut kamu?"
+
+**Catatan agent:** pemilik **meminta penilaian**, bukan persetujuan (*"Gimana menurut kamu?"*). Ini
+mengaktifkan gerbang T25 dan instruksi berdiri S-03 (*"Aku mau kamu kritisi, bukan asal meng-iya-kan
+saja"*). Jawaban agent ada di bagian **N** di bawah — **sebagian membenarkan pemilik, sebagian
+mengoreksi**, dengan bukti.
+
+**Pertanyaan 3 — Website induk / domain:** pemilik menjawab (verbatim):
+
+> "Untuk masa percobaan gpp pake subdomain dulu yang gratis. Nanti waktu bener bener mulai rilis, baru
+> pake domain yang cukup satu domin untuk semua undangan, kecuali klo client nya mau domain sendiri maka
+> dia yang tanggung biaya nya"
+
+→ **DIKUNCI sebagai kebijakan 3 fase** (lihat bagian 5 Rencana Kerangka): fase percobaan = subdomain
+gratis; fase rilis = **satu domain untuk semua undangan**; pengecualian = **client yang mau domain
+sendiri menanggung biayanya sendiri**.
+
+**Pertanyaan 4 — cara memasang 8 gap skill:** pemilik menjawab (verbatim):
+
+> "Aku kurang paham. Aku rasa kamu lebih tau tentng ini. Atau akan lebih baik klo kamu melakukan riset di
+> internet mengenai cara pasng skill dan plugin yang paling maksimal dan terbik"
+
+→ **DELEGASI + MANDAT RISET.** Hasil risetnya di bagian **O** di bawah.
+
+---
+
+# N. RISET: batas nyata AI upscaling untuk cetak — menjawab pertanyaan pemilik di G3
+
+**Pertanyaan pemilik:** kalau client tidak punya foto berkualitas, bisakah disiasati dengan *upscaling +
+penjernihan + enhancement* bertenaga AI?
+
+**Jawaban singkat: BISA, tetapi hanya untuk SEBAGIAN jenis isi — dan undangan justru penuh dengan jenis
+isi yang TIDAK bisa disiasati begitu.** Rinciannya, dengan sumber:
+
+## N.1 Yang membenarkan pemilik (upscaling memang jalan)
+
+- **"A 150 DPI photo upscaled 2x with AI tools can often reach acceptable quality at 300 DPI for most
+  print uses"** — untuk **konten fotografis**, kenaikan **2×** dari **≥150 DPI** sering sudah cukup
+  (printshop.paperlust.co).
+- Alat yang disebut berulang: **Topaz Gigapixel AI** (berbayar), **LetsEnhance** (cloud, ada free tier),
+  dan **Upscayl — gratis, open-source, desktop**, berbasis **Real-ESRGAN** (sjprinter.com;
+  aiphotogenerator.net). Model Real-ESRGAN default bagus untuk **foto**; model **UltraSharp** dan
+  **Digital Art** untuk ilustrasi/gambar hasil AI.
+- Jadi usulan pemilik **bukan ide buruk** — untuk **foto pengantin, foto keluarga, foto gedung**, ini
+  mitigasi yang sah dan gratis.
+
+## N.2 Yang MENGOREKSI pemilik (batasnya keras, dan undangan kena di batas itu)
+
+| Batas | Bukti | Kenapa ini fatal untuk undangan |
+|---|---|---|
+| **"Upscaling cannot recover detail"** — menaikkan 72 DPI ke 300 DPI **tidak menambah data piksel nyata** | printshop.paperlust.co | yang berubah hanya **angkanya**, bukan isinya. File boleh berlabel "300 DPI" tetapi hasilnya tetap lembek |
+| **"Fine text, logos with thin strokes, and geometric line art upscale poorly. The AI model has no reliable pattern to fall back on for these, and can introduce artefacts or rounded edges on letterforms"** | printshop.paperlust.co | **undangan justru didominasi teks dan ornament garis halus** — nama pengantin, tanggal, kaligrafi, bingkai. Ini kategori **paling buruk** untuk upscaling |
+| **"Text-heavy images: AI upscalers can mangle text, turning legible words into AI-hallucinated gibberish. For documents, use OCR and re-typeset instead"** | aiphotogenerator.net | **nama orang** bisa berubah jadi huruf karangan. Untuk undangan, salah nama = cacat yang tidak bisa dimaafkan client |
+| **"There's a floor below which even the best AI can't produce usable results"** | aiphotogenerator.net | ada batas bawah; di bawahnya tidak ada penyelamatan |
+| **"No upscaling tool creates the 155 megapixels needed from a 1-megapixel source"** untuk format besar | sjprinter.com | untuk **baliho/banner** (kalau kelak dibutuhkan) upscaling bukan jawaban |
+| **"Upscaling fixes resolution only — color mode, bleed, and dimensions are separate issues"** | sjprinter.com | **menaikkan resolusi TIDAK menyelesaikan CMYK, bleed, atau ukuran.** Jadi upscaling **bukan** pengganti gerbang prepress yang lain |
+
+## N.3 Satu hal yang LEBIH BAIK dari upscaling, dan belum disebut pemilik
+
+- **"For flat graphics and logos, vectorization is a complete fix — the output is infinitely scalable"**
+  (sjprinter.com). Tes praktisnya: **zoom 400%** — kalau tepi warnanya bersih, kemungkinan bisa
+  divektorkan; kalau semuanya gradien halus, tidak.
+- **Konsekuensi arsitektural yang penting untuk sistem ini:** kalau **teks di-render dari font** (bukan
+  ditempel sebagai gambar) dan **ornament dibuat sebagai vektor (SVG)**, maka **masalah resolusi untuk
+  keduanya HILANG SECARA STRUKTUR** — bukan diselesaikan, tapi **tidak pernah muncul**. Yang tersisa
+  sebagai aset raster hanyalah **foto**.
+- Ini mengubah bentuk gerbangnya: alih-alih "semua aset harus 300 DPI", aturannya jadi **"teks wajib
+  vektor/font, ornament wajib vektor, hanya foto yang boleh raster — dan hanya foto yang butuh gerbang
+  resolusi"**.
+
+## N.4 Kesimpulan agent (verdict atas ide pemilik, sesuai gerbang T25)
+
+**Ide pemilik DITERIMA SEBAGIAN dan DIPERTAJAM, bukan ditolak dan bukan diiyakan mentah-mentah:**
+
+1. **Benar** bahwa menolak mutlak terlalu kaku, dan **benar** bahwa upscaling AI adalah mitigasi sah —
+   **untuk foto**, **maksimal ~2×**, dari sumber **≥150 DPI pada ukuran cetak akhirnya**.
+2. **Salah kalau diterapkan merata**: untuk **teks dan ornament garis halus** upscaling justru
+   **mengarang** detail dan bisa **mengubah nama orang**. Kategori ini **tidak boleh** lewat jalur
+   upscaling.
+3. **Jalur yang lebih baik untuk kategori itu sudah ada**: teks = **render dari font**, ornament/logo =
+   **vektor (SVG) atau vectorization**. Ini **menghapus** masalahnya secara struktur.
+4. **Upscaling tidak menyelesaikan CMYK, bleed, atau ukuran** — jadi gerbang prepress lainnya **tetap
+   berdiri**, tidak ikut dilonggarkan.
+5. Maka G3 diubah dari **2 hasil** (lolos / tolak) menjadi **3 hasil + pengalihan menurut jenis isi** —
+   rumusannya ada di Rencana Kerangka bagian 4.3. **Ini bukan melonggarkan gerbang; ini membuat gerbangnya
+   membedakan jenis isi, karena ancamannya memang berbeda per jenis isi.**
+
+**Skill yang dibutuhkan untuk ini (permintaan pemilik: *"Klo butuh skill untuk ini, kamu bisa siapkan
+skill nya"*):** upscaling raster (**Upscayl/Real-ESRGAN** — gratis, open-source) + vectorization.
+**Tetapi kelayakannya di lingkungan ini belum diuji** dan dicatat sebagai utang, bukan diklaim siap:
+`pip install` tidak bertahan antar sesi, tidak ada ffmpeg/ImageMagick-PDF/chromium, dan **semua API
+layanan eksternal terblokir** (hanya npm, PyPI, github.com) — jadi jalur cloud seperti LetsEnhance
+**gugur sejak awal**. Yang tersisa: alat lokal yang bisa dipasang dari PyPI/npm/GitHub, **dan bobot
+modelnya harus bisa diunduh dari sumber yang terjangkau**.
+
+---
+
+# O. RISET: cara memasang skill & plugin yang paling andal — menjawab delegasi pemilik
+
+Pemilik: *"Aku kurang paham… akan lebih baik klo kamu melakukan riset di internet mengenai cara pasng
+skill dan plugin yang paling maksimal dan terbik."*
+
+## O.1 Empat jalur pemasangan yang ada di ekosistem
+
+| Jalur | Perintah | Berlaku di lingkungan ini? |
+|---|---|---|
+| **Plugin marketplace** (interaktif) | `/plugin marketplace add owner/repo` lalu `/plugin install plugin@marketplace` | **TIDAK** — ini slash command Claude Code CLI, bukan sesuatu yang bisa dijalankan agent dari shell di sini |
+| **CLI npm** | `npx skills add owner/repo --skill nama` atau `npx skillstore add author/nama` | **SEBAGIAN** — npm terjangkau, **tetapi ada preseden buruk di repo ini**: `npx skills find` **GAGAL-DIAM** (skills.sh terblokir). Jalur ini tidak boleh dipercaya tanpa diuji dulu |
+| **git clone + salin foldernya** | `git clone https://github.com/owner/repo` lalu **salin folder skill-nya saja** ke direktori skill | **YA** — github.com terjangkau, dan ini **satu-satunya jalur yang sudah terbukti** di sesi ini |
+| **Manual / ZIP** | unduh ZIP, ekstrak ke direktori skill | **YA** tapi lebih lemah provenance-nya (tidak ada sha sumber) |
+
+## O.2 Dua direktori, dan bedanya penting
+
+| | Personal | **Project-scoped** |
+|---|---|---|
+| Lokasi | `~/.claude/skills/` | **`.claude/skills/` di dalam repo** |
+| Cakupan | semua proyek | **satu repo ini saja** |
+| **Ikut ter-commit & terbagi lewat git** | **tidak** | **YA** |
+| Cocok untuk | kebiasaan pribadi | **standar tim/repo** |
+
+Sumber: agensi.io/learn/how-to-install-skills-claude-code; lucaberton.com/blog/claude-code-skills-plugins-2026.
+
+**Keputusan agent: pakai PROJECT-SCOPED dan di-vendor ke dalam repo**, mengikuti konvensi yang **sudah
+berjalan** di repo ini (`sistem/sistem-building-aplikasi/skills/` berisi 56 skill). Alasannya bukan
+selera:
+
+1. **Bertahan antar sesi.** Pemasangan di luar repo (dan `pip install`) **tidak persisten** di lingkungan
+   ini — sudah terbukti. Skill yang hilang tiap sesi = mekanisme yang tidak bisa diandalkan.
+2. **Self-contained**, sesuai filosofi repo ini (W-07 dan validator `check_selfcontained.py`): sistem
+   harus bisa dipakai tanpa bergantung pada hal di luar folder/repo.
+3. **Bisa diaudit dan di-rollback** karena versi-nya tercatat di git, bukan "terpasang suatu hari".
+4. **Standar Agent Skills lintas alat** (`agentskills.io`): format `SKILL.md` dipakai bersama oleh Claude
+   Code, Codex CLI, OpenCode, Cursor — jadi tidak mengunci ke satu alat.
+
+## O.3 Aturan keamanan yang WAJIB (ini bagian yang paling sering dilewati)
+
+> **"Skills can execute arbitrary code in Claude's environment. Only install skills from trusted
+> sources. Review SKILL.md and all scripts before enabling a skill. Be cautious of skills that request
+> sensitive data access."** — travisvn/awesome-claude-skills
+
+Maka aturan pemasangan di sistem ini:
+
+1. **Baca `SKILL.md` + semua skripnya SEBELUM di-commit.** Bukan sesudah.
+2. **Catat provenance per skill**: repo sumber, **sha commit** yang disalin, tanggal, dan **lisensinya**.
+   Tanpa sha, "skill X terpasang" tidak bisa direproduksi.
+3. **Tolak skill yang meminta akses data sensitif** atau yang memanggil layanan eksternal (semua API
+   eksternal **terblokir** di lingkungan ini, jadi skill semacam itu **memang tidak akan jalan**).
+4. **Skill yang gagal diuji tidak boleh dinyatakan terpasang** — statusnya "ada di repo, belum terbukti
+   jalan", ditulis apa adanya.
+
+## O.4 Konsekuensi untuk 8 gap skill
+
+Delapan gap itu **tidak lagi menunggu link pemilik** sebagai satu-satunya jalur. Jalurnya sekarang:
+**agent mengusulkan per butir** (repo sumber + lisensi + kenapa) → **pemilik setujui atau ganti** →
+**agent clone + review + vendor + catat provenance + uji** → baru dinyatakan terpasang. **Satu butir
+ditambah** dari hasil bagian N: **upscaling raster + vectorization** (kebutuhan yang muncul dari
+keputusan G3, bukan dari daftar awal).
+
+## Log Keputusan (lanjutan)
+
+| Tanggal | Keputusan | Alasan |
+|---|---|---|
+| 2026-09-17 | **Jawaban pemilik atas 4 pertanyaan review disimpan VERBATIM** di berkas ini, bukan diringkas di memori agent | Instruksi berdiri S-01, dan pelajaran giliran yang sama: keputusan yang hanya hidup di chat/memori **hilang tanpa jejak** kalau sesi mati |
+| 2026-09-17 | **Bentuk dasar DIKUNCI** (BERTINGKAT 3 lapis + SIKLUS 7 tahap) | Persetujuan eksplisit pemilik |
+| 2026-09-17 | **Kebijakan domain DIKUNCI 3 fase** | Kalimat pemilik sendiri: subdomain gratis untuk percobaan → satu domain saat rilis → client yang mau domain sendiri menanggung biayanya |
+| 2026-09-17 | **G3 TIDAK dijawab "ya" mentah-mentah; diriset dulu dan hasilnya MENGOREKSI sebagian ide pemilik** | Pemilik bertanya *"Gimana menurut kamu?"* — itu permintaan penilaian. Instruksi berdiri S-03: *"Aku mau kamu kritisi, bukan asal meng-iya-kan saja."* Riset menunjukkan upscaling **jalan untuk foto** tetapi **mengarang detail untuk teks dan garis halus**, dan undangan didominasi keduanya |
+| 2026-09-17 | **Jalur pemasangan skill = git clone + vendor project-scoped ke dalam repo**, bukan `/plugin` dan bukan mengandalkan `npx skills` | `/plugin` tidak bisa dijalankan dari sini; `npx skills find` punya **preseden GAGAL-DIAM** di repo ini; git clone **satu-satunya yang terbukti**. Vendor ke repo juga satu-satunya yang **persisten antar sesi** |
