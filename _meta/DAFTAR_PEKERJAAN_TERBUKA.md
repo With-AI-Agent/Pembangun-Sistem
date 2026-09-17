@@ -17,6 +17,12 @@
 **Status yang sah:** `TERBUKA` (belum dikerjakan) · `TERTAHAN` (butuh keputusan/izin pemilik — **bukan**
 kerja teknis) · `SELESAI` (wajib sha) · `DITOLAK` (wajib alasan).
 
+> **JANGAN TERTUKAR:** item di berkas ini ber-ID **`T-nn` DENGAN strip** (T-01…T-24) dan artinya
+> **pekerjaan yang belum selesai**. Tuntutan pemilik ber-ID **`T<n>` TANPA strip** (T1…T31) dan
+> artinya **masukan yang harus direspons** — daftarnya di `_meta/TANGGAPAN_MASUKAN_PEMILIK.md`.
+> Kedua namespace dibedakan oleh stripnya dan diperiksa alat, tetapi sengaja dinyatakan di sini
+> karena kemiripannya mengundang salah baca.
+
 **Prioritas:** `P1` merusak/memblokir · `P2` mekanisme tidak jalan sebagaimana dijanjikan · `P3` mutu,
 gaya, atau utang yang tidak menghalangi · `P4` usulan.
 
@@ -82,6 +88,7 @@ utang meta dikerjakan kalau pembangunan benar-benar membutuhkannya.
 | T-22 | **GAP M-2: manifest induk tidak punya bagian Batasan Platform (W-07)** | P2 | SELESAI | `f48bd5c` |
 | T-23 | **Induk dikecualikan dari kontrak warisannya sendiri** (3 butir tidak terdeteksi alat mana pun) | P1 | SELESAI | `f48bd5c` |
 | T-24 | **Cek validator baru menghasilkan PASS palsu** (prosa memenuhi `\bW-nn\b`) | P1 | SELESAI | `f48bd5c` |
+| T-25 | **Instruksi pemilik S-15: yang tercatat harus DIBACA + DIRESPONS/DIEKSEKUSI, bukan cuma dicatat** | P1 | TERBUKA | mekanisme dibangun di working tree (`_meta/TANGGAPAN_MASUKAN_PEMILIK.md` + cek validator 4 lapis + 2 langkah wajib baca di `_meta/NEXT_SESSION_PROMPT.md`); **sha menyusul di baris ini pada commit berikutnya** — aturan "SELESAI wajib sha" dipatuhi, bukan dilonggarkan |
 
 ---
 

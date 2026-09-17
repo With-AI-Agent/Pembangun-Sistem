@@ -165,6 +165,85 @@ if _daftar_path.is_file():
             "daftar utang yang kosong tanpa deklarasi eksplisit tidak bisa dibedakan dari daftar yang rusak"
         )
 
+# --- Masukan pemilik yang TERCATAT wajib punya RESPONS yang bisa diperiksa ----
+# Instruksi pemilik 17 Sep 2026: "jangan cuma dicatat tapi juga harus direspon/dieksekusi".
+# Tiga hal ditegakkan di sini, karena "harus dibaca" yang hanya berupa imbauan akan dilupakan:
+#   (a) setiap penanda tuntutan T<n> di DISKUSI_MENTAH wajib punya baris di ledger tanggapan;
+#   (b) status ledger wajib dari kosakata tertutup - "TERCATAT" BUKAN status sah;
+#   (c) status TERJADWAL wajib menunjuk ID item yang BENAR-BENAR ADA di daftar utang;
+#   (d) kewajiban membaca kedua berkas di langkah awal sesi tidak boleh hilang diam-diam.
+_LEDGER = ROOT / "_meta/TANGGAPAN_MASUKAN_PEMILIK.md"
+_DAFTAR_UTANG = ROOT / "_meta/DAFTAR_PEKERJAAN_TERBUKA.md"
+_STATUS_RESPONS = {"DIEKSEKUSI", "DIJAWAB", "DITOLAK", "MENUNGGU PEMILIK", "TERJADWAL"}
+if _LEDGER.is_file():
+    _lt = core.strip_code_fences(_LEDGER.read_text(encoding="utf-8"))
+    _baris_ledger: dict[str, tuple[int, str, str]] = {}
+    for _ln, _l in enumerate(_lt.splitlines(), 1):
+        if not _l.lstrip().startswith("|"):
+            continue
+        _sel = [y.strip() for y in _l.strip().strip("|").split("|")]
+        # T<n> tanpa strip = tuntutan pemilik; S-<nn> = instruksi berdiri.
+        # JANGAN disamakan dengan T-<nn> (dengan strip) = item utang di daftar pekerjaan terbuka.
+        if len(_sel) < 3 or not re.fullmatch(r"T\d{1,2}|S-\d{2}", _sel[0]):
+            continue
+        _baris_ledger[_sel[0]] = (_ln, _sel[-2], _sel[-1])
+
+    # (a) setiap T<n> yang tercatat di DISKUSI_MENTAH wajib punya baris tanggapan
+    _t_tercatat: set[str] = set()
+    for _d in sorted((ROOT / "_meta" / "_internal").glob("DISKUSI_MENTAH_*.md")):
+        for _m in re.finditer(r"\bT(\d{1,2})\b", core.strip_code_fences(
+                _d.read_text(encoding="utf-8", errors="replace"))):
+            _t_tercatat.add(f"T{int(_m.group(1))}")
+    for _tid in sorted(_t_tercatat):
+        if _tid not in _baris_ledger:
+            errors.append(
+                f"_meta/TANGGAPAN_MASUKAN_PEMILIK.md: tuntutan {_tid} TERCATAT di DISKUSI_MENTAH tetapi "
+                "TIDAK PUNYA BARIS TANGGAPAN - pemilik menginstruksikan 17 Sep 2026 bahwa yang tercatat "
+                "wajib direspons/dieksekusi, bukan cuma dicatat"
+            )
+
+    # (b)+(c) status sah + bukti tidak kosong + TERJADWAL menunjuk item nyata
+    _teks_utang = (_DAFTAR_UTANG.read_text(encoding="utf-8")
+                   if _DAFTAR_UTANG.is_file() else "")
+    _id_utang = set(re.findall(r"^\|\s*(T-\d{2})\b", _teks_utang, re.M))
+    for _tid, (_ln, _status, _bukti) in sorted(_baris_ledger.items()):
+        if _status not in _STATUS_RESPONS:
+            errors.append(
+                f"_meta/TANGGAPAN_MASUKAN_PEMILIK.md:{_ln}: {_tid} ber-status '{_status}' yang TIDAK SAH "
+                f"(wajib salah satu {sorted(_STATUS_RESPONS)}) - 'TERCATAT'/'terbuka'/kosong "
+                "bukan tanggapan"
+            )
+        elif not _bukti or _bukti in {"-", "—", ""}:
+            errors.append(
+                f"_meta/TANGGAPAN_MASUKAN_PEMILIK.md:{_ln}: {_tid} ber-status {_status} tetapi sel bukti "
+                "KOSONG - tanggapan tanpa bukti tidak bisa diperiksa"
+            )
+        elif _status == "TERJADWAL":
+            _dirujuk = set(re.findall(r"\bT-\d{2}\b", _bukti))
+            if not _dirujuk:
+                errors.append(
+                    f"_meta/TANGGAPAN_MASUKAN_PEMILIK.md:{_ln}: {_tid} ber-status TERJADWAL tetapi tidak "
+                    "menunjuk ID item di _meta/DAFTAR_PEKERJAAN_TERBUKA.md - 'nanti dikerjakan' tanpa "
+                    "tempat di daftar utang = memindahkan diam ke tempat lain"
+                )
+            else:
+                for _r in sorted(_dirujuk - _id_utang):
+                    errors.append(
+                        f"_meta/TANGGAPAN_MASUKAN_PEMILIK.md:{_ln}: {_tid} ber-status TERJADWAL menunjuk "
+                        f"item {_r} yang TIDAK ADA di _meta/DAFTAR_PEKERJAAN_TERBUKA.md"
+                    )
+
+    # (d) kewajiban membaca di langkah awal sesi tidak boleh hilang
+    _nsp = ROOT / "_meta/NEXT_SESSION_PROMPT.md"
+    if _nsp.is_file():
+        _nt = _nsp.read_text(encoding="utf-8")
+        for _wajib in ("_meta/DAFTAR_PEKERJAAN_TERBUKA.md", "_meta/TANGGAPAN_MASUKAN_PEMILIK.md"):
+            if _wajib not in _nt:
+                errors.append(
+                    f"_meta/NEXT_SESSION_PROMPT.md tidak mewajibkan membaca {_wajib} di langkah awal sesi "
+                    "- daftar yang tidak pernah dibaca akan dilupakan walaupun isinya lengkap"
+                )
+
 # --- Index-driven system coverage (inheritance contract) -------------------
 INDEX_PATH = ROOT / "_meta/INDEKS_SISTEM.md"
 index_text = INDEX_PATH.read_text(encoding="utf-8") if INDEX_PATH.is_file() else ""

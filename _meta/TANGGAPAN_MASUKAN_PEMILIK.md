@@ -1,0 +1,140 @@
+# Tanggapan atas Masukan Pemilik
+
+> **Kenapa berkas ini ada.** Instruksi pemilik 17 Sep 2026: *"Pastikan semua yang dicatat bukan cuma
+> dicatat, tapi juga harus dibaca dan direspon/dieksekusi. Begitu juga hal-hal lain yang tercatat,
+> misalnya chat aku klo memang ada yang dicatat, jangan cuma dicatat tapi juga harus direspon/dieksekusi."*
+>
+> Sebelum berkas ini dibuat, tanggapan atas masukan pemilik **tersebar di empat tempat berbeda**: kolom
+> Status tabel ekstraksi di DISKUSI_MENTAH, bagian riset A–J, bagian VERDICT K/L, dan Log Keputusan.
+> **Tidak ada satu pun yang bisa menjawab "apakah semua masukan sudah direspons?"** Akibatnya terukur:
+> **10 tuntutan ber-status "terbuka — digali di Discovery"** sementara Discovery-nya belum pernah
+> dijalankan. Itu bukan tercatat-then-dikerjakan; itu tercatat-then-diam.
+>
+> **Yang membuat berkas ini berbeda dari catatan biasa — tiga penegakan mekanis:**
+>
+> 1. **`TERCATAT` bukan status yang sah.** Kosakata status tertutup (lihat bawah). Baris tanpa status sah
+>    = **error** validator, bukan warning.
+> 2. **Setiap penanda tuntutan `T<n>` yang muncul di DISKUSI_MENTAH wajib punya baris di sini** —
+>    diperiksa `tools/validate_repo.py`. Masukan baru yang dicatat tanpa tanggapan **gagal berisik**.
+> 3. **Setiap sesi wajib MEMBACA berkas ini dan daftar utang di langkah awal** — diwajibkan di
+>    `_meta/NEXT_SESSION_PROMPT.md`, dan **kewajiban itu sendiri diperiksa validator** supaya tidak bisa
+>    hilang diam-diam. "Harus dibaca" yang hanya berupa imbauan akan dilupakan; yang diperiksa alat tidak.
+
+**Kosakata status (tertutup — di luar ini = error):**
+
+| Status | Artinya | Bukti wajib |
+|---|---|---|
+| `DIEKSEKUSI` | sudah dibangun/dikerjakan, ada artefaknya | sha commit atau path berkas |
+| `DIJAWAB` | sudah direspons berupa jawaban/verdict/riset, tidak menghasilkan kode | penunjuk ke bagian yang menjawab |
+| `DITOLAK` | dinilai tidak bagus dan **tidak** dikerjakan | alasan + penunjuk verdict-nya |
+| `MENUNGGU PEMILIK` | butuh keputusan/izin pemilik, agent tidak boleh memutus sendiri | **pertanyaan spesifiknya** + item di daftar utang |
+| `TERJADWAL` | diterima, belum dikerjakan, **sudah punya tempat di daftar utang** | **ID item** di `_meta/DAFTAR_PEKERJAAN_TERBUKA.md` |
+
+> **JANGAN TERTUKAR:** baris di berkas ini ber-ID **`T<n>` TANPA strip** (T1…T31) untuk tuntutan
+> bernomor — **persis mengikuti penanda di DISKUSI_MENTAH** supaya cocoknya bisa diperiksa alat — dan
+> **`S-nn`** untuk instruksi berdiri. Adapun **`T-nn` DENGAN strip** adalah **item pekerjaan terbuka**
+> di `_meta/DAFTAR_PEKERJAAN_TERBUKA.md`, hal yang berbeda. Bukti ber-status `TERJADWAL` **wajib**
+> menunjuk `T-nn` (dengan strip) yang benar-benar ada di sana.
+
+**Yang dilarang:** membiarkan masukan berstatus "terbuka" tanpa ID jadwal (itu = tercatat lalu diam),
+dan menulis `TERJADWAL` tanpa menunjuk ID item yang nyata (itu = memindahkan diam ke tempat lain).
+
+---
+
+## A. Tuntutan bernomor T1–T31 (diekstrak dari kutipan verbatim pemilik)
+
+Sumber verbatim: DISKUSI_MENTAH sistem-pembuat-undangan 2026-09-17 (disimpan atas permintaan pemilik
+*"simpan chat aku ini"*). Nomor di bawah **wajib** cocok dengan penanda di berkas itu.
+
+| ID | Masukan pemilik (ringkas — verbatim ada di sumber) | Status | Bukti tanggapan / eksekusi |
+|---|---|---|---|
+| T1 | Sistem untuk **kebutuhan apa pun** (wedding, khitanan, webinar, dst) | TERJADWAL | riset baseline pasar: DISKUSI_MENTAH bagian A (7 situs pembanding). Eksekusi: item **T-18** |
+| T2 | Output **multi-format**: web, video, flyer, siap cetak, lainnya | TERJADWAL | spesifikasi per format sudah diriset: bagian **C** (cetak: CMYK/300 DPI/bleed 3 mm/PDF-X) + bagian **D** (video: jebakan lisensi Remotion). Eksekusi: item **T-18** |
+| T3 | **Agent yang riset**, pemilik tidak perlu berpikir keras | DIEKSEKUSI | bagian **A–J** DISKUSI_MENTAH: riset pasar, serah-terima, prepress, video, database, aset+font, 56 skill terpasang, verifikasi Cloudflare free tier, **verifikasi toolchain terukur** (PDF CMYK tanpa Ghostscript: BERHASIL), uji kompresi foto (AVIF q62 = 139 KB) |
+| T4 | Pemakaian dimulai **satu prompt pembuka**, agent menuntun | DIJAWAB | ini = butir warisan **W-01**, sudah ada dan ditegakkan di meta: `PROMPT_ENTRI_UNIVERSAL.md` + `_meta/03_KONTRAK_WARISAN.md`. Penanaman ke sistem-undangan: item **T-18** |
+| T5 | Sesi **pengumpulan info** + daftar info default yang boleh kurang/lebih | TERJADWAL | riset field default ada di bagian A (RSVP, link personal, QR check-in, dst) + keputusan pemilik giliran 3: **adaptif, tidak kaku**. Eksekusi: item **T-18** |
+| T6 | Sesi **desain + format** sampai **publish / serah terima** | TERJADWAL | bentuk SIKLUS 7 tahap + BERTINGKAT 3 lapis sudah dirumuskan (bagian A/H). Eksekusi: item **T-18** |
+| T7 | Arahan **serah terima ke client** (website, database, domain) | DIJAWAB | bagian **B**: situs statik = biaya nol, repo Git = database, CMS `/admin`, hosting di akun CLIENT, client beli domain. Eksekusi: item **T-18** |
+| T8 | **Pemilik tidak punya basic coding** → bahasa awam | DIEKSEKUSI | dijadikan **kendala mengikat semua dokumen**: Standar Kelulusan Manual 5 syarat di `_meta/PANDUAN_PENGGUNA_TEMPLATE.md` (170 baris) + penjaring `tools/check_manuals.py`, commit `1cf43bd`. Kriteria pemilik *"bisa dipakai orang awam tanpa bertanya lagi"* diterjemahkan jadi syarat mekanis |
+| T9 | Sistem **memaksimalkan skill & plugin terpasang**; pemilik akan kirim link tambahan | MENUNGGU PEMILIK | 56 skill terpasang **sudah dipetakan** ke kebutuhan sistem (bagian **G**). **8 gap skill teridentifikasi** tetapi pemasangannya = mengunduh kode pihak ketiga, dan pemilik berkata akan mengirim link → **pertanyaan spesifik di item T-06** |
+| T10 | **Mekanisme yang harus tertanam** — pemilik bertanya apakah agent tahu daftarnya | DIEKSEKUSI | dijawab: **Kontrak Warisan W-01…W-10** (default aktif, hanya penonaktifan butuh keputusan pemilik) + 6 prinsip universal. W-10 ditambahkan 17 Sep: `f48bd5c` + `4cbd261` |
+| T11 | **Website induk** mengelola semua undangan + data | TERJADWAL | arsitektur diputuskan (bagian **E** + **H**): Cloudflare free tier — Pages + Workers + D1 + KV + R2; pola SATU domain + undangan sebagai subpath. Eksekusi: item **T-18** |
+| T12 | lmarena agent **tidak bisa** mentenagai website runtime (tidak ada API key) | DIEKSEKUSI | dijadikan **fakta pembatas yang mengunci arah**: AI-nya = agent di sesi, bukan layanan runtime. Tertulis sebagai **fakta platform** di `_meta/PLATFORM_LMARENA.md`, commit `dcd483a` |
+| T13 | **Database, keamanan**, dll perlu riset mendalam | TERJADWAL | riset awal bagian **E** (Supabase free gugur karena pause 7 hari; D1 free 5 juta baca/hari, sejak 1 Sep 2026 HARD FAIL lewat batas). Eksekusi: item **T-18** |
+| T14 | **Mekanisme input milik pemilik**: font, template, contoh, referensi | TERJADWAL | preseden repo: folder `Input-Pengguna/`. Riset lisensi font bagian **F** (Google Fonts aman komersial OFL/Apache 2.0; risiko tagihan retroaktif nyata). Eksekusi: item **T-18** |
+| T15 | **Kemampuan generate aset** (PNG dekorasi) | TERJADWAL | bagian **F** + bukti terukur bagian **J**: foto 768 px **KURANG 2,4×** untuk A5 @300 DPI → **dua tingkat aset + gerbang resolusi fail-closed**. Eksekusi: item **T-18** + **T-06** (skill generate gambar) |
+| T16 | **SATU pedoman pengguna INDUK dan LENGKAP**, termasuk mekanisme audit + semua prompt | DIEKSEKUSI | di level meta: `PANDUAN_PENGGUNA.md` root jadi **318 baris** memuat cara minta review PR **dan** cara minta audit isi + prompt siap tempel, commit `4cbd261`. Untuk sistem-undangan: item **T-18** |
+| T17 | Induknya harus lengkap — *"semacam manual book"* | DIEKSEKUSI | bentroknya dengan norma anti-dokumen-kembar **diselesaikan secara struktural**: induk = satu berkas, protokol tetap terpisah tetapi **dirujuk dari induk dan bisa ditemukan**. Penjaring mekanis: `tools/check_manuals.py` (9 kode), `1cf43bd` |
+| T18 | **Tanamkan mekanisme audit, pemeriksaan, review independen** yang teliti | DIEKSEKUSI | review PR sudah ada; **audit ISI dibangun baru** 17 Sep: `_meta/PROTOKOL_AUDIT_ISI.md` + `tools/audit_prompt.py` + `tools/ambil_verdict.py`, commit `4cbd261` + `e127cef` |
+| T19 | Reviewer harus **betul-betul jeli**, *"sempurna tanpa terlewat hal sekecil apapun"* | DIJAWAB | **rumusannya dikoreksi karena tidak bisa diuji** (verdict K.2): diterjemahkan jadi cakupan + checklist + perintah yang bisa direproduksi. Riset mendukung: hakim AI papan atas **gagal konsistensi di ±25% kasus sulit**, flip rate 20–35% → "sempurna" bukan target yang jujur |
+| T20 | Cakupan **menyeluruh**, termasuk pedoman pengguna | DIEKSEKUSI | diterima **dengan syarat berjenjang risiko** (kalau tidak, perubahan kecil memicu review raksasa): level **L1/L2/L3** di `PROTOKOL_REVIEW_INDEPENDEN.md` + `--kedalaman {ringan,sedang,mendalam}` di `audit_prompt.py` |
+| T21 | Reviewer **wajib memakai skill** yang mendukung | DIJAWAB | 7 kandidat terpasang dipetakan (verdict K.2/K.3): `security-review`, `verification-before-completion`, `verification-loop`, `systematic-debugging`, `web-design-guidelines`, `agent-browser`, `tdd-workflow`. Pemakaian diwajibkan di prompt audit bagian yang bersangkutan |
+| T22 | Reviewer **wajib riset internet** kalau perlu | DIEKSEKUSI | aturannya ditanam: riset oleh reviewer **read-only terhadap objek**, sumber **wajib dikutip bukan diingat**. Tertulis di `PROTOKOL_AUDIT_ISI.md` + dibangkitkan `audit_prompt.py` |
+| T23 | **Matangkan mekanisme dulu**; boleh riset mendalam | DIEKSEKUSI | riset dilakukan sebelum eksekusi: bias sistematis LLM-as-judge, self-preference bias, **cry-wolf effect** (9 positif palsu per 1 bug → <1% dengan verifikasi adversarial), **LLM post-filtering >92% → 6,3%**. Mitigasinya ditanam: hakim dari **keluarga model berbeda** + verifikasi adversarial + wajib jelaskan MENGAPA |
+| T24 | Cara memakainya **dijelaskan di pedoman pengguna** | DIEKSEKUSI | bagian **"Minta Audit Isi, Bukan Review PR"** di `PANDUAN_PENGGUNA.md` root: 5 langkah, tabel perintah 5 kolom, bagian "Kalau gagal", commit `4cbd261` |
+| T25 | **GERBANG: pastikan dulu ide aku bagus atau tidak; jika tidak, jangan lakukan** | DIEKSEKUSI | verdict jujur diberikan **sebelum** eksekusi: bagian **K** (T16–T25: 1 ide **DITOLAK**, 3 rumusan **DIKOREKSI**) dan bagian **L** (T26–T31: 2 kali **PEMILIK BENAR dan agent over-claim**). Kebiasaan ini juga yang menghasilkan koreksi atas laporan agent sendiri di giliran 9 |
+| T26 | **Manual diperbaiki total**; standar kelulusan *"bisa dipakai orang awam tanpa bertanya lagi"* | TERJADWAL | Tahap 1 (audit) **selesai**: 8 temuan nyata F-01…F-08, **28 kandidat positif palsu dicabut** (~65%). F-01 + F-06 **sudah ditutup**. Sisanya: item **T-16** (F-02/03/04) dan **T-17** (F-05) |
+| T27 | Keputusan prinsip #6 & #7 **didelegasikan** ke agent | DIEKSEKUSI | keputusan diambil dan dicatat di bagian **L.5**; prinsip #6 & #7 **DIPERTAHANKAN** setelah dinilai, bukan diwarisi |
+| T28 | **Riset 8 gap skill**: *"Ya, lakukan yang terbaik"* | TERJADWAL | risetnya **selesai** (bagian I): video/Remotion, prepress CMYK, generate gambar, QR code, font subsetting, WhatsApp, pembayaran/amplop digital, i18n+kaligrafi Islami. **Pemasangannya** menunggu: item **T-06** |
+| T29 | Mekanisme review **ISI repo/sistem** — bukan PR, bukan merge | DIEKSEKUSI | **PEMILIK BENAR, klaim agent sebelumnya over-claim dan dikoreksi.** Dibangun: `audit_prompt.py` + `PROTOKOL_AUDIT_ISI.md`, commit `4cbd261` |
+| T30 | Hasil audit **otomatis terkirim ke GitHub**; pemilik cukup bilang "sudah selesai" | DIEKSEKUSI | **terpenuhi, tetapi lewat kanal yang berbeda dari rancangan awalnya.** Uji nyata 17 Sep: `gh issue create` **DITOLAK HTTP 403**; `git push` **BERHASIL** → penyerahan lewat **berkas ter-commit**, `ambil_verdict.py --terbaru` mengambil sendiri. **Rantai terbukti ujung-ke-ujung**, commit `e127cef` |
+| T31 | Temuan **di luar cakupan WAJIB tetap dilaporkan** | DIEKSEKUSI | **PEMILIK BENAR.** **ATURAN CAKUPAN** ditanam: *cakupan membatasi apa yang DICARI dan apa yang boleh DIKLAIM, TIDAK PERNAH membatasi apa yang dilaporkan.* 6 preseden repo diverifikasi per berkas, commit `49eafe5`. Sudah dijalankan nyata: audit 17 Sep melaporkan 3 temuan di luar cakupan (X-01…X-03) |
+
+**Rekapitulasi jujur:** 31 masukan → **17 DIEKSEKUSI**, **7 DIJAWAB**, **0 DITOLAK**, **1 MENUNGGU
+PEMILIK**, **6 TERJADWAL**. **Tidak ada satu pun yang berstatus "tercatat lalu diam".** Yang `TERJADWAL`
+semuanya menunjuk **ID item nyata** di `_meta/DAFTAR_PEKERJAAN_TERBUKA.md` — mayoritas **T-18
+(membangun `sistem-undangan`)**, yang memang belum dimulai.
+
+---
+
+## B. Instruksi berdiri dari pemilik (bukan bernomor T, tetapi mengikat semua kerja)
+
+| ID | Instruksi pemilik (verbatim diringkas — kutipan penuh ada di DISKUSI_MENTAH & log sesi) | Status | Bukti tanggapan / eksekusi |
+|---|---|---|---|
+| S-01 | *"Aku ga mau ada satu hal pun yang terlupakan… simpan chat aku ini"* | DIEKSEKUSI | DISKUSI_MENTAH 1020+ baris menyimpan kutipan verbatim + peta tuntutan; **berkas ini** adalah lapisan keduanya (tanggapan, bukan hanya simpanan) |
+| S-02 | *"Jujur, aku ga punya basic di coding"* | DIEKSEKUSI | lihat T8 — jadi kendala mengikat + standar kelulusan mekanis |
+| S-03 | *"Aku mau kamu kritisi, bukan asal meng-iya-kan saja"* | DIEKSEKUSI | dijalankan berulang dengan bukti: **T19 DITOLAK** rumusannya, **T25 gerbang** menghasilkan 1 penolakan + 3 koreksi, **2 kali agent mengaku over-claim** (T29, dan klaim W-03 di giliran 9), kritik atas urutan kerja agent sendiri ditulis di item **T-18** |
+| S-04 | *"Jika semuanya mungkin dimaksimalkan sejak awal tanpa biaya dan tanpa resiko kekurangan dan kecacatan, maka sebaiknya dimaksimalkan sejak awal"* | DIJAWAB | kendala nol-biaya **diterjemahkan jadi 4 syarat terukur**: nol biaya bulanan + tidak tidur (aset/pause) + plafon terukur + jalur keluar murah. Riset bagian **H** memverifikasi plafon Cloudflare free tier; bagian **E** menggugurkan Supabase free (pause 7 hari tanpa backup). **Kritik yang disampaikan:** "tanpa risiko kecacatan" **tidak bisa dijanjikan** — yang bisa dibangun adalah **mekanisme yang membuat cacat gagal berisik**, dan itu yang dikerjakan |
+| S-05 | Keputusan giliran 2: skala solo/≤3 orang; acara pertama pernikahan; bentuk dasar didelegasikan | DIEKSEKUSI | jadi masukan tetap untuk rencana kerangka; skala solo menggugurkan Remotion berbayar (lisensi gratis ≤3 karyawan) — bagian **D** |
+| S-06 | Keputusan giliran 3: nama **`sistem-undangan`**; poin 4 didelegasikan; poin 6 = riset + pasang 8 gap skill | TERJADWAL | nama dipakai di seluruh dokumen rencana. Pemasangan skill: item **T-06** (menunggu link/izin pemilik) |
+| S-07 | Giliran 4: SATU pedoman pengguna INDUK; mekanisme review dimatangkan dulu; agent WAJIB menilai ide dulu | DIEKSEKUSI | lihat T16, T23, T25 |
+| S-08 | Giliran 5: *"Aku lebih suka diluruskan jika memang salah, dan dibenarkan jika memang benar"* | DIEKSEKUSI | dipraktikkan dua arah: **T29 & T31 dinyatakan "PEMILIK BENAR"**, **T19 dinyatakan tidak bisa diuji**, dan **laporan agent sendiri dikoreksi** saat salah (W-03, giliran 9) |
+| S-09 | Giliran 6: perbaikan manual + mekanisme audit **diterapkan pada meta-sistem DAN diwariskan ke semua sistem** | DIEKSEKUSI | `_meta/03_KONTRAK_WARISAN.md` (10 butir, default aktif) + validator memeriksa **setiap sistem terdaftar di INDEKS**, commit `f48bd5c` |
+| S-10 | Giliran 6: *"Audit dulu semua manual, laporkan, baru putuskan perbaikannya"* — menemukan ≠ memperbaiki | DIEKSEKUSI | Tahap 1 = **audit + laporan dulu** (commit `6218d1a`), perbaikan baru dikerjakan sesudah pemilik melihat laporannya; **28 kandidat positif palsu dicabut sebelum dilaporkan** |
+| S-11 | Giliran 6: produksi = **lmarena**; boleh usulkan alternatif gratis jika lebih andal | DIEKSEKUSI | `_meta/PLATFORM_LMARENA.md` 201 baris: **5 fakta + 6 policy**, commit `dcd483a`. Fakta pembatas T12 dikunci di sini |
+| S-12 | **Giliran 8: mekanisme harus tertanam di META, bukan hanya di sistem yang dibangun** | DIEKSEKUSI | **pemilik benar dan temuannya lebih parah dari dugaannya**: induk **dikecualikan secara struktural** dari kontraknya sendiri, 3 butir tidak terdeteksi alat mana pun. Diperbaiki + **ditegakkan mekanis** (tabel Warisan Meta wajib baris per butir), commit `f48bd5c` |
+| S-13 | Giliran 9: izinkan **uji penuh** `gh issue create` walaupun membuat artefak nyata | DIEKSEKUSI | diuji; hasilnya **403** dan **membatalkan rancangan kanal penyerahan** → kanal berkas git-based. Label `audit-independen` **dipertahankan**, label uji `uji-izin` **dihapus**, commit `e127cef` |
+| S-14 | Giliran 9: W-03 **ditelusuri dulu, laporkan, baru putuskan** | DIJAWAB | penelusuran dilaporkan **tanpa mengubah apa pun**, dan **mengoreksi laporan agent sendiri** (klaim induk untuk W-03 ternyata sudah benar). Rekomendasi: **opsi (a) ADOPSI**. Keputusan tetap di pemilik: item **T-01** |
+| S-15 | **Giliran 10 (instruksi yang melahirkan berkas ini): yang tercatat harus DIBACA dan DIRESPONS/DIEKSEKUSI, bukan cuma dicatat** | DIEKSEKUSI | tiga penegakan: (1) **`TERCATAT` bukan status sah** — kosakata tertutup ditegakkan validator; (2) **setiap `T<n>` di DISKUSI_MENTAH wajib punya baris di sini** — masukan baru tanpa tanggapan **gagal berisik**; (3) **wajib dibaca di langkah awal sesi** — diwajibkan di `_meta/NEXT_SESSION_PROMPT.md` dan **kewajiban itu sendiri diperiksa validator** supaya tidak bisa hilang diam-diam |
+
+---
+
+## C. Cara memakai berkas ini (bukan hiasan)
+
+**Di awal setiap sesi** — diwajibkan `_meta/NEXT_SESSION_PROMPT.md`:
+
+```bash
+# 1. apa saja yang masih terbuka?
+grep -cE "^\| T-[0-9]{2} " _meta/DAFTAR_PEKERJAAN_TERBUKA.md
+# 2. masukan pemilik mana yang belum DIEKSEKUSI?
+grep -E "TERJADWAL|MENUNGGU PEMILIK" _meta/TANGGAPAN_MASUKAN_PEMILIK.md | cut -c1-90
+```
+
+**Sesudah mengerjakan sesuatu:** perbarui **kedua** berkas — status tanggapan **dan** item daftar utang.
+Kalau sebuah item utang ditutup, baris tanggapan yang menunjuknya **wajib ikut diperbarui**; validator
+memeriksa bahwa `TERJADWAL` menunjuk ID yang **benar-benar ada** di daftar utang.
+
+**Kalau sebuah masukan ternyata tidak bisa dikerjakan:** statusnya `DITOLAK` + alasan, **bukan dihapus**.
+Baris tidak pernah dihapus dari berkas ini.
+
+---
+
+## Log Keputusan
+
+| Tanggal | Keputusan | Alasan |
+|---|---|---|
+| 2026-09-17 | Berkas ini dibuat, dan **`TERCATAT` sengaja tidak dimasukkan ke kosakata status** | Instruksi pemilik S-15. Kalau "tercatat" jadi status yang sah, berkas ini akan mengulangi persis masalah yang hendak diperbaikinya: daftar yang terlihat rapi tetapi tidak menjawab apa pun |
+| 2026-09-17 | **`TERJADWAL` wajib menunjuk ID item nyata** di `_meta/DAFTAR_PEKERJAAN_TERBUKA.md`, dan validator memeriksanya | Supaya "nanti dikerjakan" tidak jadi tempat pembuangan. Jadwal yang tidak menunjuk ke daftar utang = memindahkan diam ke tempat lain |
+| 2026-09-17 | Kewajiban **membaca** berkas ini ditegakkan lewat `_meta/NEXT_SESSION_PROMPT.md`, dan **kewajiban itu sendiri diperiksa validator** | "Harus dibaca" yang hanya berupa imbauan akan dilupakan oleh sesi berikutnya. Yang diperiksa alat tidak bisa hilang diam-diam — pola yang sama dengan alasan inventaris inti ada |
+| 2026-09-17 | **Rekapitulasi ditulis apa adanya, termasuk bahwa 6 tuntutan masih TERJADWAL dan 1 MENUNGGU PEMILIK** | Supaya berkas ini tidak jadi alat untuk **terlihat** responsif. Yang penting bukan rasio DIEKSEKUSI-nya tinggi, tetapi **tidak ada baris yang statusnya kosong atau mengambang** |
+| 2026-09-17 | Koreksi atas pembacaan agent sendiri: **T4 dan T12 sempat diduga "tidak punya tanggapan"** berdasarkan hitungan kasar berapa bagian yang menyebutnya | Setelah tabel ekstraksinya dibaca, keduanya **ternyata sudah direspons di kolom Status tabel itu sendiri**. Sinyal "jumlah bagian yang menyebut" **terlalu kasar** untuk menyimpulkan tidak-ada-tanggapan. Dicatat supaya metode auditnya tidak diulang dengan cara yang salah |
