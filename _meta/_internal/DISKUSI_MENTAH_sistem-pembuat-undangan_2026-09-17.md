@@ -377,3 +377,87 @@ platform, ketersediaannya bergantung platform (sudah dicatat di bagian F).
 | 2026-09-17 | Bagian H (Cloudflare) + I (verifikasi toolchain) ditambahkan | Pemilik mensyaratkan maksimal sejak awal **tanpa biaya dan tanpa risiko**; syarat itu hanya bisa dijawab dengan bukti, bukan janji. Supabase gugur karena pause 7 hari + tanpa backup |
 | 2026-09-17 | **Jalur CMYK bagian C DIKOREKSI**: Ghostscript/ImageMagick **tidak tersedia** di lingkungan ini; diganti **ReportLab** (terbukti dengan bukti terukur di atas) | Kejujuran: bagian C ditulis dari riset internet sebelum lingkungan diverifikasi. Setelah diuji, ImageMagick diblokir policy untuk PDF dan Ghostscript tidak terpasang. Koreksi dicatat, bukan dihapus diam-diam (append-only) |
 | 2026-09-17 | Prinsip arsitektur dikunci sementara: **satu sumber design token → dua jalur render (web RGB / cetak CMYK)** | Lahir dari bukti bahwa HTML tidak bisa menghasilkan CMYK; tanpa ini desain akan dikerjakan dua kali dan berisiko tidak konsisten (Discovery poin 3) |
+
+## J. Pipeline aset foto: bukti terukur (giliran 3) + KOREKSI atas usulan agent sendiri
+
+**Pemicu:** pemilik menolak usulan "anggaran aset maks ~300 KB" dengan alasan jujur — *"yang aku tau yang
+namanya foto yang bagus itu kan biasanya ukuran nya besar, bukan cuma setengah mb"* — dan meminta mekanisme:
+pemilik upload foto, agent memproses supaya **tetap bagus, tidak burik, tapi ukurannya kecil**.
+
+**Lingkungan terverifikasi:** ImageMagick 6.9.11-60 di sandbox ini mendukung **WEBP (libwebp 1.2.4)** dan
+**AVIF/HEIC 1.15.1)** (rw+). `Pillow 12.3.0` mendukung **WebP=True, AVIF=True**. `numpy 2.4.6` terpasang.
+`cwebp`/`avifenc` CLI **tidak ada** (tidak diperlukan — Pillow/ImageMagick sudah cukup).
+
+### J.1 Hasil uji kompresi (foto nyata dari repo, diukur dengan PSNR + SSIM implementasi sendiri)
+
+Bahan: `sistem/sistem-konten-kreator/_produksi-aktif/narasi-sejarah-sumur-di-belakang-rumah/assets/S3-ember-berjejer.png`
+— **768×1376, 2.937 KB, PNG lossless**. Metrik: PSNR (dB) + SSIM Gaussian 11×11 σ=1.5 per kanal, rata-rata 3 kanal.
+
+| Varian | Ukuran | Hemat | PSNR (dB) | SSIM | Penilaian |
+|---|---|---|---|---|---|
+| WebP q85 | 285 KB | 90,3% | **37,39** | **0,9791** | sangat baik — aman untuk gambar utama (hero) |
+| WebP q78 | 218 KB | 92,6% | 35,15 | 0,9673 | baik |
+| WebP q70 | 182 KB | 93,8% | 33,80 | 0,9577 | mulai turun |
+| WebP q60 | 164 KB | 94,4% | 33,02 | 0,9516 | mulai turun |
+| **AVIF q62** | **139 KB** | **95,3%** | **34,09** | **0,9625** | **rasio ukuran/kualitas terbaik** |
+| AVIF q50 | 93 KB | 96,8% | 31,56 | 0,9407 | degradasi mulai terlihat |
+| AVIF q40 | 64 KB | 97,8% | 29,41 | 0,9117 | degradasi jelas — jangan dipakai |
+| JPEG q85 | 311 KB | 89,4% | 36,08 | 0,9747 | fallback browser lama |
+| JPEG q75 | 236 KB | 92,0% | 34,14 | 0,9643 | fallback |
+
+**Skala penilaian yang dipakai (standar umum, bukan karangan):** PSNR ≥40 & SSIM ≥0,99 = nyaris tak
+terbedakan · PSNR 35–40 & SSIM 0,97–0,99 = sangat baik, aman untuk layar · PSNR <32 = degradasi mulai terlihat.
+
+**⚠️ Batas kejujuran angka "Hemat":** bahan ujinya **PNG lossless**, jadi persentase hemat terlihat sangat besar.
+Foto kiriman client di dunia nyata biasanya **sudah JPEG**, sehingga penghematan riil terhadap JPEG asal akan
+**jauh lebih kecil** (khas 25–50% untuk WebP/AVIF pada kualitas setara). Angka di atas **tidak boleh** dikutip
+sebagai "hemat 95% untuk foto client". Uji ulang dengan foto asli client **wajib** dilakukan saat implementasi.
+
+**Rekomendasi berbasis bukti:** titik manis = **AVIF q62** (139 KB, PSNR 34,09) untuk gambar pendukung, dan
+**WebP q85** (285 KB, PSNR 37,39) untuk gambar utama/hero; **JPEG q85 sebagai fallback**; disajikan dengan
+`<picture>` + `srcset` (AVIF → WebP → JPEG) supaya browser memilih sendiri.
+
+### J.2 TEMUAN PENENTU: aset web **TIDAK BISA** dipakai untuk cetak
+
+Perhitungan aritmetik dari bahan uji yang sama (768 px lebar) terhadap syarat 300 DPI:
+
+| Lebar cetak | Butuh px @300 DPI | Punya | Verdict |
+|---|---|---|---|
+| A5 + bleed 3 mm (full bleed) | **1.819 px** | 768 px | **KURANG 2,4×** |
+| A5 trim | 1.748 px | 768 px | **KURANG 2,3×** |
+| Kartu 100 mm | 1.181 px | 768 px | **KURANG 1,5×** |
+| Elemen kecil 50 mm | 591 px | 768 px | CUKUP |
+
+**Foto 768 px hanya layak cetak sampai lebar 65 mm @300 DPI.**
+
+### J.3 KOREKSI atas usulan agent sendiri (jujur, bukan dibela)
+
+Usulan agent di giliran 2 — **"anggaran aset: foto maks ~300 KB"** — **SALAH** dan dicabut. Alasannya:
+angka itu menyatukan dua kebutuhan yang **saling bertentangan**. Kompresi yang membuat foto ringan untuk HP
+**justru menghancurkan** kelayakannya untuk cetak. **Keberatan pemilik benar.**
+
+**Aturan pengganti (kandidat kuat untuk Discovery poin 3): DUA tingkat aset, bukan satu anggaran.**
+1. **ASET INDUK (original)** — disimpan **apa adanya, tidak pernah dikompresi**, diarsipkan terpisah.
+   **Hanya ini yang boleh dipakai untuk format cetak.** Wajib lolos **gerbang resolusi** sebelum format cetak dijanjikan.
+2. **ASET TURUNAN WEB** — dibuat otomatis dari induk: beberapa lebar (mis. 480/768/1200/1600 px) dalam
+   AVIF + WebP + JPEG fallback, disajikan lewat `srcset`. **Tidak pernah** dipakai untuk cetak.
+
+**Gerbang resolusi (fail-closed, bukan fail-open):** saat intake, agent **mengukur** lebar×tinggi tiap foto dan
+**membandingkan** dengan ukuran cetak yang diminta. Kalau kurang → sistem **MENOLAK menjanjikan format cetak**
+dan melaporkan kekurangannya berapa kali lipat, **bukan** diam-diam mencetak foto burik. Kalau client hanya punya
+foto kecil, pilihannya dinyatakan terbuka: (a) naikkan kualitas dengan alat upscale (hasil **tidak setara** foto
+asli resolusi tinggi — harus dinyatakan), (b) cetak pada ukuran lebih kecil, (c) ganti foto, (d) batalkan format cetak.
+
+**Mekanisme input yang diminta pemilik (T14) jadi konkret:** pemilik menaruh foto ke folder input
+(preseden repo: `Input-Pengguna/` atau `_input/` per undangan) → agent menjalankan pipeline: **inventarisasi
+(ukur dimensi+byte) → validasi resolusi vs target cetak → simpan induk ke arsip → hasilkan turunan web →
+ukur PSNR/SSIM tiap turunan → tulis manifest aset berisi angka terukur**. Pemilik tidak perlu paham apa pun
+soal kompresi; yang dilihat pemilik hanyalah **tabel hasil: nama foto, layak cetak ya/tidak, ukuran sebelum/sesudah**.
+
+## Log Keputusan (lanjutan)
+
+| Tanggal | Perubahan | Alasan |
+|---|---|---|
+| 2026-09-17 | Bagian J ditambahkan: bukti uji kompresi (9 varian, PSNR+SSIM) + perhitungan kelayakan cetak | Pemilik menyatakan tidak paham dan tidak bisa memastikan batas yang agent tetapkan → dijawab dengan angka terukur, bukan penegasan ulang |
+| 2026-09-17 | **Usulan agent "foto maks ~300 KB" DICABUT sebagai salah**; diganti aturan **dua tingkat aset + gerbang resolusi fail-closed** | Keberatan pemilik terbukti benar oleh aritmetika: foto 768 px kurang 2,4× untuk A5 full-bleed @300 DPI. Kompresi web dan kelayakan cetak adalah dua kebutuhan yang bertentangan, tidak bisa diatur satu angka |
+| 2026-09-17 | Batas kejujuran angka "hemat 95%" dicatat eksplisit | Bahan uji PNG lossless, bukan JPEG kiriman client; mengutipnya sebagai penghematan riil akan menyesatkan |
