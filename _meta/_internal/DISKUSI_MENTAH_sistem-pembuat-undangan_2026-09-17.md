@@ -296,3 +296,84 @@ untuk line art cetak 600–1200 DPI** tanpa vektorisasi.
 |---|---|---|
 | 2026-09-17 | Bagian "Hasil riset agent" ditambahkan (A–G) | Tuntutan T3 pemilik: agent yang riset internet supaya arah presisi dan pemilik tidak perlu berpikir keras. Hasil riset disimpan sebagai berkas, bukan cuma chat, karena sesi bisa crash (fakta platform #3) |
 | 2026-09-17 | 3 risiko dicatat eksplisit: lisensi Remotion (≥4 karyawan berbayar), HTML→PDF tidak bisa CMYK langsung (perlu Ghostscript), Supabase free tier pause 7 hari | Ketiganya bisa membuat janji sistem meleset dari kenyataan; aturan repo menuntut batas kejujuran dicatat, bukan dihaluskan |
+
+## H. Arsitektur nol-biaya: verifikasi Cloudflare free tier (giliran 2)
+
+**Kenapa Cloudflare, bukan Supabase:** pemilik mensyaratkan *"maksimalkan sejak awal tanpa perlu biaya dan
+tanpa ada resiko kekurangan dan kecacatan"*. Supabase free **di-pause setelah 1 minggu tidak aktif** dan
+**tanpa backup** → gagal syarat untuk undangan yang harus hidup sampai hari-H. Cloudflare free **tidak
+tidur**, dan STATUS sistem-building-aplikasi sudah mencatat preferensi pemilik: **"suka Cloudflare"**.
+
+| Layanan | Batas gratis (terverifikasi 2026) | Cukup untuk usaha undangan solo? |
+|---|---|---|
+| **Pages** (hosting statis) | permintaan aset statik **gratis & tak terbatas**, bandwidth **tanpa meter**, **500 build/bulan**, 1 build serentak, 20.000 berkas/situs, **25 MiB/berkas**, 100 custom domain/proyek, 100 proyek/akun | ✅ jauh lebih dari cukup |
+| **Workers** (fungsi dinamis: form RSVP, check-in) | **100.000 permintaan/hari**, 10 ms CPU/permintaan, 50 subrequest, 128 MB memori, bundle **64 MiB** (naik dari 3 MB per 4 Sep 2026) | ✅ 1 undangan × 1.000 tamu ≈ ribuan permintaan; 100 undangan serentak masih aman |
+| **D1** (database SQL) | **5 juta baris dibaca/hari**, **100 ribu baris ditulis/hari**, **5 GB total**, **tanpa kartu kredit** | ✅ data teks RSVP/ucapan/tamu; 5 GB = jutaan baris |
+| **KV** | 1 GB, 100 ribu baca/tulis per hari | ✅ counter analitik, token check-in |
+| **R2** (storage media) | **10 GB**, 1 juta operasi/bulan, **tanpa biaya egress** | ⚠️ foto/musik — **perlu anggaran aset** (lihat risiko) |
+| **Analytics Engine / Web Analytics** | termasuk, kardinalitas tak terbatas | ✅ analitik kunjungan |
+| **Durable Objects** | 400 ribu GB-detik, 1 juta permintaan/bulan | ✅ Layar Sapa realtime (opsional) |
+
+**⚠️ 6 plafon yang WAJIB dicatat sebagai risiko aktif (bukan disembunyikan):**
+1. **Sejak 1 Sep 2026 D1 free tier jadi HARD FAIL** — melewati 5 juta baca / 100 ribu tulis per hari = query **gagal dengan error** sampai reset 00:00 UTC (sebelumnya enforcement-nya lunak). Mitigasi: index yang benar, pantau `meta.rows_read`, alarm di 80% (4 juta).
+2. **Cloudflare Pages §2.8 Self-Serve Agreement melarang memakai layanan TERUTAMA untuk menyajikan video/berkas non-HTML besar.** Tidak ada angka GB yang dipublikasikan; penegakannya **diskresioner** (historisnya berupa email suruh pindah ke Stream/upgrade/pergi). **Mitigasi wajib: media besar (musik, video) ke R2, JANGAN jadikan Pages sebagai CDN video.**
+3. **Pages free: tanpa SLA uptime, tanpa dukungan prioritas.** Untuk hari-H pernikahan ini risiko nyata. Mitigasi jujur: situs statik di-cache di edge = sangat tahan banting, tetapi **tidak ada jaminan kontraktual**; SLA 100% baru ada di Business $250/zone/bulan.
+4. **R2 10 GB gratis cepat habis oleh foto.** Perlu **anggaran aset yang dikunci sebagai aturan sistem** (mis. foto tamu/galeri maks 300 KB setelah kompresi → ±33.000 foto; musik maks 2 MB → ±5.000 lagu).
+5. **Istilah free tier BERUBAH — terbukti.** Sepanjang 1–4 Sep 2026 Cloudflare mengubah 3 hal sekaligus (D1 hard-fail, WAF SQLi log→block, Workers bundle 3 MB→64 MiB). Satu sumber menyimpulkan: *"the free tier is being redrawn as a development environment, not a production substrate"*. Mitigasi: **jalur keluar $5/bulan** (Workers Paid: 10 juta permintaan + 30 juta CPU-ms) dicatat di manifest sebagai rencana naik-tingkat, dan data harus **selalu bisa diekspor** (repo Git + dump D1 + export ke Google Sheets).
+6. **Batas 25 MiB/berkas dan 20.000 berkas/situs** di Pages — menentukan cara menyusun satu proyek untuk banyak undangan (subpath, bukan proyek terpisah per undangan).
+
+**Amplop digital tanpa biaya:** tampilkan nomor rekening + gambar QRIS statis + tombol "sudah transfer" yang
+dicatat ke D1. **Nol biaya.** Gateway pembayaran sungguhan (Midtrans/Xendit) = **MDR per transaksi**, jadi
+itu fitur premium berbayar, bukan bagian jalur nol-biaya.
+
+## I. VERIFIKASI TOOLCHAIN di lingkungan agent — bukti terukur, bukan asumsi (giliran 2)
+
+Dijalankan langsung di sandbox sesi ini. **Inilah lingkungan tempat sistem nanti benar-benar bekerja.**
+
+**✅ ADA:** `node v22.22.3` · `npm 10.9.8` · `npx` · `python3 3.11.2` · `pip 23.0.1` · `convert` (ImageMagick 6.9.11-60) · `zip`/`unzip` · `curl` · **`sudo` passwordless** · `apt-get` tersedia.
+**✅ Jaringan:** registry **npm hidup** (`npm view remotion version` → **4.0.525**), **PyPI hidup** (`pip3 download qrcode` berhasil).
+**❌ TIDAK ADA:** `ghostscript`/`gs` · `ffmpeg` · `chromium`/`chrome` · `rsvg-convert` · `inkscape` · `pdftk`/`qpdf` · `exiftool`.
+**❌ Diblokir kebijakan:** **ImageMagick TIDAK BISA menulis/membaca PDF** — `convert-im6.q16: attempt to perform an operation not allowed by the security policy 'PDF'` (policy.xml Debian pasca-CVE Ghostscript). Berkas 0 byte dihasilkan. **Jalur "Ghostscript/ImageMagick untuk CMYK" di bagian C TIDAK tersedia di lingkungan ini.**
+**✅ Aset tak terduga di repo:** **54 font TTF** sudah ada di `sistem/sistem-building-aplikasi/skills/ui-styling/canvas-fonts/` (ArsenalSC, BigShoulders, Boldonse, BricolageGrotesque, …). **Font sistem `/usr/share/fonts` kosong** (`fc-list` = 0) → font untuk cetak **harus** datang dari repo atau unduhan, bukan dari sistem.
+
+### Bukti penentu: PDF CMYK siap cetak TANPA Ghostscript — **BERHASIL**
+
+Jalur pengganti yang terbukti: **ReportLab** (`pip install reportlab`, terpasang 5.0.1) + `pypdf` 6.19.0 untuk verifikasi independen.
+
+Uji nyata di `/tmp/uji_cmyk.py` → `/tmp/undangan-uji-cmyk.pdf`, hasil **dibaca balik oleh pypdf, bukan diklaim**:
+
+| Yang diuji | Target prepress | Hasil terukur | Verdict |
+|---|---|---|---|
+| Ukuran halaman | A5 + bleed 3 mm = 154×216 mm | `154.0 x 216.0 mm` | ✅ |
+| Trim size | 148×210 mm (A5) | `148.0 x 210.0 mm` | ✅ |
+| Ruang warna | CMYK, **nol** RGB | **4 operator `k`/`K`**, **0 operator `rg`/`RG`**, **0 operator `g`/`G`** | ✅ |
+| Rich black | C60 M40 Y40 K100 | `.6 .4 .4 1 k` — **persis** | ✅ |
+| Crop marks | 4 sudut, offset 3 mm, 0.25 pt | 16 operator moveto/lineto (4 sudut × 2 garis × 2 op) | ✅ |
+| Font tertanam | wajib embedded/subset | `/F2+0` BaseFont `AAAAAA+ArsenalSC-Regular`, Subtype `/TrueType`, **FontFile2: TERTANAM** | ✅ |
+| Bobot berkas | — | **14.3 KB** | ✅ |
+
+**⚠️ 1 temuan jujur dari uji ini:** sumber daya font juga mendaftarkan `/F1 Helvetica` (Type1, **tidak tertanam**)
+— artefak font bawaan ReportLab. Tidak dipakai menggambar teks (semua teks pakai font tertanam), tetapi
+**preflight percetakan bisa menandainya**. Aturan sistem wajib: **pastikan hanya font tertanam yang dirujuk**,
+dan verifikasi tidak ada BaseFont standard-14 terpakai sebelum berkas disebut "siap cetak".
+
+**Konsekuensi arsitektur yang lahir dari bukti ini (penting):** PDF CMYK **tidak bisa** dihasilkan dari
+HTML/CSS (browser menghasilkan RGB — bagian C). Jadi **format cetak = jalur render terpisah** dari format web.
+Supaya tidak mendesain dua kali, **desain harus didefinisikan di atas kedua renderer** sebagai **design token**
+(warna dinyatakan berpasangan RGB *dan* CMYK, ukuran, spasi, skala tipografi) — persis yang disediakan skill
+`design-system` (token 3 lapis primitive→semantic→component). **Satu sumber desain → dua mesin cetak.**
+
+**⚠️ Batas yang belum diverifikasi (jangan diklaim siap):** (a) `pip install` **tidak bertahan antar sesi** →
+sistem wajib punya langkah "siapkan toolchain" di awal sesi, atau vendor dependensinya; (b) **video via Remotion
+belum diuji render nyata** — npm-nya tersedia, tetapi Remotion perlu mengunduh headless shell Chromium (±ratusan MB)
+dan render-nya berat/lambat; **ini harus diuji di fase tersendiri, bukan dijanjikan sekarang**; (c) `ffmpeg` tidak ada
+di sistem — Remotion membawa ffmpeg sendiri, tapi belum dibuktikan di lingkungan ini; (d) `generate_image` adalah alat
+platform, ketersediaannya bergantung platform (sudah dicatat di bagian F).
+
+## Log Keputusan (lanjutan)
+
+| Tanggal | Perubahan | Alasan |
+|---|---|---|
+| 2026-09-17 | Bagian H (Cloudflare) + I (verifikasi toolchain) ditambahkan | Pemilik mensyaratkan maksimal sejak awal **tanpa biaya dan tanpa risiko**; syarat itu hanya bisa dijawab dengan bukti, bukan janji. Supabase gugur karena pause 7 hari + tanpa backup |
+| 2026-09-17 | **Jalur CMYK bagian C DIKOREKSI**: Ghostscript/ImageMagick **tidak tersedia** di lingkungan ini; diganti **ReportLab** (terbukti dengan bukti terukur di atas) | Kejujuran: bagian C ditulis dari riset internet sebelum lingkungan diverifikasi. Setelah diuji, ImageMagick diblokir policy untuk PDF dan Ghostscript tidak terpasang. Koreksi dicatat, bukan dihapus diam-diam (append-only) |
+| 2026-09-17 | Prinsip arsitektur dikunci sementara: **satu sumber design token → dua jalur render (web RGB / cetak CMYK)** | Lahir dari bukti bahwa HTML tidak bisa menghasilkan CMYK; tanpa ini desain akan dikerjakan dua kali dan berisiko tidak konsisten (Discovery poin 3) |
