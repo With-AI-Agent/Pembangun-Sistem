@@ -7,8 +7,8 @@
 ## Status: `Draft` → `Reviewed` → `Approved` → `Merged` → `Operational`
 
 - [x] **Draft** — digali via Channel Discovery 2026-09-17 (slot log 20)
-- [ ] **Reviewed** — disajikan untuk dibaca lengkap oleh pemilik via viewer
-- [ ] **Approved** — isi dikunci lewat gerbang **G2**
+- [x] **Reviewed** — dibaca lengkap oleh pemilik via viewer, 2026-09-17
+- [x] **Approved** — isi dikunci lewat gerbang **G2** 2026-09-17 oleh pemilik
 - [ ] **Merged** — PR sudah lewat gerbang **G3** dan masuk ke `main`
 - [ ] **Operational** — sudah `Merged` DAN semua dependency wajibnya benar-benar ada (Bu Sinta Reference-Ready, indeks arsip ada)
 
@@ -117,7 +117,7 @@
 
 | Nama Model Konten | Folder | Status |
 |---|---|---|
-| Gambar Statis & Caption | `model-konten/gambar-caption/` | `Draft` — dipersiapkan untuk Discovery |
+| Gambar Statis & Caption | `model-konten/gambar-caption/` | `Reviewed` — Draft selesai, diajukan untuk G2 |
 
 ## 9. Arsip Naskah
 
@@ -128,6 +128,7 @@ Folder `arsip-naskah/` disediakan untuk menyimpan naskah final setiap post yang 
 | Tanggal | Keputusan | Alasan |
 |---|---|---|
 | 2026-09-17 | Inisiasi Channel Discovery Toko Bu Sinta; penetapan platform Instagram feed (1 gambar + caption 3–6 baris) | Brief awal pemilik: channel bertema cerita kecil hangat toko kelontong, tanpa video/VO. |
+| 2026-09-17 | G1 Lulus & G2 Approved — Channel Brief Toko Bu Sinta v1 dikunci resmi | Pemilik menyetujui penuh draft tanpa revisi. |
 | 2026-09-17 | Bu Sinta dikunci sebagai satu-satunya Karakter Utama (Tipe A); wajib tampil di tiap konten | Karakter sentral yang menjadi pengikat emosional dan jangkar visual channel. |
 | 2026-09-17 | Latar dan props ditandai tidak berlaku untuk folder reference pack terpisah; menyatu ke prompt adegan dan Prompt Master | Pilihan pemilik di validasi poin 1 & 3: Bu Sinta adalah jangkar visual utama; latar toko dan detail meja hadir fleksibel tanpa reference pack terpisah. |
 | 2026-09-17 | Struktur caption dibakukan: baris 1-2 pengamatan benda/situasi, baris 3-4 interaksi/ucapan Bu Sinta, baris 5-6 refleksi penutup pendek | Kesepakatan pada validasi poin 2 untuk menjaga ritme konsistensi narasi tanpa hard CTA. |
