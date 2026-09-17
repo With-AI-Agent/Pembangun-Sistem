@@ -3,18 +3,19 @@
 - **Status:** in-progress
 - **Channel:** Toko Bu Sinta (`channel-toko-bu-sinta`)
 - **Model konten:** Gambar Statis & Caption v1 (`model-konten/gambar-caption/brief.md`)
-- **Tahap terakhir selesai:** Tahap 2 — Konsep & Angle (G1 disetujui 2026-09-17)
-- **Tahap berikutnya:** Tahap 3 — Naskah/Script (menunggu G1 + G2)
+- **Tahap terakhir selesai:** Tahap 3 — Naskah/Script (G1 & G2 naskah final disetujui 2026-09-17)
+- **Tahap berikutnya:** Tahap 4 — Breakdown Output (menunggu G1 + G2)
 - **Output resmi:**
   - `naskah-draft.md`
+  - `breakdown-output.md`
 - **Sumber konteks yang dibaca:** `channel-brief.md` v1 Approved, `model-konten/gambar-caption/brief.md` v1 Approved, `konsistensi-visual/bu-sinta/bank-konsistensi.md` Reference-Ready, `arsip-naskah/indeks.md` (kosong), `arsip-naskah/indeks-karakter.md` (kosong), `_sistem/05_CONTENT_PRODUCTION_PIPELINE.md`, `_sistem/06_PROMPT_LIBRARY.md`
 - **Sumber eksternal dipakai:** `Tidak ada` (murni fiksi slice-of-life orisinal; tanpa klaim faktual/sejarah/ilmiah)
-- **Keputusan baru:** Variasi ritme kontemplatif tanpa karakter Tipe B; fokus visual pada Bu Sinta dan stoples kopi tua di pagi hari; naskah caption 5 baris dibakukan.
+- **Keputusan baru:** Unit breakdown dirumuskan sebagai 1 Post Visual Tunggal (`unit-1-stoples-kopi-tua.png`) menggabungkan acuan utama Bu Sinta dengan rutinitas fajar toples kopi dan cangkir seng beruap.
 - **Approval yang sudah diberikan:**
   - `G1 Tahap 1:` disetujui 2026-09-17
   - `G1 Tahap 2:` disetujui 2026-09-17
-  - `G1 Tahap 3:` belum
-  - `G2 naskah final:` belum
+  - `G1 Tahap 3:` disetujui 2026-09-17
+  - `G2 naskah final:` disetujui 2026-09-17
   - `G1 Tahap 4:` belum
   - `G2 breakdown:` belum
   - `G1 Tahap 5:` belum
