@@ -1543,6 +1543,19 @@ membukanya** — jadi "tidak ada jejak" **tidak membuktikan** "tidak pernah terj
 - **T-33 diputuskan atas delegasi pemilik:** jalan **(b)** — buat pegangan W-01 sungguhan. Status TERTAHAN →
   TERBUKA. Pemilik boleh membatalkan.
 
+### Kegagalan buatan sendiri ke-6 dan ke-7
+
+**D-3b:** komentar penulis yang **mengumumkan perbaikan D-3** justru **ikut terhitung sebagai slot hakim**,
+karena judulnya memuat kata *"verdict"* polos — PR #74 sempat terbaca punya **2 slot**. **Tertangkap karena
+alat dijalankan ULANG SESUDAH komentar ditempel**, bukan sebelumnya. Akar diperbaiki: kosakata penyaring
+dibatasi pada **token putusan sungguhan**; kata "verdict"/"temuan"/"review" polos tidak cukup. **Batas
+platform dicatat di kode:** semua sesi memakai **satu identitas bot**, jadi penulis dan hakim **tidak bisa
+dibedakan dari author** — karena itu klasifikasi judul + kuorum adalah satu-satunya jalan. **Dibuktikan:**
+dilonggarkan → 3 uji GAGAL **dan** sinyal kuorum hilang di PR nyata.
+
+**Ke-7:** ambang mutasi ditulis `>=2` padahal hanya 1 kasus yang bergantung padanya → **`--uji` menolak
+ambang salah itu**. Ambang terlalu tinggi berteriak salah; terlalu rendah diam saat seharusnya berteriak.
+
 ### INSIDEN #6 — re-clone platform, kedua kalinya
 
 Ditemukan **karena pemeriksaan ini membandingkan remote dengan lokal**, bukan karena gejala: `HEAD` lokal

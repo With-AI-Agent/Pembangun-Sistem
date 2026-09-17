@@ -91,10 +91,20 @@ HEADING_RE = re.compile(r"^\s{0,3}#{1,6}\s")
 # Baris yang menyebut dirinya dari penulis bukan verdict.
 PENULIS_RE = re.compile(r"\b(penulis|koreksi terbuka|tanggapan penulis)\b", re.I)
 # D-3: penanda bahwa sebuah komentar adalah LAPORAN REVIEW, bukan komentar penulis PR.
-# Sengaja KETAT: kata "temuan"/"review" saja tidak cukup, karena komentar penulis di PR #74
-# memuat kata-kata itu di judulnya dan akan ikut terhitung sebagai slot hakim.
+# Sengaja KETAT dan TIDAK memuat kata "verdict" atau "temuan" polos. Alasannya diukur dua kali:
+#   (a) komentar penulis PR #74 berjudul "...status tiap temuan" ikut terhitung sebagai slot;
+#   (b) SESUDAH perbaikan itu, komentar penulis berikutnya berjudul "...kuorum verdict TIDAK
+#       terpenuhi (1 dari 3)" MASIH ikut terhitung, karena memuat kata "verdict" polos — jadi
+#       PR #74 terbaca punya 2 slot hakim padahal hanya 1. Regresi ini tertangkap karena alat
+#       dijalankan ULANG sesudah komentar ditempel, bukan sebelumnya.
+# Katanya dibatasi pada token putusan sungguhan (kosakata VERDICT_RE minus COMMENT, yang terlalu
+# mudah kena kata "komentar") + penanda diri laporan review.
+# CATATAN BATAS: penyaringan berdasarkan PENULIS komentar TIDAK MUNGKIN di platform ini — semua
+# sesi memakai satu identitas bot yang sama, jadi penulis dan hakim tak bisa dibedakan dari author.
 LAPORAN_RE = re.compile(
-    r"(review\s+independen|verdict|putaran\s*\d|jangan\s+merge|\bMERAH\b|\bHIJAU\b|\bBLOCKER\b)",
+    r"(\bMERAH\b|\bHIJAU\b|\bBERSIH\b|\bBLOCKER\b|ADA\s+TEMUAN"
+    r"|TIDAK\s+BISA\s+DISIMPULKAN|APPROVE|REQUEST_CHANGES"
+    r"|review\s+independen|putaran\s*\d|jangan\s+merge)",
     re.I,
 )
 
@@ -494,6 +504,14 @@ KASUS_SLOT = [
      "# VERDICT: HIJAU — Review Independen Putaran 1/2 (PR #75)\n", True),
     ("D-3 fail-closed: laporan yang verdictnya tak terbaca TETAP slot",
      "## Review independen — putaran 1\n\nLaporan tanpa kata verdict.\n", True),
+    # Regresi D-3b NYATA: komentar penulis ini membuat PR #74 terbaca punya 2 slot hakim.
+    ("D-3b NYATA: judul penulis ber-kata 'verdict' polos BUKAN slot",
+     "## Head yang hendak diputuskan sekarang: `4ba2c47` — dan **kuorum verdict TIDAK terpenuhi (1 dari 3)**\n",
+     False),
+    ("D-3b: judul penulis ber-kata 'temuan' polos BUKAN slot",
+     "## Head yang hendak diputuskan sekarang: `ac25de0` — dan status tiap temuan\n", False),
+    ("D-3: laporan verdict berpemarkah VERDICT: + MERAH = slot",
+     "# VERDICT: MERAH — Review Independen Putaran 1/2 (PR #74)\n", True),
 ]
 
 # D-3: kuorum. Hakim yang tidak menyerahkan laporan BUKAN hakim yang puas.
@@ -531,7 +549,7 @@ FIX_PR = {
 
 
 def uji() -> int:
-    global VERDICT_RE, PENULIS_RE
+    global VERDICT_RE, PENULIS_RE, LAPORAN_RE
     gagal = 0
     print("UJI-MUTASI pembaca verdict (D-1) + agregasi fail-closed")
     for nama, teks, harap in KASUS:
@@ -635,13 +653,28 @@ def uji() -> int:
         print(f"        {c}")
         gagal += 1
 
-    total = len(KASUS) + len(KASUS_GABUNG) + len(KASUS_SLOT) + len(KASUS_GABUNG2) + 5
+    # MUTASI 5 (D-3b) — longgarkan LAPORAN_RE jadi memuat kata "verdict" polos: komentar penulis
+    # berjudul "...kuorum verdict TIDAK terpenuhi" harus BOCOR jadi slot hakim. Ini yang menguji
+    # bahwa pembatasan kosakata LAPORAN_RE load-bearing, bukan hiasan.
+    asli_l = LAPORAN_RE
+    LAPORAN_RE = re.compile(r"(review\s+independen|verdict|putaran\s*\d|\bMERAH\b|\bHIJAU\b)", re.I)
+    bocor5 = sum(1 for _, teks, harap in KASUS_SLOT if slot_hakim(teks) != harap)
+    LAPORAN_RE = asli_l
+    # Ambang >=1, bukan >=2: penulis sempat menulis >=2 dan uji ini langsung MENANGKAPnya —
+    # hanya 1 kasus yang benar-benar bergantung pada kata "verdict" polos (kasus "temuan" polos
+    # tidak terpengaruh oleh mutasi ini). Ambang yang terlalu tinggi = uji yang berteriak salah.
+    print(f"  [{'OK ' if bocor5 >= 1 else 'GAGAL'}] MUTASI kosakata LAPORAN_RE dilonggarkan terdeteksi "
+          f"({bocor5} kasus klasifikasi jadi salah; harus >=1)")
+    if bocor5 < 1:
+        gagal += 1
+
+    total = len(KASUS) + len(KASUS_GABUNG) + len(KASUS_SLOT) + len(KASUS_GABUNG2) + 6
     if gagal:
         print(f"\nHASIL: {gagal} GAGAL dari {total} pemeriksaan")
         return 1
     print(f"\nHASIL: PASS {total}/{total} pemeriksaan "
           f"({len(KASUS)} pembacaan + {len(KASUS_GABUNG) + len(KASUS_GABUNG2)} agregasi "
-          f"+ {len(KASUS_SLOT)} klasifikasi slot + 4 mutasi + 1 smoke kanal)")
+          f"+ {len(KASUS_SLOT)} klasifikasi slot + 5 mutasi + 1 smoke kanal)")
     return 0
 
 def main() -> int:
