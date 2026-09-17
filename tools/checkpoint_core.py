@@ -220,6 +220,13 @@ def unit_status_files(sys_dir: Path):
 
 
 # --- Warisan / Tahap (F9) ------------------------------------------------------
+# Daftar butir ditulis EKSPLISIT di sini dan JUGA di _meta/03_KONTRAK_WARISAN.md
+# (dua sumber). Menambah butir di kontrak TANPA menambah di sini = butir tidak
+# diperiksa; menambah di sini TANPA menanam di manifest = 4 sistem terdaftar gagal.
+# Keduanya wajib dikerjakan bersamaan. Sengaja TIDAK diturunkan otomatis dari
+# dokumen kontrak: penurunan otomatis membuat butir baru langsung mewajibkan
+# kepatuhan sebelum butir itu bisa ditanam (alatnya belum ada) — kontrak aturan 3
+# menuntut penonaktifan/penundaan diputuskan sadar, bukan jatuh sebagai error.
 WARISAN_ITEMS = [f"W-{i:02d}" for i in range(1, 10)]
 OVERRIDE_LABELS = ("alasan:", "dampak:", "tanggal:", "approval:")
 
@@ -233,12 +240,20 @@ def manifest_tahap(text: str) -> str:
 
 
 def warisan_rows(text: str):
-    """Yield (item, row) for each manifest table row starting '| W-0n'."""
+    """Yield (item, row) for each manifest table row starting '| W-nn'.
+
+    Regex sengaja `W-\d{2}`, BUKAN `W-0\d`: pola lama diam-diam berhenti
+    mengenali baris begitu kontrak warisan melewati W-09 (W-10 dan seterusnya
+    tidak akan ter-parse), sehingga mekanisme override + pengecualian mekanis
+    di bawahnya lumpuh untuk butir baru TANPA ada error yang terlihat. Diperbaiki
+    2026-09-17 saat audit menemukan batas ini (sesi arena/01a0ae7a); perbaikan
+    ini tidak mengubah perilaku untuk W-01..W-09.
+    """
     out = []
     for line in text.splitlines():
         s = line.strip()
         if s.startswith("|"):
-            m = re.match(r"\|\s*(W-0\d)\b", s)
+            m = re.match(r"\|\s*(W-\d{2})\b", s)
             if m:
                 out.append((m.group(1), s))
     return out
