@@ -4,6 +4,38 @@
 
 ---
 
+## Induk juga subjek kontrak ini (ditambahkan 17 Sep 2026)
+
+**Sebelum tanggal ini, meta-sistem DIKECUALIKAN dari kontraknya sendiri secara struktural** — dan pengecualian
+itu tidak disadari oleh alat mana pun. Tiga bukti pengecualiannya:
+
+1. Judul dokumen ini hanya menyebut *"SETIAP sistem yang **dibangun oleh** meta-sistem ini"*.
+2. `_meta/INDEKS_SISTEM.md` menyatakan: *"Meta-sistem (`_meta/`) — ini kerangka yang menaungi semua sistem,
+   **bukan salah satu isinya**"* (pernyataan itu **benar** untuk tujuan pendaftaran sistem domain, tetapi ikut
+   membuat induk terlepas dari kewajiban).
+3. `tools/validate_repo.py` memeriksa butir Warisan **hanya** pada manifest sistem terdaftar di INDEKS.
+
+**Akibat yang terukur:** audit 17 Sep 2026 menemukan induknya sendiri **tidak** menerapkan 3 butir —
+**W-03** (tidak ada field checkpoint deterministik yang hidup), **W-07** (manifest meta tidak punya bagian
+Batasan Platform padahal meta-lah penulis aturan platformnya), dan **W-09** (4 ringkasan cadangan ada untuk
+sistem anak, **tidak ada** untuk meta sendiri). **Ketiganya lolos tanpa terdeteksi selama ini.**
+
+**Aturan sekarang:**
+
+- **Induk TUNDUK pada kontrak yang ia tulis.** Kepatuhannya dideklarasikan di tabel
+  **`## Warisan Meta`** dalam `_meta/SYSTEM_MANIFEST.md`, dan **ditegakkan mekanis** oleh
+  `tools/validate_repo.py`: setiap butir wajib punya **baris** deklarasi `| W-nn …`.
+- **Gap boleh, diam tidak boleh.** Butir yang genuinely tidak berbentuk sama di level meta **wajib dinyatakan
+  sebagai gap** (GAP M-n) beserta buktinya dan dua pilihan sahnya (adopsi, atau override tercatat sesuai
+  aturan 3 di bawah). **Yang tidak sah: tidak berstatus.**
+- **Yang ditagih dari induk adalah DEKLARASI STATUS, bukan keberadaan artefak yang seragam.** Sengaja begitu:
+  memaksa bentuk artefak yang sama di level meta akan menghasilkan **kepatuhan palsu** — centang tanpa
+  substansi. Contoh nyata: meta tidak punya "unit kerja" ber-`STATUS.md`, jadi W-03 di level meta dijawab
+  dengan bentuk setara (header Keadaan Sesi di LOG_SESI + field Status/Versi di manifest), dan **ketiadaan
+  field deterministiknya dinyatakan sebagai gap**, bukan disulap jadi centang.
+- **Butir baru yang ditambahkan ke kontrak ini otomatis berlaku juga untuk induk** — `WARISAN_ITEMS` di
+  `tools/checkpoint_core.py` adalah satu daftar yang dipakai kedua pemeriksaan (sistem terdaftar **dan** meta).
+
 ## Aturan main kontrak
 
 1. **Default aktif.** Saat membangun sistem baru, agent MENERAPKAN seluruh butir di bawah sejak kerangka (Discovery Level-0) — TANPA perlu diminta, dan TANPA menawarkan tiap butir satu per satu (birokrasi). Yang dilaporkan: satu tabel "Warisan" berisi status tiap butir.
@@ -45,5 +77,6 @@ agent menemukan butir tidak cocok / pengguna menolak
 
 | Tanggal | Perubahan | Alasan |
 |---|---|---|
+| 2026-09-17 | Bagian **"Induk juga subjek kontrak ini"** ditambahkan; kepatuhan meta dideklarasikan di tabel `## Warisan Meta` pada `_meta/SYSTEM_MANIFEST.md` dan **ditegakkan mekanis** oleh `tools/validate_repo.py` (butir wajib berupa **baris** `| W-nn …`, bukan disebut di prosa) | **Instruksi eksplisit pemilik 17 Sep 2026:** *"mekanisme itu juga harus tertanam di meta sistem. Artinya bukan pada sistem-sistem yang dibangun nya saja, tapi juga pada induk sistem itu sendiri."* Audit menemukan pengecualian struktural itu nyata dan **sudah bocor**: 3 butir (W-03, W-07, W-09) tidak diterapkan induknya sendiri dan tidak terdeteksi alat mana pun, karena validator hanya memeriksa sistem terdaftar di INDEKS. W-07 **ditutup** di commit yang sama; W-03 dan W-09 **dinyatakan sebagai gap** menunggu keputusan pemilik (adopsi atau override tercatat). Cek validatornya sendiri **diuji mutasi 5 kasus** — versi pertama cek menghasilkan **PASS palsu** (menghapus baris W-09 tetap hijau karena kalimat prosa "W-01…W-09" sudah memenuhi `W-09`); diperketat jadi wajib-baris dan kelima kasus lulus |
 | 2026-09-05 | Dokumen dibuat (meta v1.3.0) | Permintaan pengguna pasca audit menyeluruh: butir wajib harus otomatis tertanam pada sistem yang AKAN dibangun, bukan hanya diselaraskan ke yang sudah ada; desain "kontrak warisan" (default aktif, hanya penonaktifan dikonfirmasi) disetujui pengguna 16:50 WIB; temuan M-13/AUDIT_META_SISTEM_2026-09-05 |
 | 2026-09-05 | Diperketat pasca review independen PR #11: inventaris inti statis, parse INDEKS ketat, unit diharapkan, parser bersama fail-closed, bagian "Tahap pembangunan & override tervalidasi" | Reviewer (sesi agent terpisah, VERDICT: REQUEST_CHANGES) membuktikan 4 PASS palsu — hapus file inti lolos, folder `sistem-autopilot-data` lolos (pengecualian substring "pilot"), baris INDEKS tanpa backtick diabaikan, field duplikat lolos — plus 2 dependensi aktif hilang di bootstrap template; perbaikan F1–F16 di PR #11 yang sama, di-pin sebagai regresi R1–R7 |

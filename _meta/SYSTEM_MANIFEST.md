@@ -26,6 +26,22 @@
 - **Bentuk operasional:** siklus discovery → design → build → audit → release → observe → evolve.
 - **Unit kerja:** satu sistem domain atau satu perubahan pada meta-sistem.
 
+## Batasan Platform
+
+- **Dipakai via lmarena?** Ya
+- **Jika Ya:** meta-sistem ini **adalah sumber** kelima fakta platform (`PLATFORM_LMARENA.md`) dan policy P1–P6.
+  Induknya sendiri tunduk pada aturan yang ia tulis: branch kerja `arena/...` dibuat otomatis platform (fakta #1),
+  sesi **tidak bisa** push lagi setelah PR di-merge/close (fakta #2) sehingga kerja lanjutan wajib dari sesi baru
+  yang dibuka dari `main`, sesi **bisa** menjadi unusable di tengah jalan (fakta #3) sehingga P1/P2 diberlakukan,
+  jaringan sesi **dibatasi allowlist** (fakta #4) sehingga publikasi lewat `git push` + build otomatis di sisi hosting
+  dan semua aset dibundel lokal, dan riwayat git lokal **bisa** terpotong/ter-reset di tengah sesi (fakta #5)
+  sehingga P6 diberlakukan sebelum setiap commit.
+- **Bagian ini ditambahkan 17 Sep 2026** karena sebelumnya **tidak ada**: induk menulis aturan platform untuk
+  semua sistem tetapi tidak pernah menyatakan kepatuhannya sendiri. Lubang ini tidak terdeteksi validator karena
+  `validate_repo.py` memeriksa string "Dipakai via lmarena" hanya pada manifest **sistem terdaftar di INDEKS**,
+  dan meta-sistem **sengaja bukan** sistem terdaftar. Dicatat sebagai **GAP M-2** di tabel Warisan Meta di bawah,
+  lalu ditutup di commit yang sama.
+
 ## Tiga Lapisan Quality
 
 | Lapisan | Objek | Artefak |
@@ -79,6 +95,39 @@
 - Master dan template berkembang tidak sinkron. **PERNAH TERJADI (M-01, 5 Sep 2026)** dan kini dijaga guard kelengkapan `build_template.py` (rujukan aktif yang tidak ikut template = build gagal) — daftar INCLUDE/ESSENTIAL manual tidak dipakai lagi.
 - Audit historis disalahartikan sebagai instruksi aktif.
 - Pilot struktural dianggap bukti produksi sebelum diuji pengguna.
+
+## Warisan Meta — induk TUNDUK pada kontraknya sendiri
+
+> Ditambahkan 17 Sep 2026 atas instruksi eksplisit pemilik: *"mekanisme itu juga harus tertanam di meta sistem.
+> Artinya bukan pada sistem-sistem yang dibangun nya saja, tapi juga pada induk sistem itu sendiri."*
+>
+> **Sebelum tabel ini ada, meta-sistem secara struktural DIKECUALIKAN dari kontrak warisannya sendiri.**
+> `03_KONTRAK_WARISAN.md` hanya menyebut *"SETIAP sistem yang dibangun oleh meta-sistem ini"*, `INDEKS_SISTEM.md`
+> menulis *"Meta-sistem (`_meta/`) — ini kerangka yang menaungi semua sistem, **bukan salah satu isinya**"*, dan
+> validator hanya memeriksa sistem terdaftar di INDEKS. Akibatnya **tidak ada tempat** meta menyatakan kepatuhannya,
+> dan **tidak ada alat** yang menyadarinya kalau kepatuhan itu bocor.
+>
+> **Status tiap butir di bawah diisi dari BUKTI yang diperiksa 17 Sep 2026, bukan dari niat.** Tiga butir
+> **tidak** diterapkan induknya sendiri dan dinyatakan apa adanya sebagai **GAP M-1/M-2/M-3** — sesuai prinsip
+> repo *"Laporkan, jangan diam"* dan *"Tidak dilakukan karena lupa bukan override valid"*.
+
+| Butir | Status di META | Bukti yang diperiksa | Catatan / gap |
+|---|---|---|---|
+| W-01 pegangan 2-file | **diterapkan** | `PANDUAN_PENGGUNA.md` + `PROMPT_ENTRI_UNIVERSAL.md` di root repo; **identitas blok prompt diverifikasi mekanis** 17 Sep (`tools/check_manuals.py` kode K3 → 0 kandidat) | **F-06 masih terbuka (A/P3):** penanda `agent_instruction` dinyatakan dalam **prosa** (baris 3), bukan frontmatter yang bisa digrep — 4 sistem anak sudah memakai frontmatter, induknya belum |
+| W-02 LOG_SESI | **diterapkan — meta SUMBER aturannya** | folder `_log-sesi/` + `TEMPLATE_LOG_SESI.md` + policy P2 di `PLATFORM_LMARENA.md` | — |
+| W-03 field checkpoint deterministik | **TIDAK DITERAPKAN** | string `Pekerjaan belum tersimpan` **hanya** muncul di manifest ini sebagai **teks historis Log Evolusi** (baris 2026-09-04), **bukan** field hidup yang bernilai | **GAP M-1 — butuh keputusan pemilik.** Meta tidak punya "unit kerja" ber-`STATUS.md` seperti sistem anak. Bentuk setara yang selama ini dipakai: header **Keadaan Sesi** di LOG_SESI + field `Status`/`Versi` di manifest ini. Yang **tidak** ada: field deterministik exact yang bisa diperiksa alat. Dua pilihan sah: (a) **adopsi** — tambah field itu di manifest ini; (b) **override tercatat** dengan alasan + dampak + tanggal + approval. **Yang tidak sah: membiarkannya tanpa status** |
+| W-04 manifest | **diterapkan** | `_meta/SYSTEM_MANIFEST.md` (berkas ini) | — |
+| W-05 Log Keputusan | **diterapkan** | tabel Log Keputusan/Evolusi di semua dokumen hidup `_meta/` | **1 lubang ditutup 17 Sep:** `PANDUAN_PENGGUNA_TEMPLATE.md` **tidak punya** tabel Log Keputusan padahal isinya berubah — template itu sendiri melanggar W-05. Sudah dibuat di commit R-01 |
+| W-06 QA 3-lapis | **diterapkan — meta SUMBERnya** | `QUALITY_ASSURANCE_AND_EVOLUTION.md` (**Lapisan 1 = audit meta-sistem itu sendiri**) + 8 arsip audit nyata di `_meta/_internal/` + `ACCEPTANCE_TESTS.md` + `FAILURE_INJECTION_TESTS.md` + `DEFINITION_OF_DONE.md` | **Yang belum ada: prompt audit-isi yang DIBANGKITKAN ALAT** (temuan X-04) dan pengiriman/pengambilan hasil otomatis (X-05) — keduanya sasaran R-05 |
+| W-07 fakta platform | **DITERAPKAN 17 SEP** (sebelumnya tidak) | bagian **Batasan Platform** di atas + `PLATFORM_LMARENA.md` sebagai sumber 5 fakta | **GAP M-2 — DITUTUP di commit yang sama.** Sebelumnya manifest ini tidak punya bagian itu sama sekali, dan tidak ada alat yang menyadarinya (validator hanya memeriksa sistem terdaftar) |
+| W-08 approval bertingkat | **diterapkan** | kriteria konkret **L1/L2/L3** di `PROTOKOL_REVIEW_INDEPENDEN.md` baris 17–19, spesifik kerja meta: *"perubahan struktural `_meta/`"*, *"menaikkan versi aturan"*, *"operasi riwayat (reset/revert/fungsi-forcing)"*, *"merge yang mengubah klaim DONE/manifest"* | Bentuk meta = **kedalaman review**, bukan kategori Besar/Kecil per unit produksi. Override L1→L3 wajib dicatat pemiliknya di log |
+| W-09 ringkasan cadangan | **TIDAK DITERAPKAN untuk meta** | `_cadangan-claude/` berisi **4** berkas RINGKASAN — **semuanya untuk sistem anak** (building-aplikasi, klinik, konten-kreator, presentasi). **Tidak ada ringkasan untuk meta-sistem sendiri** | **GAP M-3 — diusulkan, belum dikerjakan.** Kalau repo master rusak, keadaan meta harus direkonstruksi dari manifest ini + `INDEKS_SISTEM.md` + `_log-sesi/`, tanpa satu ringkasan khusus. Membuatnya = artefak baru yang substansial, jadi **dilaporkan dulu, tidak dikerjakan diam-diam** |
+
+**Ditegakkan secara mekanis:** `tools/validate_repo.py` memeriksa bahwa bagian ini **ada** dan **menyebut semua
+butir** `WARISAN_ITEMS` (W-01…W-09, dan seterusnya saat butir baru ditambahkan). Pemeriksaan ini **baru** dan
+sengaja dibuat **berbeda** dari pemeriksaan sistem terdaftar: yang ditagih di sini adalah **deklarasi status**
+( termasuk gap yang dinyatakan jujur), **bukan** keberadaan artefak — karena memaksa artefak pada butir yang
+bentuknya memang berbeda di level meta akan menghasilkan kepatuhan palsu.
 
 ## Log Evolusi
 

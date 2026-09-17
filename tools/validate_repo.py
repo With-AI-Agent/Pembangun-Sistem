@@ -84,6 +84,46 @@ if manifest_path.is_file():
         if re.search(r"\d+\s+(?:" + corpus_terms + r")|(?:" + corpus_terms + r")\s*[:=]?\s*\d+", evidence, re.IGNORECASE):
             errors.append(f"SYSTEM_MANIFEST Log Evolusi:{lineno}: sel Bukti mengutip angka korpus; angka ini bergerak setiap kali LOG_SESI ditulis sehingga tidak bisa menjadi bukti permanen")
 
+# --- Induk TUNDUK pada kontrak warisannya sendiri (17 Sep 2026) --------------
+# Instruksi eksplisit pemilik: mekanisme wajib tertanam di META-SISTEM juga,
+# bukan hanya di sistem yang dibangunnya. Sebelum cek ini ada, meta dikecualikan
+# secara struktural: kontrak hanya menyebut "sistem yang dibangun oleh meta",
+# INDEKS menyatakan meta "bukan salah satu isinya", dan validator hanya memeriksa
+# sistem terdaftar. Tiga gap nyata (W-03/W-07/W-09) lolos tanpa terdeteksi.
+#
+# Yang ditagih di sini = DEKLARASI STATUS tiap butir (termasuk gap yang dinyatakan
+# jujur), BUKAN keberadaan artefak. Sengaja begitu: bentuk beberapa butir memang
+# berbeda di level meta (meta tidak punya "unit kerja" ber-STATUS.md), dan memaksa
+# artefak yang seragam akan menghasilkan KEPATUHAN PALSU — centang tanpa substansi.
+_meta_manifest = ROOT / "_meta/SYSTEM_MANIFEST.md"
+if _meta_manifest.is_file():
+    _mt = _meta_manifest.read_text(encoding="utf-8")
+    _potong = re.split(r"^## Warisan Meta\b", _mt, maxsplit=1, flags=re.M)
+    if len(_potong) < 2:
+        errors.append(
+            "_meta/SYSTEM_MANIFEST.md: bagian '## Warisan Meta' TIDAK ADA — induk wajib "
+            "menyatakan kepatuhannya pada kontrak warisannya sendiri (permintaan pemilik 17 Sep 2026)"
+        )
+    else:
+        _badan = re.split(r"^## ", _potong[1], maxsplit=1, flags=re.M)[0]
+        # Butir wajib muncul sebagai BARIS TABEL deklarasinya (`| W-nn …`), bukan sekadar
+        # disebut di prosa. Versi pertama cek ini memakai `\bW-nn\b` pada seluruh badan
+        # bagian dan TERBUKTI menghasilkan PASS palsu: kalimat penjelas "menyebut semua
+        # butir (W-01…W-09)" sudah memenuhi syarat walau baris deklarasinya dihapus.
+        # Tertangkap oleh uji mutasi pada hari yang sama — pola "PASS palsu" yang sama
+        # dengan temuan review independen PR #11.
+        _baris_dideklarasikan = {
+            m.group(1)
+            for m in re.finditer(r"^\|\s*(W-\d{2})\b", _badan, re.M)
+        }
+        for _w in core.WARISAN_ITEMS:
+            if _w not in _baris_dideklarasikan:
+                errors.append(
+                    f"_meta/SYSTEM_MANIFEST.md Warisan Meta: butir {_w} tidak punya BARIS deklarasi "
+                    "`| " + _w + " …` — induk wajib menyatakan statusnya sendiri (gap boleh, "
+                    "tapi wajib dinyatakan sebagai baris, bukan disebut di prosa)"
+                )
+
 # --- Index-driven system coverage (inheritance contract) -------------------
 INDEX_PATH = ROOT / "_meta/INDEKS_SISTEM.md"
 index_text = INDEX_PATH.read_text(encoding="utf-8") if INDEX_PATH.is_file() else ""
