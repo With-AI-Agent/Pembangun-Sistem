@@ -2,7 +2,7 @@
 
 ### Dibangun via `04_CHARACTER_BUILDER_KIT.md` — 2026-09-17 (slot log 20). Elemen milik channel `channel-toko-bu-sinta` (1 channel saja — tidak lintas-channel).
 
-**Status:** `Draft` → `Reviewed` → `Approved` (menuju `Reference-Ready` setelah `acuan-utama.png` digenerate di Tahap 2)
+**Status:** `Reference-Ready` — G2 disetujui 2026-09-17; berkas `referensi/acuan-utama.png` benar-benar ada di repo dan lolos verifikasi visual sesuai Prompt Master.
 
 ## Jenis Elemen
 
@@ -69,3 +69,4 @@ Bu Sinta, an Indonesian female grocery store owner, 52 years old, round friendly
 | 2026-09-17 | Inisiasi Karakter Utama Tipe A: Bu Sinta (52 tahun, pemilik toko) | Karakter sentral yang wajib muncul di setiap gambar post feed Toko Bu Sinta. |
 | 2026-09-17 | Fisik & Atribut dikunci: sawo matang, konde kuncir rendah beruban tipis, kacamata bingkai cokelat, selendang merah melingkar di leher, kardigan mustard di atas kemeja putih, lap katun di pundak, cangkir seng hijau | Brief awal pemilik + kesepakatan penajaman Tahap 1 Character Builder Kit. |
 | 2026-09-17 | Pose acuan utama: berdiri 3/4 badan di balik meja kayu tua, memegang stoples kaca, senyum tipis menghadap ke depan | Pilihan pemilik: kondisi default yang paling mewakili identitas channel Toko Bu Sinta. |
+| 2026-09-17 | Status naik ke Reference-Ready; berkas `referensi/acuan-utama.png` digenerate dan diverifikasi lolos visual | Prompt Master dieksekusi via `generate_image`; seluruh atribut (selendang merah, kardigan mustard, kacamata cokelat, konde rendah, lap katun, cangkir seng) terverifikasi lengkap. |

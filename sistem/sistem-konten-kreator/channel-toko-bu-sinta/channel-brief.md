@@ -16,7 +16,7 @@
 
 - [x] Semua bagian wajib di bawah terisi (tidak ada placeholder tersisa)
 - [x] Semua pertanyaan di checklist konsistensi (bagian 4) sudah dijawab
-- [ ] Setiap elemen visual yang ditandai wajib sudah berstatus `Reference-Ready` (`konsistensi-visual/bu-sinta/` memiliki acuan utama lolos audit)
+- [x] Setiap elemen visual yang ditandai wajib sudah berstatus `Reference-Ready` (`konsistensi-visual/bu-sinta/` memiliki acuan utama lolos audit)
 - [x] `arsip-naskah/indeks.md` dan `arsip-naskah/indeks-karakter.md` sudah dibuat
 - [ ] Sudah `Merged` ke `main`
 
@@ -129,6 +129,7 @@ Folder `arsip-naskah/` disediakan untuk menyimpan naskah final setiap post yang 
 |---|---|---|
 | 2026-09-17 | Inisiasi Channel Discovery Toko Bu Sinta; penetapan platform Instagram feed (1 gambar + caption 3–6 baris) | Brief awal pemilik: channel bertema cerita kecil hangat toko kelontong, tanpa video/VO. |
 | 2026-09-17 | G1 Lulus & G2 Approved — Channel Brief Toko Bu Sinta v1 dikunci resmi | Pemilik menyetujui penuh draft tanpa revisi. |
+| 2026-09-17 | Bu Sinta (Karakter Tipe A) Reference-Ready; acuan-utama.png terverifikasi di repo | Tahap 2 Character Builder Kit tuntas; seluruh atribut wajib terpasang sempurna. |
 | 2026-09-17 | Bu Sinta dikunci sebagai satu-satunya Karakter Utama (Tipe A); wajib tampil di tiap konten | Karakter sentral yang menjadi pengikat emosional dan jangkar visual channel. |
 | 2026-09-17 | Latar dan props ditandai tidak berlaku untuk folder reference pack terpisah; menyatu ke prompt adegan dan Prompt Master | Pilihan pemilik di validasi poin 1 & 3: Bu Sinta adalah jangkar visual utama; latar toko dan detail meja hadir fleksibel tanpa reference pack terpisah. |
 | 2026-09-17 | Struktur caption dibakukan: baris 1-2 pengamatan benda/situasi, baris 3-4 interaksi/ucapan Bu Sinta, baris 5-6 refleksi penutup pendek | Kesepakatan pada validasi poin 2 untuk menjaga ritme konsistensi narasi tanpa hard CTA. |
