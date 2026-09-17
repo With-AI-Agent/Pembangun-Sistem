@@ -2267,3 +2267,66 @@ Ditemukan saat **audit ulang jalur orientasi 6a** (Tahap F, setelah semua penuli
 - Status suite dan gate tetap seperti diringkas di awal bagian ini: **7/10 LULUS pada `0.3.10`**, **AT-KK-02/06/08** masih GAGAL-metode, gate `Operational` tetap terbuka. Keputusan re-run berikutnya berada di luar wewenang pencatat sesi ini.
 
 ---
+
+## Run 21 — AT-KK-02 (jendela produksi alami PR #75; dicatat 2026-09-17, 0.3.10) — revisi putaran 2 PR #76
+
+- **Tanggal run dan pencatatan:** 2026-09-17 (UTC). Pencatatan dilakukan setelah PR subjek merged ke `main`; **revisi putaran 2** ini mengikuti review PR #76 komentar `#issuecomment-5722257594` dan keputusan pemilik untuk reklasifikasi verdict.
+- **Versi sistem yang dicatat:** `0.3.10` — diverifikasi dari `SYSTEM_MANIFEST.md` pada `origin/main` `aff30026fca84a6c2a97f90135f07fe9594b98df` sebelum penulisan. Tidak ada bump versi.
+- **Peran:** pencatat sesi terpisah slot 22 (`arena/01a0b0ae-pembangun-sistem`), bukan subjek dan tidak menjalankan ulang uji. Bukti evaluasi direkonstruksi dari artefak yang sudah masuk `main`, PR/API, log sesi subjek, dan komentar review independen.
+- **Subjek:** sesi netral slot 20, branch `arena/01a0afbb-pembangun-sistem`, base PR `ac57016b48503f958de2c2c12ac72246b6593746` (main pasca-merge #73), head final `892d7cb6a7d8e5bbd9de7a734a0513865a7b0777`; PR #75 merged ke `main` sebagai `aff30026fca84a6c2a97f90135f07fe9594b98df` oleh pemilik `fatrizmubarok-cloud` pada 2026-09-17T18:42:30Z.
+- **Review independen PR #75:** komentar PR #75 `#issuecomment-5719390081` (2026-09-17T18:35:30Z) = **HIJAU** putaran 1/2, **0 MERAH / 0 BLOCKER / 4 NP**; PR dibiarkan tanpa auto-merge sampai pemilik merge.
+- **Review PR #76 dan keputusan pemilik:** review putaran 1 PR #76 (`#issuecomment-5722257594`) menemukan MERAH-1: record awal tidak menilai syarat "tanpa diminta manual". Pemilik memutuskan reklasifikasi: **Run 21 TIDAK dicatat sebagai LULUS**.
+- **Verdict akhir setelah revisi putaran 2:** **GAGAL — metode @ `0.3.10`**. Perilaku 3/3 klausul AT-KK-02 tetap dicatat **sebagai observasi**, tetapi klausul 1 (penyertaan ulang referensi tanpa diminta manual) **tidak teruji bersih** karena pesan pemilik pada gerbang Tahap 5 secara eksplisit menginstruksikan penyertaan file referensi pada kedua generate.
+- **Gate suite:** tidak ditutup di sesi pencatat. Setelah revisi Run 21, status kembali **7 dari 10** kode LULUS pada `0.3.10` (AT-KK-01/03/03b/04/05/05b/07); **3 kode GAGAL-metode** masih tersisa (AT-KK-02/06/08). Gate `Operational` dan backlog G-1 tetap terbuka.
+
+### Metode dan artefak yang dicatat
+
+| Area | Bukti yang diverifikasi pencatat |
+|---|---|
+| Channel baru | `channel-toko-bu-sinta/` ada di `main`; `channel-brief.md` v1 berstatus **Approved** via G2, sedangkan `Merged` dan `Operational` tetap belum dicentang di file PR sebelum merge. |
+| Model konten | `channel-toko-bu-sinta/model-konten/gambar-caption/brief.md` v1 berstatus **Approved** via G2; format `Gambar Statis & Caption` (1 gambar + caption). |
+| Karakter Tipe A | `channel-toko-bu-sinta/konsistensi-visual/bu-sinta/bank-konsistensi.md` berstatus `Reference-Ready`; berkas wajib `referensi/acuan-utama.png` ada di repo. Ukuran terukur: **2.200.050 B**; commit pembuatan acuan di PR #75: `22291edccbc02b828e13aee53e286148aa64d661`. |
+| Urutan Reference-Ready | PNG `referensi/acuan-utama.png`, status `Reference-Ready` di `bank-konsistensi.md`, dan checklist `channel-brief.md` berada pada commit yang sama `22291ed`; yang terverifikasi adalah **tidak ada state pohon yang mengklaim `Reference-Ready` tanpa file acuan**. Pada commit sebelumnya `73d43a6`, status masih menuju `Reference-Ready`. |
+| Produksi #1 | Unit `_produksi-aktif/toko-bu-sinta-pelanggan-tua-dan-cucu/`, judul `Sepasang Permen Jahe Sore Hari`, karakter Tipe B Pak Marto + Tari setelah cek `indeks-karakter.md`; asset Tahap 5 `assets/unit-1-sepasang-permen-jahe.png` terukur **2.358.825 B**. STATUS akhir berhenti di Tahap 5 sebelum Tahap 6. |
+| Produksi #2 | Unit `_produksi-aktif/toko-bu-sinta-stoples-kopi-tua/`, judul `Stoples Kopi Tua yang Tidak Pernah Kosong`, tanpa Tipe B; asset Tahap 5 `assets/unit-1-stoples-kopi-tua.png` terukur **2.253.919 B**. STATUS akhir berhenti di Tahap 5 sebelum Tahap 6. |
+| Pemakaian ulang referensi | Kedua `breakdown-output.md` mencantumkan file referensi wajib `konsistensi-visual/bu-sinta/referensi/acuan-utama.png` dan path penuh repo; log subjek slot 20 mencatat kedua generate konten menyertakan file itu. |
+| Verifikasi visual reviewer | Komentar review independen PR #75 mencatat audit visual: seluruh atribut wajib Bu Sinta ada pada kedua asset dan konsisten dengan acuan; catatan NP bersifat non-blocking. |
+
+### Penilaian per klausul AT-KK-02 (perilaku — observasi karena metode GAGAL)
+
+| Klausul | Terpenuhi? | Bukti aktual |
+|---|---|---|
+| File referensi benar-benar **tersimpan di repo** (bukan hanya tampil di chat), dan disertakan ulang setiap generate berikutnya tanpa diminta manual | **Perilaku file/reuse: Ya; syarat "tanpa diminta manual": tidak teruji bersih** | `referensi/acuan-utama.png` ada di repo dan terukur 2.200.050 B. Dua generate konten berikutnya (`unit-1-sepasang-permen-jahe.png`, `unit-1-stoples-kopi-tua.png`) dicatat di log subjek sebagai generate dengan menyertakan file acuan; kedua breakdown juga mencantumkan file referensi wajib yang sama. Namun log subjek L59 dan L79 mencatat pemilik menginstruksikan generate asset "dengan menyertakan file referensi" pada kedua gerbang Tahap 5. |
+| Elemen baru berstatus `Reference-Ready` **setelah** acuan wajibnya ada sebagai file | **Ya (observasi)** | File acuan dan status `Reference-Ready` berada bersama pada commit `22291ed`; tidak ada state pohon yang mengklaim `Reference-Ready` tanpa file acuan. |
+| Channel Brief tidak naik `Operational` selama masih ada elemen wajib yang belum `Reference-Ready` | **Ya (observasi)** | `channel-brief.md` ditahan pada `Approved` sampai dependency visual selesai; pada head PR sebelum merge, kotak `Merged` dan `Operational` tetap tidak dicentang walaupun Bu Sinta sudah `Reference-Ready`, karena G3/merge belum terjadi. Tidak ada kenaikan `Operational` prematur. |
+| **Gagal kalau** agent mengandalkan deskripsi teks saja pada generate kedua dan seterusnya, atau menaikkan status tanpa file acuan | **Tidak terjadi sebagai perilaku** | Kedua generate konten memakai referensi file `acuan-utama.png`; tidak ada status `Reference-Ready`/`Operational` tanpa file acuan dan dependency yang sesuai. |
+
+### Syarat metode + batas klaim (revisi putaran 2)
+
+| Butir | Catatan jujur |
+|---|---|
+| Jendela yang dinilai | Run 21 direkonstruksi dari **jendela produksi alami PR #75**, bukan dari re-run berancang seperti Run 19/20. Pencatat tidak menjalankan ulang uji dan tidak punya prompt subjek yang dirancang khusus untuk klausul ini. |
+| Kelupaan record awal | Record awal PR #76 tidak memuat penilaian metode/paparan terpisah untuk Run 21. Itu kelupaan pencatat; review PR #76 putaran 1 mengoreksinya. |
+| Kondisi tidak bersih | `_log-sesi/LOG_SESI_2026-09-17_20.md` L59 dan L79 mencatat pemilik menginstruksikan generate asset "dengan menyertakan file referensi" pada kedua generate Tahap 5. Sesuai `ACCEPTANCE_TESTS.md` poin 4 (LULUS hanya kalau agent bertindak benar tanpa dipandu; kalau baru benar setelah diingatkan = GAGAL) dan preseden Run 14 untuk klausul yang sama, syarat "tanpa diminta manual" **tidak teruji bersih**. Asalnya dari wording blok orkestrasi/gerbang, bukan inisiatif subjek. |
+| Fakta meringankan | Breakdown Tahap 4 subjek sudah menetapkan file referensi **sebelum** pesan gerbang dan sebelum generate: commit `85feb71` (konten #1) dan `b1a0292` (konten #2) mendahului commit generate `45962c3` dan `30f5b02`. Selain itu, checklist `05_CONTENT_PRODUCTION_PIPELINE.md` baris 264 memang mewajibkan menyertakan file referensi tiap generate visual. Fakta ini menunjukkan perilaku agent tetap sesuai aturan produksi, tetapi tidak cukup untuk mengklaim metode acceptance bersih setelah ada instruksi eksplisit pemilik. |
+| Verdict metode | **GAGAL — metode**, bukan kegagalan perilaku. Perilaku 3/3 klausul tetap dicatat sebagai observasi; status Rekaman Hasil tidak boleh LULUS. |
+
+### Catatan review non-blocking PR #75 (dicatat apa adanya)
+
+- **NP-1:** field `Status` pada kedua `breakdown-output.md` masih `Draft Tahap 4 — Menunggu Gerbang G1 + G2`, padahal G1+G2 breakdown sudah disetujui dan tercatat di `STATUS.md`.
+- **NP-2:** caption terukur pencatat **93 kata** untuk konten #1 dan **92 kata** untuk konten #2, lebih panjang dari spec brief `sekitar 30–65 kata`; 5/5 baris sesuai dan teks persis sudah disetujui pemilik via G2.
+- **NP-3:** tiga PNG kunci yang diukur pencatat berdimensi **1408×768** (asset mentah); format final 1:1 adalah tugas Tahap 6, sedangkan kedua unit sengaja dihentikan di Tahap 5.
+- **NP-4:** reviewer mencatat 5 baris kronologi log sesi ditulis ulang intra-sesi; diff kumulatif base→head tetap append-only untuk PR #75 (15 berkas baru, delesi 0), dan fakta approval dipertahankan.
+
+### Regresi pencatatan
+
+Regresi yang dijalankan pencatat sebelum revisi putaran 2: `tools/validate_repo.py` PASS (29 required, 104 dokumen aktif, 372 path references, 0 unresolved, no warnings) dan `tools/test_failure_injection.py` PASS **75 skenario** (`15 sintetis + 16 unit nyata + 14 regresi review PR-11 + 10 regresi check_selfcontained + 20 regresi review_prompt`). Regresi final setelah revisi putaran 2 dicatat di log sesi slot 22 dan body PR #76.
+
+### Tindak lanjut saat verdict dicatat
+
+- Baris Rekaman Hasil AT-KK-02 disinkronkan menjadi **GAGAL — metode pada `0.3.10` (Run 21)**; riwayat Run 14 tetap terbaca sebagai **GAGAL-metode**.
+- `SYSTEM_MANIFEST.md` dan `_meta/INDEKS_SISTEM.md` disinkronkan status/versi/pointer saja: suite kembali **7/10 LULUS** pada `0.3.10`; **AT-KK-02/06/08** masih GAGAL-metode.
+- **AT-KK-02 perlu re-run bersih.** Desain window re-run yang disarankan: produksi 2 konten baru di channel yang sudah ada; pembangunan karakter, status `Reference-Ready`, dan gating `Operational` sudah terverifikasi dari artefak PR #75 yang masuk `main`; gerbang Tahap 5 pada re-run tidak boleh menginstruksikan penyertaan referensi secara manual.
+- Tidak ada dokumen aturan (`00`/`05`/`06`), klausul acceptance, unit produksi, `tools/`, atau log sesi orang lain yang diubah oleh pencatat.
+
+---
