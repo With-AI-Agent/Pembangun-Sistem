@@ -14,6 +14,7 @@ Dokumen atau sistem **tidak boleh disebut selesai hanya karena file sudah dituli
 - [ ] Perubahan sudah di-commit
 - [ ] PR sudah diproses sesuai aturan
 - [ ] Penutupan sesi: PR dibuka → keluaran `tools/review_prompt.py --pr <N>` harus muncul sebagai satu blok berpagar di badan pesan chat terakhir, bukan keluaran perintah yang terlipat; kalau blok itu tidak ada, langkah penutupan dianggap BELUM dikerjakan dan PR belum boleh dinilai. Pemilik dapat membuka sesi baru dari main dan membangkitkan sendiri dengan `python3 tools/review_prompt.py --pr <N>` (`PROTOKOL_REVIEW_INDEPENDEN.md` §"Sumber prompt")
+- [ ] Penyerahan prompt review/audit ke pemilik memuat **path absolut berkas + link** (link PR, permalink head, daftar berkas berubah) — dicetak alat sebagai BLOK SERAH TERIMA, bukan ditulis tangan (`PROTOKOL_REVIEW_INDEPENDEN.md` aturan 11)
 
 ## Sistem domain
 

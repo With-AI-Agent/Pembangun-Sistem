@@ -855,6 +855,81 @@ def review_prompt_scenarios(base_dir: Path):
     ))
     rp_path.write_text(original, encoding="utf-8")
 
+    # ------------------------------------------------------------------
+    # RP12 - blok serah terima: path absolut + link, DICETAK ALAT, bukan ditulis tangan agent.
+    # Cacat nyatanya (keluhan pemilik giliran 19, 18 Sep 2026): prompt review diserahkan dengan
+    # menyebut NAMA BERKAS saja, tanpa path absolut dan tanpa link, sehingga pemilik - yang
+    # menyatakan tidak punya basic coding - harus mencari sendiri berkasnya dan bingung. Pemilik
+    # lalu menetapkan aturan tetap: "Setiap menyiapkan review independen dan pemeriksaan
+    # menyeluruh independen, agent harus beri link nya." Link yang ditulis tangan bisa salah atau
+    # ketinggalan: kelas cacat yang sama dengan angka beku (RP9/RP10), jadi dicetak dari data terukur.
+    # ------------------------------------------------------------------
+    import contextlib
+    import io
+
+    SLUG_UJI = "With-AI-Agent/Pembangun-Sistem"
+    SHA_UJI = "a1b2c3d4e5f6a1b2c3d4e5f6a1b2c3d4e5f6abcd"
+    serah12 = rp.handoff_block(74, SHA_UJI, "/tmp/rp12_uji.md", slug=SLUG_UJI)
+    checks.append((
+        "RP12 blok serah terima memuat path absolut + link PR + permalink head",
+        "/tmp/rp12_uji.md" in serah12
+        and f"https://github.com/{SLUG_UJI}/pull/74" in serah12
+        and f"https://github.com/{SLUG_UJI}/commit/{SHA_UJI}" in serah12
+        and "BLOK SERAH TERIMA" in serah12,
+    ))
+    checks.append((
+        "RP12 fail-closed: slug tak terbaca -> link PR TIDAK dicetak (bukan link karangan)",
+        (lambda t: "https://github.com/<OWNER>" not in t and "TIDAK DICETAK" in t)(
+            rp.handoff_block(74, SHA_UJI, "/tmp/rp12_uji.md", slug="<OWNER>/<REPO>")),
+    ))
+    checks.append((
+        "RP12 blok serah terima memuat perintah regenerasi + pengumpul verdict + wajib verifikasi",
+        "review_prompt.py --pr 74" in serah12
+        and "ambil_verdict.py --pr 74" in serah12
+        and "WAJIB memverifikasi" in serah12,
+    ))
+
+    # main() harus benar-benar MENEMPEL blok itu ke berkas prompt - punya fungsinya saja tidak cukup
+    # (regresi senyap yang mungkin: fungsi ada tetapi tidak pernah dipanggil dari jalur penulisan).
+    out12 = base_dir / "rp12_prompt.md"
+    buf12o, buf12e = io.StringIO(), io.StringIO()
+    with contextlib.redirect_stdout(buf12o), contextlib.redirect_stderr(buf12e):
+        rc12 = rp.main(["--generic", "--out", str(out12)])
+    teks12 = out12.read_text(encoding="utf-8") if out12.is_file() else ""
+    checks.append((
+        "RP12 main() menempel blok serah terima ke berkas prompt + meneriakkannya ke stderr",
+        rc12 == 0 and "BLOK SERAH TERIMA" in teks12
+        and "BLOK SERAH TERIMA" in buf12e.getvalue()
+        and str(out12) in buf12e.getvalue(),
+    ))
+
+    # Mutasi RP12 - buang penempelannya: pemeriksaan di atas harus gagal.
+    mut12 = original.replace('    text = text + "\\n" + teks_serah', '    text = text  # MUTASI RP12')
+    assert mut12 != original, "mutasi RP12 tidak mengubah apa pun - uji tidak valid"
+    rp_path.write_text(mut12, encoding="utf-8")
+    rp_m12 = _load_review_prompt(cp, "review_prompt_mut_rp12")
+    out12b = base_dir / "rp12_prompt_mut.md"
+    with contextlib.redirect_stdout(io.StringIO()), contextlib.redirect_stderr(io.StringIO()):
+        rp_m12.main(["--generic", "--out", str(out12b)])
+    teks12b = out12b.read_text(encoding="utf-8") if out12b.is_file() else ""
+    serah12c = rp.handoff_block(None, SHA_UJI, "/tmp/rp12_audit.md", slug=SLUG_UJI, objek="_meta",
+                                jenis="pemeriksaan menyeluruh independen (audit isi)")
+    checks.append((
+        "RP12 varian AUDIT ISI: objek + permalink tree + kanal --terbaru tercetak (aturan pemilik "
+        "mencakup pemeriksaan menyeluruh, bukan hanya review)",
+        "`_meta`" in serah12c and f"/tree/{SHA_UJI}/_meta" in serah12c
+        and "ambil_verdict.py --terbaru" in serah12c
+        and "audit_prompt.py --objek _meta" in serah12c
+        and "pemeriksaan menyeluruh independen (audit isi)" in serah12c
+        and "sha pin di dalam prompt == sha HEAD dari git" in serah12c
+        and "sha head PR dari API" not in serah12c,
+    ))
+    checks.append((
+        "RP12 diuji-mutasi: penempelan blok serah terima dibuang -> terdeteksi",
+        "BLOK SERAH TERIMA" not in teks12b,
+    ))
+    rp_path.write_text(original, encoding="utf-8")
+
     return checks
 
 
@@ -1224,6 +1299,100 @@ def check_selfcontained_scenarios(base_dir: Path):
 
     return checks
 
+def _run_validator(repo: Path):
+    """Jalankan validator pada salinan repo; kembalikan (kode keluar, gabungan keluaran)."""
+    r = subprocess.run(
+        [sys.executable, str(repo / "tools" / "validate_repo.py")],
+        capture_output=True, text=True,
+        env={**os.environ, "FI_SKIP_NESTED": "1"},
+    )
+    return r.returncode, (r.stdout or "") + (r.stderr or "")
+
+
+def table_integrity_scenarios(base_dir: Path):
+    """TI1-TI5: regresi penjaga integritas tabel Markdown di `validate_repo.py` (T-47).
+
+    Cacat nyatanya (18 Sep 2026): **14 baris tabel di 7 berkas** repo ini rusak — dua baris Log
+    Evolusi manifest yatim di tengah prosa (masuk dari commit `1361f2f` dan `e78f59f`, yaitu
+    pekerjaan agent ini sendiri), empat baris register "Sudah ditutup" terputus dari tabelnya oleh
+    garis `---`, lima baris berpipa tak ter-escape di dalam sel, dua baris diputus baris kosong, dan
+    satu baris kehilangan sel — dan **semuanya lolos** karena penjaga kolom versi lama hanya membaca
+    2 berkas (register + ledger) sementara validator tetap mencetak PASS. Klaim "penjaga bergigi"
+    yang tercatat sehari sebelumnya hanya benar untuk dua berkas itu.
+    """
+    checks = []
+    cp = base_dir / "repo_ti"
+    shutil.copytree(
+        ROOT, cp,
+        ignore=shutil.ignore_patterns(
+            ".git", "backups", "template_clean", "template_clean.zip", "__pycache__", "dist"),
+    )
+
+    # TI1 - KONTROL POSITIF: pohon bersih harus LOLOS. Tanpa uji ini empat uji berikutnya bisa
+    # "lolos" karena validatornya memang selalu gagal (tautologi) - pelajaran yang sudah tercatat.
+    rc1, _out1 = _run_validator(cp)
+    checks.append(("TI1 kontrol positif: pohon bersih -> validator PASS (bukan tautologi)", rc1 == 0))
+
+    REG = cp / "_meta" / "DAFTAR_PEKERJAAN_TERBUKA.md"
+    MAN = cp / "_meta" / "SYSTEM_MANIFEST.md"
+    asli_reg = REG.read_text(encoding="utf-8")
+    asli_man = MAN.read_text(encoding="utf-8")
+
+    def _indeks(teks: str, awalan: str) -> int:
+        for k, l in enumerate(teks.split("\n")):
+            if l.strip().startswith(awalan):
+                return k
+        raise AssertionError(f"anchor tidak ditemukan: {awalan[:48]}")
+
+    # TI2 - baris kosong disisipkan di tengah tabel: baris-baris sesudahnya jadi yatim.
+    L = asli_reg.split("\n")
+    L.insert(_indeks(asli_reg, "| T-40 |"), "")
+    REG.write_text("\n".join(L), encoding="utf-8")
+    rc2, out2 = _run_validator(cp)
+    checks.append((
+        "TI2 baris kosong memutus tabel register -> terdeteksi sebagai BARIS TABEL YATIM",
+        rc2 != 0 and "BARIS TABEL YATIM" in out2,
+    ))
+    REG.write_text(asli_reg, encoding="utf-8")
+
+    # TI3 - satu pipa pemisah sel dibuang: jumlah kolom tidak lagi cocok dengan header.
+    L = asli_man.split("\n")
+    i = _indeks(asli_man, "| 2026-09-18 | v1.24.0 →")
+    L[i] = L[i].replace(" | ", " ", 1)
+    MAN.write_text("\n".join(L), encoding="utf-8")
+    rc3, out3 = _run_validator(cp)
+    checks.append((
+        "TI3 pipa pemisah sel dibuang di manifest -> terdeteksi sebagai kolom tidak cocok header",
+        rc3 != 0 and "kolom padahal header tabelnya" in out3,
+    ))
+    MAN.write_text(asli_man, encoding="utf-8")
+
+    # TI4 - baris tabel dipindah ke tengah prosa: bentuk cacat yang benar-benar terjadi dua kali.
+    L = asli_man.split("\n")
+    baris = L.pop(_indeks(asli_man, "| 2026-09-18 | v1.25.0 →"))
+    L.insert(_indeks("\n".join(L), "- **Status:**"), baris)
+    MAN.write_text("\n".join(L), encoding="utf-8")
+    rc4, out4 = _run_validator(cp)
+    checks.append((
+        "TI4 baris tabel dipindah ke prosa -> terdeteksi sebagai BARIS TABEL YATIM",
+        rc4 != 0 and "BARIS TABEL YATIM" in out4,
+    ))
+    MAN.write_text(asli_man, encoding="utf-8")
+
+    # TI5 - pengecualian vendor: tabel rusak di dalam `skills/` TIDAK boleh menggagalkan validator.
+    # Dokumen pihak ketiga disalin apa adanya; mengubahnya merusak provenance dan sinkronisasi hulu.
+    vend = cp / "sistem" / "sistem-building-aplikasi" / "skills"
+    assert vend.is_dir(), f"folder vendor untuk TI5 tidak ada: {vend}"
+    (vend / "FI_RUSAK_SENGAJA.md").write_text(
+        "# tabel rusak sengaja (uji TI5)\n\n| A | B |\n\n| C |\n", encoding="utf-8")
+    rc5, out5 = _run_validator(cp)
+    checks.append((
+        "TI5 tabel rusak di folder vendor skills/ dikecualikan -> validator tetap PASS",
+        rc5 == 0 and "FI_RUSAK_SENGAJA" not in out5,
+    ))
+    return checks
+
+
 def run():
     checks = []
     with TemporaryDirectory() as d:
@@ -1475,6 +1644,13 @@ def run():
             rp_checks = review_prompt_scenarios(Path(d))
     checks += rp_checks
 
+    # TI1–TI5 integritas tabel Markdown (skipped when nested, same reason).
+    ti_checks = []
+    if not os.environ.get("FI_SKIP_NESTED"):
+        with TemporaryDirectory() as d:
+            ti_checks = table_integrity_scenarios(Path(d))
+    checks += ti_checks
+
     # --- D-2 (temuan R2 review PR #74): penjaga sinkron jumlah skenario vs dokumen ---
     # Sebelumnya angka di _meta/FAILURE_INJECTION_TESTS.md adalah SALINAN TANGAN, sehingga
     # menambah satu sistem terdaftar (yang menaikkan "unit nyata") membuat dokumen tertinggal
@@ -1482,7 +1658,7 @@ def run():
     # Mode DIDETEKSI DARI KEADAAN, bukan dari variabel lingkungan: di ekstrak template ketiga
     # grup regresi tidak dijalankan, jadi ketiganya kosong. Versi pertama penjaga ini hanya
     # membandingkan angka master (74) dan membuat smoke extract GAGAL karena di sana jumlahnya 16.
-    _di_ekstrak = not (reg or sc_checks or rp_checks)
+    _di_ekstrak = not (reg or sc_checks or rp_checks or ti_checks)
     if not os.environ.get("FI_SKIP_NESTED"):
         doc = ROOT / "_meta" / "FAILURE_INJECTION_TESTS.md"
         if not doc.is_file():
@@ -1525,7 +1701,8 @@ def run():
         if not _di_ekstrak:
             komponen += [("regresi review PR-11", len(reg)),
                          ("regresi check_selfcontained", len(sc_checks)),
-                         ("regresi review_prompt", len(rp_checks))]
+                         ("regresi review_prompt", len(rp_checks)),
+                         ("regresi integritas tabel", len(ti_checks))]
         angka_doc, aktual, hilang = [], [], []
         for label, nilai in komponen:
             mm = re.search(rf"(\d+)\s+{re.escape(label)}", m.group(2))
@@ -1556,7 +1733,8 @@ def run():
     print(f"FAILURE-INJECTION TESTS PASSED: {len(checks)} scenarios "
           f"({n_synth} sintetis + {len(real)} unit nyata + {len(reg)} regresi review PR-11"
           f" + {len(sc_checks)} regresi check_selfcontained"
-          f" + {len(rp_checks)} regresi review_prompt)")
+          f" + {len(rp_checks)} regresi review_prompt"
+          f" + {len(ti_checks)} regresi integritas tabel)")
 
 
 if __name__ == "__main__":

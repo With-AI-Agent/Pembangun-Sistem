@@ -1877,3 +1877,98 @@ membatalkan review-nya.
   anchor. Diperbaiki di commit ini (dua bullet ditulis **dan dibaca ulang dari disk untuk di-assert**),
   dan aturan kerjanya diperbarui: *setiap penulisan berkas programatis wajib diverifikasi dengan membaca
   ulang dari disk, bukan dengan tidak-adanya error.*
+
+---
+
+## Giliran 19 (2026-09-18) — pemilik bingung karena serah terima tanpa path/link, lalu menetapkan ATURAN TETAP
+
+**Pemilik (verbatim, apa adanya termasuk salah ketiknya):**
+
+> Maaf, aku bingung. Seharusnya kamu memberi tau nama file nya secara akurat dan path nya. Dan akan
+> lebih baik lagi klo dia beri link nya. Sehingga aku ga bingung cari file nya. Catat itu. Setiap
+> menyiapkan review independen dan pemeriksaan menyeluruh independen, agent harus beri link nya
+
+**Dibaca sebagai tiga hal, bukan satu:**
+
+1. **Koreksi komunikasi.** Serah terima prompt putaran 3 hanya menyebut nama berkas. Pemilik sudah
+   menyatakan tidak punya basic coding (giliran 5) dan sudah pernah mengeluh laporan agent terlalu
+   teknis (giliran 16) — jadi "sebut nama berkas" bukan penyederhanaan, melainkan memindahkan beban
+   mencari berkas ke pemilik. Ini pengulangan pola yang sama, bukan kekeliruan baru yang terisolasi.
+2. **Permintaan pencatatan eksplisit** ("Catat itu") → wajib masuk ledger masukan (S-24), diskusi
+   mentah (bagian ini), dan register (T-46), sesuai mandat giliran 10 bahwa yang tercatat wajib
+   dibaca dan dieksekusi.
+3. **Aturan tetap yang mengikat ke depan**, dan cakupannya **dua mekanisme**: review independen DAN
+   pemeriksaan menyeluruh independen (= audit isi, `tools/audit_prompt.py`). Memenuhinya hanya untuk
+   review berarti klaim lebih luas dari cakupan — pola cacat yang sudah tiga kali ditutup di PR ini.
+
+**Yang dieksekusi (bukan cuma dicatat):**
+
+- `handoff_block()` di `tools/review_prompt.py` mencetak **BLOK SERAH TERIMA** ke ujung prompt DAN ke
+  stderr: path absolut berkas, nama berkas + foldernya, link PR, link daftar berkas yang berubah,
+  permalink head yang di-pin, isi repo pada head itu, perintah regenerasi kalau berkasnya hilang,
+  perintah pengumpul verdict, dan empat hal yang wajib diverifikasi sebelum diserahkan. Dicetak alat,
+  bukan ditulis tangan agent — link tulisan tangan bisa salah/ketinggalan, kelas cacat yang sama dengan
+  angka beku yang ditutup RP9/RP10.
+- `tools/audit_prompt.py` **meminjam fungsi yang sama** (satu definisi untuk dua alat, pola `next_round()`
+  meminjam `slot_hakim()` dari `ambil_verdict.py`), dengan permalink objek (`blob`/`tree` menurut jenis
+  objeknya) dan kanal pengumpul yang benar untuk audit isi (`ambil_verdict.py --terbaru`). Checklist
+  verifikasinya **berbeda per jenis pekerjaan**: versi pertama mencetak "sha head PR dari API" dan
+  "nomor putaran" juga untuk audit isi, padahal audit isi tidak punya PR dan tidak punya putaran —
+  diperbaiki dan dikunci uji.
+- **Fail-closed:** slug repo, sha head, atau objek tidak terbaca → link TIDAK dicetak; blok menyatakan
+  tidak tercetak dan menyuruh mengambilnya dari API/git. Link karangan lebih merusak daripada tidak ada
+  link, karena pemilik akan mengkliknya dan kehilangan kepercayaan pada semua link berikutnya.
+- `_meta/PROTOKOL_REVIEW_INDEPENDEN.md` **aturan 11** + checklist penutupan sesi di
+  `00_CARA_KERJA_META.md` dan `DEFINITION_OF_DONE.md` menyebut kewajiban ini, supaya sesi berikutnya
+  terikat tanpa harus membaca chat.
+- Dikunci **6 uji RP12** di `tools/test_failure_injection.py`, termasuk uji mutasi (penempelan blok
+  dibuang → terdeteksi) dan varian audit.
+
+**Temuan yang muncul saat mematuhinya, dan tidak dibiarkan lewat (T-47):**
+
+Memeriksa integritas tabel Markdown di seluruh repo (untuk memastikan baris-baris baru yang kutulis
+sendiri tidak rusak seperti register kemarin) menemukan **14 baris tabel rusak di 7 berkas**:
+
+- dua baris **Log Evolusi `_meta/SYSTEM_MANIFEST.md` yatim di tengah prosa**, di ATAS heading
+  `## Log Evolusi`, dan bentuknya **2 sel di tabel 5 sel** — keduanya masuk dari commit `1361f2f`
+  (v1.25.0) dan `e78f59f` (v1.26.0), yaitu **pekerjaan agent ini sendiri**, dan `e78f59f` adalah
+  commit yang justru mengklaim memperbaiki korupsi register;
+- empat baris register bagian "Sudah ditutup" (T-39/T-40/T-43/T-41) **terputus dari tabelnya oleh
+  garis `---`** — jadi empat item yang diklaim SELESAI itu tidak pernah tampil sebagai tabel;
+- lima baris ber**pipa tak ter-escape di dalam sel** (manifest meta v1.21.0, kontrak warisan, dua di
+  `ACCEPTANCE_TEST_LOG` konten-kreator, manifest konten-kreator);
+- dua baris tabel diputus **baris kosong** (draft kerangka + `sistem-undangan/00_RENCANA_KERANGKA.md`);
+- empat baris Log Evolusi manifest **kehilangan sel Alasan** (v1.12.0, v1.13.0, v1.13.1, v1.13.2).
+
+Semuanya lolos karena **penjaga kolom versi lama hanya membaca 2 berkas** (register + ledger) sementara
+validator tetap mencetak PASS. Konsekuensinya: klaim "penjaga kini bergigi" yang tercatat sehari
+sebelumnya **hanya benar untuk dua berkas itu**, dan dikoreksi terbuka di commit ini. Perbaikannya:
+semua 14 baris dipulihkan (isi tidak diubah, hanya struktur), penjaga diperluas ke **semua artefak repo**
+dengan algoritma **berbasis blok** (folder vendor `skills/` dan isi pagar kode dilewati; pipa ter-escape
+bukan pemisah sel), dikunci **5 uji TI** dan **diuji-mutasi tiga kali** (baris kosong pemutus → YATIM;
+pipa sel dibuang → kolom tidak cocok; baris dipindah ke prosa → YATIM), plus bukti pengecualian vendor
+(tabel rusak di `skills/` tidak menggagalkan validator).
+
+**Catatan teknis yang layak diingat:** penjaga versi pertama yang diperluas itu **streaming** dan langsung
+menghasilkan ratusan temuan palsu — ia menandai BARIS HEADER sebagai yatim, karena header selalu datang
+sebelum baris pemisah sehingga jumlah kolom harapan belum diketahui. Ketahuan karena dijalankan pada
+pohon bersih dulu. Aturan kerjanya: **penjaga baru wajib dijalankan pada pohon bersih sebelum dipakai;
+kalau pohon bersih tidak lolos, yang salah penjaganya.**
+
+**Insiden platform ke-3 hari ini (kelas insiden #4/#6).** Giliran ini dimulai dengan HEAD lokal jatuh ke
+`eff7afa` dan repo jadi **shallow**, sementara remote memegang `1ec8f4e`, dan 51 berkas tampak tak
+selaras. Pemulihan: `git fetch --unshallow origin "+refs/heads/<branch>:refs/remotes/origin/<branch>"` →
+`git reset --mixed origin/<branch>` → HEAD == remote, tidak shallow, 661 commit, **tree bersih, 0 berkas
+hilang**. Tidak ada force-push. Yang menangkapnya adalah pemeriksaan HEAD-vs-remote di AWAL giliran
+(aturan dari insiden #2/#3/#4/#6); tanpa itu commit baru akan dibuat di atas basis salah seperti `00a6ce9`.
+
+**Berkas di luar repo hilang lagi.** `/home/user/body74_baru.md` lenyap sesudah platform memulihkan
+workspace (sebelumnya `sinkron_jumlah_fi.py`, dan skrip-skrip patch generasi pertama). Konsekuensi yang
+diambil, bukan sekadar dicatat: penyegaran body PR kini **bersumber dari API GitHub** (bukan berkas
+lokal), dan prompt review selalu bisa dibuat ulang dengan satu perintah yang ikut tercetak di blok
+serah terima.
+
+**Yang TIDAK berubah:** hakim putaran 3 belum bekerja; sesudah dua commit ini head dibekukan lagi dan
+prompt dibangkitkan ulang pada head yang baru; merge tetap ditunda sampai verdict masuk; aturan
+fail-closed 3 hakim tetap; T-42 (7 kandidat) dan T-45 (regresi FI penjaga kolom — kini SELESAI lewat
+grup TI) ditinjau ulang di commit penutup.

@@ -855,6 +855,106 @@ def render(pr: dict | None, files: list[str], generic: bool,
 
 
 # --------------------------------------------------------------------------
+# RP12 (18 Sep 2026): BLOK SERAH TERIMA — path absolut + link, DICETAK ALAT, bukan ditulis tangan.
+# Sebab (aturan tetap pemilik, giliran 19): "Setiap menyiapkan review independen dan pemeriksaan
+# menyeluruh independen, agent harus beri link nya." Sebelumnya prompt diserahkan dengan menyebut
+# nama berkas saja; pemilik — yang menyatakan tidak punya basic coding — harus mencari sendiri
+# berkasnya dan bingung. Link yang ditulis tangan bisa salah atau ketinggalan: itu kelas cacat yang
+# sama dengan angka beku yang ditutup RP9/RP10, jadi link DIRANGKAI DARI DATA TERUKUR dan alatnya
+# sendiri yang meneriakkannya ke stderr supaya agent tidak bisa "lupa".
+# --------------------------------------------------------------------------
+def handoff_block(number: int | None = None, head_sha: str | None = None,
+                  out_path: str | None = None, slug: str | None = None,
+                  objek: str | None = None,
+                  jenis: str = "review independen") -> str:
+    """Blok serah terima untuk PEMILIK: di mana berkasnya, dan link apa saja yang bisa diklik.
+
+    Fail-closed: kalau slug repo atau sha head tidak terbaca, blok ini TIDAK mencetak link karangan.
+    Link palsu lebih berbahaya daripada tidak ada link — pemilik akan mengkliknya dan mendapat 404,
+    lalu kehilangan kepercayaan pada semua link berikutnya.
+    """
+    if slug is None:
+        slug = repo_slug()
+    slug_ok = bool(slug) and "/" in slug and "<" not in slug
+    sha_ok = bool(head_sha) and len(head_sha or "") >= 7 and "<" not in (head_sha or "")
+    b: list[str] = []
+    a = b.append
+    a("")
+    a("---")
+    a("")
+    a("## BLOK SERAH TERIMA — untuk pemilik dan agent yang menyiapkan; BUKAN bagian tugas hakim")
+    a("")
+    a("Hakim/auditor boleh melewati bagian ini. Ia ada karena pemilik menetapkan aturan tetap")
+    a("(18 Sep 2026): *setiap menyiapkan review independen atau pemeriksaan menyeluruh")
+    a("independen, agent wajib menyerahkan path berkas DAN link-nya*, bukan hanya nama berkas.")
+    a(f"Yang diserahkan kali ini: **{jenis}**.")
+    a("")
+    _akar = Path(__file__).resolve().parent.parent   # root repo, BUKAN folder kerja sekarang
+    if out_path:
+        p = Path(out_path).resolve()
+        a(f"- **Berkas prompt (path absolut — salin persis):** `{p}`")
+        a(f"- **Nama berkas:** `{p.name}` · **di dalam folder:** `{p.parent}`")
+    else:
+        a("- **Berkas prompt:** TIDAK ditulis ke berkas (keluar ke stdout). Jalankan ulang dengan")
+        a("  `--out <path>` supaya ada berkas yang bisa diberi path dan link.")
+    if objek:
+        a(f"- **Objek yang diperiksa:** `{objek}` (relatif dari root repo)")
+        if slug_ok and sha_ok:
+            _o = _akar / objek
+            if _o.exists():
+                _macam = "tree" if _o.is_dir() else "blob"
+                a(f"- **Objek itu pada sha yang di-pin:** "
+                  f"https://github.com/{slug}/{_macam}/{head_sha}/{objek}")
+            else:
+                a(f"- **Objek itu pada sha yang di-pin:** TIDAK DICETAK — `{objek}` tidak ditemukan")
+                a("  di root repo. Link karangan lebih buruk daripada tidak ada link.")
+    if number and number > 0 and slug_ok:
+        a(f"- **PR yang dinilai:** https://github.com/{slug}/pull/{number}")
+        a(f"- **Daftar berkas yang berubah:** https://github.com/{slug}/pull/{number}/files")
+        if sha_ok:
+            a(f"- **Head yang di-pin (permalink permanen):** https://github.com/{slug}/commit/{head_sha}")
+            a(f"- **Isi repo pada head itu:** https://github.com/{slug}/tree/{head_sha}")
+        else:
+            a(f"- **Head yang di-pin:** TIDAK TERBACA dari API. Jangan menulis sha dari ingatan —")
+            a(f"  baca ulang `gh api repos/{slug}/pulls/{number} --jq .head.sha` sampai cocok,")
+            a("  baru serahkan prompt-nya ke pemilik.")
+    elif number and number > 0:
+        a(f"- **Link PR: TIDAK DICETAK** karena slug repo tidak terbaca (terbaca: `{slug}`).")
+        a("  Ambil slugnya dengan `gh repo view --json nameWithOwner -q .nameWithOwner`, rangkai")
+        a("  `https://github.com/<slug>/pull/<N>`, lalu serahkan link itu ke pemilik.")
+    elif objek:
+        a("- **Link PR:** tidak ada — pemeriksaan menyeluruh (audit isi) tidak menunjuk PR;")
+        a("  kanal penyerahannya Issue atau berkas ter-commit (`_meta/PROTOKOL_AUDIT_ISI.md`).")
+    else:
+        a("- **Link PR:** tidak dicetak — mode `--generic` tidak menunjuk PR tertentu.")
+    tujuan = out_path or "<path>"
+    if number and number > 0:
+        a(f"- **Regenerasi kalau berkasnya hilang:** `python3 tools/review_prompt.py --pr {number}"
+          f" --out {tujuan}`")
+        a(f"- **Kumpulkan verdict sesudah hakim selesai:** `python3 tools/ambil_verdict.py"
+          f" --pr {number} --harapkan <jumlah hakim>`")
+    elif objek:
+        a(f"- **Regenerasi kalau berkasnya hilang:** `python3 tools/audit_prompt.py"
+          f" --objek {objek} --out {tujuan}`")
+        a("- **Kumpulkan hasil sesudah auditor selesai:**"
+          " `python3 tools/ambil_verdict.py --terbaru`")
+    a("- **Sebelum diserahkan, agent WAJIB memverifikasi (bukan mengandalkan ingatan):**")
+    if number and number > 0:
+        a("  1. sha head di dalam prompt == sha head PR dari API;")
+        a("  2. nomor putaran dicetak alat, bukan ditebak;")
+    elif objek:
+        a("  1. sha pin di dalam prompt == sha HEAD dari git (`git rev-parse HEAD`);")
+        a("  2. objek yang disebut di prompt == objek yang diminta pemilik, bukan ditebak;")
+    else:
+        a("  1. prompt ini versi placeholder — JANGAN diserahkan sebagai prompt kerja;")
+        a("  2. jalankan ulang dengan `--pr <N>` (review) atau `--objek <path>` (audit isi);")
+    a("  3. setiap link di atas benar-benar terbuka;")
+    a("  4. path absolut di atas benar-benar ada di disk (`ls -l`).")
+    a("")
+    return "\n".join(b) + "\n"
+
+
+# --------------------------------------------------------------------------
 def main(argv: list[str] | None = None) -> int:
     ap = argparse.ArgumentParser(
         prog="review_prompt.py",
@@ -864,6 +964,11 @@ def main(argv: list[str] | None = None) -> int:
     ap.add_argument("--generic", action="store_true", help="cetak versi placeholder (tanpa memanggil GitHub)")
     ap.add_argument("--out", default="-", help="'-' (default, stdout) atau path berkas")
     args = ap.parse_args(argv)
+
+    # RP12: kedua nilai ini yang dipakai blok serah terima. Default None supaya mode --generic
+    # (tanpa GitHub) tidak pernah mencetak nomor PR atau sha karangan.
+    number: int | None = None
+    head_sha: str | None = None
 
     try:
         if args.generic:
@@ -878,17 +983,24 @@ def main(argv: list[str] | None = None) -> int:
             files = resolve_pr_files(number, data)
             # R3: objek diff DIUKUR sebelum prompt dicetak, bukan diserahkan ke reviewer untuk ditebak.
             objek = objek_diff(data["baseRefOid"], data["headRefOid"])
+            head_sha = data["headRefOid"]  # RP12: sha untuk permalink di blok serah terima
             putaran = next_round(data["number"])
             text, windows = render(data, files, generic=False, objek=objek, putaran=putaran)
     except ToolError as exc:
         print(f"review_prompt: GAGAL — {exc}", file=sys.stderr)
         return 2
 
+    # RP12: blok serah terima ditempel ke prompt DAN diteriakkan ke stderr. Dua kanal, bukan satu:
+    # berkasnya memuat link untuk pemilik, stderr memaksa agent yang menjalankan alat melihatnya.
+    teks_serah = handoff_block(number, head_sha, None if args.out == "-" else args.out)
+    text = text + "\n" + teks_serah
+
     if args.out == "-":
         print(text)
     else:
         Path(args.out).write_text(text + "\n", encoding="utf-8")
-        print(f"ditulis: {args.out}", file=sys.stderr)
+        print(f"ditulis: {Path(args.out).resolve()}", file=sys.stderr)
+    print(teks_serah, file=sys.stderr)
 
     if windows:
         print(

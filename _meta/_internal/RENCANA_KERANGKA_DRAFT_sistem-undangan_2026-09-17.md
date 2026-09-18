@@ -309,7 +309,6 @@ pemetaannya di DISKUSI_MENTAH bagian **G**. Yang paling relevan sebagai **gerban
 | 6 | **WhatsApp** | template pesan & pengiriman undangan | kanal utama penyebaran di Indonesia (bagian A) |
 | 7 | **pembayaran / amplop digital** | fitur amplop digital | diputuskan **rekening + QRIS statis** — **tanpa payment gateway**, jadi **tanpa biaya per transaksi dan tanpa biaya bulanan** |
 | 8 | **i18n + kaligrafi Islami** | khitanan/pernikahan Muslim, multi-bahasa | bagian F |
-
 | 9 | **upscaling raster + vectorization** *(BARU — lahir dari keputusan G3, bukan dari daftar awal)* | mitigasi foto kurang resolusi + membuat ornament jadi vektor | **TERUJI 17 Sep: `cv2.dnn_superres` + FSRCNN_x2 (39 KB) / ESPCN_x2 (85 KB) BISA**, 2–4 dtk untuk A4@300. **Real-ESRGAN & EDSR GUGUR** (butuh PyTorch / OOM-KILL). `vtracer` untuk vektorisasi gambar datar ✅ (23 KB), ❌ untuk foto (6,4 MB). Rincian: bagian 4.4 + DISKUSI_MENTAH P |
 
 ### 6.1 Cara memasang skill — **DIKUNCI** (jawab atas delegasi pemilik)

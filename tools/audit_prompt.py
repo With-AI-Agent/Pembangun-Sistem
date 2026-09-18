@@ -429,6 +429,11 @@ def main() -> int:
     ap.add_argument("--out", help="tulis prompt ke berkas ini, bukan ke stdout")
     a = ap.parse_args()
 
+    # T-46: dua nilai ini dipakai blok serah terima. Default None supaya mode --generic tidak
+    # pernah mencetak sha atau objek karangan.
+    objek = None
+    sha = None
+
     try:
         if a.generic:
             teks = render("", "", a.kedalaman, generic=True)
@@ -455,11 +460,29 @@ def main() -> int:
         print(f"ERROR: {e}", file=sys.stderr)
         return 2
 
+    # T-46 (aturan tetap pemilik 18 Sep 2026): serah terima WAJIB memuat path absolut + link.
+    # Bloknya DIPINJAM dari review_prompt.py supaya hanya ada SATU definisi — pola yang sama
+    # dengan next_round() meminjam slot_hakim() dari ambil_verdict.py. Fail-closed: kalau impor
+    # atau pembangkitannya gagal, blok tetap dicetak dan menyatakan gagalnya, bukan hilang diam-diam.
+    try:
+        sys.path.insert(0, str(Path(__file__).resolve().parent))
+        import review_prompt as _rp
+        _serah = _rp.handoff_block(
+            None, sha, a.out, objek=objek,
+            jenis="pemeriksaan menyeluruh independen (audit isi)")
+    except Exception as _exc:  # pragma: no cover - jalur gagal tetap harus bersuara
+        _serah = (
+            "\n---\n\n## BLOK SERAH TERIMA — GAGAL DIBANGKITKAN\n\n"
+            f"Blok serah terima (path absolut + link) tidak bisa dicetak: {_exc}.\n"
+            "Serahkan path berkas dan permalink-nya secara manual, lalu perbaiki alatnya.\n")
+    teks = teks + "\n" + _serah
+
     if a.out:
         Path(a.out).write_text(teks, encoding="utf-8")
-        print(f"prompt audit ditulis ke {a.out} ({len(teks.splitlines())} baris)")
+        print(f"prompt audit ditulis ke {Path(a.out).resolve()} ({len(teks.splitlines())} baris)")
     else:
         print(teks)
+    print(_serah, file=sys.stderr)
     return 0
 
 

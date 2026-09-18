@@ -145,3 +145,22 @@ mengarang aturan. Jadi ditulis **sebelum** verdict ke-2 dan ke-3 tiba.
     yang lebih dulu — karena itu tiap hakim wajib memakai branch/slot lognya sendiri, dan **menempel
     verdictnya sebagai komentar PR sebelum sesi ditutup** (butir 8), supaya hasilnya tidak bergantung pada
     umur branch mana pun.
+11. **Serah terima prompt review WAJIB memuat path berkas absolut DAN link-nya — DICETAK ALAT,
+    bukan ditulis tangan agent.** Aturan tetap pemilik (giliran 19, 18 Sep 2026): *"Seharusnya kamu
+    memberi tau nama file nya secara akurat dan path nya. Dan akan lebih baik lagi klo dia beri link
+    nya. Sehingga aku ga bingung cari file nya… Setiap menyiapkan review independen dan pemeriksaan
+    menyeluruh independen, agent harus beri link nya."* Karena itu `tools/review_prompt.py` mencetak
+    **BLOK SERAH TERIMA** di ujung prompt dan ke stderr: path absolut berkas, nama berkas + foldernya,
+    link PR, link daftar berkas yang berubah, permalink head yang di-pin, isi repo pada head itu,
+    perintah regenerasi kalau berkasnya hilang, perintah pengumpul verdict, dan empat hal yang wajib
+    diverifikasi sebelum diserahkan. `tools/audit_prompt.py` **meminjam fungsi yang sama**
+    (`handoff_block()`), karena aturan pemilik menyebut review independen DAN pemeriksaan menyeluruh
+    independen — satu definisi untuk dua alat, pola yang sama dengan `next_round()` meminjam
+    `slot_hakim()` dari `ambil_verdict.py`.
+    **Sebab aturan ini ada (kejadian nyata 18 Sep 2026):** prompt putaran 3 diserahkan ke pemilik
+    dengan menyebut nama berkas saja; pemilik — yang menyatakan tidak punya basic coding — harus
+    mencari sendiri berkasnya dan bingung. Link yang ditulis tangan agent bisa salah atau ketinggalan:
+    itu kelas cacat yang sama dengan angka beku yang ditutup RP9/RP10, jadi link DIRANGKAI DARI DATA
+    TERUKUR dan alatnya sendiri yang meneriakkannya. **Fail-closed:** kalau slug repo, sha head, atau
+    objek tidak terbaca, blok itu TIDAK mencetak link karangan — ia menyatakan tidak tercetak dan
+    menyuruh pembaca mengambilnya dari API/git, karena link palsu lebih merusak daripada tidak ada link.

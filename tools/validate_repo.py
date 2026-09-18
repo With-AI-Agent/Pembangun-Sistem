@@ -69,57 +69,92 @@ for p in ROOT.rglob("*.md"):
     if text.count("```") % 2:
         errors.append(f"unpaired code fence: {p.relative_to(ROOT)}")
 
-# --- Baris tabel register & ledger wajib se-kolom dengan header tabelnya ------------------
-# Cacat nyata 18 Sep 2026 (sudah terdorong di da62d3f sebelum diperbaiki): sebuah script penyisip
-# baris menghitung indeks string SEBELUM satu baris di-pop dari daftar, sehingga baris baru tersisip
-# DI TENGAH prosa bagian lain dan mematahkan baris di sekitarnya. Pemeriksaan "SELESAI wajib sha"
-# tidak bisa menangkapnya — baris yang patah tidak terparse sebagai baris sama sekali — jadi yang
-# dijaga di sini adalah KOLOMNYA. Pipa yang di-escape (\|) adalah teks di dalam sel, bukan pemisah.
+# --- Integritas tabel Markdown: SEMUA artefak repo, bukan hanya register & ledger -------------
+# Diperluas 18 Sep 2026 (T-47) sesudah **14 temuan nyata** ditemukan DI LUAR dua berkas yang dijaga
+# versi sebelumnya: dua baris Log Evolusi `_meta/SYSTEM_MANIFEST.md` yatim di tengah prosa (masuk
+# dari commit `1361f2f` dan `e78f59f` — pekerjaan agent ini sendiri, bentuknya 2 sel di tabel 5 sel),
+# empat baris register "Sudah ditutup" (T-39/T-40/T-43/T-41) terputus dari tabelnya oleh garis `---`,
+# lima baris berpipa tak ter-escape di dalam sel (manifest meta, kontrak warisan, dua di
+# ACCEPTANCE_TEST_LOG konten-kreator, manifest konten-kreator), dan dua baris tabel diputus baris
+# kosong (draft kerangka + `sistem-undangan/00_RENCANA_KERANGKA.md`). Penjaga versi lama hanya
+# membaca 2 berkas, jadi SEMUA itu lolos sementara validator mencetak PASS — persis pola "klaim
+# lebih luas dari cakupan" yang sudah dua kali ditutup di PR ini.
+#
+# PENJAGA INI BERBASIS BLOK, bukan streaming. Versi streaming yang sempat dibuat menandai BARIS
+# HEADER sebagai yatim (header selalu datang sebelum baris pemisah, jadi kolom harapan belum
+# diketahui) dan menghasilkan ratusan temuan palsu; ketahuan karena dijalankan pada pohon bersih
+# dulu. Aturan mainnya: baris pipa yang BERURUTAN = satu blok. Kalau baris kedua blok adalah pemisah
+# (`|---|`), blok itu tabel → setiap baris wajib se-kolom dengan header. Kalau tidak, seluruh baris
+# blok itu YATIM: tersisip di prosa, atau terputus dari tabelnya oleh baris kosong / garis `---` —
+# di Markdown keduanya dirender sebagai TEKS BIASA, jadi datanya "ada" tetapi tidak pernah tampil.
+#
+# Yang dilewati dan mengapa: folder vendor (`skills/` = dokumen pihak ketiga yang disalin apa adanya;
+# mengubahnya merusak provenance dan sinkronisasi hulu) dan ISI PAGAR KODE (pipa di dalam contoh kode
+# bukan sel tabel). Pipa ter-escape `\|` juga bukan pemisah sel.
+#
+# Aturan yang DILEPAS dengan sadar dari versi lama: "baris non-pipa tepat sesudah baris tabel". Pada
+# cakupan 2 berkas itu aman; pada seluruh repo ia menandai prosa yang wajar langsung mengikuti tabel.
+# Bentuk korupsi yang diincarnya tetap tertangkap aturan yatim/kolom di bawah.
+TABEL_VENDOR = ("skills", "node_modules", "backups", "template_clean", ".git", "__pycache__")
+SEP_TABLE_RE = re.compile(r"^\|(?:\s*:?-+:?\s*\|)+\s*$")
+
+
 def _kolom(baris: str) -> int:
+    """Jumlah sel: pipa yang TIDAK di-escape (`\|` adalah pipa literal di dalam sel)."""
     return len(re.findall(r"(?<!\\)\|", baris)) - 1
 
 
-SEP_TABLE_RE = re.compile(r"^\|(?:\s*:?-{3,}:?\s*\|)+\s*$")
-for _rel in ("_meta/DAFTAR_PEKERJAAN_TERBUKA.md", "_meta/TANGGAPAN_MASUKAN_PEMILIK.md"):
-    _p = ROOT / _rel
-    if not _p.is_file():
-        continue
-    _garis = _p.read_text(encoding="utf-8").splitlines()
-    _harap = None
-    _kosong = False   # baris kosong sesudah baris tabel: tabel BELUM dianggap berakhir
-    for _no, _line in enumerate(_garis, 1):
-        if SEP_TABLE_RE.match(_line):
-            _harap, _kosong = _kolom(_line), False
+def _berkas_markdown_own():
+    """Semua `.md` milik repo ini (bukan vendor), urut path supaya temuan deterministik."""
+    for _p in sorted(ROOT.rglob("*.md")):
+        _rel = _p.relative_to(ROOT)
+        if any(_v in _rel.parts for _v in TABEL_VENDOR):
             continue
-        if not _line.strip():
-            # Baris kosong TIDAK mengakhiri tabel secara diam-diam. Versi pertama penjaga ini
-            # me-reset `_harap` di sini, dan karena itu BUTA terhadap cacat yang paling sering
-            # terjadi: baris tabel yang terpisah dari tabelnya oleh satu baris kosong (terjadi
-            # nyata di berkas ini pada 18 Sep 2026, dan di _meta/INDEKS_SISTEM.md sebagai temuan
-            # hakim putaran 2). Kalau sesudah baris kosong masih ada baris `|`, itu temuan.
-            _kosong = _harap is not None
-            continue
-        if not _line.startswith("|"):
-            if _harap is not None and not _kosong:
+        yield str(_rel).replace("\\", "/"), _p
+
+
+def _nilai_blok_tabel(rel, blok, errors):
+    """Nilai satu blok baris pipa berurutan: tabel sehat, kolom salah, atau baris yatim."""
+    if not blok:
+        return
+    if len(blok) >= 2 and SEP_TABLE_RE.match(blok[1][1]):
+        harap = _kolom(blok[0][1])
+        for no, teks in blok[2:]:
+            if _kolom(teks) != harap:
                 errors.append(
-                    f"{_rel}:{_no}: baris yatim tepat sesudah baris tabel ({_line.strip()[:60]}) — "
-                    "tanda sebuah baris tabel patah atau tersisip di tempat yang salah"
+                    f"{rel}:{no}: baris tabel punya {_kolom(teks)} kolom padahal header tabelnya "
+                    f"{harap} — baris patah/tersisip salah tempat, atau ada pipa di dalam sel yang "
+                    "belum di-escape sebagai \\|"
                 )
-            _harap, _kosong = None, False
+        return
+    for no, teks in blok:
+        errors.append(
+            f"{rel}:{no}: BARIS TABEL YATIM — baris `|…|` yang tidak punya header+pemisah tabel di "
+            f"atasnya ({teks[:60]}). Sebab umumnya: tersisip di tengah prosa, atau terputus dari "
+            "tabelnya oleh baris kosong / garis `---`. Di Markdown ini dirender sebagai TEKS BIASA, "
+            "jadi datanya ada di berkas tetapi tidak pernah tampil sebagai tabel"
+        )
+
+
+for _rel, _path in _berkas_markdown_own():
+    _garis = _path.read_text(encoding="utf-8", errors="replace").splitlines()
+    _blok: list = []
+    _pagar = False
+    for _no, _line in enumerate(_garis, 1):
+        _s = _line.strip()
+        if _s.startswith("```"):
+            _pagar = not _pagar
+            _nilai_blok_tabel(_rel, _blok, errors)
+            _blok = []
             continue
-        if _harap is not None and _kosong:
-            errors.append(
-                f"{_rel}:{_no}: baris tabel TERPUTUS dari tabelnya oleh baris kosong — di Markdown "
-                "baris ini tidak lagi jadi bagian tabel (cacat yang sama dengan baris sistem yang "
-                "jatuh di luar tabel INDEKS). Buang baris kosongnya, jangan memindahkan barisnya"
-            )
-        _kosong = False
-        if _harap is not None and _kolom(_line) != _harap:
-            errors.append(
-                f"{_rel}:{_no}: baris tabel punya {_kolom(_line)} kolom padahal header tabelnya "
-                f"{_harap} — baris patah/tersisip salah tempat, atau ada pipa di dalam sel yang "
-                "belum di-escape sebagai \\|"
-            )
+        if _pagar:
+            continue
+        if _s.startswith("|") and _s.endswith("|"):
+            _blok.append((_no, _s))
+            continue
+        _nilai_blok_tabel(_rel, _blok, errors)
+        _blok = []
+    _nilai_blok_tabel(_rel, _blok, errors)
 
 # --- Volatile corpus counts are forbidden in permanent evidence (C5/AT-16) --
 manifest_path = ROOT / "_meta/SYSTEM_MANIFEST.md"
