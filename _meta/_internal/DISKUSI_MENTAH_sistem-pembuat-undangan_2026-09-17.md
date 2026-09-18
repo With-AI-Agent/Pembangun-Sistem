@@ -2025,3 +2025,11 @@ verdict masuk; aturan fail-closed 3 hakim tetap; T-44 (putaran 3) dan T-42 (7 ka
 Prompt putaran 3 akan **dibangkitkan ulang dengan `--umumkan` pada head yang sama** sesudah commit ini,
 supaya yang diserahkan ke pemilik adalah link yang bisa dibuka.
 
+**Insiden re-clone platform ke-5 terjadi di tengah giliran ini.** Sesudah gerbang hijau dan sebelum
+commit, `git log -1` mencetak `eff7afa` (basis branch): HEAD lokal terpotong jadi 1 commit dan shallow,
+sementara remote tetap `2122d80` dan working tree utuh. Dipulihkan dengan `fetch --unshallow` +
+`fetch origin <branch>:refs/remotes/origin/<branch>` + `reset --mixed origin/<branch>` → HEAD `2122d80`,
+663 commit, tidak shallow, status 53 → **16 berkas** (persis editan giliran ini). Tanpa `--hard`, tanpa
+force-push, tanpa berkas hilang; commit isi baru dibuat sesudah reset supaya tidak berdiri di atas basis
+salah. Commit: `8c60fa4` (isi) + commit penutup T-48 dengan sha.
+
