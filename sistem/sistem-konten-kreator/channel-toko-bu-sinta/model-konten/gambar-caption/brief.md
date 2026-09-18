@@ -9,8 +9,8 @@
 - [x] **Draft** — digali via Model Konten Discovery 2026-09-17 (slot log 20)
 - [x] **Reviewed** — disajikan untuk dibaca lengkap oleh pemilik via viewer
 - [x] **Approved** — isi dikunci lewat gerbang **G2** 2026-09-17 oleh pemilik
-- [ ] **Merged** — PR sudah lewat gerbang **G3** dan masuk ke `main`
-- [ ] **Operational** — sudah `Merged` DAN semua dependency wajibnya benar-benar ada
+- [x] **Merged** — PR #76 masuk ke `main` pada 2026-09-17 oleh pemilik
+- [x] **Operational** — dinaikkan 2026-09-17 (sesi 25); semua dependency checklist terpenuhi
 
 **Checklist Kelengkapan — syarat naik ke `Operational`:**
 
@@ -18,8 +18,8 @@
 - [x] Bentuk detail tiap tahap pipeline untuk model ini sudah ditetapkan (unit kerja: 1 frame gambar visual tunggal + naskah caption 3–6 baris)
 - [x] Override terhadap Channel Brief dinyatakan eksplisit (mewarisi penuh, tidak ada override tone/voice)
 - [x] Gerbang tambahan dicatat (tetap mempertahankan G1/G2 standar pipeline)
-- [ ] Channel Brief induknya sudah berstatus `Operational` (saat ini `Approved` di branch aktif)
-- [ ] Sudah `Merged` ke `main`
+- [x] Channel Brief induknya sudah berstatus `Operational` (dinaikkan sesi yang sama 2026-09-17)
+- [x] Sudah `Merged` ke `main`
 
 **Versi:** `1` — **Terakhir diperbarui:** `2026-09-17`
 
@@ -82,3 +82,5 @@
 | 2026-09-17 | Inisiasi Model Konten Brief "Gambar Statis & Caption" (folder: `gambar-caption/`) | Format unggulan channel Toko Bu Sinta di Instagram feed. |
 | 2026-09-17 | Mode: Kerangka Standar dengan unit breakdown 1 Post Visual Tunggal | Alur linear dan sederhana, cocok untuk produksi feed harian berbasis 1 gambar + caption 3-6 baris. |
 | 2026-09-17 | G1 Lulus & G2 Approved — Model Konten Brief v1 dikunci resmi | Pemilik menyetujui penuh draft tanpa revisi. |
+| 2026-09-17 | Status naik ke `Merged` — PR #76 masuk `main` oleh pemilik | Brief dan dependency induk sudah ada di `main`. |
+| 2026-09-17 | Status naik ke `Operational` — sesi 25 | Channel Brief induk sudah `Operational`; semua checklist kelengkapan model konten terpenuhi. |

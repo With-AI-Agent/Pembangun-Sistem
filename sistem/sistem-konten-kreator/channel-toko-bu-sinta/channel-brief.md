@@ -9,8 +9,8 @@
 - [x] **Draft** — digali via Channel Discovery 2026-09-17 (slot log 20)
 - [x] **Reviewed** — dibaca lengkap oleh pemilik via viewer, 2026-09-17
 - [x] **Approved** — isi dikunci lewat gerbang **G2** 2026-09-17 oleh pemilik
-- [ ] **Merged** — PR sudah lewat gerbang **G3** dan masuk ke `main`
-- [ ] **Operational** — sudah `Merged` DAN semua dependency wajibnya benar-benar ada (Bu Sinta Reference-Ready, indeks arsip ada)
+- [x] **Merged** — PR #76 masuk ke `main` pada 2026-09-17 oleh pemilik
+- [x] **Operational** — dinaikkan 2026-09-17 (sesi 25); semua dependency checklist terpenuhi
 
 **Checklist Kelengkapan — syarat naik ke `Operational`:**
 
@@ -18,7 +18,7 @@
 - [x] Semua pertanyaan di checklist konsistensi (bagian 4) sudah dijawab
 - [x] Setiap elemen visual yang ditandai wajib sudah berstatus `Reference-Ready` (`konsistensi-visual/bu-sinta/` memiliki acuan utama lolos audit)
 - [x] `arsip-naskah/indeks.md` dan `arsip-naskah/indeks-karakter.md` sudah dibuat
-- [ ] Sudah `Merged` ke `main`
+- [x] Sudah `Merged` ke `main`
 
 **Versi:** `1` — **Terakhir diperbarui:** `2026-09-17` — **Diwarisi dari:** `_sistem/01_BRAND_CORE.md`
 
@@ -134,3 +134,5 @@ Folder `arsip-naskah/` disediakan untuk menyimpan naskah final setiap post yang 
 | 2026-09-17 | Latar dan props ditandai tidak berlaku untuk folder reference pack terpisah; menyatu ke prompt adegan dan Prompt Master | Pilihan pemilik di validasi poin 1 & 3: Bu Sinta adalah jangkar visual utama; latar toko dan detail meja hadir fleksibel tanpa reference pack terpisah. |
 | 2026-09-17 | Struktur caption dibakukan: baris 1-2 pengamatan benda/situasi, baris 3-4 interaksi/ucapan Bu Sinta, baris 5-6 refleksi penutup pendek | Kesepakatan pada validasi poin 2 untuk menjaga ritme konsistensi narasi tanpa hard CTA. |
 | 2026-09-17 | Batasan keras: tanpa nama toko/brand nyata, tanpa clickbait, tanpa bahasa gaul | Menjaga integritas slice-of-life bersahaja dan kepatuhan hak cipta. |
+| 2026-09-17 | Status naik ke `Merged` — PR #76 masuk `main` oleh pemilik | Channel Brief dan seluruh dependency (Bu Sinta Reference-Ready, indeks arsip) sudah ada di `main`. |
+| 2026-09-17 | Status naik ke `Operational` — sesi 25 | Semua checklist kelengkapan terpenuhi: bagian wajib terisi, checklist konsistensi terjawab, Bu Sinta Reference-Ready, indeks arsip ada, sudah merged. Channel siap produksi. |
