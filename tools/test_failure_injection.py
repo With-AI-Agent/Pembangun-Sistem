@@ -538,6 +538,105 @@ def review_prompt_scenarios(base_dir: Path):
     ))
     rp_path.write_text(original, encoding="utf-8")
 
+    # ------------------------------------------------------------------
+    # RP7 - regresi temuan R3 review independen PR #74: pembangkit prompt
+    # menyajikan `git diff <base tip> <head>` sebagai perintah wajib sementara
+    # daftar berkasnya berasal dari diff PR terhadap MERGE-BASE. Keduanya berbeda
+    # (terukur 53 vs 49 oleh reviewer; 59 vs 55 sesudahnya) sehingga reviewer
+    # mencurigai penghapusan bukti yang tidak pernah terjadi.
+    # ------------------------------------------------------------------
+    rp = _load_review_prompt(cp, "review_prompt_rp7")
+    MB, BT, HD = "b" * 40, "a" * 40, "c" * 40
+    pr7 = dict(fake_pr, baseRefOid=BT, headRefOid=HD)
+
+    # RP7a - tanpa objek diff: merge-base TIDAK TERHITUNG, dinyatakan, tidak ditebak.
+    prompt_a, _ = rp.render(pr7, ["tools/review_prompt.py"], generic=False)
+    checks.append((
+        "RP7a tanpa pengukuran -> merge-base dinyatakan TIDAK TERHITUNG (fail-closed, bukan ditebak)",
+        "TIDAK TERHITUNG" in prompt_a and "OBJEK YANG HENDAK DIPUTUSKAN" in prompt_a,
+    ))
+
+    # RP7b - dengan objek terukur: KETIGA sha muncul, dua diff berlabel dengan perintah
+    # yang benar, dan selisihnya dinyatakan sebagai angka.
+    objek = {
+        "merge_base": MB,
+        "nama_merge_base": ["_meta/A.md", "_meta/B.md"],
+        "nama_langsung": ["_meta/A.md", "_meta/B.md", "_log-sesi/L.md", "sistem/x/C.md"],
+        "kesalahan": [],
+    }
+    prompt_b, _ = rp.render(pr7, ["_meta/A.md", "_meta/B.md"], generic=False, objek=objek)
+    checks.append((
+        "RP7b diff (A) memakai MERGE-BASE, bukan base tip",
+        f"git diff --stat {MB} {HD}" in prompt_b,
+    ))
+    checks.append((
+        "RP7b diff (B) memakai base tip dan diberi label sebagai selisih langsung",
+        f"git diff --stat {BT} {HD}" in prompt_b and "SELISIH LANGSUNG" in prompt_b,
+    ))
+    checks.append((
+        "RP7b selisih terukur dinyatakan: 2 berkas hanya di (B) = bukan perubahan PR",
+        "hanya di (B), jadi BUKAN perubahan PR ini: 2 berkas" in prompt_b
+        and "`_log-sesi/L.md`" in prompt_b and "`sistem/x/C.md`" in prompt_b,
+    ))
+    checks.append((
+        "RP7b ketiga sha ter-pin di tabel objek (base tip, merge-base, head)",
+        all(x in prompt_b for x in (BT, MB, HD)),
+    ))
+
+    # RP7c - konsistensi daftar API vs diff lokal: SAMA dan BERBEDA dua-duanya diuji.
+    prompt_sama, _ = rp.render(pr7, ["_meta/A.md", "_meta/B.md"], generic=False,
+                               objek=dict(objek, nama_merge_base=["_meta/A.md", "_meta/B.md"]))
+    prompt_beda, _ = rp.render(pr7, ["_meta/A.md", "_meta/Z.md"], generic=False, objek=objek)
+    checks.append((
+        "RP7c konsistensi daftar dinyatakan SAMA bila API = diff lokal",
+        "**SAMA**" in prompt_sama,
+    ))
+    checks.append((
+        "RP7c konsistensi daftar dinyatakan BERBEDA bila API != diff lokal (tidak dipilih diam-diam)",
+        "**BERBEDA**" in prompt_beda and "wajib dinyatakan di verdict" in prompt_beda,
+    ))
+
+    # RP7d - kesalahan pengukuran disampaikan ke prompt, tidak ditelan.
+    prompt_err, _ = rp.render(pr7, ["_meta/A.md"], generic=False,
+                              objek={"merge_base": None, "nama_merge_base": None,
+                                     "nama_langsung": None,
+                                     "kesalahan": ["merge-base tidak bisa dihitung (git keluar 128)"]})
+    checks.append((
+        "RP7d kegagalan pengukuran dinyatakan di prompt (fail-closed)",
+        "Yang TIDAK bisa diukur, dinyatakan" in prompt_err
+        and "merge-base tidak bisa dihitung" in prompt_err
+        and f"git diff --stat {MB} {HD}" not in prompt_err,
+    ))
+
+    # Mutasi RP7 - kembalikan perilaku lama: diff (A) memakai base tip. Kedua diff jadi
+    # identik dan selisihnya hilang; RP7b harus GAGAL. Kalau mutasi ini tidak mengubah
+    # apa pun, berarti uji di atas tautologi.
+    mut_a = original.replace(
+        'a(f"git diff --stat {mb} {head}")', 'a(f"git diff --stat {base} {head}")')
+    assert mut_a != original, "mutasi RP7a tidak mengubah apa pun - uji tidak valid"
+    rp_path.write_text(mut_a, encoding="utf-8")
+    rp_mut = _load_review_prompt(cp, "review_prompt_mut_rp7")
+    prompt_mut, _ = rp_mut.render(pr7, ["_meta/A.md", "_meta/B.md"], generic=False, objek=objek)
+    checks.append((
+        "RP7 diuji-mutasi: diff (A) dikembalikan ke base tip -> perintah merge-base hilang",
+        f"git diff --stat {MB} {HD}" not in prompt_mut,
+    ))
+    rp_path.write_text(original, encoding="utf-8")
+
+    # Mutasi RP7 kedua - buang penanda fail-closed: tanpa objek, prompt tidak boleh
+    # lagi menyatakan TIDAK TERHITUNG, dan RP7a harus gagal.
+    mut_b = original.replace('mb = objek.get("merge_base") or "TIDAK TERHITUNG"',
+                             'mb = objek.get("merge_base") or ""')
+    assert mut_b != original, "mutasi RP7b tidak mengubah apa pun - uji tidak valid"
+    rp_path.write_text(mut_b, encoding="utf-8")
+    rp_mut2 = _load_review_prompt(cp, "review_prompt_mut_rp7b")
+    prompt_mut2, _ = rp_mut2.render(pr7, ["tools/review_prompt.py"], generic=False)
+    checks.append((
+        "RP7 diuji-mutasi: penanda TIDAK TERHITUNG dibuang -> prompt diam tanpa merge-base",
+        "TIDAK TERHITUNG" not in prompt_mut2,
+    ))
+    rp_path.write_text(original, encoding="utf-8")
+
     return checks
 
 
@@ -975,6 +1074,39 @@ def run():
     checks.append(("C5 377 rujukan ditolak", c5_mutation("377 rujukan") != 0))
     checks.append(("C5 377 rujukan pada SHA tetap ditolak", c5_mutation("377 rujukan pada 2a717dce93f098d2f61d260d1413f2207f1dbb78") != 0))
     checks.append(("C5 PASS 0-warning angka stabil lolos", c5_mutation("PASS 0-warning (29 wajib)") == 0))
+
+    # Penjaga drift Status/Versi pada manifest meta. Uji drift-nya TIDAK menyebut versi nyata
+    # (hanya Status yang diganti, Versi dibiarkan apa adanya) supaya skenario ini tidak
+    # membusuk setiap kali versi manifest naik.
+
+    def versi_status(status_line, versi_line=None):
+        with TemporaryDirectory() as d:
+            cp = Path(d) / "repo"
+            shutil.copytree(ROOT, cp, ignore=shutil.ignore_patterns(".git"))
+            mp = cp / "_meta/SYSTEM_MANIFEST.md"
+            mt = mp.read_text(encoding="utf-8")
+            mt2 = re.sub(r"^- \*\*Status:\*\* `[^`]*`$", status_line, mt, count=1, flags=re.MULTILINE)
+            assert mt2 != mt, "mutasi Status tidak mengubah apa pun - uji tidak valid"
+            if versi_line is not None:
+                mt3 = re.sub(r"^- \*\*Versi:\*\* `[^`]*`$", versi_line, mt2, count=1, flags=re.MULTILINE)
+                assert mt3 != mt2, "mutasi Versi tidak mengubah apa pun - uji tidak valid"
+                mt2 = mt3
+            mp.write_text(mt2, encoding="utf-8")
+            r = subprocess.run([sys.executable, "tools/validate_repo.py"], cwd=cp,
+                               capture_output=True, text=True)
+            return r.returncode, r.stdout
+
+    # Kontrol positif dulu: kalau keadaan selaras tidak lolos, dua uji di bawah tidak berarti.
+    # Pasangan versi yang dipakai SENGAJA berbeda dari yang nyata (9.9.9) supaya mutasinya
+    # benar-benar mengubah berkas - menulis ulang nilai yang sudah sama adalah mutasi no-op
+    # dan assert di dalam versi_status() akan (dengan benar) menolaknya.
+    checks.append(("manifest selaras (Status = Versi, pasangan 9.9.9) lolos",
+                   versi_status("- **Status:** `Released — v9.9.9`", "- **Versi:** `9.9.9`")[0] == 0))
+    rc_drift, out_drift = versi_status("- **Status:** `Released — v0.0.1`", None)
+    checks.append(("Status tertinggal dari Versi ditolak + alasannya tercetak (drift nyata dua bump terakhir)",
+                   rc_drift != 0 and "bergerak bersama" in out_drift))
+    checks.append(("Status tanpa versi ditolak karena bentuknya yang dipakai mendeteksi drift",
+                   versi_status("- **Status:** `Released`", None)[0] != 0))
 
     n_synth = len(checks)
 

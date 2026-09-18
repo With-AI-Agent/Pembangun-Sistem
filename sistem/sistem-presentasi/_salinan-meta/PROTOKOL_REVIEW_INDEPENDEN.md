@@ -1,4 +1,4 @@
-> Salinan turunan. Sumber: _meta/PROTOKOL_REVIEW_INDEPENDEN.md sha 57e50f922c90a29b8ef552a59ad7de066f09f128 tanggal 2026-09-18 versi-meta 1.21.0
+> Salinan turunan. Sumber: _meta/PROTOKOL_REVIEW_INDEPENDEN.md sha 1172e704afd91971b87b7ee33ebbe25272df3a34 tanggal 2026-09-18 versi-meta 1.23.0
 > Perbedaan: tidak ada
 > Pemakaian: protokol yang dirujuk bagian "Review independen (sesi lain)" di ACCEPTANCE_TESTS.md sistem ini; dipakai saat penutupan gate acceptance dan klaim permanen (level L1).
 # Protokol Review Independen (Sesi Lain)
@@ -23,7 +23,20 @@ Verifikasi akhir atas pekerjaan yang berdampak permanen dilakukan oleh SESI AI L
 
 ## Anatomi prompt reviewer (wajib berisi)
 1. Identitas: "kamu reviewer independen PR #N; kamu memutuskan, bukan melanjutkan".
-2. Objek ter-pin: nomor PR + SHA basis + SHA head.
+2. Objek ter-pin: nomor PR + **TIGA sha** — base sha (ujung base SEKARANG), **merge-base sha** (titik
+   branch dibuat), dan head sha yang wajib disebut sebagai **OBJEK YANG HENDAK DIPUTUSKAN** — beserta
+   **DUA diff berlabel**: **(A)** merge-base ke head = perubahan yang diperkenalkan PR, dan **(B)** base sha
+   ke head = selisih langsung yang **ikut memuat perubahan yang masuk ke base SESUDAH branch dibuat**.
+   **Sebab aturan ini diperketat (temuan R3 review independen PR #74, nyata terjadi):** butir ini dulu hanya
+   berbunyi "SHA basis + SHA head", lalu prompt menyajikan diff **(B)** sebagai perintah wajib sementara
+   daftar berkasnya diambil dari diff **(A)** — **dua semantik berbeda disajikan sebagai satu objek**.
+   Selisihnya **terukur 4 berkas** (53 vs 49 saat reviewer mengukurnya; 59 vs 55 sesudahnya), dan reviewer
+   menghabiskan tenaga mencurigai **penghapusan bukti yang tidak pernah terjadi**.
+   **Kewajiban reviewer: nyatakan di verdict diff mana yang kamu pakai.** Cek append-only dan
+   kelengkapan-vs-isi-PR dilakukan pada **(A)**; delesi yang hanya muncul di **(B)** pada berkas yang tidak
+   ada di **(A)** **BUKAN** penghapusan oleh penulis PR melainkan base yang bergerak. Kalau merge-base tidak
+   bisa dihitung (objek tidak ada lokal, riwayat git terpotong), pembangkit prompt **wajib menyatakannya**
+   dan reviewer **tidak boleh** menggantinya dengan tebakan.
 3. Daftar pemeriksaan terverifikasi-able (append-only diff, grep audit, jalankan tools, cek status via API) — bukan pertanyaan opini.
 4. Bila ada sengketa penilaian (mis. materialitas paparan): pertanyaan yang harus dijawab EKSPLISIT + kalimat "kamu satu-satunya pemutus; jangan menelan mentah penilaian pihak yang dinilai".
 5. Batasan: aturan 6d di atas; larangan menyentuh branch orang; larangan mengutip jawaban selama jendela terbuka.

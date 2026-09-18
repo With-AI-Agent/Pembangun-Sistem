@@ -1659,3 +1659,104 @@ untuk ditutup di commit berikutnya beserta sha-nya.
 memisahkan diff PR-terhadap-merge-base dari diff langsung base-tip→head, dan menyebut head yang hendak
 diputuskan secara eksplisit. **Hakim tidak boleh diulang sebelum ini selesai**, karena mengulang sekarang
 berarti membuang satu dari maksimal dua putaran untuk temuan yang sudah diketahui.
+## Giliran 16 (18 September 2026) — pemilik menulis satu kata "Lanjutkan", dan R3 (T-34) dikerjakan sampai tuntas di sumbernya
+
+**Masukan pemilik (verbatim):**
+
+> Lanjutkan
+
+Konteksnya: giliran sebelumnya agent melaporkan bahwa barang yang hilang menurut temuan R1 (pegangan pengguna
+`sistem-undangan`) sudah dibuat dan di-push, dan bahwa **3 hakim belum boleh diulang** karena temuan R3 masih
+terbuka. Satu kata itu dibaca sebagai *teruskan putaran koreksi sesuai urutan yang sudah disepakati*, bukan
+sebagai izin membuka pekerjaan baru — sesuai delegasi giliran 14: *"Terserah kamu yang terbaik gimana. Yang
+penting semuanya harus dibereskan dan dimatangkan."*
+
+**Yang dikerjakan (T-34 / temuan R3).**
+
+Reviewer menemukan bahwa pembangkit prompt review menyajikan **dua semantik diff sebagai satu objek**: perintah
+wajibnya `git diff <base sha> <head sha>` (selisih langsung ke ujung base **sekarang**), sementara daftar
+berkasnya berasal dari **diff PR terhadap merge-base** (titik branch dibuat). Begitu base bergerak — dan pada PR
+ini base bergerak — keduanya berbeda. Reviewer mengukur 53 vs 49 berkas dan, karena itu, menghabiskan tenaga
+mencurigai penghapusan bukti yang tidak pernah terjadi. Reviewer **secara eksplisit tidak menuduh** penulis
+menghapus bukti, dan penulis setuju: yang rusak adalah **alatnya**, bukan niat siapa pun.
+
+Perbaikannya dilakukan **di sumber**, bukan dengan menambah kalimat penjelasan:
+
+1. Fungsi baru `objek_diff(base, head)` di `tools/review_prompt.py` menghitung **merge-base**, dua daftar nama
+   berkas (semantik A dan B), dan daftar kesalahan — **fail-closed**: kalau merge-base tidak bisa dihitung
+   (objek tidak ada lokal, riwayat git terpotong), keadaannya **dinyatakan** sebagai `TIDAK TERHITUNG` dan
+   kesalahannya ikut tercetak, **bukan ditebak**.
+2. Perhitungan itu sengaja dilakukan **DI LUAR** `render()`. Alasannya konkret: failure-injection memanggil
+   `render()` dengan **PR palsu dan tanpa git**, jadi diff tidak boleh dihitung di dalam render — kalau
+   dihitung di dalam, FI akan selalu mendapat jalur gagal dan regresi barunya tidak bisa menguji apa pun.
+   `render()` sekarang menerima `objek=None`, dan jalur PR nyata mengalirkan hasil `objek_diff()` ke dalamnya.
+3. Bagian 3 prompt kini mencetak **TIGA sha**: base sha (ujung base sekarang), merge-base sha (titik branch
+   dibuat), dan head sha yang dilabeli **OBJEK YANG HENDAK DIPUTUSKAN** — dengan kalimat bahwa verdict wajib
+   menyebut head sha itu.
+4. Bagian baru **3a** menyajikan **dua diff berlabel**: **(A)** merge-base→head = perubahan yang diperkenalkan
+   PR (*pakai ini untuk menilai isi PR*), dan **(B)** base sha→head = selisih langsung yang **ikut memuat
+   perubahan yang masuk ke base sesudah branch dibuat**. Besertanya: **selisih terukur** (jumlah berkas tiap
+   sisi + daftar berkas yang hanya ada di (B), dinamai satu per satu) dan **cek konsistensi** jumlah berkas
+   menurut API vs diff lokal, dinyatakan **SAMA** atau **BERBEDA** — kalau BERBEDA, reviewer wajib
+   menyatakannya di verdict, tidak boleh dipilih diam-diam.
+5. Aturan **append-only dipindahkan ke diff (A)**, dan kalimat eksplisit ditambahkan: delesi yang hanya muncul
+   di (B) pada berkas yang tidak ada di (A) **bukan** penghapusan oleh penulis PR melainkan base yang bergerak.
+6. Protokol review **butir 2 diperketat** supaya ini mengikat reviewer, bukan cuma jadi baris di prompt: tiga
+   sha, dua diff berlabel, **kewajiban reviewer menyatakan diff mana yang dipakai**, dan larangan mengganti
+   merge-base yang tak terhitung dengan tebakan. Penomoran butir 1–6 **tidak digeser** (pelajaran anchor patah).
+   Salinan berlabel di sistem-presentasi disinkronkan: sha label dihitung ulang memakai fungsi alat sendiri
+   (`source_sha`, `current_meta_version`), dan badan diverifikasi **byte-identik** dengan `assert`, bukan
+   dilihat mata.
+
+**Hasil terukur pada PR #74 head sekarang** (`python3 tools/review_prompt.py --pr 74`):
+
+| Yang dicetak | Nilai |
+|---|---|
+| Base sha (ujung base sekarang) | `ac57016b48503f958de2c2c12ac72246b6593746` |
+| Merge-base sha (titik branch dibuat) | `b6a4b7e8a2e9e45fd85c7c2e0948236fafd0a683` |
+| Head sha (objek yang hendak diputuskan) | `028684c9fa833fa588affd802f28dcef7672b31e` |
+| Diff (A) merge-base→head | **55 berkas** |
+| Diff (B) base sha→head | **59 berkas** |
+| Hanya di (B) — jadi **BUKAN** perubahan PR ini | **4 berkas** (`_log-sesi/LOG_SESI_2026-09-17_16.md`, `_log-sesi/LOG_SESI_2026-09-17_18.md`, `sistem/sistem-konten-kreator/ACCEPTANCE_TESTS.md`, `sistem/sistem-konten-kreator/ACCEPTANCE_TEST_LOG.md`) |
+| Hanya di (A) | 0 berkas |
+| Konsistensi API vs diff lokal | **SAMA** (55 = 55) |
+
+Angka absolutnya bergeser dari yang dilihat reviewer (53/49 → 55/59) karena PR ini bertambah berkas sejak
+verdict masuk; **selisihnya tetap 4 berkas** dan keempatnya berkas milik pekerjaan lain yang masuk ke `main`
+sesudah branch ini dibuat — persis penjelasan yang selama ini hanya bisa diklaim, sekarang **tercetak oleh alat**.
+`--generic` (tanpa git) tetap jalan dan menyatakan merge-base **TIDAK TERHITUNG** beserta catatannya.
+
+**Dikunci sebagai regresi, bukan ditinggal sebagai perbaikan sekali jalan.** 10 pemeriksaan **RP7** ditambahkan
+ke failure-injection: tanpa objek → `TIDAK TERHITUNG` dinyatakan; dengan objek terukur → diff (A) memakai
+merge-base **dan** diff (B) memakai base tip, keduanya berlabel; selisih terukur tercetak **beserta nama
+berkasnya**; ketiga sha ter-pin; konsistensi SAMA dan BERBEDA diuji dua-duanya; kegagalan pengukuran
+disampaikan ke prompt. **Dua uji mutasi** memastikan pemeriksaan itu tidak tautologis: diff (A) dikembalikan ke
+base tip → perintah merge-base harus hilang; penanda `TIDAK TERHITUNG` dibuang → prompt harus diam. FI naik
+**74 → 84**, dan dokumen inventarisnya diperbarui **dari cetakan alat** sesudah penjaga D-2 berbunyi (bukan
+mengurangi skenario atau menggeser pin).
+
+**Temuan yang muncul saat mengerjakan ini, dan tidak dibiarkan lewat (T-36).** Field `Status` pada manifest meta
+tertulis `Released — v1.20.0` sementara `Versi` sudah `1.22.0`. Ini **bukan** dua field yang boleh berbeda: di
+`main` keduanya `1.14.0`, dan di commit v1.20.0 keduanya `1.20.0` — jadi dua bump terakhir menaikkan `Versi`
+tanpa `Status`. Polanya persis **D-2** (dua angka di dua tempat tanpa penjaga) yang sudah pernah menggigit repo
+ini pada jumlah skenario FI. Sesuai mandat pemilik giliran 10 (*"semua yang dicatat bukan cuma dicatat, tapi
+juga harus dibaca dan direspon/dieksekusi"*), temuan ini **dijaga alat**, bukan dicatat lalu ditinggal:
+`tools/validate_repo.py` mendapat cek baru (bentuk `Status` harus `Released — vX.Y.Z` dan **sama** dengan
+`Versi`; pesannya melarang melonggarkan cek supaya cocok dengan manifest yang tertinggal), `Status`/`Versi`
+diselaraskan ke `1.23.0`, dan **3 skenario sintetis** dipasang dengan **kontrol positif** (keadaan selaras harus
+lolos — kalau tidak, dua uji penolakan tidak berarti apa-apa) serta versi **tidak di-hardcode** (diambil dari
+manifest nyata) supaya skenarionya tidak membusuk saat versi naik lagi. **Bukti penjaganya bukan hiasan:**
+validator dijalankan SEBELUM `Status` diselaraskan dan **FAIL** dengan pesan menyebut `v1.20.0` vs `1.22.0`;
+sesudah diselaraskan **PASS**. FI naik **84 → 87**.
+
+**Kesalahan proses yang terjadi di giliran ini dan dicatat supaya tidak diulang.** Dua percobaan pertama
+menyunting `tools/review_prompt.py` memakai **heredoc inline** dan mati karena jerat kutip (typo `'',` dan
+triple-quote tak tertutup); untung skripnya assert-based sehingga **tidak ada satu byte pun tertulis** —
+diperiksa dengan `git diff` yang kosong. Aturannya sekarang tertulis: **patch multi-string yang memuat backtick
+atau kutip kompleks ditulis sebagai berkas lalu dijalankan**, jangan heredoc inline. Dua kali pula rantai
+perintah `&&` putus karena `grep` keluar 1 (menghitung 0 baris) — diulang dengan `;`.
+
+**Yang TIDAK diklaim.** R3 ditutup di alat dan protokol; **yang belum terjadi** adalah pembuktiannya oleh pihak
+luar: 3 sesi hakim baru pada head hasil koreksi. Verdict PR #74 tetap **1/3 MERAH + kuorum 1/3**, PR tetap
+**OPEN tanpa auto-merge**, dan konflik kepentingan tetap berlaku — rangkaian PR ini mengubah alat pengadil,
+jadi keputusan merge hanya milik pemilik.

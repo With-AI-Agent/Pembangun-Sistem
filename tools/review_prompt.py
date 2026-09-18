@@ -39,6 +39,7 @@ ROOT = Path(__file__).resolve().parents[1]
 PLACEHOLDER_PR = "<NOMOR PR>"
 PLACEHOLDER_BASE = "<BASE SHA>"
 PLACEHOLDER_HEAD = "<HEAD SHA>"
+PLACEHOLDER_MERGE_BASE = "<MERGE-BASE SHA>"
 
 # Pin regresi hanya dihitung bila sebuah tools/*.py benar-benar MENDEFINISIKAN
 # konstanta yang dipin. Mencari nama konstanta sebagai substring membuat alat
@@ -417,6 +418,40 @@ def open_test_window(files: list[str] | None = None) -> tuple[list[str], list[st
     return blocking, writer_hits
 
 
+def objek_diff(base_sha: str, head_sha: str) -> dict:
+    """Tiga sha + dua daftar berkas, DIUKUR lokal. Fail-closed: kalau tidak bisa dihitung, katakan.
+
+    Sebab fungsi ini ada (temuan **R3** review independen PR #74): prompt versi lama menyajikan
+    `git diff <base sha> <head sha>` sebagai perintah wajib, sementara daftar berkasnya diambil dari
+    **diff PR terhadap MERGE-BASE** (`gh api pulls/N/files`). Keduanya **berbeda** begitu base bergerak
+    sejak branch dibuat - pada PR #74 terukur **53 vs 49 berkas**, dan reviewer menghabiskan tenaga
+    mencurigai penghapusan bukti yang tidak pernah dilakukan penulis. Yang salah bukan datanya:
+    **dua semantik berbeda disajikan sebagai satu objek.**
+    """
+    hasil: dict = {"merge_base": None, "nama_merge_base": None, "nama_langsung": None, "kesalahan": []}
+    code, out, err = _run(["git", "merge-base", base_sha, head_sha])
+    if code != 0 or not out.strip():
+        hasil["kesalahan"].append(
+            f"merge-base tidak bisa dihitung dari {base_sha[:12]} dan {head_sha[:12]} "
+            f"(git keluar {code}): {(err or out).strip()[:200] or '(kosong)'} - "
+            "kemungkinan objek tidak ada lokal (repo shallow / belum fetch). "
+            "Prompt TIDAK boleh mengklaim selisih yang tidak terukur."
+        )
+        return hasil
+    mb = out.strip()
+    hasil["merge_base"] = mb
+    for kunci, kiri in (("nama_merge_base", mb), ("nama_langsung", base_sha)):
+        c2, o2, e2 = _run(["git", "diff", "--name-only", kiri, head_sha])
+        if c2 != 0:
+            hasil["kesalahan"].append(
+                f"git diff --name-only {kiri[:12]} {head_sha[:12]} gagal (keluar {c2}): "
+                f"{(e2 or o2).strip()[:200] or '(kosong)'}"
+            )
+        else:
+            hasil[kunci] = sorted({ln.strip() for ln in o2.splitlines() if ln.strip()})
+    return hasil
+
+
 def head_sha_of_worktree() -> str:
     code, out, _ = _run(["git", "rev-parse", "HEAD"])
     return out.strip() if code == 0 else "(tidak terbaca)"
@@ -425,7 +460,8 @@ def head_sha_of_worktree() -> str:
 # --------------------------------------------------------------------------
 # Render
 # --------------------------------------------------------------------------
-def render(pr: dict | None, files: list[str], generic: bool) -> tuple[str, list[str]]:
+def render(pr: dict | None, files: list[str], generic: bool,
+           objek: dict | None = None) -> tuple[str, list[str]]:
     if generic:
         num, base, head = PLACEHOLDER_PR, PLACEHOLDER_BASE, PLACEHOLDER_HEAD
         title = "<JUDUL PR>"
@@ -469,25 +505,83 @@ def render(pr: dict | None, files: list[str], generic: bool) -> tuple[str, list[
     for i, item in enumerate(reading_order(files), start=1):
         a(f"{i}. {item}")
     a("")
+    # R3: tiga sha, bukan dua. Merge-base = titik branch dibuat; base sha = ujung base SEKARANG.
+    if generic:
+        mb = PLACEHOLDER_MERGE_BASE
+        daftar_a: list[str] | None = None
+        daftar_b: list[str] | None = None
+        err_objek = ["mode --generic: tidak ada PR, jadi merge-base dan selisihnya tidak bisa diukur"]
+    else:
+        objek = objek or {}
+        mb = objek.get("merge_base") or "TIDAK TERHITUNG"
+        daftar_a = objek.get("nama_merge_base")
+        daftar_b = objek.get("nama_langsung")
+        err_objek = list(objek.get("kesalahan") or [])
+
     a("## 3. Objek ter-pin")
     a("")
     a("| Objek | Nilai |")
     a("|---|---|")
     a(f"| PR | {pr_ref} — {title} |")
     a(f"| Base ref | `{base_ref}` |")
-    a(f"| Base sha | `{base}` |")
+    a(f"| **Base sha — ujung base SEKARANG** | `{base}` |")
+    a(f"| **Merge-base sha — titik branch ini dibuat** | `{mb}` |")
     a(f"| Head ref | `{head_ref}` |")
-    a(f"| Head sha | `{head}` |")
-    a(f"| Berkas berubah | {len(files)} |")
+    a(f"| **Head sha — OBJEK YANG HENDAK DIPUTUSKAN** | `{head}` |")
+    a(f"| Berkas menurut data PR (semantik merge-base) | {len(files)} |")
     a("")
-    a("Semua pemeriksaan dilakukan **pada dua sha itu**, bukan pada \"main terbaru\" atau pada branch yang bergerak:")
+    a("**Verdict wajib menyebut head sha di atas.** Head bisa bergerak selama review berjalan; verdict")
+    a("yang tidak menyebut sha tidak bisa dipetakan ke keadaan mana pun dan diperlakukan sebagai belum")
+    a('terverifikasi (protokol review independen, bagian "Beberapa hakim sekaligus").')
+    a("")
+    a("### 3a. Dua diff yang BERBEDA — jangan ditukar")
+    a("")
+    a("**Sebab bagian ini ada:** prompt versi lama menyajikan `git diff <base sha> <head sha>` sebagai")
+    a("perintah wajib, sementara daftar berkasnya berasal dari **diff PR terhadap merge-base**. Keduanya")
+    a("**berbeda** begitu base bergerak sejak branch dibuat — pada PR #74 terukur **53 vs 49 berkas**.")
     a("")
     a("```bash")
+    a("# (A) PERUBAHAN YANG DIPERKENALKAN PR — semantik daftar berkas di bagian 3b. PAKAI INI untuk menilai isi PR.")
+    a(f"git diff --stat {mb} {head}")
+    a(f"git diff --numstat {mb} {head}")
+    a("")
+    a("# (B) SELISIH LANGSUNG ujung base ke head — IKUT memuat perubahan yang masuk ke base SESUDAH branch dibuat.")
     a(f"git diff --stat {base} {head}")
-    a(f"git diff --numstat {base} {head}")
     a("```")
     a("")
-    a("Berkas yang di-declare berubah oleh data PR:")
+    a("**Aturan pakai:** cek *kelengkapan vs isi PR* dan *append-only* dilakukan pada **(A)**. Kalau kamu")
+    a("memakai (B) lalu menemukan delesi pada berkas yang tidak ada di (A), itu **BUKAN penghapusan oleh")
+    a("penulis PR** — itu base yang bergerak. **Nyatakan di verdict-mu diff mana yang kamu pakai.**")
+    a("")
+    if err_objek:
+        a("**Yang TIDAK bisa diukur, dinyatakan (fail-closed — jangan disimpulkan sendiri):**")
+        a("")
+        for e in err_objek:
+            a(f"- {e}")
+        a("")
+    if daftar_a is not None and daftar_b is not None:
+        hanya_b = [x for x in daftar_b if x not in set(daftar_a)]
+        hanya_a = [x for x in daftar_a if x not in set(daftar_b)]
+        a(f"**Selisih terukur (A) vs (B) — angka, bukan perkiraan:** (A) {len(daftar_a)} berkas,")
+        a(f"(B) {len(daftar_b)} berkas.")
+        a("")
+        a(f"- **hanya di (B), jadi BUKAN perubahan PR ini: {len(hanya_b)} berkas**"
+          + (" — inilah sumber kebingungan 53 vs 49 di PR #74" if hanya_b else ""))
+        for rel in hanya_b[:15]:
+            a(f"  - `{rel}`")
+        if len(hanya_b) > 15:
+            a(f"  - … dan {len(hanya_b) - 15} lainnya")
+        a(f"- hanya di (A): {len(hanya_a)} berkas")
+        for rel in hanya_a[:15]:
+            a(f"  - `{rel}`")
+        a("")
+        sama = "SAMA" if sorted(files) == daftar_a else "BERBEDA"
+        a(f"**Konsistensi daftar:** data PR lewat API menyebut **{len(files)}** berkas; diff lokal (A)")
+        a(f"menyebut **{len(daftar_a)}** berkas → **{sama}**."
+          + ("" if sama == "SAMA" else
+             " Selisihnya wajib dinyatakan di verdict, jangan dipilih salah satu diam-diam."))
+        a("")
+    a("### 3b. Berkas yang di-declare berubah oleh data PR (semantik diff A)")
     a("")
     if files:
         for rel in files:
@@ -499,7 +593,8 @@ def render(pr: dict | None, files: list[str], generic: bool) -> tuple[str, list[
     a("")
     a("1. **Kelengkapan vs isi PR** — setiap hal yang dijanjikan body PR benar-benar ada di diff; setiap hal di diff")
     a("   punya penjelasan di body. Selisih dua arah = temuan.")
-    a("2. **Append-only** — `git diff --numstat <base> <head>` untuk berkas log/bukti (`LOG_SESI_*.md`,")
+    a("2. **Append-only** — `git diff --numstat <merge-base> <head>` (diff **A**, lihat bagian 3a) untuk")
+    a("   berkas log/bukti (`LOG_SESI_*.md`,")
     a("   `ACCEPTANCE_TEST_LOG.md`, dokumen bukti): kolom delesi **harus 0** — KECUALI blok header")
     a("   \"Keadaan Sesi\" pada `LOG_SESI_*.md`. Blok itu WAJIB disegarkan saat penutupan sesi (header")
     a("   `OPEN` menjadi `CLOSED`, ringkasan keadaan diperbarui), jadi perubahan baris DI DALAM blok itu")
@@ -643,7 +738,9 @@ def main(argv: list[str] | None = None) -> int:
                 raise ToolError(f"nomor PR tidak masuk akal: {number}")
             data = fetch_pr(number)
             files = resolve_pr_files(number, data)
-            text, windows = render(data, files, generic=False)
+            # R3: objek diff DIUKUR sebelum prompt dicetak, bukan diserahkan ke reviewer untuk ditebak.
+            objek = objek_diff(data["baseRefOid"], data["headRefOid"])
+            text, windows = render(data, files, generic=False, objek=objek)
     except ToolError as exc:
         print(f"review_prompt: GAGAL — {exc}", file=sys.stderr)
         return 2

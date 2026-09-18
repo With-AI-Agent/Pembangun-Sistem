@@ -244,6 +244,31 @@ if _LEDGER.is_file():
                     "- daftar yang tidak pernah dibaca akan dilupakan walaupun isinya lengkap"
                 )
 
+# --- Meta manifest: Status dan Versi harus bergerak bersama -----------------
+# Sebab cek ini ada (ditemukan 18 Sep 2026, bukan dicari-cari): pada dua bump terakhir
+# field `Versi` dinaikkan sementara `Status` tertinggal di `Released — v1.20.0`, padahal
+# di `main` keduanya sama dan di commit v1.20.0 keduanya sama. Dua angka di dua tempat
+# tanpa penjaga adalah pola D-2 yang sudah pernah menggigit repo ini (jumlah skenario FI
+# vs dokumennya), jadi dijaga alat — bukan mata, dan bukan dicatat lalu ditinggal.
+_MM = ROOT / "_meta/SYSTEM_MANIFEST.md"
+if _MM.is_file():
+    _mmt = _MM.read_text(encoding="utf-8")
+    _st = re.search(r"^- \*\*Status:\*\* `Released — v([0-9]+\.[0-9]+\.[0-9]+)`$", _mmt, re.MULTILINE)
+    _vs = re.search(r"^- \*\*Versi:\*\* `([0-9]+\.[0-9]+\.[0-9]+)`$", _mmt, re.MULTILINE)
+    if not _st:
+        errors.append(
+            "_meta/SYSTEM_MANIFEST.md: field Status tidak berbentuk `Released — vX.Y.Z` - "
+            "bentuk itu yang dipakai mendeteksi drift terhadap field Versi"
+        )
+    elif not _vs:
+        errors.append("_meta/SYSTEM_MANIFEST.md: field Versi tidak berbentuk `X.Y.Z`")
+    elif _st.group(1) != _vs.group(1):
+        errors.append(
+            f"_meta/SYSTEM_MANIFEST.md: Status menyebut v{_st.group(1)} tetapi Versi {_vs.group(1)} - "
+            "keduanya bergerak bersama (di main dan di commit v1.20.0 keduanya sama). Naikkan KEDUANYA "
+            "di commit yang sama; JANGAN melonggarkan cek ini supaya cocok dengan manifest yang tertinggal."
+        )
+
 # --- Index-driven system coverage (inheritance contract) -------------------
 INDEX_PATH = ROOT / "_meta/INDEKS_SISTEM.md"
 index_text = INDEX_PATH.read_text(encoding="utf-8") if INDEX_PATH.is_file() else ""
