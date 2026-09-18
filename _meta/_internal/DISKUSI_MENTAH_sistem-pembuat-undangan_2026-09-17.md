@@ -2033,3 +2033,118 @@ sementara remote tetap `2122d80` dan working tree utuh. Dipulihkan dengan `fetch
 force-push, tanpa berkas hilang; commit isi baru dibuat sesudah reset supaya tidak berdiri di atas basis
 salah. Commit: `8c60fa4` (isi) + commit penutup T-48 dengan sha.
 
+## Giliran 21 (2026-09-18) — tiga hakim putaran 3 selesai: 10 temuan, semuanya MERAH, semuanya kureproduksi sendiri
+
+**Verbatim pemilik (giliran 21):**
+
+> 3 hakim udh selesai. Silahkan periksa
+
+**Verbatim pemilik (dua keputusan lewat tanya-jawab di giliran yang sama):**
+
+> (1) Soal 2 baris di berkas bukti historis `ACCEPTANCE_TEST_LOG.md` yang tersunting saat memperbaiki tabel
+> rusak — pilihan pemilik: **"Saran terbaikku: kembalikan ke byte asli + berkas bukti historis
+> dikecualikan dari paksaan suntingan"** (opsi A).
+>
+> (2) Lanjutan sesudah 10 temuan dibereskan — pilihan pemilik: **"Saran terbaikku: bereskan dulu, lalu
+> siapkan 3 hakim baru untuk putaran 4 + link prompt-nya"** (opsi A).
+
+**Yang diperiksa lebih dulu (bukan langsung percaya laporan hakim).** Keadaan repo: `HEAD == remote ==
+f683db8`, 665 commit, tidak shallow, tree bersih, dan **head tidak bergerak** selama hakim bekerja — jadi
+tidak ada yang mendorong commit ke branch ini. Kanal: komentar bertambah 12 → **15**, review resmi 0,
+branch remote tidak bertambah. Tiga verdict putaran 3 ada sebagai **tiga komentar terpisah**
+(`5730876237` 13:44:05Z, `5730926780` 13:48:09Z, `5730927103` 13:48:10Z) — tidak ada yang saling menimpa,
+berbeda dari insiden giliran 15/17. Ketiganya menyebut head `f683db8` (bukan head basi) dan ketiganya
+memutus **MERAH**. Agregat alat: 7 slot lintas putaran, semuanya MERAH → **MERAH, jangan merge**.
+
+**10 temuan unik (union tiga hakim, fail-closed) — dan SEMUANYA kureproduksi sendiri, nol positif palsu:**
+
+1. **2 baris berkas bukti tersunting** (dilaporkan KETIGA hakim; `git diff --numstat` = `2 2`, baris 1870
+   dan 1956): pipa di dalam sel di-escape saat memperbaiki 14 baris tabel rusak (T-47). Isi ter-render
+   identik, tidak ada fakta yang dihapus — tetapi aturan append-only tetap terlanggar, dan dua aturan
+   (penjaga tabel vs append-only) saling mengunci. **Keputusan pemilik: opsi A.** Dikerjakan: kedua baris
+   dikembalikan ke **byte asli** (diff berkas itu terhadap merge-base kini KOSONG) dan `validate_repo.py`
+   dapat `POLA_BUKTI_HISTORIS` — cacat tabel di berkas bukti jadi **peringatan**, di dokumen hidup tetap
+   **kegagalan**. Terukur sesudahnya: `VALIDATION PASSED` + `WARNINGS: 2` (keduanya baris bukti itu).
+   Dikunci **TI6/TI7** supaya pengecualian tidak melebar diam-diam.
+2. **P1 — pembanding jumlah skenario vs dokumen tidak pernah jalan di mode ekstrak.** Seluruh blok D-2
+   terbungkus `if not FI_SKIP_NESTED`, padahal satu-satunya pemanggil yang menjalankan ekstrak
+   (`build_template.smoke_extract`) justru menyetel `FI_SKIP_NESTED=1`. Direproduksi sendiri: ekstrak nyata
+   mencetak **25 scenarios (24 sintetis + 1 unit)** sementara dokumen menulis **16 (15 sintetis + 1 unit)**.
+   Ditutup: pembanding jadi fungsi murni `bandingkan_jumlah_dokumen()` yang dijalankan **tanpa syarat
+   pagar**, plus pengetatan **D-2c** (klaim jumlah ekstrak harus TEPAT SATU — di dokumen ini klaim itu
+   terganda dua kali pada baris yang sama). Bukti penutupannya berbunyi: sesudah diperbaiki, ekstrak
+   mencetak **30 (29 sintetis + 1 unit)** dan `SMOKE EXTRACT PASSED`; dan D-2c **langsung berbunyi**
+   (`baris jumlah memuat 2 klaim 'di ekstrak template'`) begitu dijalankan di ekstrak — bukti cabang itu
+   kini terjangkau. Angka dokumen diperbarui **dari cetakan alat**, bukan dari angka lama.
+3. **P1 — putaran yang sedang berjalan dinamai sebagai putaran berikutnya.** Direproduksi: sesudah satu
+   hakim putaran 3 menempel verdict, `review_prompt.py --pr 74` pada head yang sama mencetak *"putaran 4"*
+   tiga kali. Ditutup dengan `hitung_putaran(data, kuorum, head_sha)`: putaran R **masih berjalan** kalau
+   slot yang menamai R kurang dari kuorum **atau** head belum bergerak sejak verdict R. Terukur sesudahnya:
+   kanal nyata + head sekarang → **3**; head sudah bergerak → **4**. Dikunci **RP14 (5 uji)**.
+4. **P1 — laporan kuorum fail-open lintas putaran.** `--harapkan 3` membandingkan terhadap seluruh slot
+   (7), jadi tidak pernah bisa bilang "2 dari 3 hakim putaran 3 belum masuk". Ditutup: `putaran_dari()` +
+   `kuorum_putaran()` mencetak blok **KUORUM PER PUTARAN** dan `--putaran R` memilih putaran yang diputus;
+   agregat lintas putaran **tidak dilonggarkan**. Terukur: `putaran 1: 1 slot · putaran 2: 3 slot ·
+   putaran 3: 3 slot → kuorum 3/3 LENGKAP`. `ambil_verdict.py --uji` **33 → 40 pemeriksaan** (6 kasus +
+   1 mutasi: kalau nomor putaran diabaikan, laporan kuorum berubah — bukti uji tidak tautologis).
+5. **P2 — body PR membantah dirinya sendiri.** §1 menyatakan prompt yang berlaku dibangkitkan pada
+   `f683db8` dan versi `2122d80` BASI, tetapi §7 (T-44) dan §9(g) masih menulis prompt yang berlaku ada di
+   `2122d80`. Dikonfirmasi dari API. Ditutup di penyegaran body sesudah commit (satu sha, satu angka, satu
+   status T-44), dan **judul PR** yang masih `v1.17.0-v1.19.0` ikut diganti.
+6. **P2 — satu angka bukti di body tidak bisa direproduksi.** Body menulis *"hitungan BUKAN SLOT 9 → 10,
+   slot hakim TETAP 4"*. Yang benar **7 → 8**: aku dulu menghitung dengan `grep -c` atas frasa
+   "BUKAN SLOT HAKIM", dan frasa itu juga muncul **di dalam teks** dua komentar lain (terukur: grep
+   memberi 11, tally alat memberi 8 bukan-slot dari 15 komentar). Hakim juga mengingatkan hal yang lebih
+   prinsip: hitungan komentar adalah **angka yang bergerak**, dan aturan C5 repo sendiri melarang
+   mengutipnya sebagai fakta permanen. Ditutup: body kini mengutip **tally alat**, bukan grep, dan
+   menyebut waktu + sha pengukurannya.
+7. **P2 — urutan baca wajib menjatuhkan 2 dari 60 berkas.** Direproduksi persis: `reading_order()` hanya
+   menerima `*.md` (plus semua di bawah `tools/`), sehingga `_meta/_internal/uji/uji_upscaling.py` dan
+   `sistem/sistem-undangan/_sistem/validate_system.py` tidak masuk daftar (58 dari 60). Ditutup dengan
+   cabang **catch-all**: tidak boleh ada berkas berubah yang tidak masuk daftar. Dikunci **RP15 (3 uji,
+   termasuk mutasi)**. Efek samping yang jujur dicatat: mutasi **RP2** sempat jadi **no-op** karena
+   catch-all menangkap berkas yang tadinya jatuh, jadi RP2 GAGAL — mutasinya diperbaiki agar meniru kode
+   lama sepenuhnya (filter `.md` dipersempit **dan** catch-all dimatikan) plus assert bukan-no-op.
+8. **P2 — prompt melabeli base sha beku sebagai "ujung base SEKARANG"** dan menulis *"hanya di (B): 0
+   berkas"*. Terukur: `main` bergerak ke `26147e1` (PR lain merge 13:35Z) sementara `.base.sha` PR tetap
+   `c1d00c3`; selisih terhadap ujung sebenarnya 71 berkas dengan **11 hanya di (B)**. Ditutup:
+   `ujung_base_hidup()` mengukur ujung branch yang sebenarnya + waktu ukur, `baris_ujung_base()` melabeli
+   nilai API sebagai **BEKU sejak PR dibuat**, menyatakan **BASE SUDAH BERGERAK** atau **TIDAK TERUKUR**
+   (fail-closed), dan `objek_diff()` menghitung **(B-hidup)** terhadap ujung terukur. Dikunci **RP16 (3
+   uji)**. Satu koreksi atas bukti hakim: `.base.sha` dari API masih `c1d00c3` (bukan `26147e1` seperti
+   kutipan hakim) — yang bergerak adalah **tip branch `main`**; substansi temuannya tetap benar.
+9. **P2 — status W-01 bertentangan di dalam berkas yang sama.** `SYSTEM_MANIFEST.md` baris 28 dan 34
+   menulis "sudah dibuat 18 Sep 2026", baris 55 (tabel Warisan) menulis "berkasnya belum dibuat";
+   `00_RENCANA_KERANGKA.md` langkah 6 menulis "sengaja tidak dibuat sekarang" sementara Log Keputusan
+   baris 555 menulis "Pegangan pengguna W-01 dibuat". Ditutup: tabel Warisan disamakan ke keadaan terukur
+   (**berkasnya ADA, kelulusannya BELUM dinyatakan** — syarat 4), dan langkah 6 dipertahankan sebagai
+   riwayat **plus koreksi bertanggal** (entri log tidak dihapus, sesuai perintah hakim dan prinsip
+   append-only).
+10. **P2 — kontrak warisan sudah 10 butir, 3 dokumen aktif masih menulis 9.** Terukur `WARISAN_ITEMS` =
+    10 (W-10 ada). Ditutup di `03_KONTRAK_WARISAN.md:44` ("kelengkapan 10 butir Warisan (W-01…W-10)"),
+    `DEFINITION_OF_DONE.md:23` dan `00_CARA_KERJA_META.md:25` (W-01…W-09 → **W-01…W-10**). Satu kemunculan
+    "9 butir" yang tersisa ada di **baris Log Keputusan 17 Sep** dan merupakan kutipan instruksi pemilik
+    (riwayat, append-only) — hakim sendiri mengecualikan log lama dari cakupan temuan ini, dan baris log di
+    atasnya sudah mencatat penambahan W-10.
+
+**Gerbang sesudah semua perbaikan (dicetak alat, bukan diklaim):** FI **153 PASSED** (30 sintetis + 17 unit
+nyata + 14 + 13 + 72 + 7), smoke ekstrak **30 PASSED**, `validate_repo` **VALIDATION PASSED** (35 berkas
+wajib, 122 dokumen aktif, 550 rujukan, 0 unresolved, **2 peringatan** = baris bukti historis),
+`check_selfcontained --semua` **PASS** 5 sistem temuan 0, `ambil_verdict --uji` **40/40**,
+`check_manuals --uji` **LULUS** dan `--report` **7 kandidat** (T-42 tetap terbuka), validator mandiri
+sistem-undangan **PASS** (kerangka, 15 berkas, **10 butir warisan**), `build_template` **TEMPLATE CLEAN
+BUILD PASSED** dengan R7 **persis 5 WARNING** (pin tidak digeser).
+
+**Pin R7 nyaris tergeser oleh pekerjaanku sendiri, dan tidak kugeser.** Amendemen aturan 8 di protokol
+menyebut path lengkap `ACCEPTANCE_TEST_LOG.md` milik sistem konten-kreator; rujukan path di dokumen meta
+ikut terhitung sebagai **warning normalisasi template**, sehingga warning ekstrak jadi 6 dan regresi R7
+(yang memaku persis 5) GAGAL. Dua jalan: menggeser pin jadi 6, atau menulis namanya tanpa path. Pin
+**tidak kugeser** — bagian 5 prompt review mewajibkan pin yang tersentuh dilaporkan ke pemilik dan tidak
+diubah atas nama sendiri, dan nilai 5 itu ukuran normalisasi template, bukan tempat menampung rujukan
+baru. Teksnya yang disesuaikan, dan alasan penyesuaiannya ditulis di tempat itu supaya tidak terbaca
+sebagai penyensoran. Sesudahnya: warning ekstrak 5, R7 PASS, smoke ekstrak 30 PASSED.
+
+**Yang TIDAK berubah:** merge tetap ditunda (agregat MERAH, dan PR ini mengubah alat pengadil —
+pengecualian pengadil berlaku, keputusan merge milik pemilik langsung); T-42 (7 kandidat di sistem lain)
+dan T-44 (review putaran berjalan) tetap terbuka; T-44 akan ditutup pemilik sesudah putaran 4.
+

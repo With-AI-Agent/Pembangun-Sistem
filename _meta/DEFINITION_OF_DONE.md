@@ -15,12 +15,14 @@ Dokumen atau sistem **tidak boleh disebut selesai hanya karena file sudah dituli
 - [ ] PR sudah diproses sesuai aturan
 - [ ] Penutupan sesi: PR dibuka → keluaran `tools/review_prompt.py --pr <N>` harus muncul sebagai satu blok berpagar di badan pesan chat terakhir, bukan keluaran perintah yang terlipat; kalau blok itu tidak ada, langkah penutupan dianggap BELUM dikerjakan dan PR belum boleh dinilai. Pemilik dapat membuka sesi baru dari main dan membangkitkan sendiri dengan `python3 tools/review_prompt.py --pr <N>` (`PROTOKOL_REVIEW_INDEPENDEN.md` §"Sumber prompt")
 - [ ] Penyerahan prompt review/audit ke pemilik memuat **path absolut berkas + link** (link PR, permalink head, daftar berkas berubah) — dicetak alat sebagai BLOK SERAH TERIMA, bukan ditulis tangan (`PROTOKOL_REVIEW_INDEPENDEN.md` aturan 11)
+- [ ] **Kuorum dilaporkan PER PUTARAN, dan putaran yang sedang berjalan tidak diganti nomornya** — `python3 tools/ambil_verdict.py --pr <N> --harapkan <jumlah hakim> [--putaran R]` mencetak blok KUORUM PER PUTARAN (agregat lintas putaran tetap fail-closed), dan prompt yang dibangkitkan ulang pada head yang sama tetap menamai putaran yang sedang berjalan (`hitung_putaran()`: kuorum belum lengkap ATAU head belum bergerak sejak verdict → putaran tetap). Nilai beku dari API tidak pernah dilabeli "SEKARANG": ujung branch base diukur terpisah dan pergerakannya dinyatakan (`PROTOKOL_REVIEW_INDEPENDEN.md` aturan 9 amendemen + aturan 12 dan 13)
+- [ ] **Berkas bukti historis tidak disunting** — `ACCEPTANCE_TEST_LOG.md`, `LOG_SESI_*`, `DISKUSI_MENTAH_*`, laporan audit bertanggal, folder `_log-sesi/` dan arsip: kolom delesi harus 0 di bawah blok header, dan cacat tabel di sana cukup peringatan (keputusan pemilik 18 Sep 2026). Dokumen hidup/normatif tetap kegagalan keras (`tools/validate_repo.py` `POLA_BUKTI_HISTORIS`, dikunci TI6/TI7)
 - [ ] **Link yang diserahkan adalah link ke BERKAS PROMPT ITU SENDIRI**, bukan hanya link ke PR — pemilik dan siapa pun yang membuka sesi hakim harus bisa membuka dan menyalin teks prompt tanpa akses ke mesin kerja agent. Caranya `python3 tools/review_prompt.py --pr <N> --out <path> --umumkan`: prompt ditempel ke kanal PR sebagai komentar penulis (BUKAN verdict, teruji lintas alat di regresi RP13) dan permalink-nya dicetak di blok serah terima. Kalau kanal itu tidak tersedia, agent wajib menyatakannya dan menempelkan teks prompt sebagai satu blok berpagar di badan pesan (`PROTOKOL_REVIEW_INDEPENDEN.md` aturan 11 amendemen giliran 20)
 
 ## Sistem domain
 
 - [ ] Discovery Level-0 selesai
-- [ ] Semua butir `03_KONTRAK_WARISAN.md` (W-01…W-09) diterapkan dan tercatat di bagian "Warisan" rencana kerangka + manifest — atau override-nya tercatat dengan alasan + approval eksplisit pengguna
+- [ ] Semua butir `03_KONTRAK_WARISAN.md` (W-01…W-10) diterapkan dan tercatat di bagian "Warisan" rencana kerangka + manifest — atau override-nya tercatat dengan alasan + approval eksplisit pengguna
 - [ ] `tools/validate_repo.py` PASS dengan 0 warning terhadap sistem ini (penegakan mekanis butir W-01…W-04)
 - [ ] Bentuk sistem dan batasannya terdokumentasi
 - [ ] Manifest tersedia dan lengkap

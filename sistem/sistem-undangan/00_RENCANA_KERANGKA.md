@@ -524,6 +524,14 @@ Ini **kategori BESAR**, jadi aku tidak menguncinya sendiri. Urut dari yang palin
    `PROMPT_ENTRI_UNIVERSAL.md` (W-01) — alur menaruhnya di langkah 6 sesudah dokumen, dan membuatnya
    setengah jadi akan melanggar **Standar Kelulusan Manual 5 syarat**. Di tahap `kerangka` ketiadaan
    keduanya **dilonggarkan jadi warning** oleh validator, bukan disembunyikan.
+   **KOREKSI 18 Sep 2026 (keadaan terkini — menutup temuan hakim putaran 3 PR #74):** kalimat "yang juga
+   belum ada dan sengaja tidak dibuat sekarang" di atas adalah **keadaan saat langkah 6 ini ditulis**, dan
+   dipertahankan apa adanya sebagai riwayat. Keadaan sekarang: `PANDUAN_PENGGUNA.md` dan
+   `PROMPT_ENTRI_UNIVERSAL.md` **SUDAH dibuat 18 Sep 2026** (keduanya ada di folder ini, blok prompt-nya
+   identik), tercatat di Log Keputusan di bawah dan di `SYSTEM_MANIFEST.md` (baris *Entry point* dan
+   *Pegangan pengguna*). Yang **belum boleh dinyatakan adalah KELULUSANNYA** (Standar Kelulusan Manual
+   syarat 4) — bukan keberadaannya. Jangan membaca kalimat riwayat itu sebagai keadaan sekarang: satu
+   berkas yang membantah dirinya sendiri adalah temuan review, dan itu yang terjadi di sini.
 
 **Yang menutup utang kalau ini jalan:** item **T-18** (tujuan awal sesi) dan **6 tuntutan ber-status
 `TERJADWAL`** di ledger tanggapan — **T1, T2, T5, T6, T11, T13, T14, T15** semuanya mengalir ke

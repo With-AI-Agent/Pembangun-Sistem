@@ -190,6 +190,80 @@ def gabungkan(verdicts: list[str], diharapkan: int | None = None) -> str:
     return dasar
 
 
+PUTARAN_RE = re.compile(r"putaran\s+(\d+)", re.IGNORECASE)
+
+
+def putaran_dari(teks: str) -> int | None:
+    """Nomor putaran yang DINAMAI sebuah laporan; None kalau tidak menamai putaran.
+
+    Dibaca sesudah pagar kode dikosongkan (`strip_code_fences`), jadi contoh judul di dalam prompt yang
+    dipagari tidak ikut terhitung — pola yang sama dengan `slot_hakim()`.
+    """
+    m = PUTARAN_RE.search(strip_code_fences(teks or ""))
+    return int(m.group(1)) if m else None
+
+
+def kuorum_putaran(pasangan: list[tuple[str, int | None]], diharapkan: int | None = None,
+                   putaran: int | None = None) -> str:
+    """Laporan kuorum PER PUTARAN (temuan #3 hakim putaran 3 PR #74, P1).
+
+    **Sebab fungsi ini ada.** `gabungkan(..., diharapkan)` membandingkan kuorum terhadap SELURUH slot,
+    sedangkan slot lintas putaran menumpuk: di PR #74 putaran 3, `--harapkan 3` mencetak "5 dari 5 slot"
+    (lalu "7 dari 7") dan **tidak pernah** bisa memberi tahu pemilik bahwa 2 dari 3 hakim putaran 3 belum
+    menyerahkan laporan. Itu persis mode kegagalan D-3 yang `--harapkan` dibuat untuk menutupnya — jadi
+    penjaganya fail-open di tingkat putaran walaupun fail-closed di tingkat agregat.
+
+    **Yang TIDAK berubah:** agregat lintas putaran tetap fail-closed (satu MERAH di putaran mana pun
+    menahan merge, verdict tak terbaca menahan merge). Fungsi ini hanya MENAMBAH laporan per putaran,
+    karena dari laporan itulah pemilik memutuskan boleh tidaknya bertindak dengan verdict belum lengkap.
+
+    `putaran` = putaran yang hendak diputus (default: putaran terbaru yang ada di kanal).
+    """
+    b: list[str] = []
+    a = b.append
+    per: dict[int, list[str]] = {}
+    tanpa_nomor: list[str] = []
+    for v, r in pasangan or []:
+        if r is None:
+            tanpa_nomor.append(v or "TIDAK TERBACA")
+        else:
+            per.setdefault(r, []).append(v or "TIDAK TERBACA")
+    a("  KUORUM PER PUTARAN (agregat fail-closed di atas tetap berlaku lintas putaran):")
+    if not per and not tanpa_nomor:
+        a("    belum ada slot hakim yang terbaca — belum ada putaran yang bisa dilaporkan")
+    for r in sorted(per):
+        vs = per[r]
+        ringkas = ", ".join(sorted(set(vs)))
+        a(f"    putaran {r}: {len(vs)} slot — {ringkas}")
+    if tanpa_nomor:
+        a(f"    (tanpa nomor putaran: {len(tanpa_nomor)} slot — {', '.join(sorted(set(tanpa_nomor)))}; "
+          "tidak bisa dipetakan ke putaran mana pun, jadi TIDAK dihitung sebagai kuorum putaran)")
+    if not per:
+        return "\n".join(b)
+    target = putaran if putaran is not None else max(per)
+    asal = "dipilih eksplisit lewat --putaran" if putaran is not None else "putaran terbaru di kanal"
+    if target not in per:
+        a(f"  >> PUTARAN YANG DIPUTUS: {target} ({asal}) — **TIDAK ADA slot hakim untuk putaran ini**.")
+        a("     Artinya verdict belum diserahkan, BUKAN bersih. Jangan merge, jangan simpulkan hijau.")
+        return "\n".join(b)
+    n = len(per[target])
+    merah = [v for v in per[target] if v not in HIJAU_SET]
+    if diharapkan is None:
+        a(f"  >> PUTARAN YANG DIPUTUS: {target} ({asal}) — {n} slot terbaca, "
+          f"{len(merah)} di antaranya bukan hijau.")
+        a("     Kuorum TIDAK DINYATAKAN: jalankan dengan `--harapkan N` (N = jumlah hakim yang sungguh")
+        a("     kamu kerahkan) supaya verdict yang tidak sampai terbaca sebagai KUORUM BELUM LENGKAP.")
+    elif n < diharapkan:
+        a(f"  >> PUTARAN YANG DIPUTUS: {target} ({asal}) — kuorum {n}/{diharapkan} "
+          f"**BELUM LENGKAP**: {diharapkan - n} hakim belum menyerahkan laporan atau laporannya tidak")
+        a("     terbaca. Hakim yang hening bukan hakim yang puas: jangan bertindak atas putaran ini")
+        a("     seolah-olah lengkap, dan jangan menyimpulkan apa pun dari putaran yang belum penuh.")
+    else:
+        a(f"  >> PUTARAN YANG DIPUTUS: {target} ({asal}) — kuorum {n}/{diharapkan} LENGKAP "
+          f"({len(merah)} bukan hijau).")
+    return "\n".join(b)
+
+
 class ToolError(Exception):
     """Kegagalan yang harus terlihat sebagai exit non-zero + pesan spesifik."""
 
@@ -394,7 +468,7 @@ def cetak_issue(nomor: int, diharapkan: int | None = None) -> int:
     return 0
 
 
-def cetak_pr(nomor: int, diharapkan: int | None = None) -> int:
+def cetak_pr(nomor: int, diharapkan: int | None = None, putaran: int | None = None) -> int:
     d = ambil_pr(nomor)
     comments = d.get("comments") or []
     reviews = d.get("reviews") or []
@@ -403,6 +477,7 @@ def cetak_pr(nomor: int, diharapkan: int | None = None) -> int:
     print(f"state: {d.get('state')} · head: {(d.get('headRefOid') or '')[:12]} · base: {d.get('baseRefName')}")
     print("=" * 78)
     kumpul: list[str] = []
+    pasangan: list[tuple[str, int | None]] = []      # (verdict, putaran) untuk laporan kuorum per putaran
     bukan_slot = 0
     if reviews:
         print(f"\n----- {len(reviews)} REVIEW -----")
@@ -412,6 +487,7 @@ def cetak_pr(nomor: int, diharapkan: int | None = None) -> int:
             if rb.strip():
                 v = simpulkan(rb)
                 kumpul.append(v)
+                pasangan.append((v, putaran_dari(rb)))
                 print(f"VERDICT (terbaca otomatis): {v}")
                 print(rb.strip())
     if comments:
@@ -426,6 +502,7 @@ def cetak_pr(nomor: int, diharapkan: int | None = None) -> int:
                 continue
             v = simpulkan(cb)
             kumpul.append(v)
+            pasangan.append((v, putaran_dari(cb)))
             print(f"VERDICT (terbaca otomatis): {v}")
             print(cb.strip())
     if not reviews and not comments:
@@ -441,7 +518,9 @@ def cetak_pr(nomor: int, diharapkan: int | None = None) -> int:
     if diharapkan is None:
         print("  (bila pemilik mengerahkan N hakim, jalankan dengan `--harapkan N`: verdict yang")
         print("   TIDAK SAMPAI akan terbaca sebagai KUORUM BELUM TERPENUHI, bukan sebagai hening)")
-    print(f"\n  >> HASIL GABUNGAN: {gabungkan(kumpul, diharapkan)}")
+    print(f"\n  >> HASIL GABUNGAN (SEMUA putaran, fail-closed): {gabungkan(kumpul, diharapkan)}")
+    print()
+    print(kuorum_putaran(pasangan, diharapkan, putaran))
     print("\n  Membaca verdict BUKAN menyetujuinya. Bertindak atas temuan tetap butuh keputusan pemilik,")
     print("  dan PR yang mengubah alat pengadil tidak boleh di-merge oleh reviewer (konflik kepentingan).")
     return 0
@@ -523,6 +602,24 @@ KASUS_GABUNG2 = [
     ("D-3: tanpa --harapkan perilaku lama tetap", ["HIJAU", "HIJAU"], None, "HIJAU"),
 ]
 
+# Temuan #3 hakim putaran 3 PR #74: kuorum PER PUTARAN. Slot lintas putaran menumpuk, jadi kuorum
+# yang dihitung dari seluruh slot tidak pernah bisa mengatakan "2 dari 3 hakim putaran 3 belum masuk".
+_P1, _P2, _P3 = ("MERAH", 1), ("MERAH", 2), ("MERAH", 3)
+KASUS_PUTARAN = [
+    ("kuorum putaran: 1 dari 3 verdict putaran 3 -> BELUM LENGKAP walau slot total 5",
+     [_P1, _P2, _P2, _P2, _P3], 3, None, "BELUM LENGKAP"),
+    ("kuorum putaran: 3 dari 3 putaran 3 -> LENGKAP",
+     [_P1, _P2, _P2, _P2, _P3, ("HIJAU", 3), ("MERAH", 3)], 3, None, "LENGKAP"),
+    ("kuorum putaran: --putaran memilih putaran lama, bukan yang terbaru",
+     [_P1, _P2, _P2, _P2, _P3, ("HIJAU", 4), ("HIJAU", 4), ("HIJAU", 4)], 3, 3, "BELUM LENGKAP"),
+    ("kuorum putaran: tanpa --harapkan tidak mengarang kuorum",
+     [_P1, _P2, _P3], None, None, "Kuorum TIDAK DINYATAKAN"),
+    ("kuorum putaran: verdict tanpa nomor putaran tidak hilang dan tidak dihitung sebagai kuorum",
+     [_P1, ("MERAH", None)], 3, None, "tanpa nomor putaran: 1 slot"),
+    ("kuorum putaran: putaran yang diminta tidak ada di kanal -> dinyatakan belum diserahkan",
+     [_P1, _P2], 3, 9, "TIDAK ADA slot hakim untuk putaran ini"),
+]
+
 # D-4: fixture untuk smoke test KANAL. --uji dulu hanya menguji fungsi murni, jadi NameError di
 # cetak_issue (kanal --issue DAN --terbaru) lolos dari uji sendiri.
 FIX_ISU = {
@@ -579,6 +676,22 @@ def uji() -> int:
         if not ok:
             print(f"        harapan awalan: {harap} · dapat: {got}")
             gagal += 1
+    for nama, pasangan, n, put, harap in KASUS_PUTARAN:
+        got = kuorum_putaran(pasangan, n, put)
+        ok = harap in got
+        print(f"  [{'OK ' if ok else 'GAGAL'}] {nama}")
+        if not ok:
+            print(f"        harapan memuat: {harap} · dapat: {got[:200]}")
+            gagal += 1
+    # MUTASI kuorum putaran: kalau perhitungan per putaran dilewatkan (semua slot dianggap satu
+    # putaran), kasus "1 dari 3 putaran 3" harus berubah jadi LENGKAP — bukti ujinya bukan tautologi.
+    _asli = kuorum_putaran([_P1, _P2, _P2, _P2, _P3], 3, None)
+    _palsu = kuorum_putaran([(v, 3) for v, _r in [_P1, _P2, _P2, _P2, _P3]], 3, None)
+    _mutasi_ok = ("BELUM LENGKAP" in _asli) and ("BELUM LENGKAP" not in _palsu)
+    print(f"  [{'OK ' if _mutasi_ok else 'GAGAL'}] MUTASI kuorum putaran: nomor putaran diabaikan -> "
+          f"laporan kuorum berubah (bukti uji tidak tautologis)")
+    if not _mutasi_ok:
+        gagal += 1
 
     # MUTASI 1 — kembalikan kosakata lama (tanpa MERAH/HIJAU). Uji verdict review harus
     # GAGAL; kalau tidak, uji ini tautologi (persis cacat RP5b yang pernah ditemukan di
@@ -668,13 +781,15 @@ def uji() -> int:
     if bocor5 < 1:
         gagal += 1
 
-    total = len(KASUS) + len(KASUS_GABUNG) + len(KASUS_SLOT) + len(KASUS_GABUNG2) + 6
+    total = (len(KASUS) + len(KASUS_GABUNG) + len(KASUS_SLOT) + len(KASUS_GABUNG2)
+             + len(KASUS_PUTARAN) + 7)
     if gagal:
         print(f"\nHASIL: {gagal} GAGAL dari {total} pemeriksaan")
         return 1
     print(f"\nHASIL: PASS {total}/{total} pemeriksaan "
           f"({len(KASUS)} pembacaan + {len(KASUS_GABUNG) + len(KASUS_GABUNG2)} agregasi "
-          f"+ {len(KASUS_SLOT)} klasifikasi slot + 5 mutasi + 1 smoke kanal)")
+          f"+ {len(KASUS_SLOT)} klasifikasi slot + {len(KASUS_PUTARAN)} kuorum per putaran "
+          f"+ 6 mutasi + 1 smoke kanal)")
     return 0
 
 def main() -> int:
@@ -690,6 +805,9 @@ def main() -> int:
     g.add_argument("--daftar", action="store_true", help="daftar kandidat audit-isi tanpa mencetak isi")
     g.add_argument("--berkas", metavar="PATH", help="ambil hasil audit dari berkas ter-commit (kanal git)")
     ap.add_argument("--objek", help="saring berdasarkan objek, mis. `_meta` atau `sistem/sistem-klinik`")
+    ap.add_argument("--putaran", type=int, metavar="R",
+                    help="putaran yang hendak diputus untuk laporan kuorum (default: putaran terbaru "
+                         "yang ada di kanal)")
     ap.add_argument("--harapkan", type=int, metavar="N",
                     help="KUORUM (D-3): jumlah hakim yang sungguh dikerahkan pemilik. Slot terbaca "
                          "< N = KUORUM BELUM TERPENUHI dan hasil tidak pernah hijau")
@@ -705,7 +823,7 @@ def main() -> int:
         if a.uji:
             return uji()
         if a.pr:
-            return cetak_pr(a.pr, a.harapkan)
+            return cetak_pr(a.pr, a.harapkan, a.putaran)
         if a.issue:
             return cetak_issue(a.issue, a.harapkan)
 

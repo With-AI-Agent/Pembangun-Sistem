@@ -98,6 +98,38 @@ for p in ROOT.rglob("*.md"):
 TABEL_VENDOR = ("skills", "node_modules", "backups", "template_clean", ".git", "__pycache__")
 SEP_TABLE_RE = re.compile(r"^\|(?:\s*:?-+:?\s*\|)+\s*$")
 
+# --- Berkas BUKTI HISTORIS: append-only menang atas kosmetika tabel ---------------------------------
+# Keputusan pemilik 18 Sep 2026 (opsi A), menutup temuan yang dilaporkan KETIGA hakim putaran 3 PR #74:
+# penjaga integritas tabel (T-47) mewajibkan pipa di dalam sel di-escape, sedangkan aturan append-only
+# melarang suntingan pada berkas bukti. Dua aturan itu saling mengunci, dan yang terjadi adalah riwayat
+# tersunting (2 baris `sistem/sistem-konten-kreator/ACCEPTANCE_TEST_LOG.md`, terukur `2 2` di numstat).
+# Keduanya sudah dikembalikan ke byte asli (diff-nya terhadap merge-base kini KOSONG), dan kelas berkas
+# ini dikecualikan dari PAKSAAN suntingan: cacat tabel di berkas bukti historis dicetak sebagai
+# PERINGATAN, bukan kegagalan. Dokumen hidup/normatif (manifest, protokol, register, ledger, DoD,
+# indeks, dokumen sistem) TETAP kegagalan keras — pengecualian ini sempit dan disebut eksplisit.
+# Sebabnya prinsip, bukan kenyamanan: bukti yang boleh dirapikan bukan bukti lagi.
+POLA_BUKTI_HISTORIS = (
+    re.compile(r"(?:^|/)ACCEPTANCE_TEST_LOG\.md$"),
+    re.compile(r"(?:^|/)LOG_SESI_[^/]*\.md$"),
+    re.compile(r"(?:^|/)DISKUSI_MENTAH_[^/]*\.md$"),
+    re.compile(r"(?:^|/)SESSION_REPORT_[^/]*\.md$"),
+    re.compile(r"(?:^|/)PILOT_REPORT_[^/]*\.md$"),
+    re.compile(r"(?:^|/)BEHAVIORAL_AUDIT_[^/]*\.md$"),
+    re.compile(r"(?:^|/)REGRESSION_AUDIT_[^/]*\.md$"),
+    re.compile(r"(?:^|/)AUDIT_[^/]*_\d{4}-\d{2}-\d{2}\.md$"),
+    re.compile(r"(?:^|/)_log-sesi/"),
+    re.compile(r"(?:^|/)_internal/arsip-"),
+)
+
+
+def berkas_bukti_historis(rel: str) -> bool:
+    """True kalau `rel` adalah rekaman peristiwa (append-only), bukan dokumen hidup/normatif."""
+    r = (rel or "").replace("\\", "/")
+    return any(p.search(r) for p in POLA_BUKTI_HISTORIS)
+
+
+tabel_warnings: list = []
+
 
 def _kolom(baris: str) -> int:
     """Jumlah sel: pipa yang TIDAK di-escape (`\|` adalah pipa literal di dalam sel)."""
@@ -113,24 +145,36 @@ def _berkas_markdown_own():
         yield str(_rel).replace("\\", "/"), _p
 
 
-def _nilai_blok_tabel(rel, blok, errors):
-    """Nilai satu blok baris pipa berurutan: tabel sehat, kolom salah, atau baris yatim."""
+AWALAN_WARNING_BUKTI = ("WARNING tabel (berkas bukti historis — append-only menang atas kosmetika "
+                        "tabel, keputusan pemilik 18 Sep 2026; JANGAN sunting riwayatnya): ")
+
+
+def _nilai_blok_tabel(rel, blok, errors, warnings=None):
+    """Nilai satu blok baris pipa berurutan: tabel sehat, kolom salah, atau baris yatim.
+
+    Untuk **berkas bukti historis** (`berkas_bukti_historis`) temuan dialihkan ke `warnings` — bukan
+    karena cacatnya tidak nyata, tetapi karena memperbaikinya berarti MENYUNTING riwayat, dan itu
+    dilarang (keputusan pemilik 18 Sep 2026, opsi A). Semua berkas lain tetap masuk `errors`.
+    """
     if not blok:
         return
+    _bukti = warnings is not None and berkas_bukti_historis(rel)
+    tujuan = warnings if _bukti else errors
+    awalan = AWALAN_WARNING_BUKTI if _bukti else ""
     if len(blok) >= 2 and SEP_TABLE_RE.match(blok[1][1]):
         harap = _kolom(blok[0][1])
         for no, teks in blok[2:]:
             if _kolom(teks) != harap:
-                errors.append(
-                    f"{rel}:{no}: baris tabel punya {_kolom(teks)} kolom padahal header tabelnya "
+                tujuan.append(
+                    f"{awalan}{rel}:{no}: baris tabel punya {_kolom(teks)} kolom padahal header tabelnya "
                     f"{harap} — baris patah/tersisip salah tempat, atau ada pipa di dalam sel yang "
                     "belum di-escape sebagai \\|"
                 )
         return
     for no, teks in blok:
-        errors.append(
-            f"{rel}:{no}: BARIS TABEL YATIM — baris `|…|` yang tidak punya header+pemisah tabel di "
-            f"atasnya ({teks[:60]}). Sebab umumnya: tersisip di tengah prosa, atau terputus dari "
+        tujuan.append(
+            f"{awalan}{rel}:{no}: BARIS TABEL YATIM — baris `|…|` yang tidak punya header+pemisah tabel "
+            f"di atasnya ({teks[:60]}). Sebab umumnya: tersisip di tengah prosa, atau terputus dari "
             "tabelnya oleh baris kosong / garis `---`. Di Markdown ini dirender sebagai TEKS BIASA, "
             "jadi datanya ada di berkas tetapi tidak pernah tampil sebagai tabel"
         )
@@ -144,7 +188,7 @@ for _rel, _path in _berkas_markdown_own():
         _s = _line.strip()
         if _s.startswith("```"):
             _pagar = not _pagar
-            _nilai_blok_tabel(_rel, _blok, errors)
+            _nilai_blok_tabel(_rel, _blok, errors, tabel_warnings)
             _blok = []
             continue
         if _pagar:
@@ -152,9 +196,9 @@ for _rel, _path in _berkas_markdown_own():
         if _s.startswith("|") and _s.endswith("|"):
             _blok.append((_no, _s))
             continue
-        _nilai_blok_tabel(_rel, _blok, errors)
+        _nilai_blok_tabel(_rel, _blok, errors, tabel_warnings)
         _blok = []
-    _nilai_blok_tabel(_rel, _blok, errors)
+    _nilai_blok_tabel(_rel, _blok, errors, tabel_warnings)
 
 # --- Volatile corpus counts are forbidden in permanent evidence (C5/AT-16) --
 manifest_path = ROOT / "_meta/SYSTEM_MANIFEST.md"
@@ -596,7 +640,10 @@ print(
 print(f"SYSTEMS CHECKED (inheritance contract): {len(index_folders)} registered + pilot excluded by design")
 for w in ref_warnings:
     print(w)
-if ref_warnings:
-    print(f"WARNINGS: {len(ref_warnings)} (warning tier, exit code unaffected)")
+for w in tabel_warnings:
+    print(w)
+_jumlah_warning = len(ref_warnings) + len(tabel_warnings)
+if _jumlah_warning:
+    print(f"WARNINGS: {_jumlah_warning} (warning tier, exit code unaffected)")
 else:
     print("WARNINGS: none")

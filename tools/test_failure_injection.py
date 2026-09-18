@@ -271,6 +271,71 @@ def klaim_total(baris: str) -> int:
             + len(re.findall(r"PASSED:\s*\d+\s+scenarios", baris)))
 
 
+def bandingkan_jumlah_dokumen(teks_doc: str, komponen: list, total_aktual: int,
+                              di_ekstrak: bool) -> list:
+    """Bandingkan baris `**Jumlah:**` dokumen inventaris dengan cetakan alat. MURNI: tanpa SystemExit.
+
+    Mengembalikan daftar pesan kegagalan (kosong = sinkron). Dipisah dari `run()` supaya **bisa diuji** —
+    dan itu bukan soal kerapian: temuan #1 hakim putaran 3 PR #74 membuktikan pembanding ini tidak
+    pernah jalan di mode ekstrak, karena seluruh bloknya terbungkus `if not FI_SKIP_NESTED` padahal
+    satu-satunya pemanggil yang menjalankan ekstrak (`build_template.smoke_extract`) justru menyetel
+    `FI_SKIP_NESTED=1`. Terukur: dokumen menulis "16 di ekstrak template (15 sintetis + 1 unit nyata
+    benih)" sementara cetakan ekstrak 25 (24 sintetis + 1 unit) — dan tidak ada satu alat pun protes.
+
+    Pengetatan **D-2c** (baru, dari temuan yang sama): klaim jumlah ekstrak harus **TEPAT SATU**. Di
+    dokumen repo ini klaim itu terganda dua kali pada baris yang sama; dua angka di satu baris adalah
+    pola yang sudah ditutup D-2b untuk angka master, jadi penutupannya disamakan.
+    """
+    gagal: list = []
+    if di_ekstrak:
+        semua = re.findall(r"(\d+)\s*di ekstrak template\s*\(([^)]*)\)", teks_doc or "")
+        if len(semua) > 1:
+            gagal.append(
+                f"D-2c: baris jumlah memuat {len(semua)} klaim 'di ekstrak template' "
+                f"({[a for a, _b in semua]}) — harus TEPAT 1. Dua angka di satu dokumen bisa saling "
+                "membantah; buang yang duplikat/basi, JANGAN melonggarkan penghitung ini.")
+        m = re.search(r"(\d+)\s*di ekstrak template\s*\(([^)]*)\)", teks_doc or "")
+        pola = "**Jumlah:** ... N di ekstrak template (...)"
+    else:
+        m = re.search(r"^\*\*Jumlah:\*\*\s*(\d+)\s*skenario di master\s*\(([^)]*)\)",
+                      teks_doc or "", re.M)
+        pola = "**Jumlah:** N skenario di master (...)"
+    if not m:
+        gagal.append(f"D-2: baris '{pola}' tidak ditemukan/tidak terparse "
+                     "di _meta/FAILURE_INJECTION_TESTS.md")
+        return gagal
+    baris = next((l for l in (teks_doc or "").splitlines() if l.startswith("**Jumlah:**")), "")
+    n_klaim = klaim_total(baris)
+    if n_klaim != 1:
+        gagal.append(
+            f"D-2b: baris '**Jumlah:**' di _meta/FAILURE_INJECTION_TESTS.md memuat {n_klaim} klaim total "
+            "(harus TEPAT 1). Dokumen yang membantah dirinya sendiri di satu baris tidak bisa jadi "
+            "acuan. Buang total yang basi — JANGAN melonggarkan penghitung `klaim_total()`, dan jangan "
+            "menghapus riwayat penambahan (riwayat bukan klaim total).")
+        return gagal
+    angka_doc, aktual, hilang = [], [], []
+    for label, nilai in komponen:
+        mm = re.search(rf"(\d+)\s+{re.escape(label)}", m.group(2))
+        if not mm:
+            hilang.append(label)
+        else:
+            angka_doc.append(int(mm.group(1)))
+        aktual.append(nilai)
+    if hilang:
+        gagal.append(f"D-2: komponen tidak ditemukan di baris '**Jumlah:**' dokumen: {hilang}. "
+                     "Penjaga ini menolak menebak — perbaiki label di dokumen atau di penjaga.")
+        return gagal
+    if gagal:
+        return gagal
+    if int(m.group(1)) != total_aktual or angka_doc != aktual:
+        gagal.append(
+            f"D-2: jumlah skenario tidak sinkron dengan _meta/FAILURE_INJECTION_TESTS.md baris "
+            f"'**Jumlah:**' — dokumen menulis {m.group(1)} ({angka_doc}), alat mencetak "
+            f"{total_aktual} ({aktual}). Perbarui DOKUMENNYA dari cetakan alat; JANGAN mengurangi "
+            "skenario atau menggeser pin agar cocok dengan angka lama.")
+    return gagal
+
+
 def _load_review_prompt(repo: Path, module_name: str):
     spec = importlib.util.spec_from_file_location(module_name, repo / "tools" / "review_prompt.py")
     if spec is None or spec.loader is None:
@@ -366,8 +431,21 @@ def review_prompt_scenarios(base_dir: Path):
         and joined.count("`_meta/00_CARA_KERJA_META.md`") == 1,
     ))
 
-    # Mutasi RP2: kembalikan filter lama yang hanya menerima .md ber-slash.
+    # Mutasi RP2: kembalikan perilaku LAMA sepenuhnya. Dua perubahan perlu, bukan satu: sesudah
+    # cabang catch-all dipasang (temuan #6 hakim putaran 3), berkas yang jatuh dari filter `.md`
+    # tertangkap cabang terakhir, sehingga mutasi versi lama menjadi NO-OP dan uji ini kehilangan
+    # giginya (terukur 18 Sep 2026: RP2 GAGAL sesudah catch-all ada). Jadi mutasinya harus meniru
+    # kode lama apa adanya: filter `.md` dipersempit DAN catch-all dimatikan.
     mutated = original.replace('elif rel.endswith(".md"):', 'elif rel.endswith(".md") and "/" in rel:')
+    mutated = mutated.replace("""        else:
+            # Temuan hakim putaran 3 PR #74 (#6):""", """        elif False:
+            # Temuan hakim putaran 3 PR #74 (#6):""")
+    assert mutated != original, "mutasi RP2 tidak mengubah apa pun - uji tidak valid"
+    # Sesudah mutasi pola itu muncul DUA kali: cabang ".md ber-slash" yang memang sudah ada, dan
+    # cabang ".md root" yang baru dipersempit. Yang wajib hilang adalah cabang lama yang tak bersyarat.
+    assert mutated.count('elif rel.endswith(".md") and "/" in rel:') == 2, "mutasi RP2 filter .md tidak masuk"
+    assert 'elif rel.endswith(".md"):' not in mutated, "cabang .md root yang lama masih ada - mutasi gagal"
+    assert "        elif False:\n            # Temuan hakim putaran 3" in mutated, "mutasi RP2 catch-all tidak masuk"
     rp_path.write_text(mutated, encoding="utf-8")
     rp_mut = _load_review_prompt(cp, "review_prompt_mut_rp2")
     order_mut = "\n".join(rp_mut.reading_order(files))
@@ -986,6 +1064,110 @@ def review_prompt_scenarios(base_dir: Path):
         url13 is None and "slug repo tidak terbaca" in cat13,
     ))
 
+    # ------------------------------------------------------------------
+    # RP14 - putaran yang SEDANG BERJALAN tidak boleh dinamai sebagai putaran berikutnya (temuan #2
+    # hakim putaran 3 PR #74, P1). Cacat nyatanya terukur: begitu SATU hakim putaran 3 menempel
+    # verdictnya, `review_prompt.py --pr 74` pada head yang sama mencetak "putaran 4" tiga kali,
+    # padahal pemilik membuka putaran 3 dan dua hakim lain masih bekerja di bawah teks "putaran 3".
+    # ------------------------------------------------------------------
+    H_UJI = "f683db8" + "0" * 33
+
+    def _verd(r, head=None):
+        t = f"## Review independen PR #74 — putaran {r} — VERDICT: MERAH\n"
+        if head:
+            t += f"\nHead yang diputuskan: `{head}`\n"
+        return {"body": t}
+
+    kanal_1dari3 = {"comments": [_verd(1), _verd(2), _verd(2), _verd(2), _verd(3, H_UJI)], "reviews": []}
+    kanal_3dari3 = {"comments": [_verd(1), _verd(2), _verd(2), _verd(2),
+                                 _verd(3, H_UJI), _verd(3, H_UJI), _verd(3, H_UJI)], "reviews": []}
+    checks.append((
+        "RP14a kuorum putaran belum lengkap (1 dari 3) -> prompt menamai putaran yang berjalan, bukan +1",
+        rp.hitung_putaran(kanal_1dari3, 3, H_UJI) == 3,
+    ))
+    checks.append((
+        "RP14b kuorum lengkap TAPI head belum bergerak sejak verdict -> tetap putaran yang berjalan",
+        rp.hitung_putaran(kanal_3dari3, 3, H_UJI) == 3,
+    ))
+    checks.append((
+        "RP14c kuorum lengkap DAN head sudah bergerak (koreksi masuk) -> putaran berikutnya",
+        rp.hitung_putaran(kanal_3dari3, 3, "9" * 40) == 4,
+    ))
+    checks.append((
+        "RP14d kuorum yang lebih besar dihormati (5 hakim, baru 3 masuk) -> masih putaran berjalan",
+        rp.hitung_putaran(kanal_3dari3, 5, "9" * 40) == 3,
+    ))
+    checks.append((
+        "RP14e komentar penulis yang menyebut 'putaran 9' tidak dihitung sebagai slot -> putaran 1",
+        rp.hitung_putaran({"comments": [{"body": "## Tanggapan penulis atas verdict putaran 9\n"}],
+                           "reviews": []}, 3, H_UJI) == 1,
+    ))
+
+    # ------------------------------------------------------------------
+    # RP15 - urutan baca wajib memuat SETIAP berkas yang berubah (temuan #6 hakim putaran 3).
+    # Terukur pada PR ini: 58 dari 60 berkas masuk daftar; yang jatuh persis dua berkas non-Markdown
+    # di luar tools/ - `_meta/_internal/uji/uji_upscaling.py` dan
+    # `sistem/sistem-undangan/_sistem/validate_system.py`.
+    # ------------------------------------------------------------------
+    files15 = ["_meta/00_CARA_KERJA_META.md", "_meta/_internal/uji/uji_upscaling.py",
+               "sistem/sistem-undangan/_sistem/validate_system.py", "data/konfig.json", "CATATAN.md"]
+    order15 = "\n".join(rp.reading_order(files15))
+    checks.append((
+        "RP15a setiap berkas yang berubah masuk urutan baca (non-Markdown di luar tools/ tidak jatuh)",
+        all(f in order15 for f in files15),
+    ))
+    checks.append((
+        "RP15b tidak ada berkas ganda dan urutan tetap diawali pegangan wajib",
+        order15.count("`CATATAN.md`") == 1 and order15.count("uji_upscaling.py") == 1
+        and rp.reading_order(files15)[0].startswith("`LOG_SESI_"),
+    ))
+    # Mutasi RP15: buang cabang catch-all -> dua berkas non-Markdown di luar tools/ harus JATUH.
+    mut15 = original.replace(
+        '''        else:
+            # Temuan hakim putaran 3 PR #74 (#6): semua cabang di atas hanya menerima `*.md` (plus apa''',
+        '''        elif False:
+            # Temuan hakim putaran 3 PR #74 (#6): semua cabang di atas hanya menerima `*.md` (plus apa''')
+    assert mut15 != original, "mutasi RP15 tidak mengubah apa pun - uji tidak valid"
+    rp_path.write_text(mut15, encoding="utf-8")
+    rp_mut15 = _load_review_prompt(cp, "review_prompt_mut_rp15")
+    order15_mut = "\n".join(rp_mut15.reading_order(files15))
+    checks.append((
+        "RP15c diuji-mutasi: cabang catch-all dibuang -> berkas non-Markdown di luar tools/ jatuh",
+        "uji_upscaling.py" not in order15_mut and "validate_system.py" not in order15_mut,
+    ))
+    rp_path.write_text(original, encoding="utf-8")
+
+    # ------------------------------------------------------------------
+    # RP16 - ujung base: nilai BEKU dari API tidak boleh dilabeli "SEKARANG" (temuan #7 hakim
+    # putaran 3). Terukur: main bergerak ke 26147e1 (PR lain merge 13:35Z) sementara `.base.sha`
+    # PR #74 tetap c1d00c3, dan prompt menulis "hanya di (B): 0 berkas" padahal selisih terhadap
+    # ujung main yang sebenarnya memuat 11 berkas tambahan.
+    # ------------------------------------------------------------------
+    t16a, p16a = rp.baris_ujung_base("c1d00c3" + "0" * 33, {
+        "sha": "26147e1" + "0" * 33, "waktu_utc": "2026-09-18T14:00:00Z",
+        "sumber": "git ls-remote origin refs/heads/main", "kesalahan": []})
+    checks.append((
+        "RP16a base bergerak -> dinyatakan BERGERAK + waktu ukur, dan base PR dilabeli BEKU (bukan SEKARANG)",
+        any("BASE SUDAH BERGERAK" in x for x in p16a)
+        and any("BEKU sejak PR dibuat" in x for x in t16a)
+        and any("2026-09-18T14:00:00Z" in x for x in t16a)
+        and not any("SEKARANG" in x for x in t16a),
+    ))
+    t16b, p16b = rp.baris_ujung_base(SHA_UJI, {
+        "sha": SHA_UJI, "waktu_utc": "2026-09-18T14:00:00Z", "sumber": "git ls-remote", "kesalahan": []})
+    checks.append((
+        "RP16b base tidak bergerak -> dinyatakan sama DAN tetap menyuruh ukur ulang sebelum menyimpulkan",
+        any("sama" in x for x in p16b) and not any("BASE SUDAH BERGERAK" in x for x in p16b)
+        and any("ukur ulang" in x for x in p16b),
+    ))
+    t16c, p16c = rp.baris_ujung_base(SHA_UJI, {
+        "sha": None, "waktu_utc": None, "sumber": None, "kesalahan": ["ujung branch tidak terbaca"]})
+    checks.append((
+        "RP16c ujung base tak terukur -> TIDAK TERUKUR dinyatakan + perintah ukur (fail-closed, tak disamakan)",
+        any("TIDAK TERUKUR" in x for x in t16c) and any("git ls-remote" in x for x in p16c)
+        and not any("sama" in x for x in p16c),
+    ))
+
     return checks
 
 
@@ -1446,6 +1628,36 @@ def table_integrity_scenarios(base_dir: Path):
         "TI5 tabel rusak di folder vendor skills/ dikecualikan -> validator tetap PASS",
         rc5 == 0 and "FI_RUSAK_SENGAJA" not in out5,
     ))
+
+    # TI6 - berkas BUKTI HISTORIS: cacat tabel jadi PERINGATAN, bukan kegagalan (keputusan pemilik
+    # 18 Sep 2026, opsi A; menutup temuan yang dilaporkan KETIGA hakim putaran 3 PR #74). Dua aturan
+    # saling mengunci: penjaga tabel mewajibkan pipa di dalam sel di-escape, append-only melarang
+    # suntingan riwayat. Yang menang append-only - bukti yang boleh dirapikan bukan bukti lagi.
+    BUKTI = cp / "sistem" / "sistem-konten-kreator" / "ACCEPTANCE_TEST_LOG.md"
+    assert BUKTI.is_file(), f"berkas bukti historis untuk TI6 tidak ada: {BUKTI}"
+    rc6, out6 = _run_validator(cp)
+    asli_bukti = BUKTI.read_text(encoding="utf-8")
+    BUKTI.write_text(asli_bukti.rstrip("\n") + "\n\n| A | B |\n\n| C |\n", encoding="utf-8")
+    rc6b, out6b = _run_validator(cp)
+    checks.append((
+        "TI6 cacat tabel di berkas bukti historis -> PERINGATAN (validator tetap PASS, append-only menang)",
+        rc6 == 0 and "berkas bukti historis" in out6
+        and rc6b == 0 and "berkas bukti historis" in out6b and "BARIS TABEL YATIM" in out6b,
+    ))
+    BUKTI.write_text(asli_bukti, encoding="utf-8")
+
+    # TI7 - pengecualian itu SEMPIT: cacat yang sama di dokumen hidup/normatif tetap KEGAGALAN.
+    # Tanpa uji ini TI6 bisa dibaca sebagai "penjaga tabel dilonggarkan untuk semua berkas".
+    HIDUP = cp / "_meta" / "FI_RUSAK_SENGAJA.md"
+    HIDUP.write_text("# tabel rusak sengaja di dokumen hidup (uji TI7)\n\n"
+                     "| A | B | C |\n|---|---|---|\n| D | E |\n", encoding="utf-8")
+    rc7, out7 = _run_validator(cp)
+    baris7 = [l for l in out7.splitlines() if "FI_RUSAK_SENGAJA" in l and "kolom padahal header" in l]
+    checks.append((
+        "TI7 cacat yang sama di dokumen HIDUP (bukan bukti historis) -> tetap KEGAGALAN tanpa awalan WARNING",
+        rc7 != 0 and baris7 and not any("WARNING" in l for l in baris7),
+    ))
+    HIDUP.unlink()
     return checks
 
 
@@ -1659,6 +1871,45 @@ def run():
     checks.append(("CORE_REQUIRED tidak punya entri ganda",
                    len(core.CORE_REQUIRED) == len(set(core.CORE_REQUIRED))))
 
+    # D-2 sebagai fungsi murni: diuji langsung, karena cacat #1 hakim putaran 3 justru berupa
+    # pembanding yang TIDAK PERNAH DIJALANKAN. Uji perilaku, bukan keberadaan teks.
+    _doc_m = "**Jumlah:** 100 skenario di master (60 sintetis + 40 unit nyata)\n"
+    _doc_e = ("**Jumlah:** 100 skenario di master (60 sintetis + 40 unit nyata) 25 di ekstrak template "
+              "(24 sintetis + 1 unit nyata benih)\n")
+    _doc_e_ganda = _doc_e + " 25 di ekstrak template (24 sintetis + 1 unit nyata benih)\n"
+    _komp_m = [("sintetis", 60), ("unit nyata", 40)]
+    _komp_e = [("sintetis", 24), ("unit nyata", 1)]
+    checks.append((
+        "D-2 murni: dokumen sinkron dengan cetakan alat -> tidak ada kegagalan (master dan ekstrak)",
+        bandingkan_jumlah_dokumen(_doc_m, _komp_m, 100, False) == []
+        and bandingkan_jumlah_dokumen(_doc_e, _komp_e, 25, True) == [],
+    ))
+    checks.append((
+        "D-2 murni: total dokumen salah -> kegagalan yang menyebut angka dokumen DAN angka alat",
+        len(bandingkan_jumlah_dokumen(_doc_m, _komp_m, 101, False)) == 1
+        and "100" in bandingkan_jumlah_dokumen(_doc_m, _komp_m, 101, False)[0]
+        and "101" in bandingkan_jumlah_dokumen(_doc_m, _komp_m, 101, False)[0],
+    ))
+    checks.append((
+        "D-2 murni: mode EKSTRAK membaca baris ekstrak, dan angka ekstrak salah -> terdeteksi "
+        "(cacat nyata: 16 di dokumen vs 25 cetakan, dulu tak terjangkau)",
+        len(bandingkan_jumlah_dokumen(_doc_e, _komp_e, 16, True)) == 1
+        and len(bandingkan_jumlah_dokumen(
+            _doc_e.replace("25 di ekstrak template (24 sintetis", "16 di ekstrak template (15 sintetis"),
+            [("sintetis", 15), ("unit nyata", 1)], 25, True)) == 1,
+    ))
+    checks.append((
+        "D-2c murni: klaim ekstrak TERGANDA -> kegagalan (dua angka di satu dokumen bisa saling membantah)",
+        any("D-2c" in g for g in bandingkan_jumlah_dokumen(_doc_e_ganda, _komp_e, 25, True))
+        and not any("D-2c" in g for g in bandingkan_jumlah_dokumen(_doc_e, _komp_e, 25, True)),
+    ))
+    checks.append((
+        "D-2 murni: baris jumlah hilang / komponen tak berlabel -> menolak menebak, bukan lolos diam-diam",
+        any("tidak ditemukan" in g for g in bandingkan_jumlah_dokumen("tanpa baris jumlah\n", _komp_m, 1, False))
+        and any("komponen tidak ditemukan" in g
+                for g in bandingkan_jumlah_dokumen(_doc_m, [("sintetis", 60), ("label asing", 1)], 100, False)),
+    ))
+
     n_synth = len(checks)
 
     # Regression against REAL repo data (F3): every registered system must
@@ -1715,70 +1966,33 @@ def run():
     # grup regresi tidak dijalankan, jadi ketiganya kosong. Versi pertama penjaga ini hanya
     # membandingkan angka master (74) dan membuat smoke extract GAGAL karena di sana jumlahnya 16.
     _di_ekstrak = not (reg or sc_checks or rp_checks or ti_checks)
-    if not os.environ.get("FI_SKIP_NESTED"):
-        doc = ROOT / "_meta" / "FAILURE_INJECTION_TESTS.md"
-        if not doc.is_file():
-            print("FAILURE-INJECTION TESTS FAILED")
-            print(f"- D-2: dokumen inventaris tidak ditemukan: {doc}")
-            raise SystemExit(1)
-        _teks_doc = doc.read_text(encoding="utf-8")
-        if _di_ekstrak:
-            m = re.search(r"(\d+)\s*di ekstrak template\s*\(([^)]*)\)", _teks_doc)
-            _pola = "**Jumlah:** ... N di ekstrak template (...)"
-        else:
-            m = re.search(r"^\*\*Jumlah:\*\*\s*(\d+)\s*skenario di master\s*\(([^)]*)\)",
-                          _teks_doc, re.M)
-            _pola = "**Jumlah:** N skenario di master (...)"
-        if not m:
-            print("FAILURE-INJECTION TESTS FAILED")
-            print(f"- D-2: baris '{_pola}' tidak ditemukan/tidak terparse "
-                  f"di _meta/FAILURE_INJECTION_TESTS.md")
-            raise SystemExit(1)
-        # D-2b (pengetatan 18 Sep 2026): baris itu harus memuat TEPAT SATU klaim total.
-        # Berlaku di KEDUA mode (master dan ekstrak): dokumennya berkas yang sama, dan
-        # uji ujung-ke-ujung D-2b juga dijalankan di dalam ekstrak oleh build_template.
-        _baris_jumlah = next((l for l in _teks_doc.splitlines()
-                              if l.startswith("**Jumlah:**")), "")
-        _n_klaim = klaim_total(_baris_jumlah)
-        if _n_klaim != 1:
-            print("FAILURE-INJECTION TESTS FAILED")
-            print(
-                f"- D-2b: baris '**Jumlah:**' di _meta/FAILURE_INJECTION_TESTS.md memuat "
-                f"{_n_klaim} klaim total (harus TEPAT 1). Dokumen yang membantah dirinya "
-                "sendiri di satu baris tidak bisa jadi acuan. Buang total yang basi — "
-                "JANGAN melonggarkan penghitung `klaim_total()`, dan jangan menghapus "
-                "riwayat penambahan (riwayat bukan klaim total)."
-            )
-            raise SystemExit(1)
-        # Parsing PER KOMPONEN BERNAMEKA, bukan "ambil semua angka": versi pertama penjaga ini
-        # memakai re.findall(r"\d+") dan ikut menangkap angka 11 dari label "regresi review PR-11",
-        # sehingga penjaganya sendiri melaporkan selisih palsu. Tertangkap oleh uji pertamanya.
-        komponen = [("sintetis", n_synth), ("unit nyata", len(real))]
-        if not _di_ekstrak:
-            komponen += [("regresi review PR-11", len(reg)),
-                         ("regresi check_selfcontained", len(sc_checks)),
-                         ("regresi review_prompt", len(rp_checks)),
-                         ("regresi integritas tabel", len(ti_checks))]
-        angka_doc, aktual, hilang = [], [], []
-        for label, nilai in komponen:
-            mm = re.search(rf"(\d+)\s+{re.escape(label)}", m.group(2))
-            if not mm:
-                hilang.append(label)
-            else:
-                angka_doc.append(int(mm.group(1)))
-            aktual.append(nilai)
-        if hilang:
-            print("FAILURE-INJECTION TESTS FAILED")
-            print(f"- D-2: komponen tidak ditemukan di baris '**Jumlah:**' dokumen: {hilang}. "
-                  f"Penjaga ini menolak menebak — perbaiki label di dokumen atau di penjaga.")
-            raise SystemExit(1)
-        if int(m.group(1)) != len(checks) or angka_doc != aktual:
-            print("FAILURE-INJECTION TESTS FAILED")
-            print(f"- D-2: jumlah skenario tidak sinkron dengan _meta/FAILURE_INJECTION_TESTS.md baris "
-                  f"'**Jumlah:**' — dokumen menulis {m.group(1)} ({angka_doc}), alat mencetak "
-                  f"{len(checks)} ({aktual}). Perbarui DOKUMENNYA dari cetakan alat; "
-                  f"JANGAN mengurangi skenario atau menggeser pin agar cocok dengan angka lama.")
-            raise SystemExit(1)
+    # Penjaga D-2/D-2b/D-2c jalan TANPA SYARAT — juga di mode ekstrak. Versi sebelumnya membungkus
+    # seluruh pembanding di dalam `if not FI_SKIP_NESTED`, padahal satu-satunya pemanggil yang
+    # menjalankan ekstrak (build_template.smoke_extract) justru menyetel FI_SKIP_NESTED=1; jadi cabang
+    # ekstrak tidak pernah terjangkau dan angka ekstrak di dokumen boleh salah tanpa satu pun alat
+    # protes (temuan #1 hakim putaran 3 PR #74: dokumen 16, cetakan ekstrak 25). Yang dilewati di
+    # ekstrak hanyalah PEMBANGKIT grup regresi (butuh salinan repo), bukan pembandingnya.
+    doc = ROOT / "_meta" / "FAILURE_INJECTION_TESTS.md"
+    if not doc.is_file():
+        print("FAILURE-INJECTION TESTS FAILED")
+        print(f"- D-2: dokumen inventaris tidak ditemukan: {doc}")
+        raise SystemExit(1)
+    # Parsing PER KOMPONEN BERNAMEKA, bukan "ambil semua angka": versi pertama penjaga ini memakai
+    # re.findall(r"\d+") dan ikut menangkap angka 11 dari label "regresi review PR-11", sehingga
+    # penjaganya sendiri melaporkan selisih palsu. Tertangkap oleh uji pertamanya.
+    komponen = [("sintetis", n_synth), ("unit nyata", len(real))]
+    if not _di_ekstrak:
+        komponen += [("regresi review PR-11", len(reg)),
+                     ("regresi check_selfcontained", len(sc_checks)),
+                     ("regresi review_prompt", len(rp_checks)),
+                     ("regresi integritas tabel", len(ti_checks))]
+    _gagal_d2 = bandingkan_jumlah_dokumen(doc.read_text(encoding="utf-8"), komponen,
+                                          len(checks), _di_ekstrak)
+    if _gagal_d2:
+        print("FAILURE-INJECTION TESTS FAILED")
+        for _g in _gagal_d2:
+            print(f"- {_g}")
+        raise SystemExit(1)
 
     failed = [name for name, ok in checks if not ok]
     if failed:

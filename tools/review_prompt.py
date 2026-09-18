@@ -32,6 +32,7 @@ import json
 import re
 import subprocess
 import sys
+from datetime import datetime, timezone
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[1]
@@ -40,6 +41,11 @@ PLACEHOLDER_PR = "<NOMOR PR>"
 PLACEHOLDER_BASE = "<BASE SHA>"
 PLACEHOLDER_HEAD = "<HEAD SHA>"
 PLACEHOLDER_MERGE_BASE = "<MERGE-BASE SHA>"
+
+# Kuorum hakim default: aturan pemilik 17 Sep 2026 ("Selagi ada yang merah, maka harus diperbaiki")
+# dijalankan dengan 3 hakim independen. Dipakai hitung_putaran() untuk memutuskan apakah satu putaran
+# masih berjalan; bisa diganti lewat --harapkan N.
+KUORUM_HAKIM_DEFAULT = 3
 
 # Pin regresi hanya dihitung bila sebuah tools/*.py benar-benar MENDEFINISIKAN
 # konstanta yang dipin. Mencari nama konstanta sebagai substring membuat alat
@@ -333,6 +339,16 @@ def reading_order(files: list[str]) -> list[str]:
             relevan.append((rel, f"`{rel}` — dokumen sistem yang disentuh PR"))
         elif rel.endswith(".md"):
             relevan.append((rel, f"`{rel}` — dokumen root yang disentuh PR"))
+        else:
+            # Temuan hakim putaran 3 PR #74 (#6): semua cabang di atas hanya menerima `*.md` (plus apa
+            # pun di bawah `tools/`), sehingga berkas non-Markdown di LUAR tools/ jatuh DIAM-DIAM dari
+            # daftar wajib baca. Terukur pada PR ini: `_meta/_internal/uji/uji_upscaling.py` (skrip
+            # pengukuran yang menopang klaim judul PR) dan
+            # `sistem/sistem-undangan/_sistem/validate_system.py` (validator mandiri sistem baru) tidak
+            # muncul di bagian 2 — 58 dari 60 berkas. Daftar baca yang tidak lengkap membuat hakim
+            # merasa sudah membaca semuanya, jadi cabang terakhir ini WAJIB ada: tidak boleh ada berkas
+            # yang berubah tanpa masuk daftar.
+            relevan.append((rel, f"`{rel}` — berkas non-Markdown yang disentuh PR (baca isinya dan diff-nya)"))
     seen, dedup = set(), []
     for rel, item in relevan:
         if rel in seen:
@@ -418,7 +434,7 @@ def open_test_window(files: list[str] | None = None) -> tuple[list[str], list[st
     return blocking, writer_hits
 
 
-def objek_diff(base_sha: str, head_sha: str) -> dict:
+def objek_diff(base_sha: str, head_sha: str, ujung_hidup: str | None = None) -> dict:
     """Tiga sha + dua daftar berkas, DIUKUR lokal. Fail-closed: kalau tidak bisa dihitung, katakan.
 
     Sebab fungsi ini ada (temuan **R3** review independen PR #74): prompt versi lama menyajikan
@@ -430,7 +446,8 @@ def objek_diff(base_sha: str, head_sha: str) -> dict:
     mencurigai penghapusan bukti yang tidak pernah dilakukan penulis. Yang salah bukan datanya:
     **dua semantik berbeda disajikan sebagai satu objek.**
     """
-    hasil: dict = {"merge_base": None, "nama_merge_base": None, "nama_langsung": None, "kesalahan": []}
+    hasil: dict = {"merge_base": None, "nama_merge_base": None, "nama_langsung": None,
+                   "nama_ujung_hidup": None, "ujung_hidup": None, "kesalahan": []}
     code, out, err = _run(["git", "merge-base", base_sha, head_sha])
     if code != 0 or not out.strip():
         hasil["kesalahan"].append(
@@ -451,7 +468,90 @@ def objek_diff(base_sha: str, head_sha: str) -> dict:
             )
         else:
             hasil[kunci] = sorted({ln.strip() for ln in o2.splitlines() if ln.strip()})
+    # (B-hidup): selisih terhadap UJUNG BASE YANG SEBENARNYA, bukan terhadap base sha beku dari API.
+    if ujung_hidup and ujung_hidup != base_sha:
+        hasil["ujung_hidup"] = ujung_hidup
+        c3, o3, e3 = _run(["git", "diff", "--name-only", ujung_hidup, head_sha])
+        if c3 != 0:
+            hasil["kesalahan"].append(
+                f"objek ujung base terukur {ujung_hidup[:12]} tidak ada lokal, jadi (B-hidup) TIDAK "
+                f"terukur (git keluar {c3}: {(e3 or o3).strip()[:160] or '(kosong)'}). Jalankan "
+                "`git fetch origin <base ref>` lebih dulu lalu ukur sendiri — prompt ini tidak menebak.")
+        else:
+            hasil["nama_ujung_hidup"] = sorted({ln.strip() for ln in o3.splitlines() if ln.strip()})
     return hasil
+
+
+def ujung_base_hidup(base_ref: str, slug: str | None = None) -> dict:
+    """Ujung branch base YANG SEBENARNYA saat ini + waktu pengukurannya. Fail-closed.
+
+    **Sebab fungsi ini ada (temuan hakim putaran 3 PR #74, #7).** Prompt mencetak baris
+    "**Base sha — ujung base SEKARANG**" dari `.base.sha` API. Nilai itu **BEKU sejak PR dibuat**:
+    pada 18 Sep 2026 `main` bergerak ke `26147e1` (PR lain di-merge 13:35Z) sementara `.base.sha`
+    PR #74 tetap `c1d00c3`, sehingga prompt menulis "hanya di (B): 0 berkas" padahal selisih terhadap
+    ujung `main` yang sebenarnya memuat 11 berkas tambahan. Melabeli nilai beku sebagai "SEKARANG"
+    adalah kebalikan dari kenyataan, dan bagian 3a justru dibuat untuk MENAMPAKKAN pergerakan base.
+    """
+    hasil: dict = {"sha": None, "sumber": None, "waktu_utc": None, "kesalahan": []}
+    hasil["waktu_utc"] = datetime.now(timezone.utc).strftime("%Y-%m-%dT%H:%M:%SZ")
+    if not base_ref or base_ref.startswith("<"):
+        hasil["kesalahan"].append(
+            "base ref tidak terbaca (mode --generic?) — ujung base yang sebenarnya TIDAK DIUKUR")
+        return hasil
+    code, out, err = _run(["git", "ls-remote", "origin", f"refs/heads/{base_ref}"])
+    if code == 0 and out.strip():
+        hasil["sha"] = out.split()[0].strip()
+        hasil["sumber"] = f"git ls-remote origin refs/heads/{base_ref}"
+        return hasil
+    slug = slug or repo_slug()
+    if slug and "/" in slug and "<" not in slug:
+        c2, o2, _ = _run(["gh", "api", f"repos/{slug}/branches/{base_ref}", "--jq", ".commit.sha"])
+        if c2 == 0 and o2.strip():
+            hasil["sha"] = o2.strip()
+            hasil["sumber"] = f"gh api repos/{slug}/branches/{base_ref}"
+            return hasil
+    hasil["kesalahan"].append(
+        f"ujung branch `{base_ref}` tidak terbaca (git ls-remote keluar {code}: "
+        f"{(err or '').strip()[:160] or '(kosong)'}) — TIDAK diklaim sama dengan base sha PR")
+    return hasil
+
+
+def baris_ujung_base(base_pr: str, ujung: dict | None) -> tuple[list[str], list[str]]:
+    """(baris tabel, peringatan) soal base. MURNI — tidak menyentuh git/jaringan, jadi bisa diuji.
+
+    Tidak pernah melabeli base sha dari API sebagai "sekarang"; kalau ujung yang sebenarnya tidak
+    terukur, ia menyatakan itu dan memberi perintah ukurnya (fail-closed), bukan menyamakan keduanya.
+    """
+    tabel: list[str] = []
+    peringatan: list[str] = []
+    tabel.append(f"| Base sha yang tercatat di PR (**BEKU sejak PR dibuat** — BUKAN ujung base sekarang) "
+                 f"| `{base_pr}` |")
+    if not ujung or not ujung.get("sha"):
+        alasan = "; ".join((ujung or {}).get("kesalahan") or []) or "tidak terukur"
+        tabel.append("| Ujung branch base TERUKUR saat prompt dibangkitkan | **TIDAK TERUKUR** |")
+        peringatan.append(f"> **Fail-closed:** ujung branch base yang sebenarnya TIDAK TERUKUR ({alasan}).")
+        peringatan.append("> Prompt ini karena itu TIDAK mengklaim base tidak bergerak, dan angka (B) di")
+        peringatan.append("> bawah — kalau ada — dihitung terhadap base sha yang beku. Ukur sendiri:")
+        peringatan.append("> `git ls-remote origin <base ref>` lalu `git diff --name-only <ujung itu> <head sha>`.")
+        return tabel, peringatan
+    sha = ujung["sha"]
+    waktu = ujung.get("waktu_utc") or "(waktu pengukuran tidak tercatat)"
+    sumber = ujung.get("sumber") or "git ls-remote"
+    tabel.append(f"| **Ujung branch base TERUKUR** saat prompt dibangkitkan ({waktu}, lewat `{sumber}`) "
+                 f"| `{sha}` |")
+    if sha == base_pr:
+        peringatan.append(f"> Ujung base terukur **sama** dengan base sha yang tercatat di PR (`{sha[:12]}`) pada")
+        peringatan.append("> saat prompt ini dibangkitkan. Itu TIDAK menjamin base diam sesudah prompt dibaca:")
+        peringatan.append("> ukur ulang (`git ls-remote origin <base ref>`) sebelum menyimpulkan apa pun dari (B).")
+    else:
+        peringatan.append(f"> **BASE SUDAH BERGERAK** sejak PR dibuat: yang tercatat di PR `{base_pr[:12]}`, ujung")
+        peringatan.append(f"> terukur saat prompt dibangkitkan `{sha[:12]}`. Akibatnya diff **(B) yang dicetak prompt")
+        peringatan.append("> ini bisa MENGERDILKAN keadaan** — ia dihitung terhadap base sha yang beku. Kalau angka")
+        peringatan.append("> '(B-hidup)' ada di bawah, itulah selisih terhadap ujung terukur; kalau tidak ada,")
+        peringatan.append("> **wajib ukur sendiri sebelum menyimpulkan:**")
+        peringatan.append(f"> `git fetch origin <base ref> && git diff --name-only {sha[:12]} <head sha>`, lalu sebut")
+        peringatan.append("> angka pengukuranmu sendiri di verdict — bukan angka prompt ini.")
+    return tabel, peringatan
 
 
 def head_sha_of_worktree() -> str:
@@ -473,7 +573,55 @@ def repo_slug() -> str:
     return slug if code == 0 and "/" in slug else "<OWNER>/<REPO>"
 
 
-def next_round(number: int) -> int | None:
+def hitung_putaran(data: dict, kuorum: int = KUORUM_HAKIM_DEFAULT, head_sha: str | None = None) -> int:
+    """Putaran yang HARUS dinamai prompt — dihitung dari kanal PR. MURNI: tidak menyentuh jaringan.
+
+    **Sebab aturan ini ada (temuan hakim putaran 3 PR #74, #2, P1).** Versi sebelumnya selalu
+    mengembalikan `max(putaran yang tertempel) + 1`. Akibatnya begitu SATU hakim putaran 3 menempel
+    verdictnya, setiap pembangkitan ulang pada head yang SAMA menamai putaran yang sedang berjalan
+    sebagai "putaran 4" — padahal pemilik membuka putaran 3 dan dua hakim lain masih bekerja di bawah
+    teks yang menulis "putaran 3". Karena prompt menyuruh hakim menyalin angka itu apa adanya, catatan
+    putaran di kanal jadi bercampur.
+
+    Putaran R dinyatakan **MASIH BERJALAN** selama salah satu dari ini benar:
+      (a) jumlah slot hakim yang menamai R **kurang dari kuorum** — hakim yang belum menyerahkan
+          laporan bukan hakim yang puas; atau
+      (b) head PR **belum bergerak** sejak verdict R tertempel (sha head disebut di dalam verdict itu)
+          — artinya koreksi belum dibuat, jadi belum ada objek baru untuk diadili.
+    Hanya kalau keduanya tidak berlaku, putaran berikutnya = R + 1. Arah kegagalannya sengaja
+   konservatif: lebih baik menamai putaran yang sama dua kali daripada melompati satu putaran.
+    """
+    tools_dir = str(Path(__file__).resolve().parent)
+    if tools_dir not in sys.path:
+        sys.path.insert(0, tools_dir)
+    import ambil_verdict as av                      # definisi "slot hakim" DIPINJAM, bukan diduplikasi
+
+    per_putaran: dict[int, int] = {}
+    menyebut_head: set[int] = set()
+    pendek = (head_sha or "")[:7]
+    for kelompok in ("comments", "reviews"):
+        for k in data.get(kelompok) or []:
+            teks = (k or {}).get("body") or ""
+            if not av.slot_hakim(teks):
+                continue
+            m = re.search(r"putaran\s+(\d+)", teks, re.I)
+            if not m:
+                continue
+            r = int(m.group(1))
+            per_putaran[r] = per_putaran.get(r, 0) + 1
+            if pendek and (head_sha in teks or pendek in teks):
+                menyebut_head.add(r)
+    if not per_putaran:
+        return 1
+    R = max(per_putaran)
+    if per_putaran[R] < max(1, int(kuorum or 1)):
+        return R                                    # (a) kuorum putaran R belum lengkap
+    if head_sha and R in menyebut_head:
+        return R                                    # (b) head belum bergerak sejak verdict R
+    return R + 1
+
+
+def next_round(number: int, kuorum: int = KUORUM_HAKIM_DEFAULT, head_sha: str | None = None) -> int | None:
     """Hitung nomor putaran review BERIKUTNYA dari verdict yang sudah tertempel di kanal PR.
 
     Sebab: prompt versi lama menyuruh hakim MENEBAK ("ganti `putaran 1` dengan angka putaran yang
@@ -494,21 +642,13 @@ def next_round(number: int) -> int | None:
         data = av.ambil_pr(number)
     except Exception:
         return None
-    angka = []
-    for kelompok in ("comments", "reviews"):
-        for k in data.get(kelompok) or []:
-            teks = (k or {}).get("body") or ""
-            if not av.slot_hakim(teks):
-                continue
-            m = re.search(r"putaran\s+(\d+)", teks, re.I)
-            if m:
-                angka.append(int(m.group(1)))
-    return (max(angka) + 1) if angka else 1
+    return hitung_putaran(data, kuorum, head_sha)
 
 
 def render(pr: dict | None, files: list[str], generic: bool,
            objek: dict | None = None,
-           putaran: int | None = None) -> tuple[str, list[str]]:
+           putaran: int | None = None,
+           ujung_base: dict | None = None) -> tuple[str, list[str]]:
     if generic:
         num, base, head = PLACEHOLDER_PR, PLACEHOLDER_BASE, PLACEHOLDER_HEAD
         title = "<JUDUL PR>"
@@ -552,17 +692,21 @@ def render(pr: dict | None, files: list[str], generic: bool,
     for i, item in enumerate(reading_order(files), start=1):
         a(f"{i}. {item}")
     a("")
-    # R3: tiga sha, bukan dua. Merge-base = titik branch dibuat; base sha = ujung base SEKARANG.
+    # R3: tiga sha, bukan dua. Merge-base = titik branch dibuat; base sha yang TERCATAT DI PR beku
+    # sejak PR dibuat, dan ujung base yang SEBENARNYA diukur terpisah lewat ujung_base_hidup()
+    # (temuan #7 hakim putaran 3: melabeli nilai beku sebagai "SEKARANG" adalah kebalikan kenyataan).
     if generic:
         mb = PLACEHOLDER_MERGE_BASE
         daftar_a: list[str] | None = None
         daftar_b: list[str] | None = None
+        daftar_hidup: list[str] | None = None
         err_objek = ["mode --generic: tidak ada PR, jadi merge-base dan selisihnya tidak bisa diukur"]
     else:
         objek = objek or {}
         mb = objek.get("merge_base") or "TIDAK TERHITUNG"
         daftar_a = objek.get("nama_merge_base")
         daftar_b = objek.get("nama_langsung")
+        daftar_hidup = objek.get("nama_ujung_hidup")
         err_objek = list(objek.get("kesalahan") or [])
 
     a("## 3. Objek ter-pin")
@@ -571,11 +715,16 @@ def render(pr: dict | None, files: list[str], generic: bool,
     a("|---|---|")
     a(f"| PR | {pr_ref} — {title} |")
     a(f"| Base ref | `{base_ref}` |")
-    a(f"| **Base sha — ujung base SEKARANG** | `{base}` |")
+    _tabel_base, _peringatan_base = baris_ujung_base(base, ujung_base)
+    for _b in _tabel_base:
+        a(_b)
     a(f"| **Merge-base sha — titik branch ini dibuat** | `{mb}` |")
     a(f"| Head ref | `{head_ref}` |")
     a(f"| **Head sha — OBJEK YANG HENDAK DIPUTUSKAN** | `{head}` |")
     a(f"| Berkas menurut data PR (semantik merge-base) | {len(files)} |")
+    a("")
+    for _p in _peringatan_base:
+        a(_p)
     a("")
     a("**Verdict wajib menyebut head sha di atas.** Head bisa bergerak selama review berjalan; verdict")
     a("yang tidak menyebut sha tidak bisa dipetakan ke keadaan mana pun dan diperlakukan sebagai belum")
@@ -611,9 +760,22 @@ def render(pr: dict | None, files: list[str], generic: bool,
     if daftar_a is not None and daftar_b is not None:
         hanya_b = [x for x in daftar_b if x not in set(daftar_a)]
         hanya_a = [x for x in daftar_a if x not in set(daftar_b)]
-        a(f"**Selisih terukur (A) vs (B) — angka, bukan perkiraan:** (A) {len(daftar_a)} berkas,")
-        a(f"(B) {len(daftar_b)} berkas.")
+        a(f"**Selisih terukur (A) vs (B) — angka, bukan perkiraan, diukur saat prompt dibangkitkan:**")
+        a(f"(A) {len(daftar_a)} berkas, (B) {len(daftar_b)} berkas — (B) dihitung terhadap base sha yang")
+        a("**tercatat di PR (beku)**, bukan terhadap ujung branch base yang sebenarnya.")
         a("")
+        if daftar_hidup is not None:
+            hanya_hidup = [x for x in daftar_hidup if x not in set(daftar_a)]
+            a(f"**(B-hidup) terhadap ujung base TERUKUR `{(objek or {}).get('ujung_hidup', '')[:12]}`: "
+              f"{len(daftar_hidup)} berkas, {len(hanya_hidup)} di antaranya hanya ada di (B-hidup)** —")
+            a("inilah selisih yang sesungguhnya kalau base sudah bergerak. Sebut angka ini (atau hasil")
+            a("pengukuranmu sendiri) di verdict, dan JANGAN memakai '0 berkas hanya di (B)' dari prompt")
+            a("versi lama sebagai fakta.")
+            for rel in hanya_hidup[:15]:
+                a(f"  - `{rel}`")
+            if len(hanya_hidup) > 15:
+                a(f"  - … dan {len(hanya_hidup) - 15} berkas lagi (ukur sendiri untuk daftar lengkap)")
+            a("")
         a(f"- **hanya di (B), jadi BUKAN perubahan PR ini: {len(hanya_b)} berkas**"
           + (" — berkas-berkas ini masuk ke base SESUDAH branch ini dibuat" if hanya_b else ""))
         for rel in hanya_b[:15]:
@@ -1071,6 +1233,9 @@ def main(argv: list[str] | None = None) -> int:
     ap.add_argument("--pr", type=int, default=None, help="nomor PR")
     ap.add_argument("--generic", action="store_true", help="cetak versi placeholder (tanpa memanggil GitHub)")
     ap.add_argument("--out", default="-", help="'-' (default, stdout) atau path berkas")
+    ap.add_argument("--harapkan", type=int, metavar="N", default=KUORUM_HAKIM_DEFAULT,
+                    help=f"kuorum hakim untuk memutuskan apakah satu putaran masih berjalan "
+                         f"(default {KUORUM_HAKIM_DEFAULT})")
     ap.add_argument("--umumkan", action="store_true",
                     help="tempel prompt ke kanal PR sebagai komentar penulis (BUKAN verdict) "
                          "lalu cetak permalink-nya di blok serah terima")
@@ -1093,10 +1258,16 @@ def main(argv: list[str] | None = None) -> int:
             data = fetch_pr(number)
             files = resolve_pr_files(number, data)
             # R3: objek diff DIUKUR sebelum prompt dicetak, bukan diserahkan ke reviewer untuk ditebak.
-            objek = objek_diff(data["baseRefOid"], data["headRefOid"])
             head_sha = data["headRefOid"]  # RP12: sha untuk permalink di blok serah terima
-            putaran = next_round(data["number"])
-            text, windows = render(data, files, generic=False, objek=objek, putaran=putaran)
+            # Temuan #7: ujung base yang SEBENARNYA diukur, bukan diambil dari base sha beku di API.
+            ujung_base = ujung_base_hidup(data["baseRefName"])
+            # R3: objek diff DIUKUR sebelum prompt dicetak, bukan diserahkan ke reviewer untuk ditebak.
+            objek = objek_diff(data["baseRefOid"], head_sha, ujung_hidup=(ujung_base or {}).get("sha"))
+            # Temuan #2: putaran dihitung dari kanal + kuorum + head, supaya putaran yang sedang
+            # berjalan tidak dinamai sebagai putaran berikutnya.
+            putaran = next_round(data["number"], args.harapkan, head_sha)
+            text, windows = render(data, files, generic=False, objek=objek, putaran=putaran,
+                                   ujung_base=ujung_base)
     except ToolError as exc:
         print(f"review_prompt: GAGAL — {exc}", file=sys.stderr)
         return 2

@@ -52,7 +52,7 @@ Status butir `03_KONTRAK_WARISAN.md` untuk sistem ini — disalin dari bagian "W
 
 | Butir | Status (diterapkan / override) | Letak di folder sistem | Override? |
 |---|---|---|---|
-| W-01 pegangan | diterapkan — **berkasnya belum dibuat** (tahap kerangka) | direncanakan `PANDUAN_PENGGUNA.md` + `PROMPT_ENTRI_UNIVERSAL.md` | Tidak |
+| W-01 pegangan | diterapkan — **berkasnya SUDAH dibuat 18 Sep 2026**; **kelulusannya BELUM dinyatakan** (Standar Kelulusan Manual syarat 4) | `PANDUAN_PENGGUNA.md` + `PROMPT_ENTRI_UNIVERSAL.md` — keduanya ADA di folder ini, blok prompt-nya identik | Tidak |
 | W-02 LOG_SESI | diterapkan — **berkasnya belum dibuat** (belum ada unit kerja untuk dicatat) | direncanakan `12_LOG_SESI.md` | Tidak |
 | W-03 field checkpoint STATUS | diterapkan — **belum ada unit** | direncanakan `STATUS.md` per unit kerja (1 undangan = 1 unit) | Tidak |
 | W-04 manifest | **diterapkan — berkas ini** | `SYSTEM_MANIFEST.md` | Tidak |

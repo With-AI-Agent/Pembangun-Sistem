@@ -128,6 +128,26 @@ mengarang aturan. Jadi ditulis **sebelum** verdict ke-2 dan ke-3 tiba.
    komentar baris, tidak ada commit, tidak ada berkas log sesi. Hakim yang menyimpan laporannya hanya di
    `/tmp` dan di chat sesinya **tidak meninggalkan bukti yang bisa diverifikasi oleh siapa pun** —
    termasuk oleh pemiliknya sendiri, dan termasuk oleh sesi berikutnya yang harus menindaklanjuti.
+
+   **AMENDEMEN 18 Sep 2026 (keputusan pemilik, opsi A) — berkas BUKTI HISTORIS tidak boleh dipaksa
+   disunting demi kosmetika tabel.** Dua aturan repo ini sempat saling mengunci: penjaga integritas
+   tabel (T-47) mewajibkan pipa di dalam sel di-escape sebagai `\|`, sedangkan prinsip append-only
+   melarang suntingan pada rekaman peristiwa. Yang terjadi: 2 baris
+   `ACCEPTANCE_TEST_LOG.md` milik sistem konten-kreator tersunting (terukur `2 2` di numstat diff PR;
+   path lengkapnya sengaja TIDAK ditulis di sini — rujukan path baru di dokumen meta ikut terhitung
+   sebagai warning normalisasi template, dan **pin R7 = 5 tidak boleh digeser tanpa otorisasi
+   pemilik**, jadi namanya disebut tanpa path),
+   dan **ketiga hakim putaran 3** melaporkannya. Keputusan pemilik: kedua baris **dikembalikan ke byte
+   aslinya** (diff berkas itu terhadap merge-base kini KOSONG) dan kelas berkas bukti historis
+   **dikecualikan dari paksaan suntingan** — cacat tabel di sana dicetak `tools/validate_repo.py`
+   sebagai **PERINGATAN**, bukan kegagalan. Daftarnya sempit dan disebut eksplisit di
+   `POLA_BUKTI_HISTORIS`: `ACCEPTANCE_TEST_LOG.md`, `LOG_SESI_*.md`, `DISKUSI_MENTAH_*.md`,
+   `SESSION_REPORT_*`, `PILOT_REPORT_*`, `BEHAVIORAL_AUDIT_*`, `REGRESSION_AUDIT_*`,
+   `AUDIT_*_<tanggal>.md`, folder `_log-sesi/`, dan folder arsip `_internal/arsip-*`. Dokumen
+   hidup/normatif (manifest, protokol, register, ledger, Definition of Done, indeks, dokumen sistem)
+   **TETAP kegagalan keras**. Dikunci regresi **TI6** (bukti historis → peringatan, validator PASS) dan
+   **TI7** (cacat yang sama di dokumen hidup → tetap gagal, tanpa awalan WARNING), supaya pengecualian
+   ini tidak bisa melebar diam-diam. Prinsipnya: **bukti yang boleh dirapikan bukan bukti lagi.**
 9. **Kuorum DIHITUNG, bukan diasumsikan.** Yang mengumpulkan verdict WAJIB menjalankan
    `python3 tools/ambil_verdict.py --pr <N> --harapkan <jumlah hakim yang dikerahkan>`. Bila slot yang
    terbaca kurang dari jumlah itu, alat melaporkan **KUORUM BELUM TERPENUHI** dan hasilnya **tidak pernah
@@ -139,6 +159,17 @@ mengarang aturan. Jadi ditulis **sebelum** verdict ke-2 dan ke-3 tiba.
    Perbaikannya diuji-mutasi, dan `--uji` kini **memanggil fungsi kanal sungguhan** (regresi D-4: kanal
    `--issue` dan kanal utama `--terbaru` dulu **crash `NameError`** setiap kali isunya punya komentar, dan
    lolos dari `--uji` karena uji lama hanya menguji fungsi murni, tidak pernah fungsi kanal).
+
+   **AMENDEMEN 18 Sep 2026 (temuan #3 hakim putaran 3, P1) — kuorum dihitung PER PUTARAN.** Slot hakim
+   menumpuk lintas putaran, jadi kuorum yang dibandingkan terhadap SELURUH slot **fail-open di tingkat
+   putaran**: pada PR #74, `--harapkan 3` mencetak *"5 dari 5 slot"* (lalu *"7 dari 7"*) dan tidak pernah
+   bisa memberi tahu pemilik bahwa **2 dari 3 hakim putaran 3 belum menyerahkan laporan** — persis mode
+   kegagalan D-3 yang aturan ini dibuat untuk menutupnya. Kini `tools/ambil_verdict.py` mencetak blok
+   **KUORUM PER PUTARAN** (jumlah slot per putaran + putaran mana yang sedang diputus), dan `--putaran R`
+   memilih putaran yang hendak diputus (default: putaran terbaru di kanal). **Agregatnya tidak
+   dilonggarkan:** satu MERAH di putaran mana pun tetap menahan merge, verdict tak terbaca tetap menahan,
+   dan putaran yang diminta tapi tidak ada di kanal dinyatakan **belum diserahkan**, bukan bersih.
+   Dikunci 6 kasus + 1 mutasi di `ambil_verdict.py --uji` (33 → **40 pemeriksaan**).
 10. **Verdict yang hilang = pekerjaan belum dilakukan, dan WAJIB diulang pada head yang berlaku.** Tidak
     ada jalur "dianggap hijau karena tidak ada kabar", dan tidak ada jalur "sudah terlanjur, pakai yang
     ada". Bila dua hakim memakai **branch atau slot log yang sama**, push yang datang kemudian **menimpa**
@@ -189,3 +220,29 @@ mengarang aturan. Jadi ditulis **sebelum** verdict ke-2 dan ke-3 tiba.
     kanal PR tidak tersedia), agent WAJIB menyatakan itu di pesan serah terima dan menyerahkan teks
     prompt sebagai satu blok berpagar di badan pesan chat — tidak boleh diam-diam menyerahkan path
     lokal saja.
+12. **Putaran yang SEDANG berjalan tidak boleh dinamai sebagai putaran berikutnya.** Nomor putaran
+    DICETAK ALAT (`hitung_putaran()` di `tools/review_prompt.py`), dan alat wajib mengenali putaran yang
+    masih berjalan: putaran R dinyatakan **masih berjalan** selama (a) slot hakim yang menamai R kurang
+    dari kuorum (`--harapkan N`, default 3), **atau** (b) head PR belum bergerak sejak verdict R tertempel
+    (sha head disebut di verdict itu) — artinya koreksi belum dibuat, jadi belum ada objek baru untuk
+    diadili. Hanya kalau keduanya tidak berlaku, prompt menamai R+1.
+    **Sebab aturan ini ada (temuan #2 hakim putaran 3, P1, terukur):** `next_round()` versi lama
+    mengembalikan `max(putaran tertempel) + 1`, sehingga begitu SATU hakim putaran 3 menempel verdictnya,
+    prompt yang dibangkitkan ulang pada head yang SAMA menulis **"putaran 4" tiga kali** — padahal pemilik
+    membuka putaran 3 dan dua hakim lain masih bekerja di bawah teks yang menulis "putaran 3". Karena
+    prompt menyuruh hakim menyalin angka itu apa adanya, catatan putaran di kanal jadi bercampur.
+    Dikunci regresi **RP14 (5 uji)**, termasuk kasus kuorum lebih besar dan komentar penulis yang menyebut
+    nomor putaran (tidak boleh ikut terhitung).
+13. **Nilai beku dari API tidak boleh dilabeli "SEKARANG", dan diff (B) wajib diukur ulang kalau base
+    bergerak.** `.base.sha` dari API **beku sejak PR dibuat**; ujung branch base yang sebenarnya diukur
+    terpisah (`git ls-remote origin <base ref>`, cadangan `gh api repos/<slug>/branches/<ref>`) dan
+    dicetak bersama **waktu pengukurannya**. Kalau keduanya berbeda, prompt wajib menyatakan **BASE SUDAH
+    BERGERAK** dan menyuruh reviewer mengukur (B) sendiri; kalau ujungnya tidak terbaca, prompt menyatakan
+    **TIDAK TERUKUR** dan memberi perintah ukurnya — tidak pernah menyamakan yang beku dengan yang hidup.
+    **Sebab aturan ini ada (temuan #7 hakim putaran 3, terukur):** prompt menulis *"Base sha — ujung base
+    SEKARANG"* untuk `c1d00c3` dan *"hanya di (B): 0 berkas"*, padahal `main` sudah bergerak ke `26147e1`
+    (PR lain di-merge 13:35Z) sehingga selisih yang sebenarnya memuat **11 berkas** yang masuk ke base
+    sesudah branch dibuat. Reviewer yang percaya angka itu menyimpulkan "base tidak bergerak" — kebalikan
+    kenyataan, dan persis kelas cacat R3/RP7/RP9 yang bagian 3a dibuat untuk menutupnya. Dikunci regresi
+    **RP16 (3 uji)**: base bergerak, base tidak bergerak, dan ujung tak terukur (fail-closed).
+
