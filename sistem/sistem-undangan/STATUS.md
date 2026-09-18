@@ -34,8 +34,12 @@
 - **Pekerjaan belum tersimpan:** Tidak ada
 - **Waktu pembaruan:** 2026-09-18 — pegangan pengguna W-01 dibuat (menutup temuan R1 review PR #74); validator mandiri diperketat 2 → 4 berkas wajib
   `arena/01a0ae7a-pembangun-sistem` (Discovery Level-0 + finalisasi rencana kerangka).
-- **Risiko aktif:** (1) **pegangan pengguna belum ada** — sistem ini **belum bisa dipakai** siapa pun
-  sampai (c) selesai, dan itu **syarat** naik Tahap, bukan pelengkap; (2) **6 dokumen generator belum
+- **Risiko aktif:** (1) **pegangan pengguna sudah ADA (18 Sep 2026) tetapi kelulusannya belum
+  dinilai dan log sesi (W-02) belum dibuat** — sistem ini **belum bisa dipakai** siapa pun sampai
+  keduanya selesai, dan itu **syarat** naik Tahap, bukan pelengkap. Baris ini pernah membantah butir
+  (c) di berkas yang sama ("belum ada" padahal (c) tercatat SELESAI) — temuan review independen
+  putaran 2 PR #74. Yang kurang bukan berkasnya, melainkan PENILAIANNYA oleh sesi independen, karena
+  Syarat 4 melarang penulis menilai sendiri; (2) **6 dokumen generator belum
   ditulis** — tanpa prompt Discovery detail, isinya akan lahir tanpa penggalian dan mengulangi kegagalan
   yang justru ditemukan di Discovery ini: **risetnya tercatat tetapi keputusan desainnya tidak**;
   (3) **ambang G3 diukur pada satu foto repo saja** — foto client nyata yang sudah terkompresi JPEG berat

@@ -22,7 +22,7 @@ their own (drifting) copy of the same judgments. This module holds:
     one used to be invisible), protocol formats (`- Status: approved`)
     recognized, not only the literal bold form.
   * Warisan / Tahap parsing for the inheritance-contract enforcement (F9):
-    all 9 items W-01..W-09 must be present in a system manifest; an
+    all 10 items W-01..W-10 must be present in a system manifest; an
     'override' row only exempts the mechanical check of that item when the
     full approval trail (alasan:, dampak:, tanggal:, approval:) is present.
   * dokumen_aktif — the single active-document definition introduced by
@@ -88,7 +88,12 @@ CORE_TOOL_FILES = [
     "tools/audit_prompt.py",
     "tools/ambil_verdict.py",
     "tools/check_manuals.py",
-    "tools/build_template.py",
+    # `tools/build_template.py` PERNAH tercantum dua kali di daftar ini (ditambahkan lagi pada
+    # 17 Sep 2026 padahal sudah ada di atas) sehingga `CORE_REQUIRED` menghitung 35 sementara
+    # berkas wajib UNIK-nya 34 — dan angka 35 itulah yang dicetak validator lalu tersebar ke
+    # dokumen dan log. Temuan review independen putaran 2 PR #74 ( ketiga hakim, saling bebas).
+    # Duplikatnya dihapus DI SINI, bukan dengan mengubah angka yang dicetak: ini konstanta PIN,
+    # jadi perubahannya dilaporkan ke pemilik, tidak diputuskan sendiri.
 ]
 CORE_REQUIRED = CORE_META_FILES + CORE_ROOT_FILES + CORE_TOOL_FILES
 
@@ -261,7 +266,7 @@ def warisan_rows(text: str):
     tidak akan ter-parse), sehingga mekanisme override + pengecualian mekanis
     di bawahnya lumpuh untuk butir baru TANPA ada error yang terlihat. Diperbaiki
     2026-09-17 saat audit menemukan batas ini (sesi arena/01a0ae7a); perbaikan
-    ini tidak mengubah perilaku untuk W-01..W-09.
+    ini tidak mengubah perilaku untuk W-01..W-10.
     """
     out = []
     for line in text.splitlines():
@@ -274,7 +279,7 @@ def warisan_rows(text: str):
 
 
 def warisan_errors(name: str, text: str):
-    """F9: all nine items must be present; an 'override' row without the
+    """F9: all ten items must be present; an 'override' row without the
     full approval trail is NOT a valid override (contract rule 3) and is an
     error. Format-agnostic presence (table rows or prose enumeration); the
     mechanical exemption (overridden_items) only applies to table rows."""

@@ -424,7 +424,9 @@ def objek_diff(base_sha: str, head_sha: str) -> dict:
     Sebab fungsi ini ada (temuan **R3** review independen PR #74): prompt versi lama menyajikan
     `git diff <base sha> <head sha>` sebagai perintah wajib, sementara daftar berkasnya diambil dari
     **diff PR terhadap MERGE-BASE** (`gh api pulls/N/files`). Keduanya **berbeda** begitu base bergerak
-    sejak branch dibuat - pada PR #74 terukur **53 vs 49 berkas**, dan reviewer menghabiskan tenaga
+    sejak branch dibuat - pada PR #74 reviewer mengukur selisih 4 berkas (53 vs 49 pada head saat
+    itu; ANGKA INI HISTORIS dan bergerak setiap kali base/head bergerak, jadi ia SENGAJA TIDAK
+    PERNAH dicetak ke prompt - prompt menghitung sendiri lewat `objek_diff()`). Reviewer menghabiskan tenaga
     mencurigai penghapusan bukti yang tidak pernah dilakukan penulis. Yang salah bukan datanya:
     **dua semantik berbeda disajikan sebagai satu objek.**
     """
@@ -538,7 +540,9 @@ def render(pr: dict | None, files: list[str], generic: bool,
     a("")
     a("**Sebab bagian ini ada:** prompt versi lama menyajikan `git diff <base sha> <head sha>` sebagai")
     a("perintah wajib, sementara daftar berkasnya berasal dari **diff PR terhadap merge-base**. Keduanya")
-    a("**berbeda** begitu base bergerak sejak branch dibuat — pada PR #74 terukur **53 vs 49 berkas**.")
+    a("**berbeda** begitu base bergerak sejak branch dibuat. Selisihnya **DIHITUNG dan DICETAK di bawah** —")
+    a("prompt ini sengaja TIDAK mengutip angka dari PR mana pun, karena angka yang dibekukan di kode akan")
+    a("membantah pengukurannya sendiri begitu base atau head bergerak (itu terjadi, dan jadi temuan review).")
     a("")
     a("```bash")
     a("# (A) PERUBAHAN YANG DIPERKENALKAN PR — semantik daftar berkas di bagian 3b. PAKAI INI untuk menilai isi PR.")
@@ -566,7 +570,7 @@ def render(pr: dict | None, files: list[str], generic: bool,
         a(f"(B) {len(daftar_b)} berkas.")
         a("")
         a(f"- **hanya di (B), jadi BUKAN perubahan PR ini: {len(hanya_b)} berkas**"
-          + (" — inilah sumber kebingungan 53 vs 49 di PR #74" if hanya_b else ""))
+          + (" — berkas-berkas ini masuk ke base SESUDAH branch ini dibuat" if hanya_b else ""))
         for rel in hanya_b[:15]:
             a(f"  - `{rel}`")
         if len(hanya_b) > 15:

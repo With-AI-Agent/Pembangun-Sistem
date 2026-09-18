@@ -58,10 +58,14 @@ Alasan perubahan: **mekanisme harus bisa dipakai tanpa perantara sesi.** Sebelum
   DISIMPULKAN` / `APPROVE` / `REQUEST_CHANGES`), **tidak** memuat kata `penulis` / `koreksi terbuka` /
   `tanggapan penulis`, dan **tidak** berada di dalam pagar kode. **Sebab aturan ini:** prompt pembangkit tidak
   pernah menyebut syarat baca alat pengumpul, jadi verdict yang **sampai tetapi melenceng formatnya** tidak
-  terhitung sebagai slot dan kuorum gagal **diam-diam** (tanpa pesan error). **Batas klaim, diukur pada PR #74:**
-  kanal PR itu memuat 6 komentar — 5 milik penulis (benar digolongkan BUKAN SLOT) dan 1 verdict hakim (terbaca
-  MERAH) — jadi dua verdict yang hilang pada putaran pertama **tidak pernah ditempel sama sekali**, bukan gagal
-  dibaca. Aturan format ini menutup **modus kegagalan yang berbeda dan belum sempat terjadi**; ia **tidak**
+  terhitung sebagai slot dan kuorum gagal **diam-diam** (tanpa pesan error). **Batas klaim:**
+  kanal PR memuat komentar penulis dan verdict hakim yang bercampur, dan **jumlahnya bergerak setiap
+  sesi** — jadi hitungan SENGAJA TIDAK ditulis di sini sebagai fakta permanen. Salinan yang membeku
+  menjadi salah tanpa terlihat: review independen putaran 2 PR #74 menemukan angka "6 komentar" di
+  baris ini tersimpan seolah keadaan tetap, padahal ia hanya keadaan kanal pada satu hari. Yang
+  permanen adalah ATURANNYA: verdict yang **tidak pernah ditempel** tidak bisa dibedakan dari verdict
+  yang **gagal dibaca** kecuali kanalnya diperiksa langsung, dan keduanya sama-sama menggagalkan
+  kuorum. Aturan format ini menutup **modus kegagalan yang berbeda dan belum sempat terjadi**; ia **tidak**
   menjelaskan kuorum 1/3 yang lama dan tidak boleh diklaim sebagai penjelasannya. Formatnya dicetak pembangkit
   sebagai bagian 6a (termasuk kewajiban mengganti nomor putaran, bukan menyalin `putaran 1` mentah), dan
   **kesepakatannya diuji lintas alat** — contoh judul yang diwajibkan prompt harus benar-benar terbaca oleh

@@ -153,7 +153,11 @@ _meta/_internal/audit/AUDIT_<objek-dengan-garis-bawah>_<sha7>.md
 
 Baris **pertama** berkas wajib berpola persis `# AUDIT <objek> @<sha7>` — **baris itulah yang dibaca
 alat**, bukan nama berkasnya (satu sumber kebenaran, dan polanya identik dengan judul kanal Issue).
-Auditor lalu **commit + push**. Sesi yang diaudit mengambilnya dengan perintah yang sama seperti biasa:
+Auditor lalu **commit + push — hanya berkas laporan itu, dan hanya itu** (pengecualian read-only yang
+dinyatakan dan sempit; lihat aturan #9). Alasannya integritas, bukan kenyamanan: kalau sesi yang
+diaudit yang meng-commit laporan pengadilnya, pihak yang diaudit bisa mengubah isinya di jalan;
+commit milik auditor sendiri adalah bukti asal-usulnya. Sesi yang diaudit mengambilnya dengan
+perintah yang sama seperti biasa:
 
 ```bash
 python3 tools/ambil_verdict.py --terbaru
@@ -220,7 +224,14 @@ Semuanya **diwarisi**, tidak dikarang ulang di sini — satu sumber:
 7. **Append-only**: jangan menghapus riwayat, jangan menghaluskan (`PROTOKOL_REVIEW_INDEPENDEN.md` #8).
 8. **Batas publikasi 6d**: selama jendela uji terbuka, artefak yang dipublikasikan tidak boleh memuat
    rumusan jawaban/kriteria yang belum tertutup uji — pakai pointer SHA+baris.
-9. **Read-only**: auditor tidak commit, tidak push, tidak menyunting berkas repo. Salinan kerja hanya di `/tmp`.
+9. **Read-only, dengan SATU pengecualian yang dinyatakan**: auditor tidak menyunting berkas repo,
+   tidak merge, tidak mengubah kode atau dokumen yang diaudit; salinan kerja hanya di `/tmp`.
+   **Pengecualiannya:** auditor boleh `commit + push` **tepat satu berkas** — laporannya sendiri di
+   `_meta/_internal/audit/` (Kanal A). Tanpa pengecualian ini Kanal A tidak bisa dijalankan sama
+   sekali, padahal Kanal A adalah kanal UTAMA karena kanal Issue terblokir 403 (terukur 17 Sep 2026).
+   Baris ini pernah membantah langkah Kanal A di dokumen yang sama ("Auditor lalu commit + push") —
+   temuan review independen putaran 2 PR #74, dan yang diputuskan di sini adalah SATU aturan.
+   Menyerahkan laporan lewat pihak yang diaudit **DITOLAK**: itu mengorbankan asal-usul bukti.
 
 ## Pengecualian pengadil
 

@@ -748,12 +748,47 @@ def review_prompt_scenarios(base_dir: Path):
     ))
     rp_path.write_text(original, encoding="utf-8")
 
+    # ------------------------------------------------------------------
+    # RP9 - temuan review independen putaran 2 PR #74 (hakim ke-3, dan dikonfirmasi
+    # ulang oleh penulis): perbaikan R3 malah MEMBEKUKAN angka pengukurannya sendiri ke
+    # dalam kode - "pada PR #74 terukur 53 vs 49 berkas" tercetak untuk SETIAP PR, lalu
+    # dibantah oleh angka yang dihitung alat di paragraf berikutnya ((A) 55 / (B) 59).
+    # Itu kelas cacat yang sama dengan R3: dokumen yang meyakinkan tetapi tidak cocok
+    # dengan data. Keluaran tercetak harus bebas angka beku; angka hanya dari objek_diff().
+    # ------------------------------------------------------------------
+    objek_rp9 = {"merge_base": MB, "nama_merge_base": ["a.md", "b.md"],
+                 "nama_langsung": ["a.md", "b.md", "c.md", "d.md"], "kesalahan": []}
+    p_rp9, _ = rp.render(pr7, ["a.md", "b.md"], generic=False, objek=objek_rp9)
+    checks.append((
+        "RP9 prompt TIDAK memuat angka diff yang dibekukan di kode (53 vs 49)",
+        "53 vs 49" not in p_rp9 and "53" not in p_rp9.split("## 3a")[1].split("## 3b")[0],
+    ))
+    checks.append((
+        "RP9 angka selisih yang tercetak berasal dari objek, bukan dari teks tetap",
+        "(A) 2 berkas" in p_rp9 and "(B) 4 berkas" in p_rp9
+        and "BUKAN perubahan PR ini: 2 berkas" in p_rp9,
+    ))
+
+    # Mutasi RP9 - bekukan lagi angkanya di keluaran: pemeriksaan di atas harus gagal.
+    mut9 = original.replace(
+        'a("**berbeda** begitu base bergerak sejak branch dibuat. Selisihnya **DIHITUNG dan DICETAK di bawah** —")',
+        'a("**berbeda** begitu base bergerak sejak branch dibuat — pada PR #74 terukur **53 vs 49 berkas**.")')
+    assert mut9 != original, "mutasi RP9 tidak mengubah apa pun - uji tidak valid"
+    rp_path.write_text(mut9, encoding="utf-8")
+    rp_m9 = _load_review_prompt(cp, "review_prompt_mut_rp9")
+    p_m9, _ = rp_m9.render(pr7, ["a.md", "b.md"], generic=False, objek=objek_rp9)
+    checks.append((
+        "RP9 diuji-mutasi: angka beku dikembalikan ke keluaran -> terdeteksi",
+        "53 vs 49" in p_m9,
+    ))
+    rp_path.write_text(original, encoding="utf-8")
+
     return checks
 
 
-def _run_check_selfcontained(repo: Path, system: str):
+def _run_check_selfcontained(repo: Path, system: str, *extra: str):
     return subprocess.run(
-        [sys.executable, "-B", "tools/check_selfcontained.py", "--sistem", system, "--report"],
+        [sys.executable, "-B", "tools/check_selfcontained.py", "--sistem", system, "--report", *extra],
         cwd=str(repo),
         capture_output=True,
         text=True,
@@ -1049,6 +1084,72 @@ def check_selfcontained_scenarios(base_dir: Path):
         ),
         lambda after: after.returncode == 0 and "[MASTER-ONLY-COPY]" not in after.stdout,
     ))
+
+    # SC11-SC12 (18 Sep 2026): alat yang MENDETEKSI salinan berlabel basi juga harus bisa
+    # MEMPERBAIKI. Salinan basi sudah terjadi DUA KALI (v1.18.0 "3 salinan berlabel disinkron", dan
+    # 18 Sep 2026 sesudah PROTOKOL_REVIEW_INDEPENDEN.md disunting) — deteksi tanpa perbaikan
+    # mendorong penyuntingan salinan dengan tangan, dan itu cara salinan jadi basi tanpa jejak.
+    src_rel = "_meta/PLATFORM_LMARENA.md"
+    src_master = cp / src_rel
+    src_asli = src_master.read_bytes()
+
+    system = "sistem-fi-salinan-basi"
+    root = _write_minimal_selfcontained_system(cp, system)
+    (root / "_salinan-meta").mkdir()
+    salinan = root / "_salinan-meta" / "PLATFORM_LMARENA.md"
+    salinan.write_bytes(_derived_label(cp, src_rel))
+    sinkron_awal = _run_check_selfcontained(cp, system)  # fixture harus sehat dulu
+
+    # master bergerak -> salinan jadi basi. Inilah kejadian nyatanya, bukan karangan.
+    src_master.write_bytes(src_asli + b"\n<!-- mutasi uji FI: master bergerak -->\n")
+    before = _run_check_selfcontained(cp, system)
+    synced = _run_check_selfcontained(cp, system, "--sinkronkan")
+    after = _run_check_selfcontained(cp, system)
+    checks.append((
+        "SC11 salinan berlabel basi: STALE-COPY terdeteksi, --sinkronkan MEMPERBAIKI, alat lalu PASS",
+        sinkron_awal.returncode == 0
+        and before.returncode != 0 and "[STALE-COPY]" in before.stdout
+        and "DISINKRONKAN" in synced.stdout
+        and after.returncode == 0,
+    ))
+
+    # SC11b - mutasi: lumpuhkan PENULISAN sinkron. Kalau "perbaikan" itu bohong (mencetak
+    # DISINKRONKAN tanpa menulis berkas), salinan tetap basi dan SC11 harus gagal — inilah giginya.
+    # Keadaan basi dibangun ulang dari nol: salinan sehat terhadap master LAMA, lalu master bergerak.
+    src_master.write_bytes(src_asli)
+    salinan.write_bytes(_derived_label(cp, src_rel))
+    assert _run_check_selfcontained(cp, system).returncode == 0, "fixture SC11b tidak sehat sejak awal"
+    src_master.write_bytes(src_asli + b"\n<!-- mutasi uji FI (2): master bergerak lagi -->\n")
+    tool_path.write_text(
+        original.replace("            path.write_bytes(baru)\n", "            pass  # mutasi FI\n", 1),
+        encoding="utf-8")
+    mutasi_berhasil = tool_path.read_text(encoding="utf-8") != original
+    mut_run = _run_check_selfcontained(cp, system, "--sinkronkan")
+    tool_path.write_text(original, encoding="utf-8")
+    checks.append((
+        "SC11b diuji-mutasi: penulisan sinkron dilumpuhkan -> salinan TETAP basi (SC11 punya gigi)",
+        mutasi_berhasil and mut_run.returncode != 0,
+    ))
+
+    # SC12 - salinan yang MENYATAKAN perbedaan nyata tidak boleh ditimpa: itu keputusan orang lain,
+    # dan menimpanya diam-diam = menghapus keputusan tanpa jejak.
+    system2 = "sistem-fi-salinan-bedanya-dinyatakan"
+    root2 = _write_minimal_selfcontained_system(cp, system2)
+    (root2 / "_salinan-meta").mkdir()
+    salinan2 = root2 / "_salinan-meta" / "PLATFORM_LMARENA.md"
+    salinan2.write_bytes(_derived_label(
+        cp, src_rel, body=b"# isi fixture yang SENGAJA berbeda\n",
+        diff_line="> Perbedaan: fixture FI - isi sengaja berbeda untuk uji SC12\n"))
+    sebelum = salinan2.read_bytes()
+    run2 = _run_check_selfcontained(cp, system2, "--sinkronkan")
+    checks.append((
+        "SC12 --sinkronkan TIDAK menimpa salinan yang menyatakan perbedaan nyata",
+        salinan2.read_bytes() == sebelum and "DILEWATI" in run2.stdout
+        and "tidak boleh ditimpa" in run2.stdout,
+    ))
+
+    src_master.write_bytes(src_asli)
+
     return checks
 
 def run():
@@ -1253,6 +1354,13 @@ def run():
                                env=dict(os.environ, FI_NESTED="1"))
             checks.append(("D-2b ujung-ke-ujung: dokumen ber-total ganda -> alat exit non-zero dan menyebut D-2b",
                            r.returncode != 0 and "D-2b" in r.stdout))
+
+    # Inventaris inti tidak boleh punya entri ganda: duplikat membuat validator mencetak angka
+    # kewajiban yang lebih tinggi dari kenyataan (35 vs 34) dan angka itu menyebar ke dokumen.
+    checks.append(("CORE_TOOL_FILES tidak punya entri ganda (angka kewajiban yang dicetak = berkas unik)",
+                   len(core.CORE_TOOL_FILES) == len(set(core.CORE_TOOL_FILES))))
+    checks.append(("CORE_REQUIRED tidak punya entri ganda",
+                   len(core.CORE_REQUIRED) == len(set(core.CORE_REQUIRED))))
 
     n_synth = len(checks)
 

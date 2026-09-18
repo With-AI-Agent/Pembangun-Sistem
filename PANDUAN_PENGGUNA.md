@@ -135,7 +135,7 @@ pernah terjadi di repo ini:
 | Objeknya | satu PR | **satu jalur** di repo: `_meta`, `tools`, sebuah sistem, atau satu berkas |
 | Keluarannya | verdict + keputusan merge | **laporan temuan** — tidak ada merge |
 | Alatnya | `python3 tools/review_prompt.py --pr N` | `python3 tools/audit_prompt.py --objek <path>` |
-| Hasilnya ditaruh di | komentar PR | **GitHub Issue** berjudul `AUDIT <objek> @<sha7>` |
+| Hasilnya ditaruh di | komentar PR | **berkas ter-commit** di `_meta/_internal/audit/` (**Kanal A = UTAMA**), baris pertamanya `# AUDIT <objek> @<sha7>`. GitHub Issue = **alternatif yang terblokir** (403, terukur 17 Sep 2026) |
 | Aturannya | `_meta/PROTOKOL_REVIEW_INDEPENDEN.md` | `_meta/PROTOKOL_AUDIT_ISI.md` |
 
 **Kapan pakai yang ini:** sesudah membangun sesuatu dan sebelum menyatakannya siap; untuk pemeriksaan
@@ -161,7 +161,7 @@ berkala; kalau kamu minta *"periksa semuanya"* tanpa menunjuk PR; atau kalau kam
 
 3. **Tempel seluruh keluaran perintah itu** ke **sesi auditor** (sesi ketiga, yang benar-benar mengaudit)
    sebagai pesan pertamanya.
-4. Tunggu. Auditor menyerahkan hasilnya ke sebuah GitHub Issue.
+4. Tunggu. Auditor menyerahkan hasilnya sebagai **berkas ter-commit** di `_meta/_internal/audit/` (Kanal A) — **bukan** GitHub Issue; kanal Issue terblokir 403 di lingkungan ini (terukur 17 Sep 2026).
 5. Kembali ke sesi yang sedang bekerja, dan **cukup bilang**: *"audit sudah selesai."* Sesi itu
    mengambil hasilnya sendiri:
 
@@ -218,12 +218,20 @@ bagian ATURAN CAKUPAN.
 pengadilnya sendiri, hasil audit mengukur **kepandaian menulis prompt**, bukan **kesehatan isi**. Alasan
 yang sama kenapa `review_prompt.py` ada untuk PR.
 
-**Yang belum terbukti (jangan dianggap sudah):** pengiriman hasil lewat `gh issue create` **belum diuji**
-di lingkungan ini — yang terverifikasi baru kemampuan **membaca** (`gh issue list`, `gh pr view`,
-`gh api`). Menguji pengiriman berarti **membuat Issue nyata di repo ini**, jadi butuh izin pemilik lebih
-dulu. Sampai itu terjadi, bagian "cara menyerahkan hasil" adalah **rancangan yang masuk akal, bukan
-mekanisme terverifikasi** — dan dinyatakan begitu di `_meta/PROTOKOL_AUDIT_ISI.md` bagian
-"Yang belum terbukti".
+**Yang sudah DIUJI dan hasilnya negatif — jangan dibaca sebagai "belum diuji":** pengiriman hasil
+lewat `gh issue create` **ditolak HTTP 403** `Resource not accessible by integration` (terukur 17 Sep
+2026 di lingkungan ini; `permissions` token semuanya `false`). Jadi kanal Issue bukan rancangan yang
+belum disentuh: ia **sudah diuji dan terblokir**, dan karena itu kanal UTAMA adalah **Kanal A — berkas
+ter-commit** di `_meta/_internal/audit/` (`_meta/PROTOKOL_AUDIT_ISI.md`).
+
+**Yang masih belum terbukti:** keberhasilan kanal Issue *kalau* izin kelak diberikan — labelnya sudah
+ada, tetapi keberadaan label tidak membuktikan bisa membuat Issue. Selama izin itu belum ada, jangan
+mengandalkan Issue.
+
+**Satu pengecualian read-only yang dinyatakan:** auditor boleh `commit + push` **tepat satu berkas**,
+yaitu laporannya sendiri di `_meta/_internal/audit/`. Selain itu ia tetap read-only. Alasannya
+integritas: laporan pengadil yang di-commit oleh pihak yang diaudit bisa diubah di jalan, sedangkan
+commit milik auditor sendiri adalah bukti asal-usulnya.
 
 ---
 

@@ -20,7 +20,7 @@ independent review of PR #11 (findings F1–F16):
   (warning only when the manifest declares `Tahap: kerangka`).
 - Review F8: STATUS templates must parse to the exact safe value with the
   same shared parser (guidance text inside the field value = defect).
-- Review F9: Warisan enforcement — all nine items W-01..W-09 present in the
+- Review F9: Warisan enforcement — all ten items W-01..W-10 present in the
   system manifest; an 'override' row exempts the mechanical check of that
   item only with the full approval trail (alasan/dampak/tanggal/approval).
 - Review F13/F14: path-reference resolution is scoped per document (a doc
@@ -109,7 +109,7 @@ if _meta_manifest.is_file():
         # Butir wajib muncul sebagai BARIS TABEL deklarasinya (`| W-nn …`), bukan sekadar
         # disebut di prosa. Versi pertama cek ini memakai `\bW-nn\b` pada seluruh badan
         # bagian dan TERBUKTI menghasilkan PASS palsu: kalimat penjelas "menyebut semua
-        # butir (W-01…W-09)" sudah memenuhi syarat walau baris deklarasinya dihapus.
+        # butir (W-01…W-10)" sudah memenuhi syarat walau baris deklarasinya dihapus.
         # Tertangkap oleh uji mutasi pada hari yang sama — pola "PASS palsu" yang sama
         # dengan temuan review independen PR #11.
         _baris_dideklarasikan = {

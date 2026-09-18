@@ -85,6 +85,13 @@ PEGANGAN = [
      "sistem/sistem-konten-kreator/PROMPT_ENTRI_UNIVERSAL.md", "sistem/sistem-konten-kreator"),
     ("sistem-presentasi", "sistem/sistem-presentasi/PANDUAN_PENGGUNA.md",
      "sistem/sistem-presentasi/PROMPT_ENTRI_UNIVERSAL.md", "sistem/sistem-presentasi"),
+    # Ditambahkan 18 Sep 2026 sesudah review independen putaran 2 PR #74 (ketiga hakim, saling
+    # bebas): sistem ke-6 SUDAH terdaftar di INDEKS_SISTEM.md dan validator warisan, tetapi TIDAK
+    # di inventaris ini - jadi 23 dokumennya belum pernah disisir satu pun pola. Prinsip inventaris
+    # ini sendiri ("kewajiban tidak diturunkan dari keberadaan, glob hanya pelengkap") yang
+    # dilanggar, persis seperti A-01/A-02 di checkpoint_core pada 17 Sep 2026.
+    ("sistem-undangan", "sistem/sistem-undangan/PANDUAN_PENGGUNA.md",
+     "sistem/sistem-undangan/PROMPT_ENTRI_UNIVERSAL.md", "sistem/sistem-undangan"),
 ]
 
 # ---------------------------------------------------------------- pola

@@ -28,7 +28,11 @@ import cv2
 import numpy as np
 
 MODEL_DIR = Path(os.environ.get("MODEL_DIR", "/tmp/mdl"))
-SKALA = 2  # gerbang G3 membatasi kenaikan <= 2x
+SKALA = 2  # skala yang DIUJI pada 17 Sep 2026, BUKAN ambang keputusan. Gerbang G3 FINAL
+           # membatasi kenaikan <= 1,5x untuk foto (00_RENCANA_KERANGKA.md 4.4/4.5 + Log
+           # Keputusan); 2x justru diuji untuk mengukur batas ATASnya. Nilai dan hasil ukur
+           # di berkas ini TIDAK diubah - ini artefak bukti, hanya komentarnya diluruskan
+           # (temuan review independen putaran 2 PR #74).
 
 
 # ---------------------------------------------------------------- metrik
