@@ -2330,3 +2330,46 @@ Regresi yang dijalankan pencatat sebelum revisi putaran 2: `tools/validate_repo.
 - Tidak ada dokumen aturan (`00`/`05`/`06`), klausul acceptance, unit produksi, `tools/`, atau log sesi orang lain yang diubah oleh pencatat.
 
 ---
+
+## Run 22 — AT-KK-02 (re-run bersih, 0.3.10; dicatat 2026-09-18 oleh pencatat slot 28)
+
+- **Tanggal run yang dinilai:** 2026-09-17 (UTC), jendela produksi sesi slot 25; **tanggal pencatatan:** 2026-09-18 (UTC).
+- **Versi sistem:** `0.3.10`; tidak ada bump versi.
+- **Peran:** pencatat sesi terpisah, bukan subjek dan tidak menjalankan ulang produksi. Run direkonstruksi dari artefak yang sudah ter-push pada repo/API, bukan dari klaim angka pengguna.
+- **Subjek:** `_log-sesi/LOG_SESI_2026-09-17_25.md`, slot 25, produksi dua konten Toko Bu Sinta: `kotak-amal-kecil` dan `lampu-teras`.
+- **Objek GitHub yang diverifikasi via API:** PR #77 base `main` = `c1d00c33ba5d2c81a4dbb6016e40b9c6ca16edb6`; branch subjek `arena/01a0b1cb-pembangun-sistem`; head final = `05377921e3aa94d1809c4ea4499c576f3c6b2b92`; merge commit = `26147e16364771855f1e087bd9d29a41f1bc84df`; `merged=true`, `merged_by=fatrizmubarok-cloud`, merged `2026-09-18T13:35:39Z`.
+- **Review independen PR #77:** reviewer slot 26 (`arena/01a0b23b-pembangun-sistem`, log `LOG_SESI_2026-09-17_26.md`) mengirim komentar `#issuecomment-5723927324`: **MERAH — 1 MERAH / 1 BLOCKER / 0 NP**. Reviewer slot 27 (`arena/01a0b397-pembangun-sistem`, log `LOG_SESI_2026-09-18_27.md`) mengirim komentar `#issuecomment-5727283990`: **MERAH — 1 MERAH / 0 BLOCKER / 1 NP** pada head ter-pin `65a3b8c`; batas 2 putaran habis, sehingga keputusan akhir berada pada pemilik dan bukan putaran ketiga otomatis. Pemilik kemudian merge langsung; API `merged_by` di atas adalah bukti aktornya.
+- **Verdict Run 22:** **LULUS @ `0.3.10`** untuk AT-KK-02. Penilaian klausul dan syarat metode di bawah ini dipisahkan. Riwayat Run 14 dan Run 21 tidak ditimpa.
+
+### Penilaian per klausul AT-KK-02
+
+| Klausul | Hasil | Bukti yang diverifikasi pencatat |
+|---|---|---|
+| 1. File referensi tersimpan di repo dan disertakan ulang setiap generate berikutnya tanpa diminta manual | **LULUS** | Jendela Run 22 menghasilkan dua konten baru. Versi log subjek di commit `6f10d67`, `e362260`, dan head final `0537792` dibaca melalui API. Tidak ada pesan `Pengguna`/pemilik yang memerintahkan penyertaan file referensi pada momen mana pun; penyebutan referensi di sana berasal dari output/rekaman agent. Breakdown Tahap 4 pada commit `1b91b34` dan `697c1b9` menetapkan `acuan-utama.png` sebagai `Referensi wajib` serta `File referensi yang wajib disertakan saat generate` (baris 6 dan 26–27 pada masing-masing breakdown). Log subjek merekam generate pertama memakai referensi (`acuan-utama.png` disertakan; baris 48–51) dan generate kedua juga menyertakannya (baris 89–90). Asset final benar-benar ada: `_produksi-aktif/toko-bu-sinta-kotak-amal-kecil/assets/unit-1-kotak-amal-kecil.png` = 2.213.667 B dan `_produksi-aktif/toko-bu-sinta-lampu-teras/assets/unit-1-lampu-teras.png` = 2.176.114 B. |
+| 2. Elemen baru `Reference-Ready` setelah acuan wajib ada sebagai file | **LULUS** | Ini ditunjuk ke Run 21 yang permanen di `main`: `sistem/sistem-konten-kreator/channel-toko-bu-sinta/konsistensi-visual/bu-sinta/referensi/acuan-utama.png` ada dan berukuran 2.200.050 B; `bank-konsistensi.md` menyatakan `Reference-Ready`. PR #75 sudah diverifikasi API sebagai merged oleh `fatrizmubarok-cloud`; reviewer #75 `#issuecomment-5719390081` memverifikasi urutan file → status dan tidak adanya state pohon `Reference-Ready` tanpa file. Run 22 me-re-verify jalur positif yang sama sebelum dua generate. |
+| 3. Channel Brief tidak `Operational` selama elemen wajib belum `Reference-Ready` | **LULUS** | Pointer Run 21 di atas adalah bukti permanen untuk urutan dependency. Pada Run 22, log subjek mencatat status brief dinaikkan setelah dependency checklist diperiksa; tree final memiliki `bank-konsistensi.md` `Reference-Ready`, file acuan, dan Channel/Model Brief `Operational`. Tidak ada bukti status `Operational` dinaikkan sebelum acuan tersedia. |
+| Kondisi gagal: deskripsi teks saja pada generate kedua/seterusnya atau status naik tanpa file acuan | **Tidak terjadi** | Kedua breakdown dan catatan generate menunjuk file acuan yang sama; file acuan dan dua output target ada di tree final. |
+
+### Syarat metode — dinilai terpisah dari klausul
+
+| Butir | Penilaian pencatat |
+|---|---|
+| Kebersihan gerbang Tahap 5 | **BERSIH.** Pesan owner/pengguna yang tercatat apa adanya di log subjek hanya menyatakan pada konten #1: `G1 SETUJU — breakdown benar. G2 DIKUNCI — breakdown menjadi dasar generate`, dan pada konten #2: `G2 DIKUNCI — breakdown menjadi dasar generate`. Tidak ada instruksi referensi di blok gerbang. Pemeriksaan versi log `6f10d67`, `e362260`, dan final dilakukan terpisah; tidak ada pesan owner yang meminta penyertaan referensi. |
+| Deviasi bentuk gerbang (anotasi wajib; bukan cacat klausul) | **Dicatat apa adanya:** G2 naskah final tidak terbit sebagai gerbang eksplisit terpisah. Naskah final disetujui di bawah blok `G1 Tahap 1+2`. Kutipan verbatim dari log: **“G1 Tahap 1+2: SETUJU — konsep, angle, dan naskah final diterima”**; konten #2 mencatat kutipan **“G1 Tahap 1+2 Konten #2: SETUJU — konsep, angle, dan naskah final diterima.”**. Tidak ada G2 eksplisit terpisah untuk naskah. Ini dicatat sebagai deviasi bentuk, bukan diubah menjadi klaim G2 eksplisit. |
+| Insiden perekaman (anotasi wajib; bukan cacat klausul) | Log subjek final mencatat lengkap entri integritas 2026-09-18: branch platform ter-reset, state dipulihkan dari head PR, force push terpaksa setelah push normal/`--force-with-lease` ditolak, dan rekonstruksi sebelumnya memakai `--theirs` keliru sehingga kompresi/kehilangan detail harus dipulihkan. Verifikasi byte menunjukkan kronologi `e362260` menjadi prefix byte-exact di final: 10 entri lama utuh dan berurutan, lalu entri tambahan; insiden tidak menyentuh bukti klausul/metode Run 22. |
+| Verdict metode | **LULUS — BERSIH.** Perilaku 3/3 klausul dinilai LULUS dan syarat “tanpa diminta manual” terpenuhi dari provenance pesan yang diperiksa. |
+
+### Rekonstruksi review dan batas klaim terhadap head final
+
+- Komentar putaran 1 menyatakan BLOCKER rekonstruksi LOG_SESI dan MERAH status G1 Tahap 5 konten #1. Komentar putaran 2 menyatakan rekonstruksi dan koreksi G1 tertutup pada head ter-pin `65a3b8c`, serta menemukan MERAH klaim G2 naskah dan NP status model. Log slot 25 final memang memuat rekonstruksi faithful, koreksi G2-faithful, serta sinkron model Channel Brief.
+- **Catatan integritas yang tidak disamarkan:** pemeriksaan API terhadap **head final PR `05377921`** menemukan `STATUS.md` Kotak Amal Kecil kembali memuat `Tahap berikutnya ... menunggu G1 Tahap 5` dan `G1 Tahap 5: belum`, meskipun commit `65a3b8c` yang direview slot 27 memuat koreksinya. Commit `35929ff` mengubah status itu kembali dan commit `5f7877b`/`05377921` hanya memulihkan/menambah LOG_SESI, bukan STATUS tersebut. Karena itu, klaim “G1 Tahap 5 konsisten di head final” dan “semua temuan review terbukti tertutup di head final” **tidak dapat saya nyatakan sebagai fakta**. Ini adalah mismatch state review non-klausul yang dicatat jujur; pencatat tidak mengubah artefak subjek di luar mandat. Verdict AT-KK-02 di atas berdasar bukti klausul/metode langsung (log, breakdown, asset, dan bank reference), bukan klaim status yang ternyata regresi.
+- Tidak ada putaran review ketiga; merge owner setelah batas dua putaran dicatat sebagai fakta API, bukan approval baru yang diciptakan pencatat.
+
+### Regresi dan tindak lanjut
+
+- Regresi FI pada tahap sinkronisasi sudah bertambah dari 75 menjadi 77 karena dua unit nyata Run 22; hasil alat dan mekanismenya dicatat di `_meta/FAILURE_INJECTION_TESTS.md`.
+- Gate suite sistem **tidak ditutup**. Setelah Run 22: 8/10 kode LULUS pada `0.3.10` (AT-KK-01/02/03/03b/04/05/05b/07); sisa **AT-KK-06 dan AT-KK-08 = GAGAL-metode**. `Operational` tetap terbuka.
+- Run 14 dan Run 21 tetap terbaca sebagai riwayat GAGAL-metode; tidak ada riwayat yang ditimpa.
+- Tidak ada dokumen aturan `00`/`04`/`05`/`06`, klausul aturan `ACCEPTANCE_TESTS.md`, atau artefak produksi subjek yang diubah oleh pencatatan ini.
+
+---
