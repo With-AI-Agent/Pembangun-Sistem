@@ -2148,3 +2148,103 @@ sebagai penyensoran. Sesudahnya: warning ekstrak 5, R7 PASS, smoke ekstrak 30 PA
 pengecualian pengadil berlaku, keputusan merge milik pemilik langsung); T-42 (7 kandidat di sistem lain)
 dan T-44 (review putaran berjalan) tetap terbuka; T-44 akan ditutup pemilik sesudah putaran 4.
 
+---
+
+## Giliran 22 (18 Sep 2026) — "Kenapa berhenti? Lanjut", lalu laporan 3 hakim putaran 4 selesai
+
+**Pemilik (verbatim, dua pesan):**
+
+> Kenapa berhenti? Lanjut
+
+> Sekarang harus apa?
+>
+> O iya, tadi kan kamu bilang "\*\*Buka 3 sesi agent baru\*\*, lalu tempel teks ini ke masing-masing (sama
+> persis untuk ketiganya):..."
+>
+> Aku mau laporin bahwa aku udh buka dan jalanin 3 hakim di sesi baru dan mereka semuanya udh selesai.
+> Silahkan klo kamu mau cek
+
+**Keputusan pemilik lewat tanya-jawab di giliran yang sama (dua-duanya opsi yang direkomendasikan agent):**
+
+1. Perbaikan T-42 (7 kandidat di 3 sistem lain, sudah siap dan sudah lulus uji di salinan) →
+   **"Sesudah verdict putaran 4"**: kepala cabang tetap beku di `8305eeb` supaya pengukuran tiga hakim
+   tidak basi; begitu verdict masuk, patch diterapkan sebagai commit sendiri + manifest v1.29.1 +
+   register ditutup dengan sha.
+2. Dua temuan baru sapuan + dua celah alat penjaring → **"Buka utang T-50/T-51, kerjakan sesudah
+   putaran 4"**: dicatat resmi di register + ledger sekarang, isinya dikerjakan sebagai batch terpisah,
+   dan perluasan aturan alat pengadil diputuskan bersama pemilik (bukan oleh agent di tengah rangkaian
+   review).
+
+**Jawaban agent atas "kenapa berhenti":** berhenti karena kepala cabang **sengaja dibekukan** di `8305eeb`
+selama tiga hakim putaran 4 bekerja — kalau agent push, prompt yang sudah diserahkan jadi basi dan verdict
+hakim menunjuk head yang bukan head PR, jadi kuorum putaran itu bisa terbaca belum lengkap. Yang kemudian
+dikerjakan tanpa menggeser head: triase T-42, menyiapkan + menguji perbaikannya di salinan repo penuh,
+dan menyapu kelas cacat yang sama ke seluruh repo.
+
+### Verdict putaran 4 (head `8305eeb`)
+
+Tiga verdict masuk terpisah, tidak saling menimpa: `5732560780` (15:53Z, **HIJAU**), `5732603626`
+(15:57Z, **MERAH**), `5732661937` (16:02Z, **MERAH**). `ambil_verdict.py --pr 74 --harapkan 3`:
+**kuorum putaran 4 = 3/3 LENGKAP (2 bukan hijau)**; agregat lintas putaran **MERAH — JANGAN MERGE
+(9 dari 10 slot bukan hijau)**. Hakim HIJAU menyatakan "seluruh berkas pelindung yang disentuh
+terdeklarasi eksplisit di body", dua hakim MERAH menyatakan sebaliknya → **fail-closed**, yang dipakai
+yang MERAH (aturan pemilik 17 Sep 2026).
+
+**Union 5 temuan, semuanya direproduksi agent sebelum dikerjakan — nol positif palsu (tiga putaran
+berturut-turut):**
+
+1. **Teks gerbang menjanjikan hal yang tidak terukur.** Prompt §4 mewajibkan `validate_repo.py`
+   "harus PASS, 0 warning". Terukur: di head `8305eeb` alat mencetak `WARNINGS: 2` (dua baris berkas
+   bukti historis), di merge-base `c1d00c3` (diperiksa lewat worktree sementara) `WARNINGS: none`.
+   Jadi PR ini sendiri yang memperkenalkan tier peringatan (keputusan pemilik giliran 21) **tanpa
+   menyelaraskan teks gerbang** di `tools/review_prompt.py`, `_meta/DEFINITION_OF_DONE.md`, dan
+   `_meta/00_CARA_KERJA_META.md`. Yang membuat ini lolos dua putaran: **tidak ada satu pun regresi yang
+   memaku teks gerbang**. Perbaikan: frasa dicabut dari tiga tempat, aturan tier dinyatakan, dan
+   dikunci **RP17a/b/c dengan kontrol mutasi** (FI 153 → 156).
+2. **Body stale terhadap head yang ia sebut sendiri.** §6 menulis "dicetak alat pada head `8305eeb`"
+   lalu mengutip **550 rujukan**; pengukuran di head itu `COVERAGE: 122 active documents, 558 path
+   references` → 550 adalah angka `f683db8`. Klaim "merge-base `c1d00c3` (= tip `main`)" juga basi:
+   tip `main` = `26147e1`. Ini persis kelas cacat yang body sendiri klaim sudah ditutup ("angka hanya
+   boleh disalin dari keluaran alat") — agent menyalin ulang baris lama saat menyegarkan bagian lain.
+3. **Rentang versi bertentangan di tiga tempat dan tidak cocok pengukuran.** Manifest merge-base
+   **v1.14.0**, head **v1.29.0**, Log Evolusi 23 → 39 baris (16 baru). Judul menulis v1.17.0-v1.29.0,
+   ringkasan "dua belas kenaikan versi (v1.17.0 → v1.29.0)", §3 "(v1.20.0 → v1.29.0)".
+4. **Perubahan penegakan tidak dideklarasikan.** `tools/checkpoint_core.py`: pin `WARISAN_ITEMS`
+   `range(1,10)` → `range(1,11)`, plus baris W-10 masuk ke manifest klinik, presentasi, konten-kreator.
+   Body menyebut `WARISAN_ITEMS` **0 kali** dan malah menulis "teks saja, penegakan tidak berubah";
+   §9(a) hanya melaporkan pin `CORE_REQUIRED` 35 → 34.
+5. **Deklarasi cakupan tidak lengkap.** 28 berkas di luar `_meta`/`tools`/`_log-sesi` (19 sistem-undangan,
+   4 salinan-meta, 4 dokumen sistem lain, 2 dokumen root) tidak dideklarasikan; body hanya
+   mendeklarasikan berkas pelindung.
+
+Temuan (1) diperbaiki di commit ini; (2)(3)(4)(5) adalah cacat body/judul PR → diperbaiki lewat
+penyegaran body + judul sebagai **langkah terakhir** (aturan: PATCH body selalu terakhir, tidak boleh
+diikuti commit). Dicatat sebagai **T-50**.
+
+### Triase T-42 (7 kandidat) dan dua positif palsu yang digugurkan
+
+7 dari 7 kandidat **nyata** sesudah dibaca di sumbernya (alatnya sendiri menyatakan rasio positif-palsu
+~65%). Rinciannya ada di baris T-42 dan di commit `5b1c00b`. Perbaikan **diuji di salinan repo penuh
+lebih dulu** (`/tmp/t42dry`: kandidat 7 → 0, gerbang 12 alat FAIL=0) sebelum menyentuh repo asli.
+
+Sapuan kelas cacat yang sama ke seluruh repo menghasilkan dua temuan baru (→ **T-51**) dan dua celah
+alat penjaring (→ **T-52**, TERTAHAN karena perluasan aturan pengadil adalah keputusan pemilik).
+**Dua positif palsu digugurkan dengan bukti**, supaya tidak ikut dikerjakan:
+
+- **Kit klinik "menyimpang" dari `_sistem/`** — ternyata hanya **cap sumber 2 baris** ("Sumber: … sha …
+  tanggal … versi-kit …"), dan sha-nya **cocok 6/6** dengan blob sumbernya; sudah dijaga fail-closed oleh
+  validator klinik sendiri ("Cek Kit Basi", `_sistem/validate_system.py` baris 101-136, menghitung blob
+  sha tanpa memanggil git). Sapuan agent keliru karena hanya mencari penjaga di folder `tools/`.
+- **"Prompt tutup-sesi root meta kurang commit+push dan auto-merge"** — artefak kata kunci: substansinya
+  ada di langkah 3 ("semua perubahan WAJIB ter-commit dan ter-push") dan langkah 7 ("sesudah merge/close,
+  sesi ini TIDAK BISA push lagi").
+
+Sapuan pertama agent juga **terlalu berisik** (mengelompokkan blok berpagar dari baris pertamanya,
+sehingga 75 kelompok "menyimpang" yang sebagian besar tak berhubungan, termasuk baris `---`). Itu
+pelajaran yang sama dengan temuan #1 hakim putaran 3: **hitungan kasar bukan pengukuran**; sapuan
+kemudian dipertajam ke tiga sinyal yang benar-benar berisiko.
+
+**Berikutnya:** commit ini → commit penutup T-50 dengan sha → push → segarkan body PR (penyegaran
+keenam: 558 rujukan, merge-base bukan tip main, v1.14.0 → v1.29.0 + 16 baris Log Evolusi, deklarasi
+pin `WARISAN_ITEMS` 9 → 10, deklarasi 28 berkas di luar tiga folder) + judul → bangkitkan prompt
+putaran 5 dengan `--umumkan` → serahkan link ke berkas prompt itu sendiri.

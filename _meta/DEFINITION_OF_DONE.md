@@ -23,7 +23,7 @@ Dokumen atau sistem **tidak boleh disebut selesai hanya karena file sudah dituli
 
 - [ ] Discovery Level-0 selesai
 - [ ] Semua butir `03_KONTRAK_WARISAN.md` (W-01…W-10) diterapkan dan tercatat di bagian "Warisan" rencana kerangka + manifest — atau override-nya tercatat dengan alasan + approval eksplisit pengguna
-- [ ] `tools/validate_repo.py` PASS dengan 0 warning terhadap sistem ini (penegakan mekanis butir W-01…W-04)
+- [ ] `tools/validate_repo.py` PASS terhadap sistem ini (penegakan mekanis butir W-01…W-04), dan baris `WARNINGS: N` dikutip apa adanya di laporan. **Warning tier hanya sah untuk berkas bukti historis yang append-only** (keputusan pemilik 18 Sep 2026 — riwayat tidak disunting demi kosmetika tabel); **warning di dokumen hidup berarti butir ini BELUM lulus**. Syarat lama (PASS tanpa satu pun peringatan) dicabut oleh hakim putaran 4 review PR #74 karena tidak terukur sejak warning tier ada; riwayat angkanya ada di `_meta/FAILURE_INJECTION_TESTS.md` (RP17).
 - [ ] Bentuk sistem dan batasannya terdokumentasi
 - [ ] Manifest tersedia dan lengkap
 - [ ] Entry point tersedia

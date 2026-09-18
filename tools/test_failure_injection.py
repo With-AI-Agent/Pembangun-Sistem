@@ -1168,6 +1168,50 @@ def review_prompt_scenarios(base_dir: Path):
         and not any("sama" in x for x in p16c),
     ))
 
+    # ------------------------------------------------------------------
+    # RP17 - teks gerbang tidak boleh menjanjikan hal yang tidak terukur (temuan #1 KEDUA hakim
+    # putaran 4 PR #74). Prompt mewajibkan `validate_repo.py` "harus PASS, 0 warning", padahal PR
+    # ini sendiri yang menambahkan warning tier (keputusan pemilik 18 Sep 2026): di head 8305eeb
+    # alat mencetak "WARNINGS: 2" dari dua baris berkas bukti historis, dan di merge-base
+    # "WARNINGS: none". Gerbang yang tak bisa dipenuhi itu membuat review MERAH tanpa cacat baru.
+    # Sebelumnya TIDAK ADA regresi yang memaku teks gerbang -> ia basi diam-diam.
+    # ------------------------------------------------------------------
+    out17 = base_dir / "rp17_prompt.md"
+    with contextlib.redirect_stdout(io.StringIO()), contextlib.redirect_stderr(io.StringIO()):
+        rp.main(["--generic", "--out", str(out17)])
+    teks17 = out17.read_text(encoding="utf-8") if out17.is_file() else ""
+    checks.append((
+        "RP17a gerbang validator di prompt TIDAK menjanjikan '0 warning' dan menyatakan aturan warning tier",
+        "0 warning" not in teks17 and "WARNINGS: N" in teks17
+        and "berkas bukti historis" in teks17 and "harus PASS" in teks17
+        and "Warning di dokumen HIDUP" in teks17,
+    ))
+    dod17 = (cp / "_meta" / "DEFINITION_OF_DONE.md").read_text(encoding="utf-8")
+    cara17 = (cp / "_meta" / "00_CARA_KERJA_META.md").read_text(encoding="utf-8")
+    checks.append((
+        "RP17b dokumen hidup ikut selaras: DoD + cara kerja meta tidak menjanjikan '0 warning'",
+        "PASS dengan 0 warning" not in dod17 and "harus PASS 0 warning" not in cara17
+        and "Warning tier hanya sah untuk berkas bukti historis" in dod17
+        and "warning hanya sah di berkas bukti historis" in cara17,
+    ))
+    # Mutasi RP17: kembalikan teks gerbang lama -> RP17a harus gagal (kontrol positif).
+    mut17 = original.replace(
+        """    a("python3 tools/validate_repo.py          # harus PASS; baris 'WARNINGS: N' dikutip apa adanya")""",
+        """    a("python3 tools/validate_repo.py          # harus PASS, 0 warning")""")
+    assert mut17 != original, "mutasi RP17 tidak mengubah apa pun - uji tidak valid"
+    assert "0 warning" in mut17, "mutasi RP17 tidak menghasilkan teks lama - uji tidak valid"
+    rp_path.write_text(mut17, encoding="utf-8")
+    rp_m17 = _load_review_prompt(cp, "review_prompt_mut_rp17")
+    out17b = base_dir / "rp17_prompt_mut.md"
+    with contextlib.redirect_stdout(io.StringIO()), contextlib.redirect_stderr(io.StringIO()):
+        rp_m17.main(["--generic", "--out", str(out17b)])
+    teks17b = out17b.read_text(encoding="utf-8") if out17b.is_file() else ""
+    checks.append((
+        "RP17c diuji-mutasi: teks gerbang dikembalikan ke '0 warning' -> janji tak terukur itu terdeteksi",
+        "0 warning" in teks17b and "WARNINGS: N" not in teks17b,
+    ))
+    rp_path.write_text(original, encoding="utf-8")
+
     return checks
 
 
