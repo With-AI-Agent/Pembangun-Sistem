@@ -1,4 +1,4 @@
-> Salinan turunan. Sumber: _meta/PROTOKOL_REVIEW_INDEPENDEN.md sha 49b6d5feeee09142e66b385b7b2deab119e720a6 tanggal 2026-09-18 versi-meta 1.24.0
+> Salinan turunan. Sumber: _meta/PROTOKOL_REVIEW_INDEPENDEN.md sha 5f7799394c51a206e6376fee80d73228f4ffa1ac tanggal 2026-09-18 versi-meta 1.24.1
 > Perbedaan: tidak ada
 > Pemakaian: protokol yang dirujuk bagian "Review independen (sesi lain)" di ACCEPTANCE_TESTS.md sistem ini; dipakai saat penutupan gate acceptance dan klaim permanen (level L1).
 # Protokol Review Independen (Sesi Lain)
@@ -59,12 +59,16 @@ Alasan perubahan: **mekanisme harus bisa dipakai tanpa perantara sesi.** Sebelum
 - **Komentar verdict di GitHub dibaca ALAT, bukan manusia** (`tools/ambil_verdict.py`): baris pertama harus
   judul Markdown yang memuat kata putusan (`MERAH` / `HIJAU` / `BERSIH` / `ADA TEMUAN` / `TIDAK BISA
   DISIMPULKAN` / `APPROVE` / `REQUEST_CHANGES`), **tidak** memuat kata `penulis` / `koreksi terbuka` /
-  `tanggapan penulis`, dan **tidak** berada di dalam pagar kode. **Sebab aturan ini (nyata terjadi, PR #74):**
-  dua dari tiga verdict hakim tidak pernah terhitung dan kuorum terbaca 1/3 — penyebabnya bukan hakim yang
-  tidak bekerja, melainkan **format yang tidak pernah ditetapkan**: prompt pembangkit tidak menyebut syarat
-  baca alat pengumpul. Formatnya kini dicetak pembangkit sebagai bagian 6a, dan **kesepakatannya diuji lintas
-  alat** — contoh judul yang diwajibkan prompt harus benar-benar terbaca oleh `slot_hakim()` dan
-  `simpulkan()`, bukan hanya terlihat benar di mata.
+  `tanggapan penulis`, dan **tidak** berada di dalam pagar kode. **Sebab aturan ini:** prompt pembangkit tidak
+  pernah menyebut syarat baca alat pengumpul, jadi verdict yang **sampai tetapi melenceng formatnya** tidak
+  terhitung sebagai slot dan kuorum gagal **diam-diam** (tanpa pesan error). **Batas klaim, diukur pada PR #74:**
+  kanal PR itu memuat 6 komentar — 5 milik penulis (benar digolongkan BUKAN SLOT) dan 1 verdict hakim (terbaca
+  MERAH) — jadi dua verdict yang hilang pada putaran pertama **tidak pernah ditempel sama sekali**, bukan gagal
+  dibaca. Aturan format ini menutup **modus kegagalan yang berbeda dan belum sempat terjadi**; ia **tidak**
+  menjelaskan kuorum 1/3 yang lama dan tidak boleh diklaim sebagai penjelasannya. Formatnya dicetak pembangkit
+  sebagai bagian 6a (termasuk kewajiban mengganti nomor putaran, bukan menyalin `putaran 1` mentah), dan
+  **kesepakatannya diuji lintas alat** — contoh judul yang diwajibkan prompt harus benar-benar terbaca oleh
+  `slot_hakim()` dan `simpulkan()`, bukan hanya terlihat benar di mata.
 - **Kalau PR menyentuh alat pengadil, perintah merge di prompt DIGANTI larangan.** Sebelum perbaikan ini
   bagian "Aturan keputusan" mencetak `gh pr merge <N> --merge` untuk PR yang bagian "Pengecualian pengadil"-nya
   sendiri **melarang** merge — kontradiksi di dalam satu dokumen, dan yang muncul lebih dulu adalah perintah
