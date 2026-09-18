@@ -3,8 +3,8 @@
 - **Status:** `approved`
 - **Channel:** Toko Bu Sinta (`channel-toko-bu-sinta`)
 - **Model konten:** Gambar Statis & Caption (`gambar-caption`)
-- **Tahap terakhir selesai:** Tahap 5 (Generate/Acquire Assets)
-- **Tahap berikutnya:** Tahap 6 (Assembly & Publish Prep) — menunggu G1 Tahap 5
+- **Tahap terakhir selesai:** Tahap 5 (Generate/Acquire Assets) — G1 diterima 2026-09-17
+- **Tahap berikutnya:** Tahap 6 (Assembly & Publish Prep)
 - **Output resmi:**
   - `naskah-draft.md` ✅
   - `breakdown-output.md` ✅
@@ -17,7 +17,7 @@
   - `G2 naskah final:` disetujui 2026-09-17 — naskah 5 baris dikunci
   - `G1 Tahap 4:` disetujui 2026-09-17 — breakdown benar
   - `G2 breakdown:` disetujui 2026-09-17 — breakdown dikunci sebagai dasar generate
-  - `G1 Tahap 5:` belum — menunggu keputusan pemilik
+  - `G1 Tahap 5:` disetujui 2026-09-17 — visual diterima, sesuai breakdown
   - `G3 merge:` belum
 - **Commit terakhir:** —
 - **PR terkait:** —
