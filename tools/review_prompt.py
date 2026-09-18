@@ -462,8 +462,42 @@ def head_sha_of_worktree() -> str:
 # --------------------------------------------------------------------------
 # Render
 # --------------------------------------------------------------------------
+def next_round(number: int) -> int | None:
+    """Hitung nomor putaran review BERIKUTNYA dari verdict yang sudah tertempel di kanal PR.
+
+    Sebab: prompt versi lama menyuruh hakim MENEBAK ("ganti `putaran 1` dengan angka putaran yang
+    sebenarnya") dan menyebut "maksimal 2 putaran" sebagai fakta tetap. Keduanya salah begitu pemilik
+    membuka putaran tambahan (18 Sep 2026: PR #74 putaran 3 dibuka pemilik sesudah 13 temuan gabungan
+    putaran 2 ditutup). Nomor putaran adalah DATA yang ada di kanal, jadi dihitung di sini — dan
+    definisi "slot hakim" DIPINJAM dari `ambil_verdict.py` supaya tidak ada dua definisi yang bisa
+    saling bertentangan.
+
+    Fail-closed: kalau kanal tidak terbaca, kembalikan None. Prompt lalu menyuruh hakim menghitung
+    sendiri secara eksplisit dan TIDAK mencetak angka yang bisa salah.
+    """
+    tools_dir = str(Path(__file__).resolve().parent)
+    if tools_dir not in sys.path:
+        sys.path.insert(0, tools_dir)
+    try:
+        import ambil_verdict as av
+        data = av.ambil_pr(number)
+    except Exception:
+        return None
+    angka = []
+    for kelompok in ("comments", "reviews"):
+        for k in data.get(kelompok) or []:
+            teks = (k or {}).get("body") or ""
+            if not av.slot_hakim(teks):
+                continue
+            m = re.search(r"putaran\s+(\d+)", teks, re.I)
+            if m:
+                angka.append(int(m.group(1)))
+    return (max(angka) + 1) if angka else 1
+
+
 def render(pr: dict | None, files: list[str], generic: bool,
-           objek: dict | None = None) -> tuple[str, list[str]]:
+           objek: dict | None = None,
+           putaran: int | None = None) -> tuple[str, list[str]]:
     if generic:
         num, base, head = PLACEHOLDER_PR, PLACEHOLDER_BASE, PLACEHOLDER_HEAD
         title = "<JUDUL PR>"
@@ -685,7 +719,16 @@ def render(pr: dict | None, files: list[str], generic: bool,
     a("")
     a("- **temuan** (satu kalimat, tanpa hedging) → **bukti** (perintah + keluaran + sha/baris) → **perintah perbaikan**")
     a("  (apa yang harus diubah, oleh siapa).")
-    a("- Sebut **putaran ke berapa** review ini (maksimal 2 putaran; putaran ke-2 gagal = eskalasi ke pemilik).")
+    if putaran:
+        a(f"- Review ini **putaran {putaran}** — angkanya DIHITUNG alat dari verdict yang sudah tertempel di")
+        a("  kanal PR ini (definisi slot hakim dipinjam dari `ambil_verdict.py`), bukan ditebak. Aturan default:")
+        a("  maksimal 2 putaran lalu eskalasi ke pemilik; **pemilik boleh membuka putaran tambahan secara")
+        a("  eksplisit** (preseden 18 Sep 2026, PR #74: 13 temuan putaran 2 ditutup lebih dulu, lalu pemilik")
+        a("  memutuskan membuka putaran 3).")
+    else:
+        a("- Sebut **putaran ke berapa** review ini — HITUNG dari verdict yang sudah tertempel di kanal PR,")
+        a("  jangan menebak. Aturan default: maksimal 2 putaran lalu eskalasi ke pemilik; pemilik boleh")
+        a("  membuka putaran tambahan secara eksplisit (aturan 7 protokol).")
     a("- PR dibiarkan `OPEN`.")
     a("")
     a("## 6a. Format komentar verdict — WAJIB persis, karena dibaca ALAT bukan manusia")
@@ -694,18 +737,26 @@ def render(pr: dict | None, files: list[str], generic: bool,
     a("Alat itu **tidak membaca prosa**: keputusan diambil dari **BARIS BERPARKAH PERTAMA** (judul Markdown,")
     a("atau baris diawali `-`/`*`/`>` lalu `**VERDICT:**`) dan hanya kata putusan tertentu yang dihitung.")
     a("Kalau formatmu melenceng sedikit saja, komentarmu **tidak terhitung sebagai slot hakim** dan kuorum")
-    a("gagal **diam-diam**: tidak ada pesan error, PR hanya terbaca kekurangan hakim. **Batas klaim, diukur:**")
-    a("pada PR ini dua verdict putaran pertama **tidak pernah ditempel sama sekali** — itu modus kegagalan yang")
-    a("BERBEDA dan tidak disembuhkan oleh format. Yang disembuhkan format adalah verdict yang **sudah ditulis")
-    a("tetapi tidak terbaca** oleh alat; itu belum sempat terjadi di sini dan justru karena itu ditetapkan sekarang.")
+    a("gagal **diam-diam**: tidak ada pesan error, PR hanya terbaca kekurangan hakim. **Batas klaim (preseden")
+    a("di repo ini, BUKAN diagnosis PR yang sedang kamu hadapi):** pada satu PR, dua verdict putaran pertama")
+    a("**tidak pernah ditempel sama sekali** — itu modus kegagalan yang BERBEDA dan tidak disembuhkan oleh format.")
+    a("Yang disembuhkan format adalah verdict yang **sudah ditulis tetapi tidak terbaca** oleh alat. Periksa kanal")
+    a("PR INI untuk tahu mana yang sedang terjadi; **jangan mewarisi diagnosis PR lain** (prompt ini pernah")
+    a("membekukan angka dan riwayat satu PR sehingga tercetak untuk semua PR — itu temuan review, sudah ditutup).")
     a("")
     a("**Baris PERTAMA komentar PR-mu harus persis berbentuk ini** (satu baris, TANPA pagar kode):")
     a("")
-    a(f"## Review independen PR #{merge_num} — putaran 1 — VERDICT: MERAH")
-    a("")
-    a("**Ganti `putaran 1` dengan angka putaran yang sebenarnya** — jangan disalin mentah. Kalau di PR ini")
-    a("sudah ada verdict hakim sebelumnya, kamu sedang melakukan **putaran 2** (maksimal 2 putaran; putaran")
-    a("ke-2 gagal = eskalasi ke pemilik). Untuk putusan hijau, ganti kata `MERAH` dengan `HIJAU` di baris itu.")
+    if putaran:
+        a(f"## Review independen PR #{merge_num} — putaran {putaran} — VERDICT: MERAH")
+        a("")
+        a(f"**Angka putaran {putaran} di atas DIHITUNG ALAT** dari verdict yang sudah tertempel di kanal PR ini —")
+        a("**salin apa adanya, jangan diubah.** Untuk putusan hijau, ganti kata `MERAH` dengan `HIJAU`.")
+    else:
+        a(f"## Review independen PR #{merge_num} — putaran 1 — VERDICT: MERAH")
+        a("")
+        a("**Ganti `putaran 1` dengan angka putaran yang sebenarnya** — jangan disalin mentah. Kanal PR tidak")
+        a("terbaca saat prompt ini dibangkitkan, jadi **hitung sendiri**: buka daftar komentar PR, cari verdict")
+        a("hakim yang sudah tertempel, pakai angka berikutnya. Untuk putusan hijau, ganti `MERAH` jadi `HIJAU`.")
     a("Lalu di")
     a("badan komentar, tulis sekali lagi sebagai baris berpemarkah:")
     a("")
@@ -798,7 +849,8 @@ def main(argv: list[str] | None = None) -> int:
             files = resolve_pr_files(number, data)
             # R3: objek diff DIUKUR sebelum prompt dicetak, bukan diserahkan ke reviewer untuk ditebak.
             objek = objek_diff(data["baseRefOid"], data["headRefOid"])
-            text, windows = render(data, files, generic=False, objek=objek)
+            putaran = next_round(data["number"])
+            text, windows = render(data, files, generic=False, objek=objek, putaran=putaran)
     except ToolError as exc:
         print(f"review_prompt: GAGAL — {exc}", file=sys.stderr)
         return 2

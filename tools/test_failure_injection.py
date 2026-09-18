@@ -783,6 +783,45 @@ def review_prompt_scenarios(base_dir: Path):
     ))
     rp_path.write_text(original, encoding="utf-8")
 
+    # ------------------------------------------------------------------
+    # RP10 - nomor putaran review DICETAK dari perhitungan kanal, bukan ditebak hakim.
+    # Cacat nyatanya: prompt menyuruh "ganti `putaran 1` dengan angka yang sebenarnya" dan menyebut
+    # "maksimal 2 putaran" sebagai fakta tetap; begitu pemilik membuka putaran 3 (18 Sep 2026),
+    # keduanya salah dan hakim dipaksa menebak — tebakan salah = slot verdict salah dikelompokkan.
+    # ------------------------------------------------------------------
+    p_rp10, _ = rp.render(pr7, ["a.md", "b.md"], generic=False, objek=objek_rp9, putaran=3)
+    checks.append((
+        "RP10 nomor putaran yang dicetak = yang dihitung (putaran 3), bukan beku di angka 1",
+        "putaran 3 — VERDICT: MERAH" in p_rp10
+        and "DIHITUNG ALAT" in p_rp10
+        and "Ganti `putaran 1`" not in p_rp10
+        and "Review ini **putaran 3**" in p_rp10,
+    ))
+    checks.append((
+        "RP10 prompt tidak lagi membekukan riwayat SATU PR sebagai diagnosis semua PR",
+        "pada PR ini dua verdict putaran pertama" not in p_rp10
+        and "jangan mewarisi diagnosis PR lain" in p_rp10,
+    ))
+    p_rp10b, _ = rp.render(pr7, ["a.md", "b.md"], generic=False, objek=objek_rp9, putaran=None)
+    checks.append((
+        "RP10 kalau kanal tak terbaca: prompt menyuruh HITUNG SENDIRI, tidak mencetak angka salah",
+        "hitung sendiri" in p_rp10b and "putaran 1 — VERDICT: MERAH" in p_rp10b,
+    ))
+
+    # Mutasi RP10 - bekukan lagi nomor putarannya: pemeriksaan pertama harus gagal.
+    mut10 = original.replace(
+        'a(f"## Review independen PR #{merge_num} — putaran {putaran} — VERDICT: MERAH")',
+        'a(f"## Review independen PR #{merge_num} — putaran 1 — VERDICT: MERAH")')
+    assert mut10 != original, "mutasi RP10 tidak mengubah apa pun - uji tidak valid"
+    rp_path.write_text(mut10, encoding="utf-8")
+    rp_m10 = _load_review_prompt(cp, "review_prompt_mut_rp10")
+    p_m10, _ = rp_m10.render(pr7, ["a.md", "b.md"], generic=False, objek=objek_rp9, putaran=3)
+    checks.append((
+        "RP10 diuji-mutasi: nomor putaran dibekukan ke 1 -> terdeteksi",
+        "putaran 3 — VERDICT: MERAH" not in p_m10,
+    ))
+    rp_path.write_text(original, encoding="utf-8")
+
     return checks
 
 

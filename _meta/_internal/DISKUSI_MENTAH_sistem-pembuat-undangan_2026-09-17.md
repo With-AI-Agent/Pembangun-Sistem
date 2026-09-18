@@ -1826,3 +1826,54 @@ dan agent sempat menyimpulkan dari apa yang terlihat).
    `_meta/FAILURE_INJECTION_TESTS.md` di manifest sistem-konten-kreator. Diukur pada worktree
    `origin/main` terpisah — gerbang yang sama GAGAL di sana, jadi bukan akibat merge. Diperbaiki mengikuti
    pola provenance yang sudah dipakai penulisnya sendiri, dan dilaporkan karena menyentuh sistem lain.
+
+
+## Giliran 18 (2026-09-18) — pemilik menjawab empat pertanyaan: satu keputusan tegas, tiga delegasi
+
+Agent melaporkan hasil tiga hakim putaran 2 (13 temuan gabungan, semua ditutup atau didaftar beralasan)
+lalu bertanya empat hal. Jawaban pemilik, verbatim:
+
+| # | Pertanyaan agent | Jawaban pemilik |
+|---|---|---|
+| 1 | Bolehkah pin `CORE_REQUIRED` 35 → 34 baris? | *"Aku ikut yang menurutmu terbaik dalam hal ini"* |
+| 2 | Review putaran 3? | **"ya"** (memilih opsi: *siapkan 3 hakim baru*) |
+| 3 | 7 kandidat di 3 sistem lain? | *"Aku ikut yang menurutmu terbaik dalam hal ini"* |
+| 4 | PR #74 sudah bisa digabung — diapakan? | *"Yang terbaik gimana? Aku ikut kamu"* |
+
+**Cara agent memakai delegasi itu** (aturan berdiri pemilik: delegasi wajib disertai saran terbaik, dan
+semua yang tercatat wajib dieksekusi, bukan cuma dicatat):
+
+1. **Pin (T-41) → DITERIMA, 34 entri unik.** Saran terbaik: baris kembar adalah cacat nyata, dan
+   mengembalikannya berarti mempertahankan daftar yang berbohong tentang isinya. Yang TIDAK diklaim:
+   angka cetakan validator berubah — terukur tetap 35 (ukuran gabungan). T-41 ditutup dengan sha isi
+   `d0c2319` dan penunjukan ke bagian ini sebagai bukti pengakuan pemilik.
+2. **Putaran 3 → DIBUKA.** Konsekuensinya dikerjakan lebih dulu: prompt yang akan dipakai hakim masih
+   menyuruh mereka MENEBAK nomor putaran dan membekukan riwayat PR lain sebagai diagnosis semua PR.
+   Keduanya ditutup (`next_round()`, teks PR-agnostik, protokol aturan 7, penjaga RP10) — **supaya tiga
+   hakim itu tidak mengadili dengan prompt yang salah pada saat dibangkitkan.**
+3. **7 kandidat (T-42) → DIPERIKSA satu per satu, DILAPORKAN sebelum menyentuh apa pun, dan
+   penindakannya DITUNDA sampai verdict putaran 3 masuk.** Alasan yang dinyatakan: (i) alat itu bukan
+   pemberi putusan (positif palsu terukur ~65%), jadi tiap kandidat wajib dibaca di sumbernya; (ii)
+   ketujuhnya ada di tiga sistem yang bukan milik sesi ini, jadi menindaknya mencampur cakupan PR yang
+   sedang diadili; (iii) **head PR harus BEKU selama hakim bekerja** — mendorong commit baru di tengah
+   review membuat pengukuran mereka basi, dan itu sudah pernah terjadi (giliran 15).
+4. **Merge → JANGAN dulu; tunggu verdict putaran 3.** `mergeable=true/clean` berarti *bisa* digabung,
+   bukan *boleh*. Aturan pemilik dari awal: PR normal tanpa auto-merge, dan fail-closed selama ada MERAH.
+
+**Aturan proses yang ditetapkan dari jawaban ini:** selama tiga hakim putaran 3 bekerja, **tidak ada push
+ke branch ini**. Kalau ada pekerjaan yang harus disimpan, ia menunggu verdict masuk atau pemilik
+membatalkan review-nya.
+
+**Dua insiden yang terjadi saat mengerjakan giliran ini, dicatat apa adanya:**
+
+- **Riwayat git lokal DI-RESET platform** jadi shallow di `eff7afa` (titik cabang awal sesi), sementara
+  remote sudah memegang `da62d3f` (46 commit). Isi berkas di working tree tidak hilang. Pemulihan sesuai
+  aturan yang sudah ada: `git fetch --unshallow` ref eksplisit → `git reset --mixed origin/<branch>` →
+  commit ulang pekerjaan baru di atas head remote. Commit `00a6ce9` yang sempat dibuat di atas basis
+  salah karena itu **tidak pernah didorong**; isinya di-commit ulang di atas `da62d3f`.
+- **Klaim palsu di commit `1361f2f`:** pesannya menyatakan "INDEKS_SISTEM: bullet v1.25.0" padahal
+  bullet itu **tidak pernah tertulis ke disk** — script patch-nya kehilangan baris `write_text` saat
+  blok kodenya diganti, tetapi tetap mencetak "OK". Ditemukan karena langkah berikutnya gagal menemukan
+  anchor. Diperbaiki di commit ini (dua bullet ditulis **dan dibaca ulang dari disk untuk di-assert**),
+  dan aturan kerjanya diperbarui: *setiap penulisan berkas programatis wajib diverifikasi dengan membaca
+  ulang dari disk, bukan dengan tidak-adanya error.*

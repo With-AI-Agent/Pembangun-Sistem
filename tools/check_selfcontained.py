@@ -442,6 +442,10 @@ def sinkronkan_salinan(targets: list[str], tanggal: str) -> int:
     mendeklarasikan perbedaan nyata adalah penyimpangan yang DISENGAJA dan diputuskan orang lain;
     menimpanya diam-diam akan menghapus keputusan itu, jadi ia dilewati dan dilaporkan.
 
+    Label `versi-meta` ikut disegarkan: ia menyatakan keadaan sinkron terakhir, dan keadaan itu termasuk
+    versi meta saat sinkron — jadi versi yang tertinggal juga alasan untuk menulis ulang, bukan hanya sha
+    atau badan yang berbeda.
+
     Definisi sha dan versi meta DIPINJAM dari build_template (satu definisi, bukan dua):
     `source_sha()` dan `current_meta_version()`.
     """
@@ -480,8 +484,8 @@ def sinkronkan_salinan(targets: list[str], tanggal: str) -> int:
                 continue
             src_bytes = src.read_bytes()
             sha = bt.source_sha(src)
-            if sha == m.group("sha") and _body == src_bytes:
-                continue
+            if sha == m.group("sha") and _body == src_bytes and m.group("meta") == versi:
+                continue  # sudah sinkron: sha sumber, badan, DAN versi meta pada label semuanya cocok
             baru = (
                 f"> Salinan turunan. Sumber: {src_rel} sha {sha} tanggal {tanggal} "
                 f"versi-meta {versi}\n".encode("utf-8")

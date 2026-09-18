@@ -69,6 +69,58 @@ for p in ROOT.rglob("*.md"):
     if text.count("```") % 2:
         errors.append(f"unpaired code fence: {p.relative_to(ROOT)}")
 
+# --- Baris tabel register & ledger wajib se-kolom dengan header tabelnya ------------------
+# Cacat nyata 18 Sep 2026 (sudah terdorong di da62d3f sebelum diperbaiki): sebuah script penyisip
+# baris menghitung indeks string SEBELUM satu baris di-pop dari daftar, sehingga baris baru tersisip
+# DI TENGAH prosa bagian lain dan mematahkan baris di sekitarnya. Pemeriksaan "SELESAI wajib sha"
+# tidak bisa menangkapnya — baris yang patah tidak terparse sebagai baris sama sekali — jadi yang
+# dijaga di sini adalah KOLOMNYA. Pipa yang di-escape (\|) adalah teks di dalam sel, bukan pemisah.
+def _kolom(baris: str) -> int:
+    return len(re.findall(r"(?<!\\)\|", baris)) - 1
+
+
+SEP_TABLE_RE = re.compile(r"^\|(?:\s*:?-{3,}:?\s*\|)+\s*$")
+for _rel in ("_meta/DAFTAR_PEKERJAAN_TERBUKA.md", "_meta/TANGGAPAN_MASUKAN_PEMILIK.md"):
+    _p = ROOT / _rel
+    if not _p.is_file():
+        continue
+    _garis = _p.read_text(encoding="utf-8").splitlines()
+    _harap = None
+    _kosong = False   # baris kosong sesudah baris tabel: tabel BELUM dianggap berakhir
+    for _no, _line in enumerate(_garis, 1):
+        if SEP_TABLE_RE.match(_line):
+            _harap, _kosong = _kolom(_line), False
+            continue
+        if not _line.strip():
+            # Baris kosong TIDAK mengakhiri tabel secara diam-diam. Versi pertama penjaga ini
+            # me-reset `_harap` di sini, dan karena itu BUTA terhadap cacat yang paling sering
+            # terjadi: baris tabel yang terpisah dari tabelnya oleh satu baris kosong (terjadi
+            # nyata di berkas ini pada 18 Sep 2026, dan di _meta/INDEKS_SISTEM.md sebagai temuan
+            # hakim putaran 2). Kalau sesudah baris kosong masih ada baris `|`, itu temuan.
+            _kosong = _harap is not None
+            continue
+        if not _line.startswith("|"):
+            if _harap is not None and not _kosong:
+                errors.append(
+                    f"{_rel}:{_no}: baris yatim tepat sesudah baris tabel ({_line.strip()[:60]}) — "
+                    "tanda sebuah baris tabel patah atau tersisip di tempat yang salah"
+                )
+            _harap, _kosong = None, False
+            continue
+        if _harap is not None and _kosong:
+            errors.append(
+                f"{_rel}:{_no}: baris tabel TERPUTUS dari tabelnya oleh baris kosong — di Markdown "
+                "baris ini tidak lagi jadi bagian tabel (cacat yang sama dengan baris sistem yang "
+                "jatuh di luar tabel INDEKS). Buang baris kosongnya, jangan memindahkan barisnya"
+            )
+        _kosong = False
+        if _harap is not None and _kolom(_line) != _harap:
+            errors.append(
+                f"{_rel}:{_no}: baris tabel punya {_kolom(_line)} kolom padahal header tabelnya "
+                f"{_harap} — baris patah/tersisip salah tempat, atau ada pipa di dalam sel yang "
+                "belum di-escape sebagai \\|"
+            )
+
 # --- Volatile corpus counts are forbidden in permanent evidence (C5/AT-16) --
 manifest_path = ROOT / "_meta/SYSTEM_MANIFEST.md"
 if manifest_path.is_file():

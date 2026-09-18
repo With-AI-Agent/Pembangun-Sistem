@@ -1,4 +1,4 @@
-> Salinan turunan. Sumber: _meta/PROTOKOL_REVIEW_INDEPENDEN.md sha f6afe32fad6c1a7110561cd04ba6c39820ec9289 tanggal 2026-09-18 versi-meta 1.24.1
+> Salinan turunan. Sumber: _meta/PROTOKOL_REVIEW_INDEPENDEN.md sha 9f257b534e267b8dff3c86188f0770cc6fb78334 tanggal 2026-09-18 versi-meta 1.26.0
 > Perbedaan: tidak ada
 > Pemakaian: protokol yang dirujuk bagian "Review independen (sesi lain)" di ACCEPTANCE_TESTS.md sistem ini; dipakai saat penutupan gate acceptance dan klaim permanen (level L1).
 # Protokol Review Independen (Sesi Lain)
@@ -13,7 +13,7 @@ Verifikasi akhir atas pekerjaan yang berdampak permanen dilakukan oleh SESI AI L
 4. Independensi: reviewer tidak menulis di branch subjek/penulis; read-only terhadap branch orang lain.
 5. Batas jendela (6d generalisasi): selama jendela run/uji atau proses lain yang sedang berjalan, artefak yang dipublikasikan reviewer (komentar PR, log, branch) tidak boleh memuat rumusan jawaban/kriteria yang belum tertutup uji; gunakan pointer SHA+baris.
 6. Proporsional: kedalaman review mengikuti level trigger di bawah; review bukan ritual untuk pekerjaan remeh.
-7. Putaran terbatas: maksimal 2 putaran (review → koreksi → review ulang). Putaran ke-2 gagal = eskalasi ke pemilik untuk keputusan final (termasuk opsi membatalkan).
+7. Putaran terbatas: **default** maksimal 2 putaran (review → koreksi → review ulang). Putaran ke-2 gagal = eskalasi ke pemilik untuk keputusan final (termasuk opsi membatalkan). **Eskalasi bukan larangan: pemilik boleh membuka putaran tambahan secara eksplisit**, dan keputusan itu milik pemilik — bukan milik penulis, yang justru sedang diadili (preseden 18 Sep 2026, PR #74: 13 temuan gabungan tiga hakim putaran 2 ditutup dan diuji lebih dulu, baru pemilik memutuskan membuka putaran 3). **Nomor putaran dihitung alat** dari verdict yang sudah tertempel di kanal (`review_prompt.py` meminjam definisi slot hakim dari `ambil_verdict.py`), bukan ditebak hakim: tebakan yang salah membuat pengumpul verdict salah mengelompokkan slot.
 8. Append-only: hasil review dicatat apa adanya, termasuk RED FLAG dan verdict yang merevisi verdict sebelumnya; jangan menghapus riwayat, jangan menghaluskan.
 
 ## Level trigger
@@ -109,7 +109,7 @@ mengarang aturan. Jadi ditulis **sebelum** verdict ke-2 dan ke-3 tiba.
    (terjadi nyata di PR #74: reviewer menilai `3543612` sementara head sudah `17ada02`). Verdict tanpa
    SHA head **tidak bisa dipetakan** ke keadaan mana pun dan harus diperlakukan sebagai **belum terverifikasi**.
 5. **Koreksi DITUNGGU sampai semua hakim masuk, lalu SATU putaran.** Alasannya: butir 7 di atas membatasi
-   **maksimal 2 putaran**. Mengoreksi tiap kali satu verdict masuk akan menghabiskan jatah putaran dan
+   **maksimal 2 putaran** (default; pemilik boleh membuka putaran tambahan — aturan 7). Mengoreksi tiap kali satu verdict masuk akan menghabiskan jatah putaran dan
    membuat objek review hakim lain basi. Pengecualian: **perbaikan pada instrumen pengukur verdict itu
    sendiri boleh segera** (kalau alatnya salah membaca, semua verdict berikutnya ikut salah terbaca).
 6. **Format verdict WAJIB terbaca mesin.** Putusan ditulis pada **baris judul Markdown** atau pada
