@@ -53,6 +53,20 @@ Alasan perubahan: **mekanisme harus bisa dipakai tanpa perantara sesi.** Sebelum
 ## Penulisan hasil
 - Meta: bagian baru di `_meta/ACCEPTANCE_TESTS.md` (log review per peristiwa singkat) atau `LOG_SESI` sesi reviewer; yang substantif di log acceptance sistem terkait.
 - Sistem domain: subbagian append-only di ACCEPTANCE_TEST_LOG.md-nya ("Koreksi pasca-review independen" adalah pola yang benar).
+- **Komentar verdict di GitHub dibaca ALAT, bukan manusia** (`tools/ambil_verdict.py`): baris pertama harus
+  judul Markdown yang memuat kata putusan (`MERAH` / `HIJAU` / `BERSIH` / `ADA TEMUAN` / `TIDAK BISA
+  DISIMPULKAN` / `APPROVE` / `REQUEST_CHANGES`), **tidak** memuat kata `penulis` / `koreksi terbuka` /
+  `tanggapan penulis`, dan **tidak** berada di dalam pagar kode. **Sebab aturan ini (nyata terjadi, PR #74):**
+  dua dari tiga verdict hakim tidak pernah terhitung dan kuorum terbaca 1/3 — penyebabnya bukan hakim yang
+  tidak bekerja, melainkan **format yang tidak pernah ditetapkan**: prompt pembangkit tidak menyebut syarat
+  baca alat pengumpul. Formatnya kini dicetak pembangkit sebagai bagian 6a, dan **kesepakatannya diuji lintas
+  alat** — contoh judul yang diwajibkan prompt harus benar-benar terbaca oleh `slot_hakim()` dan
+  `simpulkan()`, bukan hanya terlihat benar di mata.
+- **Kalau PR menyentuh alat pengadil, perintah merge di prompt DIGANTI larangan.** Sebelum perbaikan ini
+  bagian "Aturan keputusan" mencetak `gh pr merge <N> --merge` untuk PR yang bagian "Pengecualian pengadil"-nya
+  sendiri **melarang** merge — kontradiksi di dalam satu dokumen, dan yang muncul lebih dulu adalah perintah
+  merge. Supresinya **bersyarat**: PR yang tidak menyentuh alat pengadil tetap memakai aturan merge normal,
+  dan **kedua arah** itu diuji (supresi tanpa syarat akan melumpuhkan review PR biasa).
 - Aturan lama penulis tetap berlaku: yang dilarang tetap dilarang (6a/6b/6d), reviewer hanya menambah lapisan verifikasi, tidak menghapus kewajiban self-check sebelum review.
 
 ## Warisan ke sistem domain

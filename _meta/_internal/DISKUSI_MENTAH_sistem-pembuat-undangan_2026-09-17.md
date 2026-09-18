@@ -1760,3 +1760,31 @@ perintah `&&` putus karena `grep` keluar 1 (menghitung 0 baris) — diulang deng
 luar: 3 sesi hakim baru pada head hasil koreksi. Verdict PR #74 tetap **1/3 MERAH + kuorum 1/3**, PR tetap
 **OPEN tanpa auto-merge**, dan konflik kepentingan tetap berlaku — rangkaian PR ini mengubah alat pengadil,
 jadi keputusan merge hanya milik pemilik.
+### Lanjutan Giliran 16 — dua cacat lagi ditemukan pada prompt yang HAMPIR dikirim ke 3 hakim baru
+
+Sesudah R3 ditutup, prompt dibangkitkan ulang untuk head yang baru dan **dibaca sendiri sebelum dikirim**.
+Dua cacat muncul, dan keduanya akan membuang putaran review pemilik kalau lolos:
+
+**(1) Prompt menyuruh hakim merge PR yang mengubah alat pengadil.** Bagian 6 mencetak `gh pr merge 74 --merge`
+tanpa syarat untuk keadaan "semua cek hijau", sementara bagian 7 menyatakan pengecualian pengadil **BERLAKU
+untuk PR ini** dan melarang merge apa pun. Satu dokumen, dua perintah berlawanan, dan yang muncul lebih dulu
+adalah perintah merge. Diperbaiki dengan membuat bagian 6 **bersyarat**: PR yang menyentuh alat pengadil
+mendapat larangan eksplisit, PR biasa tetap mendapat aturan merge normal. Supresi tanpa syarat akan
+melumpuhkan review PR biasa, jadi **kedua arah diuji**.
+
+**(2) Format komentar verdict tidak pernah ditetapkan.** Pengumpul verdict memutuskan dari **baris berpemarkah
+pertama** dengan kosakata ketat; baris yang memuat kata `penulis` dibuang, dan isi pagar kode dikosongkan lebih
+dulu. Karena **semua sesi memakai satu identitas bot yang sama**, format judul adalah satu-satunya pembeda slot
+— dan prompt tidak menyebutnya sama sekali. Bagian baru **6a** menetapkannya, dan **6 dari 10 regresi RP8
+bersifat lintas alat**: contoh judul yang diwajibkan prompt benar-benar dimasukkan ke `slot_hakim()` dan
+`simpulkan()` dan harus terbaca. Celah aslinya persis di situ — tiap alat benar sendiri-sendiri, tidak ada yang
+menjamin keduanya cocok.
+
+**Batas klaim, diukur dulu sebelum ditulis.** Pemeriksaan kanal PR #74 menunjukkan **6 komentar: 5 milik penulis
+(semuanya benar digolongkan BUKAN SLOT) dan 1 verdict hakim (terbaca MERAH)**. Jadi dua verdict yang dulu hilang
+**memang tidak pernah ditempel** — bukan gagal dibaca karena format. Perbaikan (2) karena itu menutup **modus
+kegagalan yang berbeda dan belum sempat terjadi**, dan **tidak** diklaim sebagai penjelasan kuorum 1/3 yang lama.
+
+FI naik **87 → 97 skenario PASS**; gerbang 10 alat `FAIL=0`; R7 ekstrak tetap **persis 5**; manifest **v1.24.0**;
+protokol bagian "Penulisan hasil" mendapat 2 butir dan salinan berlabelnya disinkron ulang. Register mencatat
+**T-37** (kontradiksi merge) dan **T-38** (format verdict), keduanya P1.

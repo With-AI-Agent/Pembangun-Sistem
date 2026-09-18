@@ -637,6 +637,96 @@ def review_prompt_scenarios(base_dir: Path):
     ))
     rp_path.write_text(original, encoding="utf-8")
 
+    # ------------------------------------------------------------------
+    # RP8 - dua cacat prompt yang ditemukan dengan MEMBACA KELUARAN ALATNYA SENDIRI:
+    #   (1) bagian 6 mencetak perintah `gh pr merge <N> --merge` untuk PR yang bagian 7-nya
+    #       sendiri MELARANG merge (PR menyentuh alat pengadil) - kontradiksi di satu dokumen,
+    #       dan yang muncul lebih dulu adalah perintah merge;
+    #   (2) prompt tidak pernah menetapkan format komentar verdict, padahal ambil_verdict.py
+    #       memutuskan dari BARIS BERPARKAH PERTAMA dengan kosakata ketat. Akibatnya nyata:
+    #       2 dari 3 verdict PR #74 tidak pernah terhitung dan kuorum terbaca 1/3.
+    # Pemeriksaannya LINTAS ALAT: contoh judul yang diwajibkan prompt dimasukkan ke pengumpul
+    # verdict dan harus benar-benar terbaca - bukan hanya terlihat benar di mata.
+    # ------------------------------------------------------------------
+    _av_spec = importlib.util.spec_from_file_location(
+        "ambil_verdict_rp8", ROOT / "tools" / "ambil_verdict.py")
+    assert _av_spec is not None and _av_spec.loader is not None
+    av = importlib.util.module_from_spec(_av_spec)
+    _av_spec.loader.exec_module(av)
+
+    NUM = pr7["number"]
+    perintah_merge = f"gh pr merge {NUM} --merge"
+    prompt_arb, _ = rp.render(pr7, ["tools/review_prompt.py"], generic=False, objek=objek)
+    prompt_biasa, _ = rp.render(pr7, ["sistem/sistem-undangan/STATUS.md"], generic=False, objek=objek)
+
+    checks.append((
+        "RP8 PR menyentuh alat pengadil -> perintah merge HILANG dan diganti larangan (bukan kontradiksi)",
+        perintah_merge not in prompt_arb and "DILARANG" in prompt_arb,
+    ))
+    checks.append((
+        "RP8 PR biasa -> aturan merge normal TETAP ada (supresinya bersyarat, bukan dihapus menyeluruh)",
+        perintah_merge in prompt_biasa,
+    ))
+
+    judul = [b for b in prompt_arb.splitlines() if b.startswith("## Review independen PR")]
+    checks.append((
+        "RP8 prompt menetapkan TEPAT SATU contoh judul verdict yang bisa disalin hakim",
+        len(judul) == 1,
+    ))
+    badan = judul[0] + "\n\n- **temuan**: contoh\n"
+    checks.append((
+        "RP8 LINTAS ALAT: contoh judul itu terhitung sebagai SLOT HAKIM oleh ambil_verdict",
+        av.slot_hakim(badan) is True,
+    ))
+    checks.append((
+        "RP8 LINTAS ALAT: contoh judul itu menghasilkan verdict MERAH (bukan TIDAK DITEMUKAN)",
+        av.simpulkan(badan) == "MERAH",
+    ))
+    checks.append((
+        "RP8 LINTAS ALAT: varian HIJAU dari contoh itu terbaca HIJAU",
+        av.simpulkan(badan.replace("MERAH", "HIJAU")) == "HIJAU",
+    ))
+    checks.append((
+        "RP8 syarat 'jangan sebut penulis di baris pertama' itu NYATA: judul yang memuatnya dibuang",
+        av.slot_hakim("## Review independen PR — tanggapan penulis — VERDICT: MERAH\n") is False,
+    ))
+    checks.append((
+        "RP8 syarat 'jangan di dalam pagar kode' itu NYATA: verdict terpagar tidak terbaca",
+        av.simpulkan("```md\n" + badan + "```\n").startswith("TIDAK DITEMUKAN")
+        and av.slot_hakim("```md\n" + badan + "```\n") is False,
+    ))
+
+    # Mutasi RP8-1: buang supresi bersyaratnya -> perintah merge harus MUNCUL lagi untuk PR
+    # yang menyentuh alat pengadil. Kalau tidak muncul, pemeriksaan pertama di atas tautologi.
+    mut1 = original.replace('    if arbiter:\n        a("**PERHATIAN — PR INI MENYENTUH ALAT PENGADIL',
+                            '    if False:\n        a("**PERHATIAN — PR INI MENYENTUH ALAT PENGADIL')
+    assert mut1 != original, "mutasi RP8-1 tidak mengubah apa pun - uji tidak valid"
+    rp_path.write_text(mut1, encoding="utf-8")
+    rp_m1 = _load_review_prompt(cp, "review_prompt_mut_rp8a")
+    p_m1, _ = rp_m1.render(pr7, ["tools/review_prompt.py"], generic=False, objek=objek)
+    checks.append((
+        "RP8 diuji-mutasi: supresi merge dimatikan -> perintah merge muncul lagi untuk PR pengadil",
+        perintah_merge in p_m1,
+    ))
+    rp_path.write_text(original, encoding="utf-8")
+
+    # Mutasi RP8-2: ganti contoh judul dengan judul tanpa token putusan -> tidak lagi terbaca
+    # sebagai slot maupun verdict. Bukti bahwa kata putusan di baris pertama load-bearing.
+    mut2 = original.replace(
+        'a(f"## Review independen PR #{merge_num} — putaran 1 — VERDICT: MERAH")',
+        'a(f"## Catatan untuk PR #{merge_num}")')
+    assert mut2 != original, "mutasi RP8-2 tidak mengubah apa pun - uji tidak valid"
+    rp_path.write_text(mut2, encoding="utf-8")
+    rp_m2 = _load_review_prompt(cp, "review_prompt_mut_rp8b")
+    p_m2, _ = rp_m2.render(pr7, ["tools/review_prompt.py"], generic=False, objek=objek)
+    j_m2 = [b for b in p_m2.splitlines() if b.startswith("## Catatan untuk PR")]
+    checks.append((
+        "RP8 diuji-mutasi: contoh judul tanpa token putusan -> BUKAN slot dan verdict TIDAK DITEMUKAN",
+        len(j_m2) == 1 and av.slot_hakim(j_m2[0] + "\n") is False
+        and av.simpulkan(j_m2[0] + "\n").startswith("TIDAK DITEMUKAN"),
+    ))
+    rp_path.write_text(original, encoding="utf-8")
+
     return checks
 
 
