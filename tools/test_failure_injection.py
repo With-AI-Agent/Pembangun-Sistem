@@ -250,6 +250,27 @@ def regression_scenarios(base_dir: Path):
 
 
 
+def klaim_total(baris: str) -> int:
+    """Hitung KLAIM TOTAL pada baris '**Jumlah:**' dokumen inventaris FI (pengetatan D-2b).
+
+    Definisi "klaim total" sengaja SEMPIT dan dinyatakan di sini, bukan "ambil semua angka":
+      (a) angka yang langsung diikuti `skenario di master`  -> total kanonik;
+      (b) frasa `Jumlah ... kini **N**`                     -> total kedua gaya lama;
+      (c) kutipan cetakan `PASSED: N scenarios`             -> total kedua yang disalin mentah.
+    Frasa riwayat seperti "3 skenario sintetis" atau "RP8 (10 pemeriksaan)" BUKAN klaim total
+    dan sengaja tidak dihitung — kalau dihitung, riwayat tidak bisa ditulis sama sekali.
+
+    Sebab pengetatan ini (temuan review independen putaran 2 PR #74, dan ditemukan JUGA di
+    `main`): satu baris yang sama memuat 97 di depan dan 73/75 beserta komposisi lamanya di
+    ekor, sementara penjaga versi lama hanya membaca kemunculan pertama — jadi dokumen yang
+    membantah dirinya sendiri lolos alat. Itu pola D-2 (dua angka, dua tempat, tanpa penjaga)
+    di dalam SATU tempat.
+    """
+    return (len(re.findall(r"\d+\s+skenario di master", baris))
+            + len(re.findall(r"Jumlah[^.]{0,60}?kini\s*\*\*\d+\*\*", baris))
+            + len(re.findall(r"PASSED:\s*\d+\s+scenarios", baris)))
+
+
 def _load_review_prompt(repo: Path, module_name: str):
     spec = importlib.util.spec_from_file_location(module_name, repo / "tools" / "review_prompt.py")
     if spec is None or spec.loader is None:
@@ -1198,6 +1219,41 @@ def run():
     checks.append(("Status tanpa versi ditolak karena bentuknya yang dipakai mendeteksi drift",
                    versi_status("- **Status:** `Released`", None)[0] != 0))
 
+    # D-2b: penjaga "satu klaim total per baris" diuji — penghitungnya (satuan) dan
+    # kabelnya ke exit code (ujung-ke-ujung, dengan FI_NESTED supaya tidak rekursif).
+    _bersih = "**Jumlah:** 99 skenario di master (18 sintetis + 17 unit nyata) disalin dari cetakan alat."
+    checks.append(("D-2b baris bersih -> tepat 1 klaim total", klaim_total(_bersih) == 1))
+    checks.append(("D-2b total kedua gaya 'kini **N**' -> 2 klaim (ditolak)",
+                   klaim_total(_bersih + " Jumlah di branch ini kini **73** — disalin dari cetakan.") == 2))
+    checks.append(("D-2b total kedua gaya kutipan cetakan -> 2 klaim (ditolak)",
+                   klaim_total(_bersih + " (`FAILURE-INJECTION TESTS PASSED: 75 scenarios (15 sintetis)`)") == 2))
+    checks.append(("D-2b riwayat penambahan BUKAN klaim total (tidak ikut dihitung)",
+                   klaim_total(_bersih + " Angka **84 → 87** muncul karena 3 skenario sintetis ditambahkan; "
+                                         "RP8 (10 pemeriksaan) mengunci dua cacat prompt.") == 1))
+    # Uji ujung-ke-ujung ini hanya di MASTER. Di ekstrak template ia redundan (penjaga D-2b
+    # yang sesungguhnya sudah berjalan pada dokumen nyata di sana) dan mahal: FI di ekstrak
+    # dipanggil build_template, jadi tanpa pembatasan ini setiap smoke extract membayar satu
+    # pemanggilan FI bersarang lagi. Dideteksi dari KEADAAN (folder benih hanya ada di ekstrak),
+    # mengikuti cara `_di_ekstrak` ditentukan di bagian D-2 — bukan dari variabel lingkungan.
+    _di_ekstrak_lokal = (ROOT / "sistem-benih").is_dir()
+    if not os.environ.get("FI_NESTED") and not _di_ekstrak_lokal:
+        with TemporaryDirectory() as d:
+            cp = Path(d) / "repo"
+            shutil.copytree(ROOT, cp, ignore=shutil.ignore_patterns(
+                ".git", "backups", "template_clean", "template_clean.zip", "__pycache__", "dist"))
+            dp = cp / "_meta/FAILURE_INJECTION_TESTS.md"
+            dt = dp.read_text(encoding="utf-8")
+            _l = dt.splitlines(keepends=True)
+            _k = next(k for k, x in enumerate(_l) if x.startswith("**Jumlah:**"))
+            _l[_k] = _l[_k].rstrip("\n") + " Jumlah di branch ini kini **73** — disalin dari cetakan alat.\n"
+            dp.write_text("".join(_l), encoding="utf-8")
+            assert "kini **73**" in dp.read_text(encoding="utf-8"), "mutasi D-2b tidak menempel"
+            r = subprocess.run([sys.executable, "tools/test_failure_injection.py"], cwd=cp,
+                               capture_output=True, text=True,
+                               env=dict(os.environ, FI_NESTED="1"))
+            checks.append(("D-2b ujung-ke-ujung: dokumen ber-total ganda -> alat exit non-zero dan menyebut D-2b",
+                           r.returncode != 0 and "D-2b" in r.stdout))
+
     n_synth = len(checks)
 
     # Regression against REAL repo data (F3): every registered system must
@@ -1265,6 +1321,22 @@ def run():
             print("FAILURE-INJECTION TESTS FAILED")
             print(f"- D-2: baris '{_pola}' tidak ditemukan/tidak terparse "
                   f"di _meta/FAILURE_INJECTION_TESTS.md")
+            raise SystemExit(1)
+        # D-2b (pengetatan 18 Sep 2026): baris itu harus memuat TEPAT SATU klaim total.
+        # Berlaku di KEDUA mode (master dan ekstrak): dokumennya berkas yang sama, dan
+        # uji ujung-ke-ujung D-2b juga dijalankan di dalam ekstrak oleh build_template.
+        _baris_jumlah = next((l for l in _teks_doc.splitlines()
+                              if l.startswith("**Jumlah:**")), "")
+        _n_klaim = klaim_total(_baris_jumlah)
+        if _n_klaim != 1:
+            print("FAILURE-INJECTION TESTS FAILED")
+            print(
+                f"- D-2b: baris '**Jumlah:**' di _meta/FAILURE_INJECTION_TESTS.md memuat "
+                f"{_n_klaim} klaim total (harus TEPAT 1). Dokumen yang membantah dirinya "
+                "sendiri di satu baris tidak bisa jadi acuan. Buang total yang basi — "
+                "JANGAN melonggarkan penghitung `klaim_total()`, dan jangan menghapus "
+                "riwayat penambahan (riwayat bukan klaim total)."
+            )
             raise SystemExit(1)
         # Parsing PER KOMPONEN BERNAMEKA, bukan "ambil semua angka": versi pertama penjaga ini
         # memakai re.findall(r"\d+") dan ikut menangkap angka 11 dari label "regresi review PR-11",
