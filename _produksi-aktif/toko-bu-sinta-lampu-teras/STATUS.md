@@ -13,8 +13,7 @@
 - **Sumber eksternal dipakai:** Tidak ada
 - **Keputusan baru:** Tema "Lampu Teras" dipilih; angle eksterior malam diterapkan; asset diterima pemilik
 - **Approval yang sudah diberikan:**
-  - `G1 Tahap 1+2:` disetujui 2026-09-17 — konsep & naskah diterima
-  - `G2 naskah final:` disetujui 2026-09-17 — naskah 5 baris dikunci
+  - `G1 Tahap 1+2:` disetujui 2026-09-17 — konsep & naskah diterima (catatan: naskah final disetujui di bawah keputusan G1 ini; gerbang G2 eksplisit untuk naskah final tidak pernah terbit — deviasi bentuk gerbang)
   - `G1 Tahap 4:` disetujui 2026-09-17 — breakdown benar
   - `G2 breakdown:` disetujui 2026-09-17 — breakdown dikunci sebagai dasar generate
   - `G1 Tahap 5:` disetujui 2026-09-17 — asset diterima, sesuai breakdown

@@ -117,7 +117,7 @@
 
 | Nama Model Konten | Folder | Status |
 |---|---|---|
-| Gambar Statis & Caption | `model-konten/gambar-caption/` | `Approved` — G2 dikunci 2026-09-17 oleh pemilik |
+| Gambar Statis & Caption | `model-konten/gambar-caption/` | `Operational` — dinaikkan 2026-09-17 (sesi 25) |
 
 ## 9. Arsip Naskah
 

@@ -3,8 +3,8 @@
 - **Status:** `approved`
 - **Channel:** Toko Bu Sinta (`channel-toko-bu-sinta`)
 - **Model konten:** Gambar Statis & Caption (`gambar-caption`)
-- **Tahap terakhir selesai:** Tahap 5 (Generate/Acquire Assets) — G1 diterima 2026-09-17
-- **Tahap berikutnya:** Tahap 6 (Assembly & Publish Prep)
+- **Tahap terakhir selesai:** Tahap 5 (Generate/Acquire Assets)
+- **Tahap berikutnya:** Tahap 6 (Assembly & Publish Prep) — menunggu G1 Tahap 5
 - **Output resmi:**
   - `naskah-draft.md` ✅
   - `breakdown-output.md` ✅
@@ -13,11 +13,10 @@
 - **Sumber eksternal dipakai:** Tidak ada
 - **Keputusan baru:** Konsep "Kotak Amal Kecil" dipilih dari kandidat tema pengguna; naskah final 5 baris dikunci; breakdown 1 unit visual (unit-1) disusun dengan prompt terintegrasi
 - **Approval yang sudah diberikan:**
-  - `G1 Tahap 1+2:` disetujui 2026-09-17 — konsep & naskah diterima
-  - `G2 naskah final:` disetujui 2026-09-17 — naskah 5 baris dikunci
+  - `G1 Tahap 1+2:` disetujui 2026-09-17 — konsep & naskah diterima (catatan: naskah final disetujui di bawah keputusan G1 ini; gerbang G2 eksplisit untuk naskah final tidak pernah terbit — deviasi bentuk gerbang)
   - `G1 Tahap 4:` disetujui 2026-09-17 — breakdown benar
   - `G2 breakdown:` disetujui 2026-09-17 — breakdown dikunci sebagai dasar generate
-  - `G1 Tahap 5:` disetujui 2026-09-17 — visual diterima, sesuai breakdown
+  - `G1 Tahap 5:` belum — menunggu keputusan pemilik
   - `G3 merge:` belum
 - **Commit terakhir:** —
 - **PR terkait:** —
