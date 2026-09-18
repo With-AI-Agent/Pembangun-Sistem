@@ -863,10 +863,112 @@ def render(pr: dict | None, files: list[str], generic: bool,
 # sama dengan angka beku yang ditutup RP9/RP10, jadi link DIRANGKAI DARI DATA TERUKUR dan alatnya
 # sendiri yang meneriakkannya ke stderr supaya agent tidak bisa "lupa".
 # --------------------------------------------------------------------------
+# --------------------------------------------------------------------------
+# T-48 (18 Sep 2026): link ke BERKAS PROMPT ITU SENDIRI, bukan hanya link ke PR.
+# Koreksi pemilik giliran 20: *"Apakah kamu paham bahwa yang aku maksud adalah link ke file prompt
+# perintah untuk sesi hakim dan reviewer/pemeriksa nya? Bukan hanya file PR nya."* Path di mesin kerja
+# agent (`/home/user/...`) tidak bisa dibuka pemilik, dan tidak bisa dibuka teman yang membuka sesi
+# hakim — jadi yang dibutuhkan adalah URL. Prompt ditempel ke kanal PR sebagai KOMENTAR PENULIS dan
+# permalink-nya dicetak di blok serah terima.
+# --------------------------------------------------------------------------
+def bangun_komentar_pengumuman(teks_prompt: str, number: int | None = None,
+                               head_sha: str | None = None, out_path: str | None = None) -> str:
+    """Badan komentar PR yang memuat prompt, berlabel KOMENTAR PENULIS (bukan verdict).
+
+    Dua pengaman, keduanya TERUKUR (bukan diasumsikan):
+      1. baris judul menyebut `penulis` — `slot_hakim()` di `ambil_verdict.py` memeriksa `PENULIS_RE`
+         LEBIH DULU daripada token laporan, jadi komentar ini tidak pernah jadi slot hakim;
+      2. seluruh prompt dipagari pagar backtick yang LEBIH PANJANG dari pagar terpanjang di dalam
+         prompt, dan `strip_code_fences()` mengosongkan isi pagar sebelum penggolongan (terbukti juga
+         untuk pagar 4-backtick), sehingga contoh judul verdict di dalam prompt tidak terbaca.
+    """
+    runs = re.findall(r"`+", teks_prompt or "")
+    pagar = "`" * max(4, max((len(r) for r in runs), default=0) + 1)
+    b: list[str] = []
+    a = b.append
+    a("## Komentar penulis PR — BUKAN verdict: prompt review independen siap salin")
+    a("")
+    a("Komentar ini dari **penulis PR** (agent yang pekerjaannya sedang dinilai), ditempel oleh")
+    a("`tools/review_prompt.py --umumkan` atas aturan tetap pemilik 18 Sep 2026: *setiap menyiapkan")
+    a("review independen atau pemeriksaan menyeluruh independen, agent wajib menyerahkan path berkas")
+    a("DAN link-nya* — dan yang dimaksud pemilik (koreksi giliran 20) adalah **link ke berkas prompt")
+    a("itu sendiri**, bukan hanya link ke PR, supaya siapa pun yang membuka sesi hakim bisa membuka")
+    a("dan menyalin teksnya tanpa perlu akses ke mesin kerja agent.")
+    a("")
+    a("**Ini BUKAN verdict dan BUKAN laporan review.** `tools/ambil_verdict.py` menggolongkannya")
+    a("sebagai komentar penulis karena baris judul di atas menyebut `penulis` (diperiksa lebih dulu")
+    a("daripada token laporan), dan seluruh isi prompt dipagari sehingga contoh judul verdict di")
+    a("dalamnya tidak bisa terbaca sebagai verdict. Kalau penggolongan itu gagal, alat **menghapus")
+    a("komentar ini lagi** dan tidak mencetak link (fail-closed).")
+    a("")
+    if number and number > 0:
+        a(f"- PR: #{number}")
+    if head_sha:
+        a(f"- Prompt ini pin ke head `{head_sha}`. Kalau head PR sudah bergerak, prompt ini **BASI** —")
+        a("  bangkitkan ulang, jangan dipakai.")
+    if out_path:
+        a(f"- Berkas di mesin kerja agent: `{Path(out_path).resolve()}` (tidak bisa dibuka orang lain —")
+        a("  itu sebabnya link ini ada)")
+    a("- Bangkitkan ulang: `python3 tools/review_prompt.py --pr "
+      f"{number if number and number > 0 else '<N>'} --out <path> --umumkan`")
+    a("")
+    a("**Cara memakai:** buka sesi hakim baru, lalu salin SELURUH isi di dalam pagar di bawah ini")
+    a("(tanpa ikut pagarnya) sebagai satu pesan.")
+    a("")
+    a(pagar)
+    a((teks_prompt or "").rstrip("\n"))
+    a(pagar)
+    a("")
+    return "\n".join(b) + "\n"
+
+
+def umumkan_prompt(number: int, teks_prompt: str, slug: str | None = None,
+                   head_sha: str | None = None, out_path: str | None = None):
+    """Tempel prompt ke kanal PR sebagai komentar penulis; kembalikan (permalink, catatan).
+
+    Fail-closed tiga lapis — lebih baik tidak ada link daripada link palsu atau kuorum palsu:
+      1. slug repo tak terbaca            -> tidak menempel, tidak mencetak link;
+      2. POST gagal / respons tak terbaca -> tidak mencetak link;
+      3. komentar TETAP terbaca sebagai slot hakim oleh `ambil_verdict.slot_hakim()` -> DIHAPUS lagi.
+    """
+    if slug is None:
+        slug = repo_slug()
+    if not slug or "/" not in slug or "<" in slug:
+        return None, f"slug repo tidak terbaca ({slug!r}) — prompt tidak ditempel, link tidak dicetak"
+    badan = bangun_komentar_pengumuman(teks_prompt, number, head_sha, out_path)
+    r = subprocess.run(
+        ["gh", "api", "-X", "POST", f"repos/{slug}/issues/{number}/comments", "--input", "-"],
+        input=json.dumps({"body": badan}), capture_output=True, text=True)
+    if r.returncode != 0:
+        return None, f"POST komentar gagal: {((r.stderr or r.stdout) or '').strip()[:200]}"
+    try:
+        data = json.loads(r.stdout)
+        url, cid = data.get("html_url"), data.get("id")
+    except Exception as exc:
+        return None, f"respons POST tidak terbaca sebagai JSON ({exc}) — link tidak dicetak"
+    if not url or not cid:
+        return None, "respons POST tidak memuat html_url/id — link tidak dicetak"
+    try:
+        sys.path.insert(0, str(Path(__file__).resolve().parent))
+        import ambil_verdict as av
+        terbaca_slot = bool(av.slot_hakim(badan))
+    except Exception as exc:
+        subprocess.run(["gh", "api", "-X", "DELETE", f"repos/{slug}/issues/comments/{cid}"],
+                       capture_output=True, text=True)
+        return None, f"verifikasi penggolongan gagal ({exc}) — komentar DIHAPUS lagi (fail-closed)"
+    if terbaca_slot:
+        subprocess.run(["gh", "api", "-X", "DELETE", f"repos/{slug}/issues/comments/{cid}"],
+                       capture_output=True, text=True)
+        return None, ("komentar TERBACA sebagai slot hakim oleh ambil_verdict.slot_hakim() — "
+                      "DIHAPUS lagi supaya kuorum tidak palsu")
+    return url, "tertempel dan terverifikasi BUKAN slot hakim"
+
+
 def handoff_block(number: int | None = None, head_sha: str | None = None,
                   out_path: str | None = None, slug: str | None = None,
                   objek: str | None = None,
-                  jenis: str = "review independen") -> str:
+                  jenis: str = "review independen",
+                  permalink: str | None = None) -> str:
     """Blok serah terima untuk PEMILIK: di mana berkasnya, dan link apa saja yang bisa diklik.
 
     Fail-closed: kalau slug repo atau sha head tidak terbaca, blok ini TIDAK mencetak link karangan.
@@ -894,6 +996,12 @@ def handoff_block(number: int | None = None, head_sha: str | None = None,
         p = Path(out_path).resolve()
         a(f"- **Berkas prompt (path absolut — salin persis):** `{p}`")
         a(f"- **Nama berkas:** `{p.name}` · **di dalam folder:** `{p.parent}`")
+    if permalink:
+        a(f"- **LINK KE PROMPT INI (tahan lama, bisa dibuka siapa pun):** {permalink}")
+        a("  Komentar **penulis PR**, BUKAN verdict: alat pengumpul verdict menggolongkannya"
+          " sebagai komentar penulis dan isinya dipagari, jadi contoh judul verdict di dalamnya"
+          " tidak bisa terbaca. Ini link yang diserahkan ke pemilik dan ke siapa pun yang"
+          " membuka sesi hakim — path di atas hanya ada di mesin kerja agent.")
     else:
         a("- **Berkas prompt:** TIDAK ditulis ke berkas (keluar ke stdout). Jalankan ulang dengan")
         a("  `--out <path>` supaya ada berkas yang bisa diberi path dan link.")
@@ -963,6 +1071,9 @@ def main(argv: list[str] | None = None) -> int:
     ap.add_argument("--pr", type=int, default=None, help="nomor PR")
     ap.add_argument("--generic", action="store_true", help="cetak versi placeholder (tanpa memanggil GitHub)")
     ap.add_argument("--out", default="-", help="'-' (default, stdout) atau path berkas")
+    ap.add_argument("--umumkan", action="store_true",
+                    help="tempel prompt ke kanal PR sebagai komentar penulis (BUKAN verdict) "
+                         "lalu cetak permalink-nya di blok serah terima")
     args = ap.parse_args(argv)
 
     # RP12: kedua nilai ini yang dipakai blok serah terima. Default None supaya mode --generic
@@ -992,7 +1103,22 @@ def main(argv: list[str] | None = None) -> int:
 
     # RP12: blok serah terima ditempel ke prompt DAN diteriakkan ke stderr. Dua kanal, bukan satu:
     # berkasnya memuat link untuk pemilik, stderr memaksa agent yang menjalankan alat melihatnya.
-    teks_serah = handoff_block(number, head_sha, None if args.out == "-" else args.out)
+    # T-48: tempel prompt ke kanal PR lebih dulu (isi komentarnya = prompt murni, tanpa blok
+    # serah terima), lalu permalink-nya masuk ke blok serah terima di berkas.
+    permalink: str | None = None
+    if args.umumkan:
+        if not number or number <= 0:
+            print("--umumkan butuh nomor PR (pakai --pr N); prompt generic tidak punya kanal PR",
+                  file=sys.stderr)
+        else:
+            permalink, catatan = umumkan_prompt(
+                number, text, head_sha=head_sha,
+                out_path=None if args.out == "-" else args.out)
+            print(f"pengumuman: {catatan}" + (f" -> {permalink}" if permalink else ""),
+                  file=sys.stderr)
+
+    teks_serah = handoff_block(number, head_sha, None if args.out == "-" else args.out,
+                               permalink=permalink)
     text = text + "\n" + teks_serah
 
     if args.out == "-":

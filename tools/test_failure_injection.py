@@ -930,6 +930,62 @@ def review_prompt_scenarios(base_dir: Path):
     ))
     rp_path.write_text(original, encoding="utf-8")
 
+    # ------------------------------------------------------------------
+    # RP13 - link ke BERKAS PROMPT ITU SENDIRI (T-48, koreksi pemilik giliran 20): prompt ditempel ke
+    # kanal PR sebagai KOMENTAR PENULIS dan permalink-nya dicetak. Risiko nyatanya: prompt memuat
+    # contoh judul verdict yang SENGAJA tidak dipagari (supaya hakim bisa menyalinnya), jadi kalau
+    # komentar pengumuman ini terbaca sebagai slot hakim, kuorum jadi palsu - persis cacat D-3 yang
+    # sudah ditutup. Karena itu yang diuji LINTAS ALAT: badan komentarnya dimasukkan ke
+    # `slot_hakim()` milik `ambil_verdict.py` dan harus BUKAN slot.
+    # ------------------------------------------------------------------
+    import importlib.util as _iu
+    _spec_av = _iu.spec_from_file_location("av_rp13", cp / "tools" / "ambil_verdict.py")
+    av13 = _iu.module_from_spec(_spec_av)
+    _spec_av.loader.exec_module(av13)
+
+    prompt13 = p_rp10 + "\n```bash\ngh api repos/x\n```\n"      # memuat pagar 3-backtick di dalamnya
+    badan13 = rp.bangun_komentar_pengumuman(prompt13, 74, SHA_UJI, "/tmp/rp13.md")
+    # Catatan: prompt di dalamnya memuat baris penutup pagar 3-backtick yang juga "murni backtick",
+    # jadi yang dibandingkan adalah PAGAR TERLUAR (yang terpanjang) terhadap run terpanjang di dalam
+    # prompt, dan pagar terluar itu harus muncul persis dua kali (buka + tutup).
+    panjang13 = [len(x.strip()) for x in badan13.split("\n")
+                 if x.strip() and set(x.strip()) <= {"`"}]
+    terdalam13 = max((len(r) for r in re.findall(r"`+", prompt13)), default=0)
+    checks.append((
+        "RP13 komentar pengumuman: judul menyebut penulis + BUKAN verdict, prompt dipagari pagar "
+        "terluar yang LEBIH PANJANG dari run terpanjang di dalam prompt (muncul tepat 2x), dan "
+        "isinya utuh di dalam pagar",
+        badan13.splitlines()[0].startswith("## Komentar penulis PR")
+        and "BUKAN verdict" in badan13.splitlines()[0]
+        and panjang13 and max(panjang13) >= 4
+        and max(panjang13) > terdalam13
+        and panjang13.count(max(panjang13)) == 2
+        and prompt13.rstrip("\n") in badan13,
+    ))
+    checks.append((
+        "RP13 LINTAS ALAT: komentar pengumuman BUKAN slot hakim menurut ambil_verdict.slot_hakim()",
+        av13.slot_hakim(badan13) is False,
+    ))
+
+    # Mutasi RP13 - buang label `penulis` dari judul: komentar harus TERBACA sebagai slot hakim.
+    # Kalau mutasi ini tidak mengubah kesimpulan, pengaman pertama hanyalah hiasan.
+    badan13_mut = badan13.replace("## Komentar penulis PR — BUKAN verdict: prompt review independen "
+                                  "siap salin",
+                                  "## Prompt review independen PR #74 — putaran 3 (siap salin)", 1)
+    assert badan13_mut != badan13, "mutasi RP13 tidak mengubah apa pun - uji tidak valid"
+    checks.append((
+        "RP13 diuji-mutasi: label penulis dibuang dari judul -> TERBACA sebagai slot hakim "
+        "(bukti pengamannya nyata, bukan hiasan)",
+        av13.slot_hakim(badan13_mut) is True,
+    ))
+
+    # Fail-closed: slug tak terbaca -> tidak menempel dan tidak mencetak link karangan.
+    url13, cat13 = rp.umumkan_prompt(74, prompt13, slug="<OWNER>/<REPO>")
+    checks.append((
+        "RP13 fail-closed: slug repo tak terbaca -> tidak ada permalink dan alasannya dinyatakan",
+        url13 is None and "slug repo tidak terbaca" in cat13,
+    ))
+
     return checks
 
 

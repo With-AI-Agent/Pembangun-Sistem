@@ -1,4 +1,4 @@
-> Salinan turunan. Sumber: _meta/PROTOKOL_REVIEW_INDEPENDEN.md sha ff14ccb87ce1b2b35ac6feec50a332d81bb27a43 tanggal 2026-09-18 versi-meta 1.27.0
+> Salinan turunan. Sumber: _meta/PROTOKOL_REVIEW_INDEPENDEN.md sha 4793e26cf399a40418eca3357deae75a3680ddb4 tanggal 2026-09-18 versi-meta 1.28.0
 > Perbedaan: tidak ada
 > Pemakaian: protokol yang dirujuk bagian "Review independen (sesi lain)" di ACCEPTANCE_TESTS.md sistem ini; dipakai saat penutupan gate acceptance dan klaim permanen (level L1).
 # Protokol Review Independen (Sesi Lain)
@@ -167,3 +167,28 @@ mengarang aturan. Jadi ditulis **sebelum** verdict ke-2 dan ke-3 tiba.
     TERUKUR dan alatnya sendiri yang meneriakkannya. **Fail-closed:** kalau slug repo, sha head, atau
     objek tidak terbaca, blok itu TIDAK mencetak link karangan — ia menyatakan tidak tercetak dan
     menyuruh pembaca mengambilnya dari API/git, karena link palsu lebih merusak daripada tidak ada link.
+
+    **AMENDEMEN giliran 20 (18 Sep 2026) — link yang dimaksud adalah link ke BERKAS PROMPT ITU
+    SENDIRI, bukan hanya link ke PR.** Pemilik menegaskan: *"Apakah kamu paham bahwa yang aku maksud
+    adalah link ke file prompt perintah untuk sesi hakim dan reviewer/pemeriksa nya? Bukan hanya file
+    PR nya."* Sebabnya nyata: path yang dicetak blok serah terima (`/home/user/...`) hanya ada di
+    mesin kerja agent — pemilik tidak bisa membukanya, dan teman yang membuka sesi hakim juga tidak.
+    Link PR pun tidak cukup, karena yang dibutuhkan hakim adalah TEKS PROMPT-nya, bukan halaman PR-nya.
+    Karena itu `tools/review_prompt.py` punya `--umumkan`: prompt ditempel ke kanal PR sebagai
+    **komentar penulis** (bukan verdict) dan permalink-nya dicetak di blok serah terima sebagai
+    **LINK KE PROMPT INI**. Perintah lengkapnya: `python3 tools/review_prompt.py --pr <N> --out <path>
+    --umumkan`. Dua pengaman terhadap risiko prompt terbaca sebagai verdict (risiko nyata: prompt
+    memuat contoh judul verdict yang SENGAJA tidak dipagari), keduanya TERUKUR di regresi **RP13**:
+    (a) baris judul komentar menyebut `penulis`, dan `slot_hakim()` di `ambil_verdict.py` memeriksa
+    `PENULIS_RE` lebih dulu daripada token laporan — diuji LINTAS ALAT, badan komentar sungguhan
+    dimasukkan ke `slot_hakim()` dan harus BUKAN slot; (b) seluruh prompt dipagari pagar backtick yang
+    LEBIH PANJANG dari run terpanjang di dalam prompt, dan `strip_code_fences()` mengosongkannya
+    sebelum penggolongan. Uji mutasi membuktikan pengaman itu nyata, bukan hiasan: kalau label
+    `penulis` dibuang dari judul, komentar HARUS terbaca sebagai slot hakim.
+    **Fail-closed tiga lapis:** slug repo tak terbaca → tidak menempel dan tidak mencetak link; POST
+    gagal atau responsnya tak terbaca → tidak mencetak link; dan kalau komentar TETAP terbaca sebagai
+    slot hakim oleh alat pengumpul verdict → komentar **DIHAPUS lagi** dan link tidak dicetak, karena
+    kuorum palsu lebih merusak daripada tidak ada link. Kalau `--umumkan` tidak bisa dipakai (misalnya
+    kanal PR tidak tersedia), agent WAJIB menyatakan itu di pesan serah terima dan menyerahkan teks
+    prompt sebagai satu blok berpagar di badan pesan chat — tidak boleh diam-diam menyerahkan path
+    lokal saja.

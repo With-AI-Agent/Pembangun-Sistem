@@ -1972,3 +1972,56 @@ serah terima.
 prompt dibangkitkan ulang pada head yang baru; merge tetap ditunda sampai verdict masuk; aturan
 fail-closed 3 hakim tetap; T-42 (7 kandidat) dan T-45 (regresi FI penjaga kolom — kini SELESAI lewat
 grup TI) ditinjau ulang di commit penutup.
+
+## Giliran 20 (2026-09-18) — pemilik menegaskan: yang dimaksud adalah LINK KE BERKAS PROMPT, bukan link ke PR
+
+**Verbatim pemilik (giliran 20):**
+
+> Apakah kamu paham bahwa yang aku maksud adalah link ke file prompt perintah untuk sesi hakim dan
+> reviewer/pemeriksa nya? Bukan hanya file PR nya?
+
+**Verbatim pemilik (giliran 20b, sesudah auth pulih):**
+
+> Kenapa berhenti? Lanjutkan.
+
+**Apa yang salah sebelumnya.** T-46 sudah menanam `handoff_block()` yang mencetak path absolut + link,
+tapi link yang dicetak adalah **link PR, link daftar berkas berubah, dan permalink head** — semuanya
+menuju halaman GitHub, bukan menuju **teks prompt** yang harus disalin hakim. Path berkasnya
+(`/home/user/PROMPT_REVIEW_PR74_putaran3.md`) ada di mesin kerja agent: pemilik tidak bisa membukanya,
+dan teman yang membuka sesi hakim juga tidak. Jadi aturan giliran 19 terpenuhi secara huruf tetapi
+tidak secara maksud. Pemilik menangkapnya dalam satu kalimat tanya; itu koreksi yang benar.
+
+**Yang dikerjakan (bukan dicatat saja).** `tools/review_prompt.py` dapat flag `--umumkan`: prompt
+ditempel ke kanal PR sebagai **komentar penulis** dan permalink-nya dicetak di blok serah terima sebagai
+baris **LINK KE PROMPT INI (tahan lama, bisa dibuka siapa pun)**. Isi komentarnya = prompt murni (tanpa
+blok serah terima), dipagari backtick, dengan judul yang menyebut `penulis`. Berkas lokal tetap memuat
+prompt + blok serah terima, jadi keduanya saling melengkapi: yang punya akses mesin pakai path, yang
+tidak punya akses pakai link.
+
+**Risiko nyata yang dihadapi, dan cara menutupnya terukur.** Prompt review memuat **contoh judul verdict
+yang SENGAJA tidak dipagari** (supaya hakim bisa menyalinnya apa adanya). Kalau prompt itu ditempel ke
+kanal PR, `ambil_verdict.py` bisa membacanya sebagai verdict → **kuorum palsu** → persis cacat D-3 yang
+sudah ditutup. Dua pengaman, keduanya diuji di regresi **RP13 (4 uji, FI 131 → 135)**:
+
+1. judul komentar menyebut `penulis`, dan `slot_hakim()` memeriksa `PENULIS_RE` **lebih dulu** daripada
+   token laporan → diuji **LINTAS ALAT**: badan komentar sungguhan dimasukkan ke `slot_hakim()` milik
+   `ambil_verdict.py` dan harus menjawab **BUKAN slot**;
+2. seluruh prompt dipagari pagar backtick **lebih panjang** dari run terpanjang di dalam prompt, dan
+   `strip_code_fences()` mengosongkannya sebelum penggolongan (terbukti juga untuk pagar 4 backtick).
+
+Plus **uji mutasi**: label `penulis` dibuang dari judul → komentar **HARUS** terbaca sebagai slot hakim.
+Kalau mutasi itu tidak mengubah kesimpulan, pengaman pertama hanyalah hiasan. Dan **fail-closed tiga
+lapis**: slug repo tak terbaca → tidak menempel; POST gagal / respons tak terbaca → tidak mencetak link;
+kalau komentar tetap terbaca sebagai slot → **DIHAPUS lagi** dan link tidak dicetak.
+
+**Satu kesalahan agent di giliran ini, dikoreksi di tempat.** Uji RP13 pertama menulis
+`min(panjang pagar) >= 4`, dan itu GAGAL — bukan karena alatnya salah, melainkan karena prompt di
+dalamnya memuat baris penutup pagar 3 backtick yang juga "murni backtick", jadi `min()` menangkap pagar
+dalam. Yang benar: **pagar terluar** (yang terpanjang) harus lebih panjang dari run terpanjang di dalam
+prompt dan muncul tepat dua kali (buka + tutup). Diperbaiki, lalu 135 PASSED.
+
+**Yang TIDAK berubah:** head PR tetap dibekukan selama hakim putaran 3 bekerja; merge ditunda sampai
+verdict masuk; aturan fail-closed 3 hakim tetap; T-44 (putaran 3) dan T-42 (7 kandidat) masih terbuka.
+Prompt putaran 3 akan **dibangkitkan ulang dengan `--umumkan` pada head yang sama** sesudah commit ini,
+supaya yang diserahkan ke pemilik adalah link yang bisa dibuka.
+

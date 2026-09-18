@@ -15,6 +15,7 @@ Dokumen atau sistem **tidak boleh disebut selesai hanya karena file sudah dituli
 - [ ] PR sudah diproses sesuai aturan
 - [ ] Penutupan sesi: PR dibuka → keluaran `tools/review_prompt.py --pr <N>` harus muncul sebagai satu blok berpagar di badan pesan chat terakhir, bukan keluaran perintah yang terlipat; kalau blok itu tidak ada, langkah penutupan dianggap BELUM dikerjakan dan PR belum boleh dinilai. Pemilik dapat membuka sesi baru dari main dan membangkitkan sendiri dengan `python3 tools/review_prompt.py --pr <N>` (`PROTOKOL_REVIEW_INDEPENDEN.md` §"Sumber prompt")
 - [ ] Penyerahan prompt review/audit ke pemilik memuat **path absolut berkas + link** (link PR, permalink head, daftar berkas berubah) — dicetak alat sebagai BLOK SERAH TERIMA, bukan ditulis tangan (`PROTOKOL_REVIEW_INDEPENDEN.md` aturan 11)
+- [ ] **Link yang diserahkan adalah link ke BERKAS PROMPT ITU SENDIRI**, bukan hanya link ke PR — pemilik dan siapa pun yang membuka sesi hakim harus bisa membuka dan menyalin teks prompt tanpa akses ke mesin kerja agent. Caranya `python3 tools/review_prompt.py --pr <N> --out <path> --umumkan`: prompt ditempel ke kanal PR sebagai komentar penulis (BUKAN verdict, teruji lintas alat di regresi RP13) dan permalink-nya dicetak di blok serah terima. Kalau kanal itu tidak tersedia, agent wajib menyatakannya dan menempelkan teks prompt sebagai satu blok berpagar di badan pesan (`PROTOKOL_REVIEW_INDEPENDEN.md` aturan 11 amendemen giliran 20)
 
 ## Sistem domain
 
