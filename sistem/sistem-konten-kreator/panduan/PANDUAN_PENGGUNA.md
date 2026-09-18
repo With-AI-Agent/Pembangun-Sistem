@@ -97,7 +97,12 @@ Untuk pekerjaan yang menutup klaim permanen — **penutupan gate/pengecualian (m
 
 ## Langkah 2 — Hubungkan lmarena Agent ke Repo
 
-Ikuti cara lmarena menghubungkan ke repo GitHub (sesuai yang sudah pernah kamu lakukan sebelumnya). Setiap kali kamu buka sesi baru, kamu bisa memilih repo dan branch mana yang mau dipakai.
+1. **Buka sesi baru di lmarena Agent Mode**, lalu pilih repo GitHub ini dan base branch `main` di UI.
+2. **Sesudah sesi jalan, lmarena otomatis membuat branch kerja sendiri** bernama `arena/[id]-...` — semua pekerjaan masuk ke branch itu, bukan ke `main`. Karena itu agent wajib memeriksa branch-nya di awal sesi (`git branch --show-current`), bukan mengasumsikan.
+3. **Hasil kerja diserahkan lewat PR** dari branch kerja itu ke `main`. Merge selalu keputusanmu, tidak pernah otomatis.
+4. **Kalau PR sudah di-merge atau di-close, sesi itu tidak bisa push lagi** (token push-nya dicabut platform) — buka sesi baru dari `main` untuk melanjutkan.
+
+Butir 2 dan 4 bukan kebiasaan repo ini melainkan batasan platform, terdokumentasi di `_salinan-meta/PLATFORM_LMARENA.md` fakta #1 dan #2 — salinan lokalnya ada di folder sistem ini supaya tetap terbaca kalau sistem ini berdiri sebagai repo mandiri.
 
 ---
 

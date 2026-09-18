@@ -151,7 +151,7 @@ Di **sesi pertama** repo baru, agent akan **Wajib** baca `PROFIL_PENGGUNA.md` du
 
 Jawabanmu disimpan di `PROFIL_PENGGUNA.md` dan jadi **prinsip permanen** — kapanpun buka sesi terbaru, agent langsung pakai gaya itu tanpa kamu ulang. Mau ganti? Bilang saja "ganti gaya jadi ...", agent update file-nya.
 
-> **Aku jujur:** ide kamu ini **sangat penting dan benar**. Tanpa ini, agent akan kaku pakai bahasa Indonesia teknis untuk semua orang — padahal ada pengguna yang tidak paham Inggris, ada yang expert yang mau to-the-point. Dengan PROFIL, sistem jadi benar-benar menyesuaikan. Ini sudah aku jadikan `LANGKAH 0` wajib di `AGENT_SYSTEM.md` (sebelum cek PROJECT_STATE).
+> **Kenapa ini penting:** tanpa profil yang tersimpan, agent memakai bahasa teknis yang sama untuk semua orang — padahal ada pengguna yang tidak paham istilah teknis berbahasa Inggris, dan ada yang sudah mahir sehingga ingin jawaban langsung ke inti. Dengan `PROFIL_PENGGUNA.md`, penjelasan menyesuaikan pembacanya, dan latar belakangmu tidak perlu diulang di setiap sesi. Profil ini dipakai sebagai `LANGKAH 0` wajib di `AGENT_SYSTEM.md` (dibaca sebelum cek `PROJECT_STATE`).
 
 ## Mekanisme Hidup — Kapanpun Bisa Audit / Sempurnakan / Lanjutkan (Sistem & Aplikasi)
 
@@ -164,7 +164,7 @@ Sistem ini **hidup**, bukan sekali jadi:
 - atau tambah task baru di `ROADMAP.md` (dengan 7 atribut lengkap) dan eksekusi via Prosedur Coding,
 - atau jalankan **Tahap 0.5 Siklus Baru** (arsipkan ROADMAP lama → tulis ROADMAP baru, `PROJECT_STATE=SIKLUS_BARU`).
 
-> **Jujur:** kamu benar — tanpa mekanisme hidup, sistem akan mati setelah rilis. Sekarang sudah tertanam eksplisit di `AGENT_SYSTEM.md` § *MEKANISME HIDUP* (bisa dipicu dengan bahasa natural, sesuai PROFIL). Kamu bisa **audit kapanpun**, tidak perlu tunggu "sempurna".
+> **Catatan:** tanpa mekanisme hidup, sistem berhenti berkembang begitu rilis selesai. Mekanisme itu tertanam eksplisit di `AGENT_SYSTEM.md` § *MEKANISME HIDUP* dan bisa dipicu dengan bahasa sehari-hari, mengikuti `PROFIL_PENGGUNA.md`. **Audit bisa dijalankan kapan pun** — tidak perlu menunggu sistem terasa "sempurna".
 
 ## Kebiasaan yang perlu dijaga
 

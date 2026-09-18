@@ -34,10 +34,10 @@ Sepanjang sesi: pelihara LOG_SESI di _log-sesi/ (aturannya ada di `10_LOG_SESI.m
 Tutup sesi ini:
 1. Perbarui `STATUS.md` di folder sistem ini — field deterministik wajib benar: Pekerjaan belum tersimpan = "Tidak ada" hanya bila working tree memang bersih dan seluruh commit ter-push
 2. Perbarui header LOG_SESI sesi ini: CLOSED (atau OPEN + "dilanjutkan di mana" bila disengaja)
-3. Perbarui tanggal "terakhir disentuh" dan status sistem ini di _meta/INDEKS_SISTEM.md — pencatatan manual, TIDAK mengandalkan git history
+3. Perbarui tanggal "terakhir disentuh" dan status sistem ini di INDEKS_SISTEM.md repo induk — pencatatan manual, TIDAK mengandalkan git history. Kalau sistem ini sudah berdiri sebagai repo mandiri (tidak lagi di dalam repo induk), lewati langkah ini dan pastikan `STATUS.md` + `SYSTEM_MANIFEST.md` folder ini yang memuat tanggal serta status terbaru
 4. Kalau kerja berlanjut lintas sesi: tinggalkan handoff di log sesi + STATUS supaya sesi baru melanjutkan tanpa ditanya ulang dari nol
 5. Commit + push semua yang bermakna; buka PR dengan deskripsi lengkap (apa yang dikerjakan, gerbang yang diberikan/ditunda, nomor PR dicatat di commit terakhir). SEBELUM merge/close apa pun: pastikan semua sudah ter-push — setelah itu sesi ini TIDAK BISA push lagi (fakta platform); kerja lanjutan dari sesi baru yang dibuka dari main
-6. Jalankan pembangkit prompt review repo induk (tools/review_prompt.py --pr <nomor>) dan tempel keluarannya sebagai SATU BLOK BERPAGAR di badan pesan chat TERAKHIR sesi — tanpa blok itu, penutupan dianggap belum dikerjakan dan PR belum boleh dinilai
+6. Jalankan pembangkit prompt review milik repo tempat sistem ini hidup (di repo induk: tools/review_prompt.py --pr <nomor>; di repo mandiri: pembangkit prompt review repo itu) dan tempel keluarannya sebagai SATU BLOK BERPAGAR di badan pesan chat TERAKHIR sesi — tanpa blok itu, penutupan dianggap belum dikerjakan dan PR belum boleh dinilai
 7. Jangan pernah auto-merge — merge selalu keputusanku
 ```
 
@@ -70,17 +70,20 @@ Dan klinik ini sendiri hidup: setiap run berakhir dengan TAHAP PANEN — cacat b
 
 ## 6. Cara review & merge
 
-Sama seperti repo induk: buka PR → review isi (kamu pemilik keputusan) → merge sendiri → sesi lama tidak bisa push lagi setelah itu (fakta platform — buka sesi baru dari main untuk lanjut). Jangan minta agent auto-merge.
+Empat langkah berikut caranya, dan semuanya berakhir di keputusanmu:
+
+1. **Agent membuka PR** dari branch kerja ke `main`, dengan deskripsi lengkap: apa yang dikerjakan dan gerbang mana yang lulus atau ditunda.
+2. **Review ISI, bukan hanya nomor PR** — baca diff-nya sendiri. Untuk review independen dipakai protokol repo induk (`PROTOKOL_REVIEW_INDEPENDEN.md`): bangkitkan prompt review, buka sesi hakim terpisah, lalu kumpulkan verdict-nya dengan alat pengumpul verdict.
+3. **Merge sendiri; jangan pernah minta agent auto-merge.** Kalau ada satu saja verdict MERAH, perbaiki dulu — satu MERAH sudah cukup untuk menahan merge (aturan fail-closed).
+4. **Sesudah PR di-merge atau di-close, sesi lama tidak bisa push lagi** (token push sesi itu dicabut platform) — buka sesi baru dari `main` untuk melanjutkan.
 
 ## 7. Kebiasaan yang perlu dijaga — dan status sistem
 
-| Situasi | Yang terjadi |
-|---|---|
-| Kamu mau run ke sistem target | Agent MUST mulai dari diagnosis + rencana (G-Rencana); tidak ada sentuhan sebelum kamu setuju rencananya |
-| Agent mau menimpa/menghapus file target | WAJIB izin per-item; diam-diam overwrite tidak sah |
-| Agent menemukan alat/skill yang mungkin berguna (UI, PPT, OCR, dll.) | DIA MENAWARKAN + hasil risetnya; kamu boleh bilang tidak; penolakan dicatat, tidak ditawari ulang tanpa alasan baru |
-| Run selesai | Rekam klinik ditulis + cap versi kit; suntik: folder kit hilang dari git target — rawat inap: sistem tinggal di repo; PR terbuka TANPA auto-merge; merge = kamu |
-| Sesi crash | Sesi baru cari LOG_SESI terbaru → lanjut; itulah kenapa commit tiap tahap itu fisik, bukan birokrasi |
-| Sistem rawat inap mau kuhapus | Penghapusan folder sistem = keputusanku yang sadar, dicatat di log — agent tidak pernah hapus diam-diam |
+Empat kebiasaan berikut yang membuat sistem ini tetap bisa dilanjutkan oleh sesi mana pun — termasuk sesi yang dibuka orang lain atau sesi baru sesudah crash. (Perilaku agent per situasi ada di tabel bagian 4; yang di sini adalah bagian yang harus dijaga pemakainya.)
+
+1. **Commit + push tiap pertukaran yang menghasilkan informasi baru**, bukan dirapel di akhir sesi. Kalau sesi crash di tengah jalan, hanya pekerjaan yang belum ter-commit yang hilang.
+2. **Pelihara `LOG_SESI` di `_log-sesi/`** (aturannya di `10_LOG_SESI.md`): sesi baru membaca log terbaru lalu melanjutkan dari situ, bukan bertanya ulang dari nol.
+3. **Tutup tiap sesi dengan Prompt Penutup di bagian 3** — `STATUS.md` diperbarui (field deterministiknya wajib benar), header log sesi jadi `CLOSED`, PR dibuka dengan deskripsi lengkap, dan merge tidak pernah otomatis.
+4. **Rekam klinik + cap versi kit ditulis di akhir tiap run.** Tanpa itu, run berikutnya tidak tahu apa yang sudah pernah disuntikkan ke target dan bisa menanam hal yang sama dua kali.
 
 Tahap pembangunan dibaca di `STATUS.md` dan `SYSTEM_MANIFEST.md` folder ini. Rencana keseluruhan + keputusan yang sudah kamu ambil (11 Sep & 15 Sep 2026) ada di `00_RENCANA_KERANGKA.md`.
