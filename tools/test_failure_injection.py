@@ -822,6 +822,39 @@ def review_prompt_scenarios(base_dir: Path):
     ))
     rp_path.write_text(original, encoding="utf-8")
 
+    # ------------------------------------------------------------------
+    # RP11 - prompt wajib menyebut CARA MENEMPEL verdict + kewajiban memverifikasinya.
+    # Cacat nyatanya: pada putaran sebelumnya di repo ini dua dari tiga verdict TIDAK PERNAH SAMPAI
+    # ke GitHub dan kuorum gagal tanpa pesan error. Prompt mengatur format verdict sampai se-detail
+    # itu, tetapi tidak pernah menyebut cara menempelnya — jadi langkah yang paling mudah gagal
+    # justru satu-satunya yang tidak dijelaskan.
+    # ------------------------------------------------------------------
+    checks.append((
+        "RP11 prompt menyebut perintah tempel verdict lewat REST + slug repo",
+        "comments --input /tmp/verdict.json" in p_rp10 and "gh api repos/" in p_rp10,
+    ))
+    checks.append((
+        "RP11 prompt mewajibkan VERIFIKASI bahwa verdict benar-benar tertempel",
+        "VERIFIKASI tertempel" in p_rp10 and "jangan mengandalkan exit code" in p_rp10,
+    ))
+    checks.append((
+        "RP11 prompt memperingatkan `gh pr comment` tidak diandalkan (gejala gagalnya menipu)",
+        "jangan diandalkan" in p_rp10 and "projectCards" in p_rp10,
+    ))
+
+    # Mutasi RP11 - buang perintah tempelnya dari keluaran: pemeriksaan pertama harus gagal.
+    # Anchor mutasi diambil dari teks yang benar-benar tercetak, bukan dari kutipan bersarang.
+    mut11 = original.replace("comments --input /tmp/verdict.json", "comments-PERINTAH-DIBUANG")
+    assert mut11 != original, "mutasi RP11 tidak mengubah apa pun - uji tidak valid"
+    rp_path.write_text(mut11, encoding="utf-8")
+    rp_m11 = _load_review_prompt(cp, "review_prompt_mut_rp11")
+    p_m11, _ = rp_m11.render(pr7, ["a.md", "b.md"], generic=False, objek=objek_rp9, putaran=3)
+    checks.append((
+        "RP11 diuji-mutasi: perintah tempel verdict dibuang -> terdeteksi",
+        "comments --input /tmp/verdict.json" not in p_m11,
+    ))
+    rp_path.write_text(original, encoding="utf-8")
+
     return checks
 
 

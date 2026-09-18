@@ -462,6 +462,17 @@ def head_sha_of_worktree() -> str:
 # --------------------------------------------------------------------------
 # Render
 # --------------------------------------------------------------------------
+def repo_slug() -> str:
+    """`owner/repo` tempat PR ini hidup, untuk mencetak perintah tempel verdict yang benar.
+
+    Fail-closed ke placeholder: prompt yang mencetak slug karangan lebih berbahaya daripada prompt
+    yang menyuruh pembaca mengisinya sendiri.
+    """
+    code, out, _err = _run(["gh", "repo", "view", "--json", "nameWithOwner", "-q", ".nameWithOwner"])
+    slug = (out or "").strip()
+    return slug if code == 0 and "/" in slug else "<OWNER>/<REPO>"
+
+
 def next_round(number: int) -> int | None:
     """Hitung nomor putaran review BERIKUTNYA dari verdict yang sudah tertempel di kanal PR.
 
@@ -761,6 +772,24 @@ def render(pr: dict | None, files: list[str], generic: bool,
     a("badan komentar, tulis sekali lagi sebagai baris berpemarkah:")
     a("")
     a("- **VERDICT:** MERAH — jangan merge; jumlah temuan: N (lalu uraikan satu per satu di bawahnya)")
+    a("")
+    a("**Cara menempelkannya — dan ini WAJIB ditempel, bukan disimpan di sesi.** Pada satu putaran")
+    a("sebelumnya di repo ini, dua dari tiga verdict **tidak pernah sampai ke GitHub** dan kuorum gagal")
+    a("tanpa pesan error; kerjanya hilang karena tidak ada yang menempel. Pakai jalur REST:")
+    a("")
+    a("```bash")
+    a("# 1) tulis verdictmu ke berkas, lalu bungkus jadi JSON dengan satu kunci bernama body")
+    a(f"# 2) tempel sebagai komentar PR (slug repo ini: {repo_slug()})")
+    a(f"gh api repos/{repo_slug()}/issues/{merge_num}/comments --input /tmp/verdict.json")
+    a("# 3) VERIFIKASI tertempel — WAJIB, jangan mengandalkan exit code:")
+    a(f"gh api repos/{repo_slug()}/issues/{merge_num}/comments --jq '.[-1] | .body[0:90]'")
+    a("```")
+    a("")
+    a(f"`gh pr comment {merge_num}` **jangan diandalkan di lingkungan seperti ini**: keluarga perintah")
+    a("`gh pr` memakai GraphQL, dan `gh pr edit` terukur GAGAL di repo ini (field `projectCards` sudah")
+    a("didepresiasi) dengan gejala menipu — perintah keluar membawa pesan, tetapi body **tidak berubah**.")
+    a("Kalau perintahmu keluar dengan pesan galat atau keluar tanpa efek, **baca ulang dari API** sebelum")
+    a("menyimpulkan berhasil.")
     a("")
     a("**Syarat keras — semuanya diukur dari alatnya, bukan selera:**")
     a("")
