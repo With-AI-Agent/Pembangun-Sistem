@@ -1,7 +1,7 @@
 # System Manifest — Meta-Sistem Pembangun Sistem
 
-- **Status:** `Released — v1.24.1`
-- **Versi:** `1.24.1`
+- **Status:** `Released — v1.25.0`
+- **Versi:** `1.25.0`
 - **Tujuan:** merancang, membangun, mengaudit, memperbaiki, dan memelihara sistem kerja untuk berbagai domain.
 - **Consumer:** pengguna dan agent yang bekerja pada repository.
 - **Pemilik keputusan:** pengguna
@@ -129,6 +129,8 @@ butir** `WARISAN_ITEMS` (W-01…W-09, dan seterusnya saat butir baru ditambahkan
 sengaja dibuat **berbeda** dari pemeriksaan sistem terdaftar: yang ditagih di sini adalah **deklarasi status**
 ( termasuk gap yang dinyatakan jujur), **bukan** keberadaan artefak — karena memaksa artefak pada butir yang
 bentuknya memang berbeda di level meta akan menghasilkan kepatuhan palsu.
+
+| 2026-09-18 | v1.24.1 → **v1.25.0: MERGE main ke branch PR #74 (konflik diselesaikan dari CETAKAN ALAT) + 10 dari 13 temuan hakim putaran 2 ditutup + 4 penjaga baru** — **KONFLIK:** `_meta/FAILURE_INJECTION_TESTS.md` (main 73→75 lewat 2 unit produksi Toko Bu Sinta; branch 73→97 lewat penjaga drift + regresi RP7/RP8) diselesaikan dengan membuang penanda, menjalankan alat, dan menyalin angkanya — **bukan** memilih sisi atau menjumlah tangan. **PENJAGA BARU:** (1) **D-2b** — baris `**Jumlah:**` wajib memuat TEPAT SATU klaim total, berlaku di KEDUA mode (master + ekstrak), definisi "klaim total" sempit dan dinyatakan, 5 uji termasuk ujung-ke-ujung; (2) **RP9** — prompt review bebas angka diff yang dibekukan di kode (temuan: perbaikan R3 malah membekukan "53 vs 49" sehingga tercetak untuk SEMUA PR dan dibantah pengukurannya sendiri → **T-34 dibuka kembali lalu ditutup**); (3) **SC11/SC11b/SC12** + `check_selfcontained.py --sinkronkan` — alat yang mendeteksi salinan berlabel basi kini juga MEMPERBAIKI (sudah basi dua kali: v1.18.0 dan hari ini), salinan yang menyatakan perbedaan nyata dilewati; (4) 2 uji anti-duplikat inventaris inti. **DOKUMEN:** INDEKS berhenti menyalin versi meta (duplikat angka = drift; teks penggantinya sengaja tanpa angka) + baris sistem ke-6 disatukan ke tabel; `check_manuals.py` kini mengenal sistem ke-6 (hasil ukur: **0 kandidat**, total repo 7 kandidat di tiga sistem lain → T-42); PROTOKOL_REVIEW_INDEPENDEN berhenti membekukan hitungan komentar; STATUS sistem-undangan berhenti membantah butir (c)-nya sendiri; **kanal audit-isi diputuskan SATU aturan** (Kanal A utama; read-only auditor diberi satu pengecualian sempit: commit+push tepat satu berkas = laporannya sendiri, alasan integritas asal-usul; klaim "gh issue create belum diuji" dikoreksi jadi "diuji dan ditolak 403"); sisa teks "nine items W-01..W-09" → 10 butir di 7 tempat; komentar SKALA artefak uji upscaling diluruskan (hasil ukurnya TIDAK disentuh). **PIN BERUBAH → T-41 TERTAHAN (keputusan pemilik):** `CORE_REQUIRED` 35 entri → 34 unik (duplikat `tools/build_template.py` dihapus); klaim hakim bahwa angka cetakan validator menggembung karenanya **TIDAK REPRODUKSI** (tetap 35 = ukuran gabungan). **WARISAN DARI MAIN:** manifest sistem-konten-kreator merujuk berkas master-only dengan backtick → diukur pada worktree `origin/main` terpisah (gerbang sama GAGAL di sana), diperbaiki sebagai provenance. FI **104 → 112 skenario PASS** |
 
 ## Log Evolusi
 

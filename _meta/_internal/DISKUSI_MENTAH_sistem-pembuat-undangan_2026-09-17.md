@@ -1788,3 +1788,41 @@ kegagalan yang berbeda dan belum sempat terjadi**, dan **tidak** diklaim sebagai
 FI naik **87 → 97 skenario PASS**; gerbang 10 alat `FAIL=0`; R7 ekstrak tetap **persis 5**; manifest **v1.24.0**;
 protokol bagian "Penulisan hasil" mendapat 2 butir dan salinan berlabelnya disinkron ulang. Register mencatat
 **T-37** (kontradiksi merge) dan **T-38** (format verdict), keduanya P1.
+
+
+## Giliran 17 (2026-09-18) — pemilik melaporkan 3 hakim putaran 2 selesai, dan MINTA DIPERIKSA ULANG karena mereka bekerja di branch yang sama
+
+**Kutipan verbatim pemilik:**
+
+> 3 hakim udh selesai. Silahkan cek hasilnya. Dan karena ada kemungkinan saling menimpa karena 3 hakim
+> itu bekerja pada branch yang sama, maka klo kamu merasa cuma nemu 1 maka kamu harus periksa lagi.
+
+**Yang dibaca agent:** ada DUA perintah di sini, bukan satu. (1) Periksa hasil ketiga hakim. (2) Karena
+ketiganya bekerja di branch yang sama dan bisa saling menimpa, **jumlah temuan yang terlihat tidak boleh
+dipercaya begitu saja** — kalau yang terbaca cuma satu, itu tanda harus mencari lagi, bukan tanda bahwa
+hanya ada satu. Perintah kedua ini adalah koreksi atas kegagalan giliran 15 (ketika dua verdict hilang
+dan agent sempat menyimpulkan dari apa yang terlihat).
+
+**Eksekusi (bukan cuma dicatat):**
+
+1. Ketiga verdict diambil dari API GitHub sebagai sumber yang masih utuh, bukan dari ingatan sesi:
+   komentar #5723201037, #5723263674, #5723267729 — **ketiganya terbaca penuh** dan disimpan di
+   `/tmp/k_<id>.md`. Jadi kekhawatiran pemilik terjawab dengan pengukuran: yang sampai ke GitHub kali ini
+   **tiga**, bukan satu.
+2. Temuannya **DIGABUNG (union)**, bukan diambil yang paling sedikit: 13 cacat, semuanya MERAH. Tiga
+   hakim saling bebas, dan beberapa temuan hanya disebut satu hakim — persis kasus yang dikhawatirkan
+   pemilik. Contoh: angka "53 vs 49" yang dibekukan di pembangkit prompt hanya disebut hakim ke-3;
+   baris sistem ke-6 yang jatuh di luar tabel INDEKS juga hanya disebut hakim ke-3.
+3. Aturan pemilik giliran 14 (**fail-closed**: "selagi ada yang merah, maka harus diperbaiki") dipakai:
+   1 MERAH = MERAH. Kuorum terukur 4 slot hakim, semuanya MERAH.
+4. Sepuluh dari 13 temuan ditutup di `d0c2319` (+ 2 di `724ea8a`); sisanya dicatat sebagai item
+   terbuka/tertahan di `_meta/DAFTAR_PEKERJAAN_TERBUKA.md` dengan alasan, **bukan didiamkan**.
+5. Satu klaim hakim **TIDAK REPRODUKSI** dan dinyatakan apa adanya: "validator mencetak 35 padahal
+   kewajibannya 34 berkas unik". Terukur sesudah duplikatnya dihapus, validator tetap mencetak 35 karena
+   angka itu ukuran GABUNGAN `set(CORE_REQUIRED) | _derived | CORE_ROOT_FILES`, bukan `len(CORE_REQUIRED)`.
+   Duplikatnya nyata dan dibuang; klaim akibatnya tidak. Ini sesuai permintaan pemilik giliran 5:
+   *"Aku lebih suka diluruskan jika memang salah, dan dibenarkan jika memang benar."*
+6. Satu cacat **WARISAN DARI MAIN** ditemukan dan diukur dulu sebelum diperbaiki: rujukan ber-backtick ke
+   `_meta/FAILURE_INJECTION_TESTS.md` di manifest sistem-konten-kreator. Diukur pada worktree
+   `origin/main` terpisah — gerbang yang sama GAGAL di sana, jadi bukan akibat merge. Diperbaiki mengikuti
+   pola provenance yang sudah dipakai penulisnya sendiri, dan dilaporkan karena menyentuh sistem lain.
