@@ -3,16 +3,19 @@
 - **Status:** `in-progress`
 - **Channel:** Toko Bu Sinta (`channel-toko-bu-sinta`)
 - **Model konten:** Gambar Statis & Caption (`gambar-caption`)
-- **Tahap terakhir selesai:** Tahap 2 (Konsep & Angle)
-- **Tahap berikutnya:** Tahap 3 (Naskah — sudah termasuk dalam output Tahap 2 ini; menunggu G1+G2)
+- **Tahap terakhir selesai:** Tahap 4 (Breakdown Output)
+- **Tahap berikutnya:** Tahap 5 (Generate/Acquire Assets) — menunggu G1+G2 Tahap 4
 - **Output resmi:**
   - `naskah-draft.md` ✅
+  - `breakdown-output.md` ✅
 - **Sumber konteks yang dibaca:** `channel-brief.md`, `model-konten/gambar-caption/brief.md`, `konsistensi-visual/bu-sinta/bank-konsistensi.md`, `arsip-naskah/indeks.md` (kosong), `05_CONTENT_PRODUCTION_PIPELINE.md`, `06_PROMPT_LIBRARY.md`
 - **Sumber eksternal dipakai:** Tidak ada
-- **Keputusan baru:** Konsep "Kotak Amal Kecil" dipilih dari kandidat tema pengguna; angle interior sore diterapkan
+- **Keputusan baru:** Konsep "Kotak Amal Kecil" dipilih dari kandidat tema pengguna; naskah final 5 baris dikunci; breakdown 1 unit visual (unit-1) disusun dengan prompt terintegrasi
 - **Approval yang sudah diberikan:**
-  - `G1 Tahap 1+2:` belum — menunggu keputusan pemilik
-  - `G2 naskah final:` belum
+  - `G1 Tahap 1+2:` disetujui 2026-09-17 — konsep & naskah diterima
+  - `G2 naskah final:` disetujui 2026-09-17 — naskah 5 baris dikunci
+  - `G1 Tahap 4:` belum — menunggu keputusan pemilik
+  - `G2 breakdown:` belum — menunggu keputusan pemilik
   - `G3 merge:` belum
 - **Commit terakhir:** —
 - **PR terkait:** —
