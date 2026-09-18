@@ -35,6 +35,16 @@ import checkpoint_core as core
 
 ROOT = Path(__file__).resolve().parents[1]
 
+# These two Run 22 production units live at the repository-root
+# `_produksi-aktif/` scope, not below a registered `sistem-*` directory.  The
+# generic real-unit sweep below therefore cannot discover them.  Keep this
+# explicit, narrow list so the actual checkpoint state of the two acceptance
+# artifacts is covered without changing the registered-system enumeration.
+RUN22_REAL_PRODUCTION_UNITS = (
+    "_produksi-aktif/toko-bu-sinta-kotak-amal-kecil",
+    "_produksi-aktif/toko-bu-sinta-lampu-teras",
+)
+
 # The 5 normalized warnings a clean-template extract MUST produce (and only
 # those): labeled master-history references. Any warning elsewhere — above
 # all in the bootstrap doc (NEXT_SESSION_PROMPT.md) or the user guide
@@ -89,6 +99,29 @@ def run_tool(repo: Path, tool: str) -> int:
         capture_output=True, text=True,
         env={**os.environ, "FI_SKIP_NESTED": "1"},
     ).returncode
+
+
+def root_production_unit_is_safe(unit: Path) -> bool:
+    """Check the checkpoint contract for a root-level production unit.
+
+    Unlike generic system units, production folders use their model-specific
+    output names (`naskah-draft.md` and `breakdown-output.md`) rather than a
+    generic `OUTPUT.md`.  Run 22's two units are explicitly covered here so
+    their real repo state is tested without pretending they are registered
+    systems.
+    """
+    status = unit / "STATUS.md"
+    if not status.is_file():
+        return False
+    text = status.read_text(encoding="utf-8")
+    kind, value = core.parse_unsaved_field(text)
+    if kind != "value" or value != core.SAFE_VALUE:
+        return False
+    return (
+        (unit / "naskah-draft.md").is_file()
+        and (unit / "breakdown-output.md").is_file()
+        and any((unit / "assets").glob("*"))
+    )
 
 
 def index_insert_row(cp: Path, row: str):
@@ -1973,6 +2006,20 @@ def run():
             real.append((status_path, core.state_is_safe(status_path.parent)))
     for status_path, safe in real:
         checks.append((f"real unit consistent: {status_path.relative_to(ROOT)}", safe))
+
+    # Run 22 adds two real production units at repository root.  They are
+    # deliberately appended after the registered-system sweep: this is an
+    # explicit acceptance-artifact population, not a new registered system.
+    run22_units = [ROOT / rel for rel in RUN22_REAL_PRODUCTION_UNITS]
+    # A clean extracted template has no repository-root production state and
+    # must retain its historical one-unit population.  In the master repo,
+    # seeing either Run 22 unit opts into checking both; a missing sibling is
+    # then a real failure rather than a silent count drop.
+    if any(unit.is_dir() for unit in run22_units):
+        for unit in run22_units:
+            real.append((unit / "STATUS.md", root_production_unit_is_safe(unit)))
+        for status_path, safe in real[len(real) - len(run22_units):]:
+            checks.append((f"real production unit consistent: {status_path.relative_to(ROOT)}", safe))
 
     # R1–R8 regression scenarios (skipped when nested — FI_SKIP_NESTED).
     reg = []
