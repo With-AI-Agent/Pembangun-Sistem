@@ -1,6 +1,6 @@
 # Status Produksi — Toko Bu Sinta — Kotak Amal Kecil
 
-- **Status:** `in-progress`
+- **Status:** `approved`
 - **Channel:** Toko Bu Sinta (`channel-toko-bu-sinta`)
 - **Model konten:** Gambar Statis & Caption (`gambar-caption`)
 - **Tahap terakhir selesai:** Tahap 5 (Generate/Acquire Assets)
