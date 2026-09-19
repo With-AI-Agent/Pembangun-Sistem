@@ -1,10 +1,10 @@
 # Status Produksi — Toko Bu Sinta — Bangku Tua di Depan Toko (Konten #3)
 
-- **Status:** ready-for-review (G2 konten final terkunci 2026-09-19; menunggu G3 merge)
+- **Status:** merged (PR #80 merged 2026-09-19 — merge commit `4747ba9b2d7ae420febda59fabd523691ef41273`; G3 terbit)
 - **Channel:** Toko Bu Sinta (`channel-toko-bu-sinta`)
 - **Model konten:** Gambar Statis & Caption v1 (`model-konten/gambar-caption/brief.md`)
-- **Tahap terakhir selesai:** Tahap 6 — Assembly & Publish Prep + sinkron main v1.1 (rebase ke `21fcfd3` tanpa konflik) + approval ulang penutup caption vs v1.1 SETUJU + **G2 konten final + metadata DIKUNCI pemilik 2026-09-19** (paket terkoreksi sinkron v1.1 diterima sebagai konten resmi channel). **PR #80 OPEN** ke `main` (tanpa auto-merge).
-- **Tahap berikutnya:** **G3 merge PR #80** — gerbang terpisah, **menunggu keputusan pemilik**; setelah merge: verifikasi API + catat `merged`, lalu penghapusan folder produksi HANYA setelah pemilik download & memverifikasi langkah arsip 1/2/2a/2b/4
+- **Tahap terakhir selesai:** Tahap 6 — Assembly & Publish Prep + sinkron main v1.1 (rebase ke `21fcfd3` tanpa konflik) + approval ulang penutup caption vs v1.1 SETUJU + **G2 konten final + metadata DIKUNCI pemilik 2026-09-19** (paket terkoreksi sinkron v1.1 diterima sebagai konten resmi channel). **PR #80 MERGED** ke `main` 2026-09-19 (merge commit `4747ba9b2d7ae420febda59fabd523691ef41273`, 2026-09-19T14:00:40Z, oleh pemilik `fatrizmubarok-cloud` = G3 terbit).
+- **Tahap berikutnya:** **SELESAI** — unit produksi #3 terbit di main (PR #80 merged). Keputusan download asset + penghapusan folder produksi = pemilik; folder TIDAK dihapus di sesi ini.
 - **Output resmi:**
   - `naskah-draft.md` (NASKAH FINAL — G2 dikunci 2026-09-19; memuat: ide terpilih + cek pengulangan Tahap 1, konsep & angle Tahap 2, deskripsi karakter Tipe B, naskah caption 5 baris Tahap 3, evaluasi konsistensi Persona & Voice)
   - `breakdown-output.md` (TERKUNCI G2 2026-09-19; 1 unit "Post Visual Tunggal" — prompt generate [Prompt Master anchor + detail unit], referensi wajib `acuan-utama.png`, target asset)
@@ -31,9 +31,9 @@
   - `G1 Tahap 5:` disetujui 2026-09-19 (verbatim: "G1 Tahap 5: SETUJU — asset diterima.") + putusan rasio opsi (i) untuk konten ini
   - `Approval ulang penutup caption vs brief v1.1:` disetujui 2026-09-19 (verbatim: "Approval ulang penutup caption terhadap brief v1.1: SETUJU — dikunci tanpa perubahan.") — bagian terdampak sinkron v1.1 dikunci tanpa perubahan isi
   - `G2 konten final + metadata:` disetujui/dikunci 2026-09-19 (verbatim: "G2 konten final + metadata: DIKUNCI — paket terkoreksi (sinkron v1.1) diterima sebagai konten resmi channel.")
-  - `G3 merge:` belum — **diajukan terpisah 2026-09-19** setelah G2 konten final dikunci dan PR #80 disiapkan; menunggu keputusan pemilik
-- **Commit terakhir:** `ac84e21` (perbaikan MERAH-1 review PR #80 + NP-1); rantai pasca-rebase: `95538b1`…`2d2f483` (G2 + PR #80) → `ac84e21`. CATATAN: rantai pra-rebase (`b1d4752`…`b69c270`) di-rebase ke main `21fcfd3` pada 2026-09-19, isi identik, push via `--force-with-lease`. log sesi: `_log-sesi/LOG_SESI_2026-09-19_32.md`
-- **PR terkait:** **#80** (https://github.com/With-AI-Agent/Pembangun-Sistem/pull/80) — disiapkan setelah G2 konten final dikunci; merge menunggu G3 eksplisit
+  - `G3 merge:` disetujui/dilaksanakan 2026-09-19 (fakta merge: PR #80 MERGED — merge commit `4747ba9b2d7ae420febda59fabd523691ef41273`, 2026-09-19T14:00:40Z, oleh pemilik `fatrizmubarok-cloud`)
+- **Commit terakhir:** `4747ba9b2d7ae420febda59fabd523691ef41273` (merge PR #80 di main, 2026-09-19T14:00:40Z; rantai PR berakhir di `ac84e21` perbaikan MERAH-1 + NP-1). Penutupan pasca-merge ini dicatat di log sesi: `_log-sesi/LOG_SESI_2026-09-19_32.md`
+- **PR terkait:** **#80** (https://github.com/With-AI-Agent/Pembangun-Sistem/pull/80) — **MERGED** 2026-09-19 (merge commit `4747ba9b2d7ae420febda59fabd523691ef41273`, 2026-09-19T14:00:40Z, oleh `fatrizmubarok-cloud`)
 - **Pekerjaan belum tersimpan:** Tidak ada
-- **Risiko atau blocker:** Tidak ada — PR #79 (Channel Brief v1.1) telah **merge 2026-09-19** (merge commit `21fcfd3`); branch di-rebase ke main v1.1 tanpa konflik teks; asesmen dampak: semua keluaran terkunci patuh v1.1 tanpa perubahan isi. Yang masih terbuka (bukan blocker): **G3 merge PR #80 menunggu keputusan pemilik** (approval ulang penutup v1.1 dan G2 konten final sudah dikunci 2026-09-19).
+- **Risiko atau blocker:** Tidak ada — PR #79 (Channel Brief v1.1) telah **merge 2026-09-19** (merge commit `21fcfd3`); branch di-rebase ke main v1.1 tanpa konflik teks; asesmen dampak: semua keluaran terkunci patuh v1.1 tanpa perubahan isi. PR #80 (unit ini) telah **merge 2026-09-19** (merge commit `4747ba9b2d7ae420febda59fabd523691ef41273`) = G3 terbit. Sisa terbuka (bukan blocker): keputusan pemilik soal download asset + penghapusan folder produksi.
 - **Waktu pembaruan:** 2026-09-19
