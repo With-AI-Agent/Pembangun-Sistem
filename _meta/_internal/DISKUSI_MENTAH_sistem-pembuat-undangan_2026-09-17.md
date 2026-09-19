@@ -2248,3 +2248,51 @@ kemudian dipertajam ke tiga sinyal yang benar-benar berisiko.
 keenam: 558 rujukan, merge-base bukan tip main, v1.14.0 → v1.29.0 + 16 baris Log Evolusi, deklarasi
 pin `WARISAN_ITEMS` 9 → 10, deklarasi 28 berkas di luar tiga folder) + judul → bangkitkan prompt
 putaran 5 dengan `--umumkan` → serahkan link ke berkas prompt itu sendiri.
+
+
+## Giliran 23 (18 Sep 2026) — tiga keputusan didelegasikan; konflik merge dibereskan lebih dulu
+
+**Konteks yang dilaporkan agent ke pemilik sebelum tanya-jawab:** verdict putaran 4 = 3 hakim masuk
+semua (1 HIJAU + 2 MERAH) → aturan fail-closed pemilik berlaku → **MERAH, jangan merge**; lima
+temuannya diverifikasi sendiri dan **semuanya nyata, nol positif palsu**; temuan #1 sudah diperbaiki di
+kode dan dikunci regresi, temuan #2–#5 adalah cacat body/judul PR dan sudah dikoreksi. Ditambahkan satu
+hal yang ditemukan agent sendiri: PR sempat **`mergeable=false / state=dirty`** karena `main` maju 26
+commit (PR #77 + #78), dan itu **dibereskan dulu sebelum prompt diserahkan** — cara bereskannya union,
+angka disalin dari cetakan alat (FI 156 → **158**, selisihnya ditangkap penjaga D-2), sesudahnya API
+mencetak **`mergeable=true / clean`**.
+
+**Tanya-jawab (tiga pertanyaan) dan jawaban pemilik — verbatim:**
+
+1. *"Buka putaran 5 sekarang (3 hakim baru, satu teks siap tempel)?"* → **"Aku ikut yang menurut mu
+   terbaik"**
+2. *"Utang T-51 (mekanisme review tidak dijalankan di 2 sistem + teks "Tutup sesi" tidak konsisten
+   antar sistem) — kapan dikerjakan?"* → memilih **"Kamu putuskan yang terbaik"** (opsi delegasi:
+   *"Aku nilai dulu manfaat vs risikonya, lalu laporkan keputusannya beserta alasannya."*)
+3. *"Utang T-52 (dua celah cakupan di alat penjaring `check_manuals.py`) — statusnya sekarang
+   TERTAHAN."* → memilih **"Kamu putuskan yang terbaik"** (opsi delegasi yang sama)
+
+**Putusan agent atas tiga delegasi itu (dilaporkan beserta alasannya, bukan diam-diam):**
+
+1. **Putaran 5 dibuka sekarang**, head dibekukan selama hakim bekerja. Alasannya: semua temuan empat
+   putaran sudah ditutup, dan head sedang dalam keadaan terbaik untuk diputus (bersih, bisa digabung,
+   semua gerbang hijau). Menunda tidak menambah informasi apa pun.
+2. **T-51 dijadwalkan SESUDAH verdict putaran 5.** Mengerjakannya sekarang berarti commit baru → head
+   bergerak → prompt yang sudah di-pin jadi basi → putaran review terbuang. Ini bukan preferensi, ini
+   pola yang sudah berulang dan sudah dibayar mahal di putaran 3 dan 4.
+3. **T-52 dijadwalkan SESUDAH verdict putaran 5**, dengan alasan yang lebih keras: T-52 memperluas
+   `tools/check_manuals.py`, yaitu **alat pengadil**. Mengubah alat pengadil selagi hakim bekerja adalah
+   konflik kepentingan, dan repo ini sudah menulis aturannya sendiri soal itu.
+
+**Insiden yang terjadi di tengah giliran ini (dicatat, tidak ditutup-tutupi):** workspace dipulihkan
+platform ke clone dangkal (**insiden re-clone ke-6**) — HEAD lokal jatuh ke `eff7afa` dengan 1 commit
+terlihat sementara remote `179ef70`. Tertangkap karena `git show 95526c7` gagal, bukan karena
+pemeriksaan rutin. Pemulihannya: `fetch --unshallow` (tidak cukup — hanya mengambil `main` + tag) →
+**refspec eksplisit branch** → `reset --mixed` → HEAD = remote = `179ef70`, tree bersih. **Berkas di
+luar repo hilang ke-5 kalinya** (`PROMPT_REVIEW_PR74_putaran5.md`, `refresh_body_pr74_v8.py`,
+`body74_v7_api.md`); prompt-nya selamat karena sudah ditempel ke kanal PR lewat `--umumkan`
+(komentar `5733315670`) — persis alasan mekanisme itu dibuat di T-48.
+
+**Koreksi angka perkiraan di paragraf "Berikutnya" giliran 22:** yang tertulis 558 rujukan,
+`v1.14.0 → v1.29.0` + 16 baris Log Evolusi, 28 berkas di luar tiga folder. Yang **terukur** sesudah
+dikerjakan: **573 rujukan**, **`v1.14.0 → v1.30.0`** dengan **18 baris Log Evolusi baru** (23 → 41),
+**32 berkas**. Teks lama tidak dihapus; koreksinya ditambahkan di sini.
