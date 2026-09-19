@@ -3,12 +3,13 @@
 - **Status:** in-progress
 - **Channel:** Toko Bu Sinta (`channel-toko-bu-sinta`)
 - **Model konten:** Gambar Statis & Caption v1 (`model-konten/gambar-caption/brief.md`)
-- **Tahap terakhir selesai:** Tahap 5 — Generate/Acquire Assets (G1 Tahap 5 disetujui pemilik 2026-09-19; putusan rasio: opsi (i) diterima untuk konten ini, perbaikan aturan rasio = backlog higiene)
-- **Tahap berikutnya:** Tahap 6 — Assembly & Publish Prep — SEDANG DIKERJAKAN sesi ini
+- **Tahap terakhir selesai:** Tahap 6 — Assembly & Publish Prep (arsip naskah + metadata + indeks.md + indeks-karakter.md tertulis di branch; **berhenti di gerbang G2 konten final + metadata, menunggu keputusan pemilik**)
+- **Tahap berikutnya:** G2 konten final → siapkan PR → **G3 merge** (pertanyaan terpisah); penghapusan folder produksi HANYA setelah pemilik download & memverifikasi langkah arsip 1/2/2a/2b/4
 - **Output resmi:**
   - `naskah-draft.md` (NASKAH FINAL — G2 dikunci 2026-09-19; memuat: ide terpilih + cek pengulangan Tahap 1, konsep & angle Tahap 2, deskripsi karakter Tipe B, naskah caption 5 baris Tahap 3, evaluasi konsistensi Persona & Voice)
   - `breakdown-output.md` (TERKUNCI G2 2026-09-19; 1 unit "Post Visual Tunggal" — prompt generate [Prompt Master anchor + detail unit], referensi wajib `acuan-utama.png`, target asset)
   - `assets/unit-1-bangku-tua-di-depan-toko.png` (1.658.969 B, 1408×768 — hasil generate Tahap 5 dengan prompt G2-locked + referensi; verifikasi visual & deviasi minor tercatat di LOG_SESI slot 32)
+  - Arsip (channel): `channel-toko-bu-sinta/arsip-naskah/2026-09-19-bangku-tua-di-depan-toko.md` (naskah final + Tipe B + publish prep), `...-metadata.md` (reproduksibilitas), `indeks.md` +1 baris, `indeks-karakter.md` +1 baris (Tahap 6)
 - **Sumber konteks yang dibaca:** `_sistem/01_BRAND_CORE.md` (masih template umum — Channel Brief punya catatan dependency eksplisit), `channel-brief.md` v1 Operational (+ diff PR #79 v1.1 yang menggantung), `model-konten/gambar-caption/brief.md` v1 Operational, `konsistensi-visual/bu-sinta/bank-konsistensi.md` Reference-Ready, `arsip-naskah/indeks.md` (kosong), `arsip-naskah/indeks-karakter.md` (kosong), `_sistem/05_CONTENT_PRODUCTION_PIPELINE.md`, `_sistem/06_PROMPT_LIBRARY.md`, `_sistem/STATUS_TEMPLATE.md`, STATUS + naskah + breakdown 2 unit in-progress (`toko-bu-sinta-pelanggan-tua-dan-cucu`, `toko-bu-sinta-stoples-kopi-tua`)
 - **Sumber eksternal dipakai:** `Tidak ada` (murni fiksi slice-of-life orisinal; tanpa klaim faktual/sejarah/ilmiah — `SUMBER.md` tidak berlaku)
 - **Keputusan baru:**
@@ -27,8 +28,8 @@
   - `G1 Tahap 4:` disetujui 2026-09-19 (verbatim: "G1 Tahap 4: SETUJU.")
   - `G2 breakdown:` disetujui/dikunci 2026-09-19 (verbatim: "G2 breakdown: DIKUNCI.") — breakdown jadi dasar generate asset
   - `G1 Tahap 5:` disetujui 2026-09-19 (verbatim: "G1 Tahap 5: SETUJU — asset diterima.") + putusan rasio opsi (i) untuk konten ini
-  - `G2 konten final + metadata:` belum
-  - `G3 merge:` belum
+  - `G2 konten final + metadata:` belum — diajukan sekarang (isi lengkap direview pemilik)
+  - `G3 merge:` belum — akan diajukan TERPISAH setelah G2, bersamaan penyiapan PR
 - **Commit terakhir:** `022aba0` (asset Tahap 5); rantai: `b1d4752` → `212cf0a` → `999c0e9` → `bac65be` → `a8e6604` → `adc4b2f` (sinkron approval T4) → `022aba0`; log sesi: `_log-sesi/LOG_SESI_2026-09-19_32.md`
 - **PR terkait:** belum ada — PR direncanakan saat Tahap 6 (setelah G2 konten final); branch `arena/01a0b7ba-pembangun-sistem`
 - **Pekerjaan belum tersimpan:** Tidak ada
