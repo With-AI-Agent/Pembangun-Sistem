@@ -1,6 +1,6 @@
 # Status Produksi — Toko Bu Sinta — Bangku Tua di Depan Toko (Konten #3)
 
-- **Status:** in-progress
+- **Status:** ready-for-review (G2 konten final terkunci 2026-09-19; menunggu G3 merge)
 - **Channel:** Toko Bu Sinta (`channel-toko-bu-sinta`)
 - **Model konten:** Gambar Statis & Caption v1 (`model-konten/gambar-caption/brief.md`)
 - **Tahap terakhir selesai:** Tahap 6 — Assembly & Publish Prep + **sinkron main v1.1** (rebase ke `21fcfd3` tanpa konflik; asesmen: keluaran terkunci patuh v1.1 tanpa perubahan isi; pernyataan dikoreksi; entri konflik+resolusi di Log Keputusan channel-brief) + **approval ulang penutup caption vs v1.1 SETUJU (dikunci tanpa perubahan, 2026-09-19)**. Paket terkoreksi disajikan ulang; **menunggu pemilik mengajukan ulang G2 konten final + metadata**, lalu G3/PR terpisah.
@@ -29,7 +29,7 @@
   - `G2 breakdown:` disetujui/dikunci 2026-09-19 (verbatim: "G2 breakdown: DIKUNCI.") — breakdown jadi dasar generate asset
   - `G1 Tahap 5:` disetujui 2026-09-19 (verbatim: "G1 Tahap 5: SETUJU — asset diterima.") + putusan rasio opsi (i) untuk konten ini
   - `Approval ulang penutup caption vs brief v1.1:` disetujui 2026-09-19 (verbatim: "Approval ulang penutup caption terhadap brief v1.1: SETUJU — dikunci tanpa perubahan.") — bagian terdampak sinkron v1.1 dikunci tanpa perubahan isi
-  - `G2 konten final + metadata:` belum — diajukan sekarang (isi lengkap direview pemilik)
+  - `G2 konten final + metadata:` disetujui/dikunci 2026-09-19 (verbatim: "G2 konten final + metadata: DIKUNCI — paket terkoreksi (sinkron v1.1) diterima sebagai konten resmi channel.")
   - `G3 merge:` belum — akan diajukan TERPISAH setelah G2, bersamaan penyiapan PR
 - **Commit terakhir:** [commit sinkron v1.1 + entri Log Keputusan brief ini — hash di LOG_SESI slot 32]. CATATAN: seluruh rantai commit lama (`b1d4752`…`b69c270`) DI-REBASE ke main `21fcfd3` pada 2026-09-19 → hash baru (`95538b1`…`e194fc6`), isi identik; push via `--force-with-lease`. log sesi: `_log-sesi/LOG_SESI_2026-09-19_32.md`
 - **PR terkait:** belum ada — PR direncanakan saat Tahap 6 (setelah G2 konten final); branch `arena/01a0b7ba-pembangun-sistem`
