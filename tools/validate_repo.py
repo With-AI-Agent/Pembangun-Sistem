@@ -800,6 +800,28 @@ def _sha_dikenal(sha):
     return rc == 0
 
 
+def _ada_merge_di_jendela():
+    """True bila satu dari 4 commit terakhir HEAD adalah MERGE COMMIT.
+
+    Tidak boleh dipakai `git rev-list --merges -n 4 HEAD`: artinya "telusuri seluruh
+    riwayat sampai dapat 4 merge", bukan "apakah ada merge di 4 commit terakhir" -
+    kekeliruan yang sama dengan yang sempat membuat `_log_live` selalu true."""
+    rc, jendela = _git(["rev-list", "-n", "4", "HEAD"])
+    if rc != 0:
+        return False
+    for s in jendela.split():
+        rc2, parents = _git(["show", "--no-patch", "--format=%P", s])
+        if rc2 == 0 and len(parents.split()) > 1:
+            return True
+    return False
+
+
+def _leluhur(sha):
+    """True bila sha itu leluhur HEAD. False = ciri squash merge (riwayat branch dibuang)."""
+    rc, _ = _git(["merge-base", "--is-ancestor", sha, "HEAD"])
+    return rc == 0
+
+
 def _blok_header_keadaan(text):
     """Isi blok 'Keadaan Sesi' saja: dari headingnya sampai heading `## ` berikut.
 
@@ -838,35 +860,42 @@ for _lg in _berkas_log:
     _rel = _lg.relative_to(ROOT)
     _relstr = str(_rel).replace("\\", "/")
     _hdr = _tanpa_pagar_kode(_blok_header_keadaan(_t))
+    _live = True if not _git_ada else _log_live(_relstr)
     _ms = list(_pola_segar.finditer(_hdr))
-    if not _ms:
-        if _pola_segar.search(_tanpa_pagar_kode(_t)):
-            errors.append(
-                f"{_rel}: baris `- **Segar pada:**` ADA tetapi LETAKNYA DI LUAR blok header "
-                "'Keadaan Sesi' (di kronologi, atau di dalam pagar kode sebagai contoh) - header "
-                "log OPEN itu tetap tidak punya keadaan terukur. Pindahkan ke blok header"
-            )
-        elif _pola_segar_lama.search(_t):
-            errors.append(
-                f"{_rel}: baris `- **Segar pada:**` memakai FORMAT LAMA `head <sha> · <tanggal> · "
-                "FI <N> · manifest v<X>` yang memasangkan sha dengan angka yang tidak pernah benar "
-                "pada sha itu. Bentuk wajib sekarang: "
-                "- **Segar pada:** <YYYY-MM-DD> · FI <N> · manifest v<X.Y.Z> · head terukur `<sha7>`"
-            )
+    if not _ms or len(_ms) > 1:
+        if not _ms:
+            if _pola_segar.search(_tanpa_pagar_kode(_t)):
+                _pesan = ("baris `- **Segar pada:**` ADA tetapi LETAKNYA DI LUAR blok header "
+                          "'Keadaan Sesi' (di kronologi, atau di dalam pagar kode sebagai contoh) - "
+                          "header log OPEN itu tetap tidak punya keadaan terukur. Pindahkan ke blok header")
+            elif _pola_segar_lama.search(_t):
+                _pesan = ("baris `- **Segar pada:**` memakai FORMAT LAMA `head <sha> · <tanggal> · "
+                          "FI <N> · manifest v<X>` yang memasangkan sha dengan angka yang tidak pernah "
+                          "benar pada sha itu. Bentuk wajib sekarang: - **Segar pada:** <YYYY-MM-DD> · "
+                          "FI <N> · manifest v<X.Y.Z> · head terukur `<sha7>`")
+            else:
+                _pesan = ("log OPEN tanpa baris `- **Segar pada:**` di blok header - kesegaran header "
+                          "'Keadaan Sesi' tidak bisa dibuktikan. Bentuk wajib (satu baris, di dalam blok "
+                          "header, dikecualikan dari append-only justru supaya disegarkan): "
+                          "- **Segar pada:** <YYYY-MM-DD> · FI <N> · manifest v<X.Y.Z> · head terukur `<sha7>`")
         else:
-            errors.append(
-                f"{_rel}: log OPEN tanpa baris `- **Segar pada:**` di blok header - kesegaran header "
-                "'Keadaan Sesi' tidak bisa dibuktikan. Bentuk wajib (satu baris, di dalam blok header, "
-                "dikecualikan dari append-only justru supaya disegarkan): "
-                "- **Segar pada:** <YYYY-MM-DD> · FI <N> · manifest v<X.Y.Z> · head terukur `<sha7>`"
+            _pesan = (f"{len(_ms)} baris `- **Segar pada:**` di blok header, isinya berbeda - deklarasi "
+                      "ganda yang saling bertentangan tidak boleh dibiarkan lulus (temuan #1 hakim B "
+                      "putaran 7). Tepat satu baris; yang lama dihapus karena blok header dikecualikan "
+                      "dari append-only")
+        if _live:
+            errors.append(f"{_rel}: {_pesan}")
+        else:
+            # C8: penjaga tidak boleh memerahkan pohon yang tidak bisa memperbaikinya. Log OPEN yang
+            # tidak live milik sesi lain (atau arsip yang belum sempat ditutup): sesi yang sedang
+            # berjalan tidak berhak menyuntingnya, jadi temuannya warning beralasan, bukan FAILED.
+            # Tanpa ini, satu log OPEN tanpa cap yang sudah ada di `main` cukup untuk memerahkan
+            # gerbang wajib repo segera sesudah PR mana pun yang membawa penjaga ini digabung.
+            segar_warnings.append(
+                f"WARNING kesegaran header {_rel}: {_pesan} - DITURUNKAN menjadi warning karena log ini "
+                "tidak disentuh oleh 4 commit terakhir, jadi yang bisa memperbaikinya bukan sesi yang "
+                "sedang berjalan (aturan C8)"
             )
-        continue
-    if len(_ms) > 1:
-        errors.append(
-            f"{_rel}: {len(_ms)} baris `- **Segar pada:**` di blok header, isinya berbeda - deklarasi "
-            "ganda yang saling bertentangan tidak boleh dibiarkan lulus (temuan #1 hakim B putaran 7). "
-            "Tepat satu baris; yang lama dihapus karena blok header dikecualikan dari append-only"
-        )
         continue
     _m = _ms[0]
     _tgl, _n, _ver, _sha = _m.group(1), int(_m.group(2)), _m.group(3), _m.group(4)
@@ -876,7 +905,6 @@ for _lg in _berkas_log:
             f"{_rel}: header OPEN disegarkan {_tgl} tetapi berkasnya memuat tanggal lebih baru "
             f"{_tgl_berkas[-1]} - kronologi jalan sementara header tidak disegarkan"
         )
-    _live = True if not _git_ada else _log_live(_relstr)
     if not _live:
         segar_warnings.append(
             f"WARNING kesegaran header {_rel}: log OPEN ini tidak disentuh oleh 4 commit terakhir, "
@@ -908,11 +936,27 @@ for _lg in _berkas_log:
         )
         continue
     if not any(s.startswith(_sha) or _sha.startswith(s[:7]) for s in _jendela):
-        errors.append(
-            f"{_rel}: header OPEN menyebut head terukur `{_sha}` yang bukan HEAD maupun tiga commit "
-            f"sebelumnya ({', '.join(s[:7] for s in _jendela)}) padahal log ini disentuh commit "
-            "terbaru - header tidak disegarkan pada pertukaran bermakna terakhir"
-        )
+        if not _leluhur(_sha):
+            segar_warnings.append(
+                f"WARNING kesegaran header {_rel}: head terukur `{_sha}` BUKAN leluhur HEAD - ciri "
+                "SQUASH MERGE (riwayat branch dibuang, satu commit baru dibuat di atas batang utama), "
+                "jadi cap dari branch yang digabung tidak mungkin disegarkan oleh merge itu sendiri. "
+                "Bagian (e) DITURUNKAN menjadi warning beralasan (aturan C8), bukan FAILED dan bukan "
+                "mati senyap"
+            )
+        elif _ada_merge_di_jendela():
+            segar_warnings.append(
+                f"WARNING kesegaran header {_rel}: head terukur `{_sha}` di luar jendela HEAD..HEAD~3, "
+                "tetapi satu dari 4 commit terakhir adalah MERGE COMMIT - pohon ini baru menyerap "
+                "branch lain, dan merge itu tidak bisa menyegarkan header log milik sesi yang "
+                "digabung. Bagian (e) DITURUNKAN menjadi warning beralasan (aturan C8)"
+            )
+        else:
+            errors.append(
+                f"{_rel}: header OPEN menyebut head terukur `{_sha}` yang bukan HEAD maupun tiga commit "
+                f"sebelumnya ({', '.join(s[:7] for s in _jendela)}) padahal log ini disentuh commit "
+                "terbaru - header tidak disegarkan pada pertukaran bermakna terakhir"
+            )
 
 
 if errors:

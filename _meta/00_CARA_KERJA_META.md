@@ -343,11 +343,29 @@ jalankan gerbang wajib di sana, lalu buat satu commit di atasnya dan jalankan la
 atau gagal hanya karena sebab yang memang milik PR itu. Severity lalu dijajarkan dengan **siapa yang bisa
 bertindak**: keras selama pelanggarnya bisa memperbaiki, warning beralasan bila tidak.
 
+Dua syarat tambahan yang lahir dari pengalaman, bukan dari rencana. **Pertama, uji sesudah-merge wajib
+dijalankan pada pohon yang SUDAH DI-COMMIT** — checkout sha-nya di clone terpisah, bukan mengukur working
+tree lalu menyimpulkan. Pada 19 Sep 2026 perbaikan pertama lolos di working tree, di-commit sebagai
+`9f1106f`, dan baru ketika sha itu sendiri yang di-merge ke `main` `98d3cb7` ketahuan bahwa squash merge
+dan merge commit **masih `VALIDATION FAILED`**: live-scoping saja hanya menyembuhkan kasus keempat (empat
+commit asing di atasnya). Klaim "keduanya lulus" di baris utang ikut dikoreksi, bukan dibiarkan berdiri.
+**Kedua, uji penjaga wajib membawa uji prasyaratnya sendiri.** Skenario yang salah bangun menghasilkan
+"lulus" yang kosong: dengan empat commit cabang, isi jendela `rev-list -n 4 HEAD` sesudah merge bergantung
+urutan tanggal commit sehingga sha cap kadang masih ada di dalamnya; dan cap yang diisi sha HEAD saat
+cabang dibuat ternyata nenek moyang bersama trunk dan cabang, jadi sesudah `merge --squash` ia tetap leluhur
+HEAD dan keadaan "bukan leluhur" tidak pernah terbentuk. Karena itu RP23e/RP23f didampingi pemeriksaan yang
+memastikan log benar-benar live, sha cap benar-benar di luar jendela, dan HEAD benar-benar merge commit atau
+sha cap benar-benar bukan leluhur — kalau prasyaratnya tidak terbentuk, ujinya GAGAL dengan alasan yang
+dicetak, bukan lulus senyap.
+
 Kejadian nyata (19 Sep 2026, temuan #2 hakim C putaran 7 PR #74): penjaga kesegaran header yang
 ditambahkan sehari sebelumnya membuat `main` **`VALIDATION FAILED` seketika** sesudah merge — pada squash
 merge maupun merge commit, lalu permanen sesudah satu commit apa pun di atasnya — karena dua log OPEN
 milik sesi ini tidak bisa disegarkan oleh sesi lain (append-only + kepemilikan log). Penulis mereproduksi
 sendiri di clone terpisah pada `main` terbaru sebelum memperbaiki. Perbaikannya dikunci **RP23a–d** dengan
 `.git` **nyata**, karena bagian sha itu sebelumnya **tidak pernah teruji** — harness failure-injection
-meng-copy tanpa `.git`. Penjaga yang cabang utamanya tidak diuji adalah pola yang sudah tiga kali terjadi
+meng-copy tanpa `.git`. Penyembuhan itu ternyata **belum lengkap**: pada pohon `9f1106f` yang sudah
+di-commit, squash merge dan merge commit masih FAILED, jadi severity digeneralisasi (cap yang bukan leluhur
+HEAD, merge commit di dalam jendela, dan log OPEN yang tidak live untuk semua bagian) dan dikunci
+**RP23a–f**. Penjaga yang cabang utamanya tidak diuji adalah pola yang sudah tiga kali terjadi
 di PR ini (RP17b, cabang buta RP18d, RP21), dan tiap kali yang menemukan adalah pihak lain.

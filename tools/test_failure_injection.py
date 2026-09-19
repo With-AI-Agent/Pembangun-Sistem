@@ -401,6 +401,66 @@ def bandingkan_jumlah_dokumen(teks_doc: str, komponen: list, total_aktual: int,
     return gagal
 
 
+
+def selisih_populasi_dari_garis_lain(teks_doc: str, komponen: list, total_aktual: int,
+                                     unit_paths: list, git, ada_git: bool):
+    """Putuskan apakah selisih D-2 boleh DITURUNKAN jadi peringatan karena datang dari garis riwayat lain.
+
+    MURNI (`git` disuntikkan sebagai callable) supaya bisa diuji tanpa repo — pola yang sama dengan
+    `bandingkan_jumlah_dokumen` dan `klaim_total`. Mengembalikan `(boleh_diturunkan, alasan)`.
+
+    Konteks nyata (19 Sep 2026, diukur pada pohon hasil merge PR #74 di atas `main` `98d3cb7`): `main`
+    menambah satu unit produksi yang tidak ada di branch ini
+    (`sistem/sistem-konten-kreator/_produksi-aktif/toko-bu-sinta-bangku-tua`). Sesudah merge, grup
+    "unit nyata" naik 19 -> 20, jadi angka dokumen yang ditulis branch ini (190) **tidak mungkin benar**
+    di pohon hasil merge, dan D-2 memerahkan gerbang wajib FI di `main` seketika sesudah merge — untuk
+    pelanggaran yang tidak dilakukan siapa pun di branch ini dan yang tidak bisa dicegah penulisnya.
+    Itu kelas cacat yang sama dengan temuan #2 hakim C putaran 7, dan aturan C8 menuntut severity
+    dijajarkan dengan siapa yang bisa bertindak.
+
+    Pembedanya ANCESTRY, bukan niat: bila ada unit yang ditambahkan oleh commit yang merupakan
+    DESCENDANT dari commit terakhir yang memperbarui dokumen, penulis dokumen itu seharusnya sudah
+    menghitungnya -> penjaga tetap KERAS (giginya utuh, termasuk untuk `main` sesudah merge). Bila
+    tidak ada satu pun — semua unit sudah ada sebelum dokumen diperbarui di garisnya, atau datang dari
+    garis yang menyimpang lalu diserap merge — selisihnya milik pohon hasil merge -> PERINGATAN beralasan.
+    """
+    if not ada_git:
+        return False, "tidak ada .git di root repo, asal-usul unit tidak bisa ditentukan"
+    m = re.search(r"^\*\*Jumlah:\*\*\s*(\d+)\s*skenario di master\s*\(([^)]*)\)", teks_doc or "", re.M)
+    if not m:
+        return False, "baris '**Jumlah:** N skenario di master (...)' tidak terparse"
+    doc_unit = aktual_unit = None
+    beda = []
+    for label, nilai in komponen:
+        mm = re.search(rf"(\d+)\s+{re.escape(label)}", m.group(2))
+        if not mm:
+            return False, f"komponen '{label}' tidak ditemukan di baris jumlah dokumen"
+        if int(mm.group(1)) != nilai:
+            beda.append(label)
+        if label == "unit nyata":
+            doc_unit, aktual_unit = int(mm.group(1)), nilai
+    if beda != ["unit nyata"]:
+        return False, f"selisih menyentuh komponen {beda or 'lain'}, bukan kelebihan populasi unit semata"
+    if aktual_unit is None or doc_unit is None or aktual_unit <= doc_unit:
+        return False, "jumlah unit nyata alat tidak lebih besar dari dokumen (populasi menyusut, bukan bertambah)"
+    if total_aktual - int(m.group(1)) != aktual_unit - doc_unit:
+        return False, "selisih total tidak sama dengan selisih unit nyata, jadi ada penyebab lain"
+    doc_commit = git("log", "-n", "1", "--format=%H", "--",
+                     "_meta/FAILURE_INJECTION_TESTS.md").stdout.strip()
+    if not doc_commit:
+        return False, "commit terakhir yang memperbarui dokumen tidak terbaca dari riwayat"
+    sesudah_doc = []
+    for rel in unit_paths:
+        add = git("log", "--diff-filter=A", "-n", "1", "--format=%H", "--", rel).stdout.strip()
+        if add and add != doc_commit and git("merge-base", "--is-ancestor", doc_commit, add).returncode == 0:
+            sesudah_doc.append(rel)
+    if sesudah_doc:
+        return False, ("ada unit yang ditambahkan SESUDAH dokumen terakhir diperbarui di garis riwayat "
+                       "yang sama: " + ", ".join(sesudah_doc[:3]))
+    return True, ("semua unit di pohon ini sudah ada sebelum dokumen terakhir diperbarui di garis "
+                  "riwayatnya, jadi kelebihan populasi datang dari garis lain yang diserap merge")
+
+
 def _load_review_prompt(repo: Path, module_name: str):
     spec = importlib.util.spec_from_file_location(module_name, repo / "tools" / "review_prompt.py")
     if spec is None or spec.loader is None:
@@ -1664,10 +1724,97 @@ def review_prompt_scenarios(base_dir: Path):
     _commit23("RP23: cap memakai sha yang tidak dikenal (simulasi squash merge)", True)
     rc_d, out_d = run_tool_out(cp, "tools/validate_repo.py")
     checks.append((
-        "RP23d squash merge tidak memerahkan `main`: cap menunjuk sha yang tidak dikenal di repo ini "
-        "(riwayat branch dibuang squash) -> bagian (e) DITURUNKAN menjadi warning beralasan dan "
-        "validator LULUS - bukan FAILED, bukan mati senyap",
+        "RP23d sha cap yang TIDAK DIKENAL di repo ini (clone dangkal, atau riwayat branch yang dibuang) "
+        "-> bagian (e) DITURUNKAN menjadi warning beralasan dan validator LULUS - bukan FAILED, bukan "
+        "mati senyap",
         rc_d == 0 and "tidak dikenal di repo ini" in out_d,
+    ))
+    # RP23e/f - C8 diuji pada bentuk akhirnya: KEDUA cara merge yang ditawarkan GitHub tidak boleh
+    # memerahkan gerbang wajib di pohon hasil merge. Ini yang diukur hakim C dan yang saya reproduksi
+    # sendiri di clone terpisah pada `main` terbaru. Versi pertama perbaikan (hanya live-scoping) BELUM
+    # menyembuhkan: squash merge dan merge commit masih VALIDATION FAILED sampai ada empat commit asing
+    # di atasnya, jadi klaim "sembuh" akan palsu kalau hanya RP23c yang menguncinya. Yang menyembuhkan
+    # adalah dua jalur tambahan: cap yang bukan leluhur HEAD (ciri squash) dan merge commit di dalam
+    # jendela - keduanya menurunkan bagian (e) menjadi warning beralasan.
+    trunk23 = _g23("rev-parse", "--abbrev-ref", "HEAD").stdout.strip()
+    _g23("checkout", "-q", "-b", "uji-cabang-23")
+    # Cap harus menunjuk commit yang HANYA ADA DI CABANG. Versi pertama uji ini mengisi cap dengan sha
+    # HEAD saat cabang dibuat - sha itu ternyata nenek moyang bersama trunk dan cabang, jadi sesudah
+    # `merge --squash` ia TETAP leluhur HEAD dan keadaan "bukan leluhur" tidak pernah terbentuk: ujinya
+    # gagal karena skenarionya salah bangun, bukan karena penjaganya salah. Commit cabang pertama dibuat
+    # lebih dulu, barulah cap diarahkan ke sana.
+    _commit23("RP23e: commit pertama yang hanya ada di cabang", True)
+    _cap23(_g23("rev-parse", "--short=7", "HEAD").stdout.strip())
+    _commit23("RP23e: segarkan cap ke commit khusus cabang", True)
+    # DELAPAN commit, bukan empat: sesudah merge, jendela `rev-list -n 4 HEAD` berisi campuran commit
+    # batang utama dan commit cabang yang urutannya bergantung tanggal commit, jadi dengan empat commit
+    # sha cap kadang MASIH masuk jendela dan warning yang diuji tidak pernah muncul - skenarionya tidak
+    # deterministik. Versi pertama uji ini gagal persis karena itu, dan kegagalannya tampak sebagai
+    # "perbaikannya tidak jalan" padahal yang rusak adalah ujinya.
+    for i in range(8):
+        _commit23(f"RP23e: pekerjaan cabang {i + 1} tanpa menyegarkan cap", True)
+    cap23 = re.search(pola22, f22.read_text(encoding="utf-8"), re.M).group(4)
+    _g23("checkout", "-q", trunk23)
+    _commit23("RP23e: commit di batang utama", False)
+    _g23("merge", "--no-ff", "-qm", "RP23e: merge cabang", "uji-cabang-23")
+
+    def _prasyarat23(pesan_merge):
+        """Pastikan keadaan yang mau diuji benar-benar terbentuk, supaya hasilnya bukan kebetulan.
+
+        Tanpa ini, uji bisa 'lulus' karena validator memang tidak menemukan apa pun (sha cap kebetulan
+        masih di dalam jendela) dan klaim "kedua cara merge sudah disembuhkan" jadi kosong."""
+        jendela = _g23("rev-list", "-n", "4", "HEAD").stdout.split()
+        terakhir = _g23("rev-list", "-n", "1", "HEAD", "--", rel23).stdout.split()
+        if not jendela:
+            return False, "jendela HEAD kosong"
+        ada_merge = len(_g23("show", "--no-patch", "--format=%P", jendela[0]).stdout.split()) > 1
+        syarat = {
+            "log live (commit terakhir yang menyentuhnya ada di dalam jendela)":
+                bool(terakhir) and terakhir[0] in jendela,
+            "sha cap di luar jendela HEAD..HEAD~3":
+                not any(s.startswith(cap23) for s in jendela),
+            ("HEAD adalah merge commit" if pesan_merge else "sha cap bukan leluhur HEAD (squash)"):
+                (ada_merge if pesan_merge
+                 else _g23("merge-base", "--is-ancestor", cap23, "HEAD").returncode != 0),
+        }
+        return all(syarat.values()), "; ".join(k for k, v in syarat.items() if not v) or "lengkap"
+
+    ok_e, alasan_e = _prasyarat23(True)
+    rc_e, out_e = run_tool_out(cp, "tools/validate_repo.py")
+    checks.append((
+        "RP23e-prasyarat: sesudah MERGE COMMIT keadaan yang mau diuji benar-benar terbentuk (log live, "
+        "sha cap di luar jendela, HEAD merge commit) - supaya uji di bawahnya bukan kebetulan",
+        ok_e,
+    ))
+    checks.append((
+        "RP23e MERGE COMMIT tidak memerahkan pohon hasil merge: log live dan cap-nya di luar jendela "
+        "HEAD..HEAD~3, tetapi satu dari 4 commit terakhir adalah merge commit -> bagian (e) DITURUNKAN "
+        "menjadi warning beralasan dan validator LULUS (aturan C8; versi pertama perbaikan masih FAILED "
+        "di sini, terukur pada pohon yang sudah di-commit sebelum klaim apa pun dibuat)",
+        ok_e and rc_e == 0 and "MERGE COMMIT - pohon ini baru menyerap" in out_e,
+    ))
+    _g23("reset", "-q", "--hard", "HEAD~1")
+    _g23("merge", "--squash", "uji-cabang-23")
+    _g23("commit", "-qm", "RP23f: squash merge cabang")
+    ok_f, alasan_f = _prasyarat23(False)
+    rc_f, out_f = run_tool_out(cp, "tools/validate_repo.py")
+    checks.append((
+        "RP23f-prasyarat: sesudah SQUASH MERGE keadaan yang mau diuji terbentuk (log live, sha cap di luar "
+        "jendela, dan sha cap BUKAN leluhur HEAD karena riwayat cabang dibuang squash)",
+        ok_f,
+    ))
+    checks.append((
+        "RP23f SQUASH MERGE tidak memerahkan pohon hasil merge: cap dari branch yang digabung bukan "
+        "leluhur HEAD -> bagian (e) DITURUNKAN menjadi warning beralasan dan validator LULUS (aturan C8)",
+        ok_f and rc_f == 0 and "BUKAN leluhur HEAD" in out_f,
+    ))
+    # Selalu ditambahkan (bukan hanya saat gagal) supaya JUMLAH skenario tetap deterministik - kalau
+    # hanya muncul saat gagal, angka yang dicetak alat berubah-ubah dan penjaga D-2 jadi tidak bisa
+    # dipercaya. Nilainya ok_e AND ok_f, dan namanya membawa alasan persisnya bila ada yang tidak terbentuk.
+    checks.append((
+        f"RP23 catatan prasyarat (merge: {alasan_e} · squash: {alasan_f}) - kata 'lengkap' berarti keadaan "
+        "yang mau diuji benar-benar terbentuk di repo uji, jadi RP23e dan RP23f di atas bukan kebetulan",
+        ok_e and ok_f,
     ))
     f22.write_text(asli22, encoding="utf-8")
 
@@ -2429,6 +2576,75 @@ def run():
         and any("komponen tidak ditemukan" in g
                 for g in bandingkan_jumlah_dokumen(_doc_m, [("sintetis", 60), ("label asing", 1)], 100, False)),
     ))
+    # D-2d: severity selisih jumlah skenario. Kunci aturan baru `selisih_populasi_dari_garis_lain`
+    # — DITURUNKAN jadi peringatan hanya bila kelebihannya datang dari garis riwayat lain (merge),
+    # dan tetap KERAS bila unitnya ditambahkan sesudah dokumen diperbarui di garis yang sama.
+    class _GitPalsu:
+        def __init__(self, doc_commit, tambah, leluhur):
+            self.doc_commit, self.tambah, self.leluhur = doc_commit, tambah, leluhur
+            self.dipanggil = []
+
+        def __call__(self, *a):
+            self.dipanggil.append(a)
+            class R:
+                returncode = 0
+                stdout = ""
+            r = R()
+            if "--diff-filter=A" in a:
+                r.stdout = self.tambah.get(a[-1], "")
+            elif a[0] == "log":
+                r.stdout = self.doc_commit
+            elif a[0] == "merge-base":
+                r.returncode = 0 if (a[2], a[3]) in self.leluhur else 1
+            return r
+
+    _doc_d2d = "**Jumlah:** 190 skenario di master (30 sintetis + 19 unit nyata + 14 regresi review PR-11)\n"
+    _komp_d2d = [("sintetis", 30), ("unit nyata", 20), ("regresi review PR-11", 14)]
+    _unit_d2d = ["sistem/a/_produksi-aktif/unit-lama/STATUS.md", "sistem/b/_produksi-aktif/unit-baru/STATUS.md"]
+    _boleh, _alasan = selisih_populasi_dari_garis_lain(
+        _doc_d2d, _komp_d2d, 191, _unit_d2d,
+        _GitPalsu("DOC1", {"sistem/a/_produksi-aktif/unit-lama/STATUS.md": "A0",
+                           "sistem/b/_produksi-aktif/unit-baru/STATUS.md": "M9"}, set()), True)
+    checks.append((
+        "D-2d unit dari GARIS LAIN (commit penambahnya menyimpang dari commit dokumen, ciri pohon hasil "
+        "merge) -> selisih D-2 DITURUNKAN jadi peringatan beralasan, gerbang FI tidak merah di `main` "
+        "sesudah merge (aturan C8; diukur nyata pada merge PR #74 di atas main 98d3cb7)",
+        _boleh is True and "garis lain" in _alasan,
+    ))
+    _boleh2, _alasan2 = selisih_populasi_dari_garis_lain(
+        _doc_d2d, _komp_d2d, 191, _unit_d2d,
+        _GitPalsu("DOC1", {"sistem/a/_produksi-aktif/unit-lama/STATUS.md": "A0",
+                           "sistem/b/_produksi-aktif/unit-baru/STATUS.md": "N2"},
+                  {("DOC1", "N2")}), True)
+    checks.append((
+        "D-2d GIGI tetap ada: unit yang ditambahkan SESUDAH dokumen diperbarui di garis riwayat yang sama "
+        "(penulisnya bisa dan wajib menghitungnya) -> selisih TIDAK diturunkan, D-2 tetap gagal keras",
+        _boleh2 is False and "SESUDAH dokumen" in _alasan2,
+    ))
+    _boleh3, _alasan3 = selisih_populasi_dari_garis_lain(
+        "**Jumlah:** 190 skenario di master (29 sintetis + 20 unit nyata + 14 regresi review PR-11)\n",
+        [("sintetis", 30), ("unit nyata", 20), ("regresi review PR-11", 14)], 191, _unit_d2d,
+        _GitPalsu("DOC1", {}, set()), True)
+    checks.append((
+        "D-2d selisih yang menyentuh komponen LAIN (sintetis ikut beda) tidak boleh disembunyikan sebagai "
+        "efek merge -> tetap keras",
+        _boleh3 is False and "bukan kelebihan populasi unit" in _alasan3,
+    ))
+    _boleh4, _alasan4 = selisih_populasi_dari_garis_lain(
+        _doc_d2d, [("sintetis", 30), ("unit nyata", 18), ("regresi review PR-11", 14)], 189, _unit_d2d,
+        _GitPalsu("DOC1", {}, set()), True)
+    checks.append((
+        "D-2d populasi MENYUSUT (alat mencetak lebih sedikit dari dokumen — skenario hilang) tidak pernah "
+        "diturunkan jadi peringatan -> tetap keras",
+        _boleh4 is False and "menyusut" in _alasan4,
+    ))
+    _boleh5, _alasan5 = selisih_populasi_dari_garis_lain(_doc_d2d, _komp_d2d, 191, _unit_d2d,
+                                                         _GitPalsu("DOC1", {}, set()), False)
+    checks.append((
+        "D-2d tanpa .git asal-usul unit tidak bisa ditentukan -> penjaga gagal keras (fail-closed), "
+        "tidak menebak bahwa selisihnya efek merge",
+        _boleh5 is False and "tidak ada .git" in _alasan5,
+    ))
 
     n_synth = len(checks)
 
@@ -2522,6 +2738,22 @@ def run():
                      ("regresi integritas tabel", len(ti_checks))]
     _gagal_d2 = bandingkan_jumlah_dokumen(doc.read_text(encoding="utf-8"), komponen,
                                           len(checks), _di_ekstrak)
+    _peringatan_d2 = []
+    if _gagal_d2 and not _di_ekstrak:
+        def _git_root(*a):
+            return subprocess.run(["git"] + list(a), cwd=str(ROOT), capture_output=True, text=True)
+        _boleh_turun, _alasan_turun = selisih_populasi_dari_garis_lain(
+            doc.read_text(encoding="utf-8"), komponen, len(checks),
+            [p.relative_to(ROOT).as_posix() for p, _s in real], _git_root, (ROOT / ".git").exists())
+        if _boleh_turun:
+            _peringatan_d2 = [
+                "D-2 DITURUNKAN jadi peringatan (" + _alasan_turun + "): " + _gagal_d2[0] +
+                " Angka di dokumen ditulis pada pohon yang tidak memuat unit dari garis riwayat lain itu, "
+                "jadi tidak mungkin benar di sini; salin angka dari cetakan alat pada commit berikutnya "
+                "di garis riwayat ini."]
+            _gagal_d2 = []
+    for _pw in _peringatan_d2:
+        print("PERINGATAN " + _pw)
     if _gagal_d2:
         print("FAILURE-INJECTION TESTS FAILED")
         for _g in _gagal_d2:

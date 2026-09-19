@@ -34,7 +34,7 @@
        commit terakhir; bila tidak live ketiganya turun menjadi warning beralasan sedangkan pemeriksaan
        tanggal tetap keras. Sebabnya: penjaga yang selalu keras membuat `main` VALIDATION FAILED
        seketika sesudah merge — log OPEN milik satu sesi tidak bisa disegarkan oleh sesi lain (temuan #2
-       hakim C putaran 7, direproduksi pada squash merge maupun merge commit; dikunci RP23a–d dengan
+       hakim C putaran 7, direproduksi pada squash merge maupun merge commit; dikunci RP23a–f dengan
        `.git` nyata). Segarkan baris ini setiap pertukaran bermakna — header adalah satu-satunya bagian
        log yang dikecualikan dari append-only justru supaya bisa disegarkan; membiarkannya basi adalah
        pelanggaran mekanisme, bukan sekadar ketinggalan (temuan #9 hakim putaran 5 PR #74, terulang
