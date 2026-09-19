@@ -30,7 +30,7 @@
   - `G1 Tahap 5:` disetujui 2026-09-19 (verbatim: "G1 Tahap 5: SETUJU — asset diterima.") + putusan rasio opsi (i) untuk konten ini
   - `G2 konten final + metadata:` belum — diajukan sekarang (isi lengkap direview pemilik)
   - `G3 merge:` belum — akan diajukan TERPISAH setelah G2, bersamaan penyiapan PR
-- **Commit terakhir:** `022aba0` (asset Tahap 5); rantai: `b1d4752` → `212cf0a` → `999c0e9` → `bac65be` → `a8e6604` → `adc4b2f` (sinkron approval T4) → `022aba0`; log sesi: `_log-sesi/LOG_SESI_2026-09-19_32.md`
+- **Commit terakhir:** `0fe1989` (keluaran Tahap 6); rantai: `b1d4752` → `212cf0a` → `999c0e9` → `bac65be` → `a8e6604` → `adc4b2f` → `022aba0` → `36d0ad1` (sinkron approval T5) → `0fe1989`; log sesi: `_log-sesi/LOG_SESI_2026-09-19_32.md`
 - **PR terkait:** belum ada — PR direncanakan saat Tahap 6 (setelah G2 konten final); branch `arena/01a0b7ba-pembangun-sistem`
 - **Pekerjaan belum tersimpan:** Tidak ada
 - **Risiko atau blocker:** PR #79 (Channel Brief v1.1) masih OPEN dan belum diputuskan pemilik (merge/tutup) — naskah ini sudah ditulis kompatibel dengan kedua versi, tetapi status sumber resmi tetap v1 sampai PR #79 di-merge. Tidak ada blocker lain.
