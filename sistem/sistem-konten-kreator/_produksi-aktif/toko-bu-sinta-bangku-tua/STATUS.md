@@ -3,7 +3,7 @@
 - **Status:** in-progress
 - **Channel:** Toko Bu Sinta (`channel-toko-bu-sinta`)
 - **Model konten:** Gambar Statis & Caption v1 (`model-konten/gambar-caption/brief.md`)
-- **Tahap terakhir selesai:** Tahap 6 — Assembly & Publish Prep + **sinkron main v1.1** (rebase ke `21fcfd3` tanpa konflik; asesmen dampak: keluaran terkunci patuh v1.1 tanpa perubahan isi; pernyataan status PR dikoreksi; entri konflik+resolusi di-append ke Log Keputusan channel-brief). **Berhenti: approval ulang bagian terdampak (penutup caption vs v1.1) diajukan ke pemilik; G2 konten final akan diajukan ulang pemilik setelah paket terkoreksi disajikan.**
+- **Tahap terakhir selesai:** Tahap 6 — Assembly & Publish Prep + **sinkron main v1.1** (rebase ke `21fcfd3` tanpa konflik; asesmen: keluaran terkunci patuh v1.1 tanpa perubahan isi; pernyataan dikoreksi; entri konflik+resolusi di Log Keputusan channel-brief) + **approval ulang penutup caption vs v1.1 SETUJU (dikunci tanpa perubahan, 2026-09-19)**. Paket terkoreksi disajikan ulang; **menunggu pemilik mengajukan ulang G2 konten final + metadata**, lalu G3/PR terpisah.
 - **Tahap berikutnya:** G2 konten final → siapkan PR → **G3 merge** (pertanyaan terpisah); penghapusan folder produksi HANYA setelah pemilik download & memverifikasi langkah arsip 1/2/2a/2b/4
 - **Output resmi:**
   - `naskah-draft.md` (NASKAH FINAL — G2 dikunci 2026-09-19; memuat: ide terpilih + cek pengulangan Tahap 1, konsep & angle Tahap 2, deskripsi karakter Tipe B, naskah caption 5 baris Tahap 3, evaluasi konsistensi Persona & Voice)
@@ -28,6 +28,7 @@
   - `G1 Tahap 4:` disetujui 2026-09-19 (verbatim: "G1 Tahap 4: SETUJU.")
   - `G2 breakdown:` disetujui/dikunci 2026-09-19 (verbatim: "G2 breakdown: DIKUNCI.") — breakdown jadi dasar generate asset
   - `G1 Tahap 5:` disetujui 2026-09-19 (verbatim: "G1 Tahap 5: SETUJU — asset diterima.") + putusan rasio opsi (i) untuk konten ini
+  - `Approval ulang penutup caption vs brief v1.1:` disetujui 2026-09-19 (verbatim: "Approval ulang penutup caption terhadap brief v1.1: SETUJU — dikunci tanpa perubahan.") — bagian terdampak sinkron v1.1 dikunci tanpa perubahan isi
   - `G2 konten final + metadata:` belum — diajukan sekarang (isi lengkap direview pemilik)
   - `G3 merge:` belum — akan diajukan TERPISAH setelah G2, bersamaan penyiapan PR
 - **Commit terakhir:** [commit sinkron v1.1 + entri Log Keputusan brief ini — hash di LOG_SESI slot 32]. CATATAN: seluruh rantai commit lama (`b1d4752`…`b69c270`) DI-REBASE ke main `21fcfd3` pada 2026-09-19 → hash baru (`95538b1`…`e194fc6`), isi identik; push via `--force-with-lease`. log sesi: `_log-sesi/LOG_SESI_2026-09-19_32.md`
