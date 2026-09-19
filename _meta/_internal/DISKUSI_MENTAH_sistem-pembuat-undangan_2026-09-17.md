@@ -2402,3 +2402,116 @@ dilakukan: prompt itu ditempeli banner **DIGANTIKAN** (tidak dihapus), prompt pu
 ulang pada head penutup, dan body di-PATCH sekali lagi untuk memakai permalink yang baru. Biayanya satu
 komentar tambahan; alternatifnya (membiarkan header log basi sampai verdict masuk) lebih mahal karena
 hakim putaran 6 membaca blok Keadaan Sesi — persis kelas temuan #9 putaran 5.
+
+
+## Giliran 26 (19 Sep 2026) — "3 Hakim PR udh aku jalanin dan udh selesai": 2 HIJAU + 1 MERAH, 3 temuan nyata, dan 4 hal lain dari sapuan sendiri
+
+**Kutipan verbatim pemilik (disimpan utuh sesuai aturan tetap "aku ga mau ada satu hal pun yang terlupakan"):**
+
+> 3 Hakim PR udh aku jalanin dan udh selesai. Silahkan periksa
+
+Empat keputusan lalu ditawarkan lewat tanya-jawab beropsi (perbaikan + putaran berikutnya; penjaga kesegaran
+header; waktu pengerjaan T-51/T-52; kriteria merge). **Keempatnya dijawab dengan opsi yang sama:**
+
+> Kamu putuskan yang terbaik
+
+Agent berhenti sejenak untuk menyusun laporan keputusan, dan pemilik menyusul:
+
+> Kenapa ga lanjut? Lanjut
+
+**Makna yang dibaca agent dari tiga pesan itu:** (1) pemilik tidak mau lagi diminta memutus hal teknis yang
+bisa diukur — delegasinya penuh dan berulang; (2) pemilik menganggap "berhenti untuk bertanya" sebagai
+pemborosan giliran bila jawabannya sudah didelegasikan; (3) pola ini identik dengan giliran 25 (*"Kenapa
+berhenti? lanjutkan"*), jadi ia dicatat sebagai **aturan berdiri, bukan teguran sekali pakai**: sesudah
+delegasi diberikan, agent memutuskan, mengerjakan, dan melaporkan — bukan memutuskan lalu menunggu.
+
+**Yang diukur dari kanal (bukan dari ingatan):** `ambil_verdict.py --pr 74 --putaran 6 --harapkan 3`
+mencetak kuorum **3/3 LENGKAP** pada head `30b3cb2` — `5740710021` HIJAU (09:16:18Z), `5740743763` HIJAU
+(09:23:43Z), `5740781988` MERAH (09:32:15Z, **3 temuan, nol BLOCKER**). Agregat lintas putaran
+**MERAH — JANGAN MERGE (13 dari 16 slot bukan hijau)**; tally kanal **16 slot hakim · 15 bukan-slot**
+(31 komentar). Ini putaran pertama dengan mayoritas hijau, dan kedua hakim HIJAU menyatakan sendiri bahwa
+merge bukan wewenang mereka karena PR ini mengubah alat pengadil.
+
+**Tiga temuan hakim, direproduksi sendiri sebelum dipercaya — semuanya NYATA (nol positif palsu, keenam
+kalinya berturut-turut):**
+
+1. **Body PR membantah diri sendiri soal (B-hidup).** Body menulis selisih terhadap ujung `main` yang hidup
+   "identik dengan diff PR: 65 berkas" dan baris (B-hidup) tidak dicetak prompt "justru karena selisihnya
+   sudah nol". Terukur: `git diff --name-only 21fcfd3 30b3cb2` = **66 berkas**, `comm -13` atas dua daftar =
+   **1 berkas** (`sistem/sistem-konten-kreator/channel-toko-bu-sinta/channel-brief.md`, masuk base lewat
+   PR #79 sesudah branch dibuat), dan prompt berlaku baris 160 mencetak *"objek ujung base terukur
+   21fcfd3a5563 tidak ada lokal, jadi (B-hidup) TIDAK terukur (git keluar 128: fatal: bad object …)"*.
+   Jadi **dua kesalahan dalam satu kalimat**: angkanya (nol vs satu) dan sebab-akibatnya (selisih nol vs
+   fail-closed tidak terukur). Akar sebabnya di sisi penulis: koreksi baru tentang `main` yang bergerak
+   ditulis di awal paragraf, sementara kalimat lama di ujung paragraf yang sama tidak ikut dicabut — dan
+   daftar periksa mandiri penulis (12 pola yang wajib nol) tidak memuat kalimat itu.
+2. **Judul PR basi terhadap head.** Judul menulis `v1.14.0 → v1.32.0`; manifest di head terukur **v1.33.0**
+   (lalu **v1.34.0** sesudah perbaikan giliran ini). Kelas temuan #3 hakim putaran 4, terulang: body
+   disegarkan sebelas kali, judulnya tidak pernah ikut disegarkan.
+3. **Header log OPEN basi pada head.** `LOG_SESI_2026-09-18_24.md` masih menulis 63 commit, +12.737−85,
+   FI 169, "REST PATCH body sepuluh kali — 90.404 karakter", "putaran 6 belum punya slot hakim", padahal
+   head terukur 66 commit, +12.951−85, FI 172, body kesebelas, dan tiga verdict sudah masuk;
+   `git diff 6ea14a5 30b3cb2 -- _log-sesi/` menunjukkan dua commit terakhir hanya append kronologi.
+   Kelas temuan #9 putaran 5, **terulang**. Hakim juga menunjuk akar sebabnya: **RP20 memaku keberadaan
+   field `- **Keadaan:**`, bukan kesegarannya** — itulah celah yang membuat kelas cacat ini bisa terulang
+   diam-diam.
+
+**Empat butir lain ditemukan sapuan penulis sendiri, tidak dilaporkan hakim mana pun** (aturan tetap pemilik
+giliran 5: temuan di luar cakupan wajib dilaporkan; giliran 17: *"klo kamu merasa cuma nemu 1 maka kamu
+harus periksa lagi"*):
+
+- **S1 — log OPEN yang lain juga basi, dan lebih parah.** Hakim hanya memeriksa log slot 24.
+  `LOG_SESI_2026-09-17.md` menulis **"R-05 belum dibangun"** dan folder **`sistem/sistem-undangan/` "belum
+  dibuat"** — keduanya salah: `tools/audit_prompt.py` dan `_meta/PROTOKOL_AUDIT_ISI.md` ada, W-10 terdaftar
+  **3×** di `_meta/03_KONTRAK_WARISAN.md`, `check_selfcontained --semua` PASS untuk 5 sistem, dan folder
+  undangan memuat **18 berkas** di PR ini. Lebih buruk: catatan koreksi 19 Sep di header itu mengklaim
+  *"header ini … baru disegarkan sekarang"* padahal yang disegarkan hanya field Keadaan — **klaim koreksi
+  yang melebihkan diri adalah cacat, bukan koreksi**, dan itu persis pola yang sudah dilaporkan terbuka di
+  giliran 24 (temuan #1 hakim C putaran 5).
+- **S2 — body PR jadi basi oleh masuknya verdict.** Angka kanal (13 slot / 15 bukan-slot, "TIDAK ADA slot
+  hakim untuk putaran 6", "12 dari 13") benar saat ditulis dan salah begitu tiga verdict masuk. Disegarkan
+  di PATCH body terakhir, bukan lebih dulu, karena PATCH harus langkah terakhir tanpa commit sesudahnya.
+- **S3 — berkas prompt yang diserahkan ke pemilik HILANG.** Insiden pemulihan workspace ke-7:
+  `/home/user/PROMPT_REVIEW_PR74_putaran6.md` lenyap bersama skrip kerja, sehingga klaim body "berkasnya
+  28.057 byte / 430 baris" tidak lagi benar di disk. Dipulihkan dari salinan tahan lama (komentar
+  `5740334936`) → 26.898 byte; selisih 1.160 byte dijelaskan (baris verifikasi + permalink ditempel ke
+  berkas sesudah komentar terbit). Ini bukti ketujuh bahwa satu-satunya tempat tahan lama adalah kanal PR —
+  alasan `--umumkan` dibuat.
+- **S4 — angka Log Evolusi ambigu cara hitungnya.** Penulis 23→44 (baris bertanggal), semua baris tabel
+  25→46, hakim 1 mengukur 26→47. **Deltanya +21 di ketiga cara**, jadi tidak ada angka yang salah; yang
+  kurang adalah menyatakan caranya. Hakim 1 sendiri menggolongkannya "bukan BLOCKER".
+
+**Dua insiden lingkungan, dan satu pengukuran tidak sah yang ditangkap sendiri.** Workspace di-clone ulang
+platform ke `eff7afa` (dangkal) **dua kali dalam satu giliran** — insiden ke-8 di awal, ke-9 di tengah —
+sehingga HEAD lokal jatuh ke titik percabangan sementara remote tetap `30b3cb2`. Pemulihannya: fetch refspec
+eksplisit `arena/01a0ae7a-pembangun-sistem:refs/remotes/origin/…`, `git fetch --unshallow`, lalu
+`git reset --mixed 30b3cb2` (**bukan** `pull --rebase`), lalu verifikasi `shallow=false` + `dirty=0` +
+gerbang hijau. Di antara kedua insiden itu **satu pengukuran sempat tidak sah**:
+`git diff --name-status 6798bb2 30b3cb2 -- tools/check_manuals.py` mencetak kosong dan agent hampir
+menyimpulkan "berkas itu tidak disentuh PR", padahal keluaran kosongnya berasal dari `fatal: bad revision`
+karena repo sedang ter-reset. Diulang sesudah pulih: berkas itu **termasuk** dalam 65 berkas PR.
+Pelajarannya dijadikan aturan kerja: **keluaran kosong dari git harus dibaca bersama kode keluarannya**, dan
+keadaan git diverifikasi di awal **setiap** pemanggilan alat, bukan hanya di awal giliran.
+
+**Empat putusan agent atas delegasi pemilik (dilaporkan terbuka, bukan disimpan sendiri):**
+
+1. **Perbaiki ketujuh butir, lalu buka PUTARAN 7 dengan tiga hakim baru.** Alasan: aturan fail-closed
+   pemilik giliran 14 ("selagi ada yang merah, harus diperbaiki") dan rekam jejak enam putaran yang tidak
+   pernah menghasilkan positif palsu — setiap putaran masih menemukan cacat nyata, jadi berhenti sekarang
+   berarti menyerahkan keputusan merge pada head yang belum pernah diperiksa bersih oleh tiga hakim
+   sekaligus.
+2. **Penjaga kesegaran header dibangun SEKARANG** (bukan ditunda ke batch T-51/T-52): validator menuntut
+   baris `- **Segar pada:** head `<sha7>` · <tanggal> · FI <N> · manifest v<X.Y.Z>` di setiap log `OPEN` dan
+   membandingkan tiap bagiannya dengan nilai hidup (dokumen FI, manifest, tanggal terbaru di berkas itu, dan
+   sha HEAD..HEAD~3 bila git tersedia; dilewati dengan alasan tercetak bila tidak). Dikunci **RP22a–e**,
+   FI **172 → 178**, manifest **v1.34.0**. Alasan: kelas cacatnya sudah lolos tiga kali dan pola "penjaga
+   yang tidak menjaga" sudah empat kali terjadi di PR ini (RP17b, cabang buta RP18, RP21, kini RP20) —
+   sesuai prinsip pemilik "jika semuanya mungkin dimaksimalkan sejak awal tanpa biaya dan tanpa resiko
+   kekurangan, maka sebaiknya dimaksimalkan sejak awal".
+3. **T-51 dan T-52 tetap SESUDAH putaran 7.** T-51 menambah operasi mekanisme review di dua sistem anak =
+   memperbesar objek yang sedang diadili; T-52 mengubah **apa yang akan ditandai alat penjaring pada review
+   berikutnya**, jadi tidak boleh diputus di tengah rangkaian review (pelajaran pin R7: aturan pengadil yang
+   tersentuh wajib dilaporkan, tidak digeser atas nama sendiri).
+4. **Kriteria merge yang diusulkan ke pemilik: 3/3 HIJAU pada satu head beku + seluruh temuan lintas
+   putaran tertutup dengan sha + gerbang hijau.** Keputusan merge tetap milik pemilik: PR ini mengubah alat
+   pengadil, dan kedua hakim HIJAU putaran 6 pun menyatakan mereka dilarang merge.

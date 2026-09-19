@@ -1471,6 +1471,69 @@ def review_prompt_scenarios(base_dir: Path):
     ))
     rp_path.write_text(asli21, encoding="utf-8")
 
+    # ------------------------------------------------------------------
+    # RP22 - KESEGARAN header "Keadaan Sesi" (temuan #3 hakim putaran 6 PR #74 + temuan sapuan
+    # penulis pada log OPEN yang lain). RP20 hanya memaku KEBERADAAN field `- **Keadaan:**`,
+    # dan kelas cacat "header basi" lolos tiga kali: LOG_SESI_2026-09-17 menulis folder
+    # sistem-undangan "belum dibuat" dan R-05 "belum dibangun" padahal keduanya ada; log slot 24
+    # tidak punya blok Keadaan sama sekali; lalu header slot 24 BASI LAGI pada head 30b3cb2
+    # (masih 63 commit / +12.737 / FI 169 / "body sepuluh kali" / "putaran 6 belum punya slot
+    # hakim" sementara head terukur 66 / +12.951 / 172 / kesebelas / tiga verdict sudah masuk)
+    # padahal dua commit terakhir hanya append kronologi. Penjaga baru menuntut satu baris
+    # `- **Segar pada:** head `<sha7>` · <tanggal> · FI <N> · manifest v<X.Y.Z>` di setiap log
+    # OPEN dan membandingkan tiap bagiannya dengan nilai hidup. Bagian utama SENGAJA tidak
+    # bergantung git supaya bisa diuji di salinan tanpa `.git` (harness ini ignore ".git");
+    # bagian sha (HEAD..HEAD~3) hanya jalan bila git tersedia.
+    # ------------------------------------------------------------------
+    log22 = sorted((cp / "_log-sesi").glob("LOG_SESI_*.md"))
+    open22 = [f for f in log22
+              if re.search(r"^- \*\*Keadaan:\*\*\s*`?OPEN`?", f.read_text(encoding="utf-8"), re.M)]
+    checks.append((
+        "RP22a kontrol positif: salinan punya log OPEN berbaris `- **Segar pada:**` dan validator "
+        "LULUS - supaya empat uji mutasi di bawah bukan tautologi",
+        bool(open22) and run_tool(cp, "tools/validate_repo.py") == 0,
+    ))
+    f22 = open22[0]
+    asli22 = f22.read_text(encoding="utf-8")
+    m22 = re.search(r"^- \*\*Segar pada:\*\* head `([0-9a-f]{7,40})` \u00b7 (\d{4}-\d{2}-\d{2}) "
+                    r"\u00b7 FI (\d+) \u00b7 manifest v(\d+\.\d+\.\d+)\s*$", asli22, re.M)
+    checks.append(("RP22a2 baris segar di log OPEN nyata terbaca oleh pola regresi (bukan cuma oleh validator)",
+                   bool(m22)))
+    if m22 is None:
+        # Fail-closed dan TERBACA: kalau barisnya tidak ada, keempat uji mutasi di bawah tidak bisa
+        # dijalankan. Melanjutkan akan membuat `m22.group(0)` melempar AttributeError - regresi yang
+        # crash alih-alih melaporkan kegagalan adalah penjaga yang lebih buruk daripada tidak ada,
+        # jadi kegagalannya dinyatakan sebagai empat check yang gagal dengan alasannya.
+        for tag22x in ("RP22b", "RP22c", "RP22d", "RP22e"):
+            checks.append((
+                f"{tag22x} TIDAK BISA DIUJI: tidak ada baris `- **Segar pada:**` yang cocok pola di "
+                "log OPEN pertama - tambahkan barisnya (bukan melonggarkan polanya)",
+                False,
+            ))
+        return checks
+    for tag22, ubah22, pesan22 in (
+        ("RP22b", lambda t, m: "\n".join(g for g in t.split("\n")
+                                          if not g.startswith("- **Segar pada:**")) + "\n",
+         "baris `- **Segar pada:**` dicabut dari log OPEN"),
+        ("RP22c", lambda t, m: t.replace(m.group(0), m.group(0).replace("FI " + m.group(3), "FI 1"), 1),
+         "angka FI di baris segar dibuat tidak cocok dengan dokumen FI hidup (persis bentuk cacat "
+         "yang lolos tiga kali: header menulis FI 169 ketika repo sudah 172)"),
+        ("RP22d", lambda t, m: t.replace(m.group(0),
+                                         m.group(0).replace("manifest v" + m.group(4), "manifest v0.0.1"), 1),
+         "versi manifest di baris segar dibuat tidak cocok dengan manifest hidup"),
+        ("RP22e", lambda t, m: t.replace(m.group(0), m.group(0).replace("\u00b7 " + m.group(2) + " \u00b7",
+                                                                        "\u00b7 2020-01-01 \u00b7"), 1),
+         "tanggal di baris segar dibuat lebih tua dari tanggal terbaru di log itu (kronologi append, "
+         "header tidak disegarkan)"),
+    ):
+        f22.write_text(ubah22(asli22, m22), encoding="utf-8")
+        rc22 = run_tool(cp, "tools/validate_repo.py")
+        f22.write_text(asli22, encoding="utf-8")
+        checks.append((
+            f"{tag22} diuji-mutasi: {pesan22} -> validator MENOLAK, dipulihkan -> lulus lagi",
+            rc22 != 0 and run_tool(cp, "tools/validate_repo.py") == 0,
+        ))
+
     return checks
 
 
@@ -2116,6 +2179,23 @@ def run():
                 assert mt3 != mt2, "mutasi Versi tidak mengubah apa pun - uji tidak valid"
                 mt2 = mt3
             mp.write_text(mt2, encoding="utf-8")
+            # Penjaga kesegaran header (RP22, v1.34.0) membandingkan versi manifest yang tertulis di
+            # baris `- **Segar pada:**` setiap log OPEN dengan manifest HIDUP, jadi skenario yang
+            # mengubah versi manifest HARUS ikut menyelaraskan baris itu di salinan. Kalau tidak,
+            # kontrol positif ini gagal karena penjaga BARU, bukan karena penjaga drift Status/Versi
+            # yang sedang diuji - dan uji yang gagal karena sebab lain tidak membuktikan apa pun.
+            # Angka FI dan tanggal di baris itu TIDAK diubah: skenario ini tidak menyentuh dokumen FI
+            # maupun kronologi log, jadi keduanya tetap selaras.
+            if versi_line is not None:
+                _v = re.search(r"`([^`]+)`\s*$", versi_line).group(1)
+                for _lg in sorted((cp / "_log-sesi").glob("LOG_SESI_*.md")):
+                    _t = _lg.read_text(encoding="utf-8")
+                    if not re.search(r"^- \*\*Keadaan:\*\*\s*`?OPEN`?", _t, re.M):
+                        continue
+                    _lg.write_text(re.sub(
+                        r"(^- \*\*Segar pada:\*\* head `[0-9a-f]{7,40}` \u00b7 \d{4}-\d{2}-\d{2} "
+                        r"\u00b7 FI \d+ \u00b7 manifest v)\d+\.\d+\.\d+",
+                        lambda mo: mo.group(1) + _v, _t, flags=re.M), encoding="utf-8")
             r = subprocess.run([sys.executable, "tools/validate_repo.py"], cwd=cp,
                                capture_output=True, text=True)
             return r.returncode, r.stdout

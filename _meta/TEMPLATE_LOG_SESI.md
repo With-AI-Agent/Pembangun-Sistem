@@ -18,6 +18,15 @@
 
 ## Keadaan Sesi (selalu segar — agent baru BACA INI DULU)
 - **Keadaan:** `OPEN` | `CLOSED`
+- **Segar pada:** head `[sha7]` · [YYYY-MM-DD] · FI [N] · manifest v[X.Y.Z]
+  <!-- WAJIB untuk log `OPEN`: baris ini DIPERIKSA ALAT. `validate_repo.py` membandingkan [N] dengan
+       `_meta/FAILURE_INJECTION_TESTS.md`, v[X.Y.Z] dengan `- **Versi:**` di `_meta/SYSTEM_MANIFEST.md`,
+       dan [YYYY-MM-DD] dengan tanggal terbaru di berkas log ini; bila git tersedia, [sha7] harus HEAD
+       sampai HEAD~3. Tidak cocok = VALIDATION FAILED (regresi RP22a–e). Log `CLOSED` dikecualikan.
+       Segarkan baris ini setiap pertukaran bermakna — header adalah satu-satunya bagian log yang
+       dikecualikan dari append-only justru supaya bisa disegarkan; membiarkannya basi adalah
+       pelanggaran mekanisme, bukan sekadar ketinggalan (temuan #9 hakim putaran 5 PR #74, terulang
+       sebagai temuan #3 putaran 6). -->
 - **Scope:** [meta / sistem-[nama] / unit: <path>]
 - **Di mana kita sekarang:** [1–3 baris: benang kerja/diskusi aktif]
 - **Sudah disepakati:** [bullet]
@@ -37,6 +46,6 @@
 ## Siklus
 
 1. **Awal sesi:** file belum ada → agent tidak wajib membuatnya *seketika*; dibuat pada pertukaran bermakna pertama (atau lebih awal kalau sesi langsung kerja berat).
-2. **Selama sesi:** append + update header "Keadaan Sesi" setelah tiap pertukaran bermakna; commit + push segera.
+2. **Selama sesi:** append + update header "Keadaan Sesi" setelah tiap pertukaran bermakna — **termasuk baris `- **Segar pada:**` yang kini diperiksa alat** (angka FI, versi manifest, tanggal, dan sha head harus cocok dengan keadaan hidup; log `OPEN` yang header-nya basi = VALIDATION FAILED, regresi RP22a–e); commit + push segera.
 3. **Akhir sesi (prompt penutup):** header diisi final → `CLOSED` (atau `OPEN` kalau kerja memang dilanjutkan sesi lain — tuliskan "dilanjutkan di mana").
 4. **Sesi baru (entry point):** cari `LOG_SESI_*.md` terbaru di folder `_log-sesi/`, folder sistem, dan folder unit yang disentuh; kalau yang terbaru `OPEN` → baca, laporkan keadaan, **konfirmasi ke pengguna** sebelum lanjut. Jangan bertanya ulang konteks yang sudah tercatat.

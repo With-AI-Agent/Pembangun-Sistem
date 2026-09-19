@@ -40,6 +40,7 @@ independent review of PR #11 (findings F1–F16):
 """
 from pathlib import Path
 import re
+import subprocess
 import sys
 
 import checkpoint_core as core
@@ -658,6 +659,128 @@ for _lg in _berkas_log:
             "keadaan log ini supaya agent berikutnya tahu log ini masih hidup atau sudah "
             "arsip; tambahkan field-nya sebagai append bertanggal, jangan sunting riwayatnya"
         )
+
+# ---------------------------------------------------------------------------
+# Penjaga KESEGARAN header "Keadaan Sesi" (temuan #3 hakim putaran 6 PR #74 +
+# temuan sapuan penulis pada log OPEN yang lain, 19 Sep 2026). Penjaga field
+# `- **Keadaan:**` di atas hanya memaku KEBERADAAN field-nya; apakah isinya SEGAR
+# tidak terjaga, dan kelas cacat "header basi" sudah tiga kali lolos:
+#   * LOG_SESI_2026-09-17.md menulis folder `sistem-undangan` "belum dibuat" dan
+#     R-05 "belum dibangun" padahal keduanya ada (basi sejak 6f60c7c);
+#   * log slot 24 tidak punya blok Keadaan Sesi sama sekali (ditutup RP20a-b);
+#   * header slot 24 BASI LAGI pada head 30b3cb2 - masih menulis 63 commit,
+#     +12.737/-85, FI 169, "REST PATCH body sepuluh kali", "putaran 6 belum punya
+#     slot hakim" sementara head terukur 66 commit, +12.951/-85, FI 172, body
+#     kesebelas, dan tiga verdict putaran 6 sudah masuk - padahal dua commit
+#     terakhir hanya append kronologi.
+# Jadi: penjaga yang memaku keberadaan tanpa memaku kesegaran = penjaga yang tidak
+# menjaga, pola yang sama dengan RP17b dan cabang buta RP18/RP21.
+#
+# Aturan mekanisnya. Setiap log ber-`OPEN` wajib memuat SATU baris keadaan terukur
+# di blok header, bentuknya persis:
+#
+#   - **Segar pada:** head `<sha7>` · <YYYY-MM-DD> · FI <N> · manifest v<X.Y.Z>
+#
+# dan tiap bagiannya dibandingkan dengan nilai HIDUP di repo:
+#   (a) barisnya ada dan formatnya sah (sha 7-40 hex + tanggal ISO);
+#   (b) <N> == jumlah skenario di `_meta/FAILURE_INJECTION_TESTS.md`;
+#   (c) v<X.Y.Z> == field `- **Versi:**` di `_meta/SYSTEM_MANIFEST.md`;
+#   (d) tanggal baris itu >= tanggal terbaru yang muncul di berkas log tersebut
+#       (kronologi tidak boleh lebih baru daripada header yang mengklaim segar);
+#   (e) bila git tersedia dan sha-nya dikenal: sha itu harus HEAD atau paling tua
+#       HEAD~3 - satu giliran boleh membuat sampai tiga commit (perbaikan, penutup
+#       utang, rekaman), lebih dari itu berarti header tidak ikut disegarkan.
+# Bagian (b)-(d) SENGAJA tidak bergantung git supaya bisa diuji di salinan repo
+# tanpa `.git` (harness failure-injection meng-copy dengan ignore ".git"); bagian
+# (e) dilewati dengan alasan tercetak bila git tidak tersedia atau objeknya tidak
+# ada (clone dangkal - platform sudah sembilan kali memulihkan workspace seperti
+# itu), tidak pernah mati senyap. Log CLOSED dikecualikan: isinya arsip, tidak ada
+# "keadaan sekarang" yang bisa basi.
+# ---------------------------------------------------------------------------
+_pola_segar = re.compile(
+    r"^- \*\*Segar pada:\*\* head `([0-9a-f]{7,40})` \u00b7 (\d{4}-\d{2}-\d{2}) "
+    r"\u00b7 FI (\d+) \u00b7 manifest v(\d+\.\d+\.\d+)\s*$",
+    re.M,
+)
+_pola_open = re.compile(r"^- \*\*Keadaan:\*\*\s*`?OPEN`?", re.M)
+_pola_tanggal = re.compile(r"\b(\d{4}-\d{2}-\d{2})\b")
+
+
+def _fi_hidup():
+    d = ROOT / "_meta" / "FAILURE_INJECTION_TESTS.md"
+    if not d.is_file():
+        return None
+    m = re.search(r"\*\*Jumlah:\*\*\s*(\d+)\s*skenario", d.read_text(encoding="utf-8"))
+    return int(m.group(1)) if m else None
+
+
+def _versi_hidup():
+    d = ROOT / "_meta" / "SYSTEM_MANIFEST.md"
+    if not d.is_file():
+        return None
+    m = re.search(r"^- \*\*Versi:\*\*\s*`?(\d+\.\d+\.\d+)`?",
+                  d.read_text(encoding="utf-8"), re.M)
+    return m.group(1) if m else None
+
+
+def _jendela_sha():
+    """[HEAD, HEAD~1, HEAD~2, HEAD~3] atau None bila git/objeknya tidak tersedia."""
+    try:
+        h = subprocess.run(["git", "rev-list", "-n", "4", "HEAD"], cwd=str(ROOT),
+                           capture_output=True, text=True, timeout=60)
+    except Exception:
+        return None
+    if h.returncode != 0 or not h.stdout.split():
+        return None
+    return h.stdout.split()
+
+
+_n_fi_hidup, _versi_manifest, _jendela = _fi_hidup(), _versi_hidup(), _jendela_sha()
+if _jendela is None and any(_pola_open.search(p.read_text(encoding="utf-8")) for p in _berkas_log):
+    ref_warnings.append(
+        "WARNING kesegaran header: git tidak tersedia atau riwayatnya terlalu dangkal di pohon ini, "
+        "jadi bagian (e) penjaga `- **Segar pada:**` (sha harus HEAD..HEAD~3) DILEWATI - bagian (b), "
+        "(c), (d) tetap dijalankan. Dilewati dengan alasan tercetak, bukan mati senyap"
+    )
+for _lg in _berkas_log:
+    _t = _lg.read_text(encoding="utf-8")
+    if not _pola_open.search(_t):
+        continue
+    _rel = _lg.relative_to(ROOT)
+    _m = _pola_segar.search(_t)
+    if not _m:
+        errors.append(
+            f"{_rel}: log OPEN tanpa baris `- **Segar pada:**` di blok header - kesegaran header "
+            "'Keadaan Sesi' tidak bisa dibuktikan. Bentuk wajib (satu baris, di dalam blok header, "
+            "dikecualikan dari append-only justru supaya disegarkan): "
+            "- **Segar pada:** head `<sha7>` · <YYYY-MM-DD> · FI <N> · manifest v<X.Y.Z>"
+        )
+        continue
+    _sha, _tgl, _n, _ver = _m.group(1), _m.group(2), int(_m.group(3)), _m.group(4)
+    if _n_fi_hidup is not None and _n != _n_fi_hidup:
+        errors.append(
+            f"{_rel}: header OPEN mengklaim FI {_n} padahal `_meta/FAILURE_INJECTION_TESTS.md` hidup "
+            f"mencetak {_n_fi_hidup} - header BASI (segarkan baris `- **Segar pada:**`, jangan sunting "
+            "kronologinya)"
+        )
+    if _versi_manifest is not None and _ver != _versi_manifest:
+        errors.append(
+            f"{_rel}: header OPEN mengklaim manifest v{_ver} padahal `_meta/SYSTEM_MANIFEST.md` hidup "
+            f"v{_versi_manifest} - header BASI"
+        )
+    _tgl_berkas = sorted(_pola_tanggal.findall(_t))
+    if _tgl_berkas and _tgl < _tgl_berkas[-1]:
+        errors.append(
+            f"{_rel}: header OPEN disegarkan {_tgl} tetapi berkasnya memuat tanggal lebih baru "
+            f"{_tgl_berkas[-1]} - kronologi jalan sementara header tidak disegarkan"
+        )
+    if _jendela is not None and not any(s.startswith(_sha) or _sha.startswith(s[:7]) for s in _jendela):
+        errors.append(
+            f"{_rel}: header OPEN menyebut head `{_sha}` yang bukan HEAD maupun tiga commit "
+            f"sebelumnya ({', '.join(s[:7] for s in _jendela)}) - header tidak disegarkan pada "
+            "pertukaran bermakna terakhir"
+        )
+
 
 if errors:
     print("VALIDATION FAILED")
