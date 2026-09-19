@@ -1400,6 +1400,77 @@ def review_prompt_scenarios(base_dir: Path):
         rc20 != 0 and run_tool(cp, "tools/validate_repo.py") == 0,
     ))
 
+    # RP21 - cacat susulan di blok serah terima, DITEMUKAN SENDIRI 19 Sep 2026 saat prompt putaran 6
+    # PR #74 dibangkitkan ulang ke path yang sudah berisi berkas dari pembangkitan sebelumnya:
+    # `handoff_block()` mencetak "Verifikasi berkas (diukur): ADA di disk, 27.678 byte" sementara
+    # berkas hasil penulisan 27.598 byte - angka yang diserahkan adalah ukuran berkas LAMA yang lalu
+    # ditimpa. Kelas cacatnya sama dengan temuan #1 hakim C putaran 5 (pernyataan palsu di blok yang
+    # menjalankan aturan tetap pemilik "serahkan path + link"), dan RP18 buta terhadapnya karena
+    # RP18d hanya menguji path yang BELUM ada. Penjaga yang tidak menjaga, ketiga kalinya di PR ini.
+    out21 = base_dir / "rp21_prompt.md"
+    sampah21 = "X" * 999_999                      # isi yang jelas bukan prompt, ukurannya khas
+    out21.write_text(sampah21, encoding="utf-8")
+    lama21 = out21.stat().st_size
+    with contextlib.redirect_stdout(io.StringIO()), contextlib.redirect_stderr(io.StringIO()):
+        rc21 = rp.main(["--generic", "--out", str(out21)])
+    teks21 = out21.read_text(encoding="utf-8") if out21.is_file() else ""
+    checks.append((
+        "RP21a path tujuan SUDAH berisi berkas lama: ditimpa, dan blok serah terima tidak mengklaim "
+        "ukuran yang diukur sebelum penulisan",
+        rc21 == 0 and out21.is_file() and sampah21 not in teks21 and len(teks21) != lama21
+        and "ADA di disk," not in teks21 and f"{lama21:,} byte" not in teks21
+        and "diukur SESUDAH alat menulisnya" in teks21 and "Berkas lama akan DITIMPA" in teks21,
+    ))
+    # RP21b - invariant yang membuat klaim alat bisa diaudit siapa pun: angka di baris verifikasi
+    # (diukur sesudah penulisan, sebelum baris itu sendiri ditempel) + panjang baris itu == ukuran
+    # berkas di disk, dan jumlah barisnya tepat +1. Alat yang mengukur sebelum menulis memecah
+    # invariant ini, jadi pemeriksa eksternal tidak perlu memercayai kata-katanya.
+    baris21 = [g for g in teks21.split("\n") if g.startswith("- **Verifikasi sesudah ditulis")]
+    ok21b = False
+    if len(baris21) == 1:
+        m21 = re.search(r"([\d,]+) byte / ([\d,]+) baris", baris21[0])
+        if m21:
+            klaim_byte = int(m21[1].replace(",", ""))
+            klaim_baris = int(m21[2].replace(",", ""))
+            ok21b = (out21.stat().st_size == klaim_byte + len((baris21[0] + "\n").encode("utf-8"))
+                     and len(teks21.splitlines()) == klaim_baris + 1)
+    checks.append((
+        "RP21b invariant ukuran: angka baris verifikasi + panjang barisnya == ukuran berkas di disk, "
+        "dan jumlah barisnya tepat +1",
+        ok21b,
+    ))
+    # RP21c - kontrol mutasi: kembalikan cabang lama yang mengukur sebelum menulis. RP21a wajib
+    # menangkapnya; kalau mutasi ini lolos, regresi di atas hanya hiasan.
+    asli21 = rp_path.read_text(encoding="utf-8")
+    mut21 = asli21.replace(
+        """        a("- **Verifikasi berkas:** diukur SESUDAH alat menulisnya — baris verifikasi terukur")
+        a("  ditambahkan alat ke akhir berkas. Blok ini dirangkai sebelum penulisan, jadi ia")
+        a("  tidak boleh mendahului pengukuran; periksa dengan `ls -l` sesudah alat selesai.")
+        if p.exists():
+            a(f"- **Berkas lama akan DITIMPA:** `{p.name}` sudah ada di path itu sebelum penulisan,")""",
+        """        if p.exists():
+            a(f"- **Verifikasi berkas (diukur):** ADA di disk, {p.stat().st_size:,} byte.")
+        else:
+            a("- **Verifikasi berkas:** diukur SESUDAH alat menulisnya — baris verifikasi terukur")
+            a("  ditambahkan alat ke akhir berkas. Blok ini dirangkai sebelum penulisan, jadi ia")
+            a("  tidak boleh mendahului pengukuran; periksa dengan `ls -l` sesudah alat selesai.")
+        if False:
+            a(f"- **Berkas lama akan DITIMPA:** `{p.name}` sudah ada di path itu sebelum penulisan,")""")
+    assert mut21 != asli21, "mutasi RP21 tidak mengubah apa pun - uji tidak valid"
+    rp_path.write_text(mut21, encoding="utf-8")
+    rp_m21 = _load_review_prompt(cp, "review_prompt_mut_rp21")
+    out21m = base_dir / "rp21_prompt_mut.md"
+    out21m.write_text(sampah21, encoding="utf-8")
+    with contextlib.redirect_stdout(io.StringIO()), contextlib.redirect_stderr(io.StringIO()):
+        rp_m21.main(["--generic", "--out", str(out21m)])
+    teks21m = out21m.read_text(encoding="utf-8") if out21m.is_file() else ""
+    checks.append((
+        "RP21c diuji-mutasi: cabang pengukur-sebelum-menulis dikembalikan -> klaim ukuran berkas lama "
+        "itu TERDETEKSI",
+        "ADA di disk," in teks21m and f"{lama21:,} byte" in teks21m,
+    ))
+    rp_path.write_text(asli21, encoding="utf-8")
+
     return checks
 
 

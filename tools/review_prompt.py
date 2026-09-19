@@ -1188,12 +1188,21 @@ def handoff_block(number: int | None = None, head_sha: str | None = None,
         # berkas, jadi ia tidak boleh mengklaim keberadaan berkas. Yang diklaim di sini hanya
         # path tujuannya; keberadaannya DIUKUR sesudah penulisan dan ditempel ke akhir berkas
         # oleh pemanggil (lihat `verifikasi_berkas_prompt`).
+        # RP21 (ditemukan sendiri 19 Sep 2026 saat membangkitkan ulang prompt putaran 6 PR #74):
+        # cabang lama `if p.exists(): "ADA di disk, N byte"` MENGUKUR SEBELUM MENULIS. Ketika path
+        # tujuan masih berisi berkas dari pembangkitan sebelumnya, angka yang tercetak adalah ukuran
+        # berkas LAMA — lalu berkas itu ditimpa, sehingga angka yang diserahkan ke pemilik tidak sama
+        # dengan berkas yang diserahkan (terukur: blok mencetak 27.678 byte, `ls -l` hasil penulisan
+        # 27.598 byte). Blok ini dirangkai sebelum penulisan, jadi ia TIDAK BOLEH mengklaim ukuran
+        # sama sekali; klaim yang benar hanya ada di baris verifikasi yang ditempel SESUDAH penulisan
+        # (`verifikasi_berkas_prompt`). Keberadaan berkas lama dinyatakan apa adanya: akan ditimpa.
+        a("- **Verifikasi berkas:** diukur SESUDAH alat menulisnya — baris verifikasi terukur")
+        a("  ditambahkan alat ke akhir berkas. Blok ini dirangkai sebelum penulisan, jadi ia")
+        a("  tidak boleh mendahului pengukuran; periksa dengan `ls -l` sesudah alat selesai.")
         if p.exists():
-            a(f"- **Verifikasi berkas (diukur):** ADA di disk, {p.stat().st_size:,} byte.")
-        else:
-            a("- **Verifikasi berkas:** diukur SESUDAH alat menulisnya — baris verifikasi terukur")
-            a("  ditambahkan alat ke akhir berkas. Blok ini dirangkai sebelum penulisan, jadi ia")
-            a("  tidak boleh mendahului pengukuran; periksa dengan `ls -l` sesudah alat selesai.")
+            a(f"- **Berkas lama akan DITIMPA:** `{p.name}` sudah ada di path itu sebelum penulisan,")
+            a("  dan ukuran apa pun pada berkas lama BUKAN ukuran berkas yang diserahkan — alat ini")
+            a("  sengaja tidak mencetak angka yang diukur sebelum berkasnya ditulis (RP21).")
     else:
         a("- **Berkas prompt:** TIDAK ditulis ke berkas (keluar ke stdout). Jalankan ulang dengan")
         a("  `--out <path>` supaya ada berkas yang bisa diberi path dan link.")
