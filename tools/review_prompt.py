@@ -1129,6 +1129,26 @@ def umumkan_prompt(number: int, teks_prompt: str, slug: str | None = None,
     return url, "tertempel dan terverifikasi BUKAN slot hakim"
 
 
+def verifikasi_berkas_prompt(path) -> str:
+    """RP18: klaim "berkas prompt ada" wajib DIUKUR sesudah ditulis, bukan diasumsikan dari argumen.
+
+    Mengembalikan satu baris verifikasi untuk ditempel ke akhir berkas oleh pemanggil. Fail-closed:
+    kalau berkasnya tidak ada, barisnya menyatakan GAGAL — bukan diam, dan bukan klaim sukses.
+    Cacat yang ditutup: `handoff_block()` pernah mencetak "TIDAK ditulis ke berkas" padahal
+    berkasnya ditulis (temuan #1 hakim C putaran 5 PR #74) — pernyataan palsu di alat pengadil,
+    tepat di blok yang menjalankan aturan tetap pemilik "serahkan path + link".
+    """
+    p = Path(path).resolve()
+    if not p.exists():
+        return ("- **Verifikasi sesudah ditulis:** GAGAL — berkas TIDAK ADA di disk sesudah "
+                "penulisan. Jangan serahkan path ini ke pemilik; periksa alatnya.")
+    ukuran = p.stat().st_size
+    baris = len(p.read_text(encoding="utf-8").splitlines())
+    return (f"- **Verifikasi sesudah ditulis (diukur, bukan diklaim):** berkas ADA di disk — "
+            f"{ukuran:,} byte / {baris:,} baris, diukur sesudah penulisan dan sebelum baris "
+            f"verifikasi ini ditambahkan.")
+
+
 def handoff_block(number: int | None = None, head_sha: str | None = None,
                   out_path: str | None = None, slug: str | None = None,
                   objek: str | None = None,
@@ -1161,15 +1181,25 @@ def handoff_block(number: int | None = None, head_sha: str | None = None,
         p = Path(out_path).resolve()
         a(f"- **Berkas prompt (path absolut — salin persis):** `{p}`")
         a(f"- **Nama berkas:** `{p.name}` · **di dalam folder:** `{p.parent}`")
+        # RP18 (temuan #1 hakim C putaran 5 PR #74): blok ini dirangkai SEBELUM alat menulis
+        # berkas, jadi ia tidak boleh mengklaim keberadaan berkas. Yang diklaim di sini hanya
+        # path tujuannya; keberadaannya DIUKUR sesudah penulisan dan ditempel ke akhir berkas
+        # oleh pemanggil (lihat `verifikasi_berkas_prompt`).
+        if p.exists():
+            a(f"- **Verifikasi berkas (diukur):** ADA di disk, {p.stat().st_size:,} byte.")
+        else:
+            a("- **Verifikasi berkas:** diukur SESUDAH alat menulisnya — baris verifikasi terukur")
+            a("  ditambahkan alat ke akhir berkas. Blok ini dirangkai sebelum penulisan, jadi ia")
+            a("  tidak boleh mendahului pengukuran; periksa dengan `ls -l` sesudah alat selesai.")
+    else:
+        a("- **Berkas prompt:** TIDAK ditulis ke berkas (keluar ke stdout). Jalankan ulang dengan")
+        a("  `--out <path>` supaya ada berkas yang bisa diberi path dan link.")
     if permalink:
         a(f"- **LINK KE PROMPT INI (tahan lama, bisa dibuka siapa pun):** {permalink}")
         a("  Komentar **penulis PR**, BUKAN verdict: alat pengumpul verdict menggolongkannya"
           " sebagai komentar penulis dan isinya dipagari, jadi contoh judul verdict di dalamnya"
           " tidak bisa terbaca. Ini link yang diserahkan ke pemilik dan ke siapa pun yang"
           " membuka sesi hakim — path di atas hanya ada di mesin kerja agent.")
-    else:
-        a("- **Berkas prompt:** TIDAK ditulis ke berkas (keluar ke stdout). Jalankan ulang dengan")
-        a("  `--out <path>` supaya ada berkas yang bisa diberi path dan link.")
     if objek:
         a(f"- **Objek yang diperiksa:** `{objek}` (relatif dari root repo)")
         if slug_ok and sha_ok:
@@ -1299,7 +1329,14 @@ def main(argv: list[str] | None = None) -> int:
         print(text)
     else:
         Path(args.out).write_text(text + "\n", encoding="utf-8")
-        print(f"ditulis: {Path(args.out).resolve()}", file=sys.stderr)
+        # RP18: bukti keberadaan berkas diukur SESUDAH ditulis, lalu ditempel ke berkas itu sendiri
+        # supaya klaim di blok serah terima didukung pengukuran, bukan urutan kode.
+        _baris_verif = verifikasi_berkas_prompt(args.out)
+        with Path(args.out).open("a", encoding="utf-8") as _fverif:
+            _fverif.write(_baris_verif + "\n")
+        _pverif = Path(args.out).resolve()
+        print(f"ditulis: {_pverif} ({_pverif.stat().st_size:,} byte sesudah verifikasi ditempel)",
+              file=sys.stderr)
     print(teks_serah, file=sys.stderr)
 
     if windows:

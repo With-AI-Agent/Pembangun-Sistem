@@ -479,7 +479,21 @@ def main() -> int:
 
     if a.out:
         Path(a.out).write_text(teks, encoding="utf-8")
-        print(f"prompt audit ditulis ke {Path(a.out).resolve()} ({len(teks.splitlines())} baris)")
+        # RP18: alat ini MEMINJAM handoff_block dari review_prompt.py, jadi ia mewarisi cacat yang
+        # sama (temuan #1 hakim C putaran 5: berkas ditulis 17 ribu byte sementara bloknya mencetak
+        # "TIDAK ditulis ke berkas"). Perbaikannya satu akar di sana; di sini ditambah bukti ukur.
+        try:
+            sys.path.insert(0, str(Path(__file__).resolve().parent))
+            import review_prompt as _rp_verif
+            _baris_verif = _rp_verif.verifikasi_berkas_prompt(a.out)
+        except Exception as _exc_verif:  # pragma: no cover - jalur gagal tetap harus bersuara
+            _baris_verif = (f"- **Verifikasi sesudah ditulis:** GAGAL diukur ({_exc_verif}) — "
+                            "periksa `ls -l` sendiri sebelum menyerahkan path ini.")
+        with Path(a.out).open("a", encoding="utf-8") as _fverif:
+            _fverif.write(_baris_verif + "\n")
+        _pverif = Path(a.out).resolve()
+        print(f"prompt audit ditulis ke {_pverif} ({len(teks.splitlines())} baris; "
+              f"terverifikasi ADA {_pverif.stat().st_size:,} byte)")
     else:
         print(teks)
     print(_serah, file=sys.stderr)

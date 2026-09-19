@@ -2296,3 +2296,59 @@ luar repo hilang ke-5 kalinya** (`PROMPT_REVIEW_PR74_putaran5.md`, `refresh_body
 `v1.14.0 → v1.29.0` + 16 baris Log Evolusi, 28 berkas di luar tiga folder. Yang **terukur** sesudah
 dikerjakan: **573 rujukan**, **`v1.14.0 → v1.30.0`** dengan **18 baris Log Evolusi baru** (23 → 41),
 **32 berkas**. Teks lama tidak dihapus; koreksinya ditambahkan di sini.
+
+
+## Giliran 24 (19 Sep 2026) — "3 hakim udh selesai, silahkan periksa": 10 temuan, semuanya nyata
+
+**Pemilik (verbatim):** *"Aku udh jalanin 3 sesi hakim dan semuanya udh selesai. Silahkan periksa.
+Klo belum menemukan hasilnya, katakan, karena itu berarti 3 sesi hakim belum masukkan hasilnya ke
+github"*
+
+**Agent:** hasilnya **ADA** di GitHub — tiga verdict putaran 5 masuk terpisah (`5739246570`,
+`5739250305`, `5739310855`), kuorum **3/3 LENGKAP**, ketiganya **MERAH**; agregat lintas putaran
+**12 dari 13 slot bukan hijau → jangan merge**. Sebelum memeriksanya, agent menemukan dan memulihkan
+**insiden re-clone platform ke-7** (HEAD lokal jatuh ke `eff7afa` shallow sementara remote `7ca13cf`).
+
+**Tanya-jawab (tiga pertanyaan) dan jawaban pemilik:**
+
+1. *"Perbaiki kesepuluh temuan sekarang?"* → memilih **"Ya — perbaiki semua 10, lalu putaran 6"**
+   (kode/alat, dokumen hidup, body PR, log sesi — semua diperbaiki + dikunci tes regresi, lalu 3
+   hakim baru).
+2. *"Dua utang yang menunggu putusan putaran 5 (T-51 dan T-52) — ikut dikerjakan sekarang?"* →
+   **"Kamu putuskan yang terbaik"** (delegasi).
+3. *"Soal temuan #1: klaimku 'T-50 selesai' ternyata tidak sungguh tertutup. Bagaimana
+   mencatatnya?"* → **"Kamu putuskan yang terbaik"** (delegasi).
+
+**Kesepuluh temuan diverifikasi sendiri oleh agent (bukan dipercaya) dan SEMUANYA NYATA — nol
+positif palsu untuk putaran ke-5 berturut-turut.** Rincian dan perintah reproduksinya ada di log sesi
+slot 24 bagian "Giliran 24". Dua yang paling menohok adalah cacat agent sendiri:
+
+- **Temuan 1** — `_meta/00_CARA_KERJA_META.md` baris 64 masih menjanjikan gerbang yang tidak bisa
+  dipenuhi head ini, dan **penjaga yang kubuat untuk menguncinya (RP17b) buta** karena hanya mencari
+  dua frasa tunggal. Akibatnya FI hijau, T-50 kutandai `SELESAI`, dan klaim itu keliru.
+- **Temuan 8** — angka **"main maju 26 commit"** kutulis dari ingatan; terukur **24**. Sudah menyebar
+  ke pesan commit merge, log sesi, DISKUSI, ledger, dan body PR.
+
+**Putusan agent atas dua delegasi (dilaporkan beserta alasannya):**
+
+1. **T-51 dan T-52 TIDAK ikut batch ini**, dijadwalkan sebagai batch sendiri sesudah putaran 6.
+   Alasannya: keduanya melebarkan objek yang harus diadili hakim putaran 6, dan **T-52 memperluas
+   alat pengadil** (`tools/check_manuals.py`) — mengubah alat pengadil selagi review berjalan adalah
+   konflik kepentingan, dan memperluas aturannya butuh keputusan bersama pemilik karena menambah
+   penjaga berarti menambah cara gagal.
+2. **Temuan #1 dilaporkan terang-terangan**: **T-50 DIBUKA KEMBALI** di register dengan koreksi atas
+   klaim agent sendiri, sebabnya (penjaga buta) ditulis, dan perbaikannya dikunci penjaga baru
+   **RP19a–c** yang memindai **pola** atas daftar dokumen normatif hidup yang fail-closed. Mengikuti
+   preseden repo ini sendiri (klaim palsu di `1361f2f` juga dilaporkan ke hakim, tidak ditutup-tutupi).
+
+**Satu butir perintah perbaikan hakim dinyatakan tidak berlaku, dengan bukti:** koreksi bertanggal di
+`STATUS.md` `sistem-undangan` soal keadaan peringatan — berkas itu terukur **tidak memuat** klaim
+keadaan peringatan, jadi tidak ada yang perlu dikoreksi. Dicatat di register, bukan dikerjakan
+diam-diam dan bukan diabaikan diam-diam.
+
+**Yang dikerjakan:** perbaikan kode alat pengadil (`handoff_block()` + helper verifikasi terukur,
+berlaku juga di `audit_prompt.py`), dokumen hidup baris 64, regresi **RP18a–f** dan **RP19a–c**
+(FI **158 → 167 PASSED**), header log sesi disegarkan + blok Keadaan Sesi ditambahkan, register
+(**T-53 dibuka, T-50 dibuka kembali, T-41 dan T-33 dikoreksi bertanggal**), ledger **S-29**, manifest
+**v1.31.0**, INDEKS disinkron. Temuan kelas body PR dikerjakan sesudah commit dan **diverifikasi dari
+API sebelum T-53 ditutup** — pelajaran dari T-50: jangan mengklaim tertutup sebelum terukur.

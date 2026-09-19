@@ -1245,6 +1245,135 @@ def review_prompt_scenarios(base_dir: Path):
     ))
     rp_path.write_text(original, encoding="utf-8")
 
+    # ------------------------------------------------------------------
+    # RP18 - blok serah terima tidak boleh mencetak pernyataan palsu (temuan #1 hakim C putaran 5
+    # PR #74). `else` di handoff_block() terikat ke `if permalink:` bukan ke `if out_path:`, jadi
+    # alat yang DIPANGGIL DENGAN --out tetap mencetak "berkas TIDAK ditulis" padahal berkasnya
+    # ditulis (terukur: review_prompt 25.714 byte, audit_prompt 17.256 byte, dua kalimat
+    # bertentangan di berkas yang sama). Cacat ini ada di ALAT PENGADIL dan tepat di blok yang
+    # menjalankan aturan tetap pemilik (serahkan path + link). Perbaikan: else diikat ke out_path,
+    # dan klaim keberadaan berkas DIUKUR sesudah penulisan lalu ditempel ke berkas itu sendiri.
+    # ------------------------------------------------------------------
+    out18 = base_dir / "rp18_prompt.md"
+    with contextlib.redirect_stdout(io.StringIO()), contextlib.redirect_stderr(io.StringIO()):
+        rc18 = rp.main(["--generic", "--out", str(out18)])
+    teks18 = out18.read_text(encoding="utf-8") if out18.is_file() else ""
+    checks.append((
+        "RP18a dengan --out: berkas ditulis DAN tidak ada klaim palsu 'berkas TIDAK ditulis'",
+        rc18 == 0 and out18.is_file() and "TIDAK ditulis ke berkas" not in teks18
+        and "path absolut — salin persis" in teks18,
+    ))
+    checks.append((
+        "RP18b keberadaan berkas DIUKUR sesudah ditulis (baris verifikasi ada di dalam berkasnya)",
+        "Verifikasi sesudah ditulis (diukur, bukan diklaim)" in teks18 and "byte" in teks18,
+    ))
+    with contextlib.redirect_stdout(io.StringIO()), contextlib.redirect_stderr(io.StringIO()):
+        serah18c = rp.handoff_block(None, SHA_UJI, None)
+    checks.append((
+        "RP18c tanpa --out: cabang jujur TETAP ada (tidak ditulis ke berkas + suruhan --out)",
+        "TIDAK ditulis ke berkas" in serah18c and "--out <path>" in serah18c,
+    ))
+    serah18d = rp.handoff_block(None, SHA_UJI, str(base_dir / "rp18_belum_ada.md"))
+    checks.append((
+        "RP18d out_path yang BELUM ada di disk -> tidak mengklaim ADA (fail-closed, bukan karangan)",
+        "ADA di disk," not in serah18d and "diukur SESUDAH alat menulisnya" in serah18d,
+    ))
+    ap18 = base_dir / "rp18_audit.md"
+    r18e = subprocess.run(
+        # salinan uji tidak memuat .git, jadi sha HEAD di-pin manual (jalur yang ditawarkan alat
+        # sendiri waktu git tidak terbaca) — tanpa ini alat keluar rc=2 dan RP18e gagal palsu.
+        [sys.executable, "-B", "tools/audit_prompt.py", "--objek", "_meta", "--pin", SHA_UJI,
+         "--out", str(ap18)],
+        cwd=str(cp), capture_output=True, text=True,
+        env={**os.environ, "FI_SKIP_NESTED": "1", "PYTHONDONTWRITEBYTECODE": "1"})
+    teks18e = ap18.read_text(encoding="utf-8") if ap18.is_file() else ""
+    checks.append((
+        "RP18e audit_prompt.py --out (peminjam handoff_block): berkas ada, tanpa klaim palsu, terverifikasi",
+        r18e.returncode == 0 and ap18.is_file() and "TIDAK ditulis ke berkas" not in teks18e
+        and "path absolut — salin persis" in teks18e and "Verifikasi sesudah ditulis" in teks18e,
+    ))
+    # Mutasi RP18: kembalikan `else` ke ikatan lama (ke `if permalink:`) -> RP18a harus menangkapnya.
+    mut18 = original.replace(
+        """    else:
+        a("- **Berkas prompt:** TIDAK ditulis ke berkas (keluar ke stdout). Jalankan ulang dengan")
+        a("  `--out <path>` supaya ada berkas yang bisa diberi path dan link.")
+    if permalink:
+        a(f"- **LINK KE PROMPT INI (tahan lama, bisa dibuka siapa pun):** {permalink}")
+        a("  Komentar **penulis PR**, BUKAN verdict: alat pengumpul verdict menggolongkannya"
+          " sebagai komentar penulis dan isinya dipagari, jadi contoh judul verdict di dalamnya"
+          " tidak bisa terbaca. Ini link yang diserahkan ke pemilik dan ke siapa pun yang"
+          " membuka sesi hakim — path di atas hanya ada di mesin kerja agent.")""",
+        """    if permalink:
+        a(f"- **LINK KE PROMPT INI (tahan lama, bisa dibuka siapa pun):** {permalink}")
+        a("  Komentar **penulis PR**, BUKAN verdict: alat pengumpul verdict menggolongkannya"
+          " sebagai komentar penulis dan isinya dipagari, jadi contoh judul verdict di dalamnya"
+          " tidak bisa terbaca. Ini link yang diserahkan ke pemilik dan ke siapa pun yang"
+          " membuka sesi hakim — path di atas hanya ada di mesin kerja agent.")
+    else:
+        a("- **Berkas prompt:** TIDAK ditulis ke berkas (keluar ke stdout). Jalankan ulang dengan")
+        a("  `--out <path>` supaya ada berkas yang bisa diberi path dan link.")""")
+    assert mut18 != original, "mutasi RP18 tidak mengubah apa pun - uji tidak valid"
+    assert mut18.count("TIDAK ditulis ke berkas") == original.count("TIDAK ditulis ke berkas"), \
+        "mutasi RP18 mengubah jumlah kalimat, bukan ikatan else - uji tidak valid"
+    rp_path.write_text(mut18, encoding="utf-8")
+    rp_m18 = _load_review_prompt(cp, "review_prompt_mut_rp18")
+    out18m = base_dir / "rp18_prompt_mut.md"
+    with contextlib.redirect_stdout(io.StringIO()), contextlib.redirect_stderr(io.StringIO()):
+        rp_m18.main(["--generic", "--out", str(out18m)])
+    teks18m = out18m.read_text(encoding="utf-8") if out18m.is_file() else ""
+    checks.append((
+        "RP18f diuji-mutasi: else dikembalikan ke if permalink -> klaim palsu itu TERDETEKSI",
+        out18m.is_file() and "TIDAK ditulis ke berkas" in teks18m
+        and "path absolut — salin persis" in teks18m,
+    ))
+    rp_path.write_text(original, encoding="utf-8")
+
+    # ------------------------------------------------------------------
+    # RP19 - penjaga yang tidak menjaga lebih berbahaya daripada tidak ada penjaga (temuan #1 hakim
+    # A dan C putaran 5): RP17b hanya mencari DUA frasa ("PASS dengan 0 warning" di DoD, "harus PASS
+    # 0 warning" di cara kerja meta) sehingga frasa yang benar-benar hidup di peta struktur -
+    # "PASS wajib 0-warning" - lolos: FI hijau padahal cacat yang diklaim sudah ditutup masih ada,
+    # dan T-50 sempat ditandai SELESAI atas dasar penjaga buta itu. RP19 memindai POLA di daftar
+    # dokumen normatif hidup, dan daftarnya fail-closed (tidak boleh menyusut diam-diam - pelajaran
+    # dari CORE_REQUIRED). Dokumen riwayat/ujian (log sesi, ACCEPTANCE_TEST_LOG, dokumen FI, register,
+    # INDEKS) SENGAJA di luar cakupan: di sana frasa lama sah dikutip sebagai riwayat, dan keputusan
+    # pemilik 18 Sep 2026 memang melindungi berkas bukti historis append-only.
+    # ------------------------------------------------------------------
+    pola19 = re.compile(r"(0\s*[-\u2013]?\s*warning|nol\s+warning|WARNINGS?\s*:\s*none|"
+                        r"0\s+peringatan|tanpa\s+warning)", re.I)
+    dok19 = ["_meta/00_CARA_KERJA_META.md", "_meta/DEFINITION_OF_DONE.md",
+             "_meta/PROTOKOL_REVIEW_INDEPENDEN.md", "_meta/PROTOKOL_AUDIT_ISI.md",
+             "_meta/NEXT_SESSION_PROMPT.md", "_meta/03_KONTRAK_WARISAN.md",
+             "_meta/QUALITY_ASSURANCE_AND_EVOLUTION.md", "_meta/PANDUAN_PENGGUNA_TEMPLATE.md",
+             "PANDUAN_PENGGUNA.md", "PROMPT_ENTRI_UNIVERSAL.md"]
+    hilang19 = [d for d in dok19 if not (cp / d).is_file()]
+    hit19 = []
+    for d19 in dok19:
+        f19 = cp / d19
+        if f19.is_file():
+            t19 = f19.read_text(encoding="utf-8")
+            hit19 += [f"{d19}:{t19[:m.start()].count(chr(10)) + 1}" for m in pola19.finditer(t19)]
+    checks.append((
+        "RP19a daftar dokumen normatif hidup fail-closed: tidak ada yang hilang/diganti nama diam-diam",
+        not hilang19,
+    ))
+    checks.append((
+        "RP19b tidak ada janji gerbang berpola 'nol warning' di dokumen normatif hidup",
+        not hit19,
+    ))
+    f19m = cp / "_meta" / "00_CARA_KERJA_META.md"
+    asli19 = f19m.read_text(encoding="utf-8")
+    f19m.write_text(asli19.replace("Regresi struktural tersedia sebagai alat",
+                                   "Validator harus PASS dengan nol warning. "
+                                   "Regresi struktural tersedia sebagai alat", 1),
+                    encoding="utf-8")
+    hit19m = [m.group(0) for m in pola19.finditer(f19m.read_text(encoding="utf-8"))]
+    f19m.write_text(asli19, encoding="utf-8")
+    checks.append((
+        "RP19c diuji-mutasi: janji 'nol warning' disuntik ke dokumen hidup -> pola RP19 menangkapnya",
+        bool(hit19m),
+    ))
+
     return checks
 
 

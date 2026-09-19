@@ -61,7 +61,10 @@ repo-utama/
 │                                        bukan instruksi aktif; tdk ikut template)
 │
 ├── tools/                            ← regression check struktural (stdlib-only):
-│   ├── validate_repo.py              ← PASS wajib 0-warning; menegakkan kontrak
+│   ├── validate_repo.py              ← harus PASS; baris 'WARNINGS: N' dikutip apa adanya
+│   │                                    (warning hanya sah di berkas bukti historis append-only;
+│   │                                    warning di dokumen hidup = belum lulus) — selaras dengan
+│   │                                    aturan regresi struktural di bawah; menegakkan kontrak
 │   │                                    warisan generik utk tiap sistem di INDEKS
 │   ├── test_failure_injection.py     ← cek fail-closed checkpoint
 │   ├── backup_verify.py              ← backup esensial + uji restore byte-per-byte
