@@ -44,4 +44,4 @@
   5. "Bangku yang tidak pernah bertanya kenapa kamu lelah."
 - **Caption final:** 5 baris di atas (persis naskah G2-locked).
 - **Hashtag (3–5, relevan, tanpa spam):** `#TokoKelontong` `#CeritaKecil` `#SliceOfLifeIndonesia` `#IlustrasiFlat` `#KehangatanSederhana`
-- **Catatan kepatuhan publish:** tanpa hard CTA; tanpa teks di dalam gambar; penutup caption mendarat ke benda fokus (patuh Channel Brief v1 dan aturan v1.1 yang menggantung di PR #79).
+- **Catatan kepatuhan publish:** tanpa hard CTA; tanpa teks di dalam gambar; penutup caption mendarat ke benda fokus — patuh **Channel Brief v1.1** (resmi sejak merge PR #79, merge commit `21fcfd3`, 2026-09-19; asesmen pasca-merge: penutup = observasi benda fokus, tanpa perubahan isi naskah).
