@@ -3,8 +3,8 @@
 - **Status:** in-progress
 - **Channel:** Toko Bu Sinta (`channel-toko-bu-sinta`)
 - **Model konten:** Gambar Statis & Caption v1 (`model-konten/gambar-caption/brief.md`)
-- **Tahap terakhir selesai:** Tahap 4 — Breakdown Output (draft `breakdown-output.md` tersimpan di branch; **berhenti di gerbang G1 Tahap 4 + G2 breakdown, menunggu keputusan pemilik**). Sebelumnya: G1 Tahap 1+2+3 disetujui & G2 naskah final DIKUNCI pemilik 2026-09-19.
-- **Tahap berikutnya:** Tahap 5 — Generate/Acquire Assets (1 gambar via `generate_image`, HANYA setelah G1 Tahap 4 disetujui DAN G2 breakdown dikunci)
+- **Tahap terakhir selesai:** Tahap 4 — Breakdown Output (G1 Tahap 4 disetujui & G2 breakdown DIKUNCI pemilik 2026-09-19; sebelumnya G1 Tahap 1+2+3 & G2 naskah final dikunci 2026-09-19)
+- **Tahap berikutnya:** Tahap 5 — Generate/Acquire Assets — SEDANG DIKERJAKAN sesi ini (1 gambar via `generate_image`, prompt G2-locked + referensi `acuan-utama.png`)
 - **Output resmi:**
   - `naskah-draft.md` (NASKAH FINAL — G2 dikunci 2026-09-19; memuat: ide terpilih + cek pengulangan Tahap 1, konsep & angle Tahap 2, deskripsi karakter Tipe B, naskah caption 5 baris Tahap 3, evaluasi konsistensi Persona & Voice)
   - `breakdown-output.md` (draft Tahap 4; 1 unit "Post Visual Tunggal" 1:1 — prompt generate siap pakai [Prompt Master disalin persis sebagai jangkar + detail unit], referensi wajib `acuan-utama.png`, target asset `assets/unit-1-bangku-tua-di-depan-toko.png`)
@@ -22,8 +22,8 @@
   - `G1 Tahap 2:` disetujui 2026-09-19 (verbatim: "G1 Tahap 2: SETUJU.")
   - `G1 Tahap 3:` disetujui 2026-09-19 (verbatim: "G1 Tahap 3: SETUJU.")
   - `G2 naskah final:` disetujui/dikunci 2026-09-19 (verbatim: "G2 naskah final: DIKUNCI.") — naskah jadi dasar breakdown & arsip
-  - `G1 Tahap 4:` belum
-  - `G2 breakdown:` belum
+  - `G1 Tahap 4:` disetujui 2026-09-19 (verbatim: "G1 Tahap 4: SETUJU.")
+  - `G2 breakdown:` disetujui/dikunci 2026-09-19 (verbatim: "G2 breakdown: DIKUNCI.") — breakdown jadi dasar generate asset
   - `G1 Tahap 5:` belum
   - `G2 konten final + metadata:` belum
   - `G3 merge:` belum

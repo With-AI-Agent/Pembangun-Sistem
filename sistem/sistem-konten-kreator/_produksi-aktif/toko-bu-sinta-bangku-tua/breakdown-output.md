@@ -3,7 +3,7 @@
 - **Channel:** Toko Bu Sinta (`channel-toko-bu-sinta`)
 - **Model Konten:** Gambar Statis & Caption v1 (`model-konten/gambar-caption/brief.md`)
 - **Bentuk Unit:** Post Visual Tunggal (1 Frame Ilustrasi Flat 1:1)
-- **Status:** Draft Tahap 4 — Menunggu Gerbang G1 + G2 (keduanya BELUM diberikan; G1 ≠ G2)
+- **Status:** Tahap 4 TERKUNCI — G1 disetujui & G2 breakdown DIKUNCI pemilik 2026-09-19 (perubahan isi setelah dikunci memerlukan G2 ulang)
 - **Naskah Rujukan:** `naskah-draft.md` (G2 Dikunci 2026-09-19)
 
 ---
