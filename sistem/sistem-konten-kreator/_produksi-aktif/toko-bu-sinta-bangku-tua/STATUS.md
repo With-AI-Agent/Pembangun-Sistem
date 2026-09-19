@@ -3,7 +3,7 @@
 - **Status:** in-progress
 - **Channel:** Toko Bu Sinta (`channel-toko-bu-sinta`)
 - **Model konten:** Gambar Statis & Caption v1 (`model-konten/gambar-caption/brief.md`)
-- **Tahap terakhir selesai:** Tahap 6 — Assembly & Publish Prep (arsip naskah + metadata + indeks.md + indeks-karakter.md tertulis di branch; **berhenti di gerbang G2 konten final + metadata, menunggu keputusan pemilik**)
+- **Tahap terakhir selesai:** Tahap 6 — Assembly & Publish Prep + **sinkron main v1.1** (rebase ke `21fcfd3` tanpa konflik; asesmen dampak: keluaran terkunci patuh v1.1 tanpa perubahan isi; pernyataan status PR dikoreksi; entri konflik+resolusi di-append ke Log Keputusan channel-brief). **Berhenti: approval ulang bagian terdampak (penutup caption vs v1.1) diajukan ke pemilik; G2 konten final akan diajukan ulang pemilik setelah paket terkoreksi disajikan.**
 - **Tahap berikutnya:** G2 konten final → siapkan PR → **G3 merge** (pertanyaan terpisah); penghapusan folder produksi HANYA setelah pemilik download & memverifikasi langkah arsip 1/2/2a/2b/4
 - **Output resmi:**
   - `naskah-draft.md` (NASKAH FINAL — G2 dikunci 2026-09-19; memuat: ide terpilih + cek pengulangan Tahap 1, konsep & angle Tahap 2, deskripsi karakter Tipe B, naskah caption 5 baris Tahap 3, evaluasi konsistensi Persona & Voice)
@@ -30,7 +30,7 @@
   - `G1 Tahap 5:` disetujui 2026-09-19 (verbatim: "G1 Tahap 5: SETUJU — asset diterima.") + putusan rasio opsi (i) untuk konten ini
   - `G2 konten final + metadata:` belum — diajukan sekarang (isi lengkap direview pemilik)
   - `G3 merge:` belum — akan diajukan TERPISAH setelah G2, bersamaan penyiapan PR
-- **Commit terakhir:** `0fe1989` (keluaran Tahap 6); rantai: `b1d4752` → `212cf0a` → `999c0e9` → `bac65be` → `a8e6604` → `adc4b2f` → `022aba0` → `36d0ad1` (sinkron approval T5) → `0fe1989`; log sesi: `_log-sesi/LOG_SESI_2026-09-19_32.md`
+- **Commit terakhir:** [commit sinkron v1.1 + entri Log Keputusan brief ini — hash di LOG_SESI slot 32]. CATATAN: seluruh rantai commit lama (`b1d4752`…`b69c270`) DI-REBASE ke main `21fcfd3` pada 2026-09-19 → hash baru (`95538b1`…`e194fc6`), isi identik; push via `--force-with-lease`. log sesi: `_log-sesi/LOG_SESI_2026-09-19_32.md`
 - **PR terkait:** belum ada — PR direncanakan saat Tahap 6 (setelah G2 konten final); branch `arena/01a0b7ba-pembangun-sistem`
 - **Pekerjaan belum tersimpan:** Tidak ada
 - **Risiko atau blocker:** Tidak ada — PR #79 (Channel Brief v1.1) telah **merge 2026-09-19** (merge commit `21fcfd3`); branch di-rebase ke main v1.1 tanpa konflik teks; asesmen dampak: semua keluaran terkunci patuh v1.1 tanpa perubahan isi. Yang masih terbuka (bukan blocker): approval ulang bagian terdampak (penutup caption) kepada pemilik, lalu G2 konten final + G3 merge.
