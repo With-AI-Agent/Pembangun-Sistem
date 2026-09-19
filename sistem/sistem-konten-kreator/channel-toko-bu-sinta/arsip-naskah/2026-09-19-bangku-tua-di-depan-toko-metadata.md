@@ -23,6 +23,8 @@ Catatan produksi  : (1) Rasio output 1408×768 (lansekap) = default toolchain; D
                     diterima pemilik di G1 Tahap 5): Bu Sinta di balik counter etalase terbuka (bukan ambang pintu),
                     1 keranjang terlihat jelas, cekungan papan bangku tidak menonjol, satu tangan Tipe B di lutut,
                     motif lap Bu Sinta bergaris. (3) Prompt TIDAK boleh diubah tanpa G2 ulang; regenerate selalu dari
-                    acuan-utama.png asli, bukan dari hasil generate. (4) Insiden platform: sandbox ter-re-clone 2×
-                    selama produksi (pulih tanpa force-push; jejak di LOG_SESI slot 32).
+                    acuan-utama.png asli, bukan dari hasil generate. (4) Insiden platform: sandbox ter-re-clone 3×
+                    selama sesi (2× selama produksi Tahap 4-5, 1× pada fase gerbang/PR pasca-Tahap 6); semua pulih
+                    tanpa force-push; jejak di LOG_SESI slot 32. [NP-1 review PR #80: angka diluruskan dari 2× ke 3×
+                    fakta sesi pada putaran perbaikan MERAH-1, 2026-09-19.]
 ```

@@ -4,7 +4,7 @@
 - **Channel:** Toko Bu Sinta (`channel-toko-bu-sinta`)
 - **Model Konten:** Gambar Statis & Caption v1 (`model-konten/gambar-caption/brief.md`)
 - **Format terbit:** 1 gambar ilustrasi flat (asset `unit-1-bangku-tua-di-depan-toko.png`, 1408×768 — rasio diterima sebagai praktik de facto per putusan pemilik G1 Tahap 5 2026-09-19) + caption 5 baris
-- **Status naskah:** FINAL — G2 naskah final dikunci 2026-09-19; publish prep Tahap 6 disusun 2026-09-19 (G2 konten final + metadata: menunggu keputusan pemilik)
+- **Status naskah:** FINAL — G2 naskah final dikunci 2026-09-19; publish prep Tahap 6 disusun 2026-09-19; **G2 konten final + metadata: DIKUNCI pemilik 2026-09-19** (paket terkoreksi sinkron v1.1 = konten resmi channel); PR #80 OPEN ke `main`, G3 menunggu keputusan pemilik
 - **Sumber eksternal:** Tidak ada (murni fiksi slice-of-life orisinal — tanpa `SUMBER.md`)
 - **Jejak produksi:** `_produksi-aktif/toko-bu-sinta-bangku-tua/` (STATUS, breakdown, asset) + `_log-sesi/LOG_SESI_2026-09-19_32.md` (slot 32) + `2026-09-19-bangku-tua-di-depan-toko-metadata.md`
 

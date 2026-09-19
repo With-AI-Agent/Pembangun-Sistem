@@ -3,8 +3,8 @@
 - **Status:** ready-for-review (G2 konten final terkunci 2026-09-19; menunggu G3 merge)
 - **Channel:** Toko Bu Sinta (`channel-toko-bu-sinta`)
 - **Model konten:** Gambar Statis & Caption v1 (`model-konten/gambar-caption/brief.md`)
-- **Tahap terakhir selesai:** Tahap 6 — Assembly & Publish Prep + **sinkron main v1.1** (rebase ke `21fcfd3` tanpa konflik; asesmen: keluaran terkunci patuh v1.1 tanpa perubahan isi; pernyataan dikoreksi; entri konflik+resolusi di Log Keputusan channel-brief) + **approval ulang penutup caption vs v1.1 SETUJU (dikunci tanpa perubahan, 2026-09-19)**. Paket terkoreksi disajikan ulang; **menunggu pemilik mengajukan ulang G2 konten final + metadata**, lalu G3/PR terpisah.
-- **Tahap berikutnya:** G2 konten final → siapkan PR → **G3 merge** (pertanyaan terpisah); penghapusan folder produksi HANYA setelah pemilik download & memverifikasi langkah arsip 1/2/2a/2b/4
+- **Tahap terakhir selesai:** Tahap 6 — Assembly & Publish Prep + sinkron main v1.1 (rebase ke `21fcfd3` tanpa konflik) + approval ulang penutup caption vs v1.1 SETUJU + **G2 konten final + metadata DIKUNCI pemilik 2026-09-19** (paket terkoreksi sinkron v1.1 diterima sebagai konten resmi channel). **PR #80 OPEN** ke `main` (tanpa auto-merge).
+- **Tahap berikutnya:** **G3 merge PR #80** — gerbang terpisah, **menunggu keputusan pemilik**; setelah merge: verifikasi API + catat `merged`, lalu penghapusan folder produksi HANYA setelah pemilik download & memverifikasi langkah arsip 1/2/2a/2b/4
 - **Output resmi:**
   - `naskah-draft.md` (NASKAH FINAL — G2 dikunci 2026-09-19; memuat: ide terpilih + cek pengulangan Tahap 1, konsep & angle Tahap 2, deskripsi karakter Tipe B, naskah caption 5 baris Tahap 3, evaluasi konsistensi Persona & Voice)
   - `breakdown-output.md` (TERKUNCI G2 2026-09-19; 1 unit "Post Visual Tunggal" — prompt generate [Prompt Master anchor + detail unit], referensi wajib `acuan-utama.png`, target asset)
@@ -30,9 +30,9 @@
   - `G1 Tahap 5:` disetujui 2026-09-19 (verbatim: "G1 Tahap 5: SETUJU — asset diterima.") + putusan rasio opsi (i) untuk konten ini
   - `Approval ulang penutup caption vs brief v1.1:` disetujui 2026-09-19 (verbatim: "Approval ulang penutup caption terhadap brief v1.1: SETUJU — dikunci tanpa perubahan.") — bagian terdampak sinkron v1.1 dikunci tanpa perubahan isi
   - `G2 konten final + metadata:` disetujui/dikunci 2026-09-19 (verbatim: "G2 konten final + metadata: DIKUNCI — paket terkoreksi (sinkron v1.1) diterima sebagai konten resmi channel.")
-  - `G3 merge:` belum — akan diajukan TERPISAH setelah G2, bersamaan penyiapan PR
+  - `G3 merge:` belum — **diajukan terpisah 2026-09-19** setelah G2 konten final dikunci dan PR #80 disiapkan; menunggu keputusan pemilik
 - **Commit terakhir:** [commit sinkron v1.1 + entri Log Keputusan brief ini — hash di LOG_SESI slot 32]. CATATAN: seluruh rantai commit lama (`b1d4752`…`b69c270`) DI-REBASE ke main `21fcfd3` pada 2026-09-19 → hash baru (`95538b1`…`e194fc6`), isi identik; push via `--force-with-lease`. log sesi: `_log-sesi/LOG_SESI_2026-09-19_32.md`
 - **PR terkait:** **#80** (https://github.com/With-AI-Agent/Pembangun-Sistem/pull/80) — disiapkan setelah G2 konten final dikunci; merge menunggu G3 eksplisit
 - **Pekerjaan belum tersimpan:** Tidak ada
-- **Risiko atau blocker:** Tidak ada — PR #79 (Channel Brief v1.1) telah **merge 2026-09-19** (merge commit `21fcfd3`); branch di-rebase ke main v1.1 tanpa konflik teks; asesmen dampak: semua keluaran terkunci patuh v1.1 tanpa perubahan isi. Yang masih terbuka (bukan blocker): approval ulang bagian terdampak (penutup caption) kepada pemilik, lalu G2 konten final + G3 merge.
+- **Risiko atau blocker:** Tidak ada — PR #79 (Channel Brief v1.1) telah **merge 2026-09-19** (merge commit `21fcfd3`); branch di-rebase ke main v1.1 tanpa konflik teks; asesmen dampak: semua keluaran terkunci patuh v1.1 tanpa perubahan isi. Yang masih terbuka (bukan blocker): **G3 merge PR #80 menunggu keputusan pemilik** (approval ulang penutup v1.1 dan G2 konten final sudah dikunci 2026-09-19).
 - **Waktu pembaruan:** 2026-09-19
