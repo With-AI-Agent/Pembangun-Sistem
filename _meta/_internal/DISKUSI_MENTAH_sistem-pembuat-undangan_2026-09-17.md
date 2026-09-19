@@ -2352,3 +2352,53 @@ berlaku juga di `audit_prompt.py`), dokumen hidup baris 64, regresi **RP18a–f*
 (**T-53 dibuka, T-50 dibuka kembali, T-41 dan T-33 dikoreksi bertanggal**), ledger **S-29**, manifest
 **v1.31.0**, INDEKS disinkron. Temuan kelas body PR dikerjakan sesudah commit dan **diverifikasi dari
 API sebelum T-53 ditutup** — pelajaran dari T-50: jangan mengklaim tertutup sebelum terukur.
+
+## Giliran 25 (19 Sep 2026) — "Kenapa berhenti? lanjutkan"
+
+**Masukan pemilik, verbatim:**
+
+> Kenapa berhenti? lanjutkan
+
+**Konteks:** giliran sebelumnya agent berhenti dan melapor bahwa token GitHub sesi ini mati
+(`gh auth status` → *authentication failed — the token in GH_TOKEN is no longer valid*), sehingga
+push dua commit penutup, pembangkitan prompt putaran 6, dan PATCH body tidak bisa dijalankan. Agent
+meminta pemilik menyambungkan ulang GitHub di Arena dan **tidak** meminta kata sandi, token, atau
+kode 2FA.
+
+**Yang dilakukan sesudah pemilik menyuruh lanjut:**
+
+1. **Cek dulu, jangan berasumsi.** `gh auth status` ternyata sudah `✓ Logged in to github.com as
+   arena-ai-coding-agent[bot]`, `git ls-remote` menunjukkan remote di `a8faf1a`, HEAD lokal `c072da4`,
+   pohon kerja bersih, `shallow=false`. Jadi alasan berhenti sudah tidak berlaku → lanjut tanpa
+   bertanya lagi.
+2. **Dorong dua commit yang tertahan** dengan refspec eksplisit lebih dulu (pelajaran insiden re-clone):
+   `a54fcf7` (T-53 + T-50 → `SELESAI` dengan sha, T-44/T-51/T-52 diberi catatan bertanggal, ledger S-29
+   diberi bukti eksekusi) dan `c072da4` (pencatat insiden). Sesudah push, HEAD == remote == `c072da4`.
+3. **Ukur ulang gerbang pada head itu**, bukan menyalin angka head sebelumnya: PR **63 commit** (60
+   non-merge + 3 merge), **65 berkas** (32 A + 33 M), **+12.737/−85**, `mergeable=true/clean`
+   (di-poll sampai tidak `null`), validate_repo PASSED dengan **596 rujukan** dan `WARNINGS: 2`, FI
+   **169 PASSED**, pin R7 tetap **5**, TEMPLATE CLEAN BUILD + SMOKE EXTRACT PASSED. Pin `CORE_REQUIRED`
+   diukur ulang dengan AST: **27 → 34** (ditambah 7, dihapus 0) — tidak berubah oleh commit rekaman.
+4. **Prompt putaran 6 terbit** lewat `review_prompt.py --pr 74 --harapkan 3 --umumkan`: komentar penulis
+   `5740230431`, berkas `/home/user/PROMPT_REVIEW_PR74_putaran6.md`. Verifikasi yang dituntut alat
+   dijalankan, bukan dilewati: sha head di dalam prompt **sama** dengan API (40 karakter penuh, 7
+   kemunculan), **nol** sha basi, "putaran 6" **dicetak alat** 3×, dan `ambil_verdict.py --pr 74
+   --putaran 6 --harapkan 3` tetap membaca **13 slot hakim** (bukan 14) dengan komentar bukan-slot naik
+   12 → 13 → prompt baru tidak terbaca sebagai verdict.
+5. **Banner di prompt putaran 5** (`5739074508`): "PUTARAN 5 SUDAH DIPUTUS … prompt yang berlaku
+   sekarang PUTARAN 6", teks aslinya tidak dihapus (preseden dua prompt putaran 5 yang lebih awal).
+   Sesudah di-banner, tally alat tetap 13 slot → banner tidak membuat slot palsu.
+6. **Body PR di-PATCH kesepuluh kalinya** (langkah terakhir, tanpa commit sesudahnya): semua klaim
+   *keadaan sekarang* digeser ke head penutup, permalink putaran 6 + hasil verifikasinya dimasukkan,
+   baris penutup ditulis ulang karena T-53 dan T-50 kini `SELESAI`, dan insiden token dicatat apa
+   adanya. Riwayat **tidak** disentuh: `a8faf1a` masih disebut 15× sebagai sha tempat perbaikan
+   mendarat. Verifikasi dari API dengan pengukuran **di dalam jq**: **90.404 karakter / 290 baris /
+   91.112 byte** — identik dengan payload lokal; 23 frasa wajib ADA, nol klaim basi.
+
+**Koreksi atas urutan sendiri (dilaporkan, bukan dirapikan diam-diam):** prompt putaran 6 terbit
+SEBELUM rekaman giliran ini ditulis, padahal urutan baku repo adalah **rekaman → prompt → body PATCH**.
+Akibatnya commit rekaman ini menggerakkan head dan membuat pin prompt `5740230431` basi. Yang
+dilakukan: prompt itu ditempeli banner **DIGANTIKAN** (tidak dihapus), prompt putaran 6 dibangkitkan
+ulang pada head penutup, dan body di-PATCH sekali lagi untuk memakai permalink yang baru. Biayanya satu
+komentar tambahan; alternatifnya (membiarkan header log basi sampai verdict masuk) lebih mahal karena
+hakim putaran 6 membaca blok Keadaan Sesi — persis kelas temuan #9 putaran 5.
