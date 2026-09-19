@@ -32,7 +32,7 @@
   - `G2 konten final + metadata:` disetujui/dikunci 2026-09-19 (verbatim: "G2 konten final + metadata: DIKUNCI — paket terkoreksi (sinkron v1.1) diterima sebagai konten resmi channel.")
   - `G3 merge:` belum — akan diajukan TERPISAH setelah G2, bersamaan penyiapan PR
 - **Commit terakhir:** [commit sinkron v1.1 + entri Log Keputusan brief ini — hash di LOG_SESI slot 32]. CATATAN: seluruh rantai commit lama (`b1d4752`…`b69c270`) DI-REBASE ke main `21fcfd3` pada 2026-09-19 → hash baru (`95538b1`…`e194fc6`), isi identik; push via `--force-with-lease`. log sesi: `_log-sesi/LOG_SESI_2026-09-19_32.md`
-- **PR terkait:** belum ada — PR direncanakan saat Tahap 6 (setelah G2 konten final); branch `arena/01a0b7ba-pembangun-sistem`
+- **PR terkait:** **#80** (https://github.com/With-AI-Agent/Pembangun-Sistem/pull/80) — disiapkan setelah G2 konten final dikunci; merge menunggu G3 eksplisit
 - **Pekerjaan belum tersimpan:** Tidak ada
 - **Risiko atau blocker:** Tidak ada — PR #79 (Channel Brief v1.1) telah **merge 2026-09-19** (merge commit `21fcfd3`); branch di-rebase ke main v1.1 tanpa konflik teks; asesmen dampak: semua keluaran terkunci patuh v1.1 tanpa perubahan isi. Yang masih terbuka (bukan blocker): approval ulang bagian terdampak (penutup caption) kepada pemilik, lalu G2 konten final + G3 merge.
 - **Waktu pembaruan:** 2026-09-19
