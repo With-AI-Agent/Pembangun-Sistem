@@ -3,10 +3,11 @@
 - **Status:** in-progress
 - **Channel:** Toko Bu Sinta (`channel-toko-bu-sinta`)
 - **Model konten:** Gambar Statis & Caption v1 (`model-konten/gambar-caption/brief.md`)
-- **Tahap terakhir selesai:** Tahap 3 — Naskah Caption (G1 Tahap 1+2+3 disetujui & G2 naskah final DIKUNCI pemilik 2026-09-19)
-- **Tahap berikutnya:** Tahap 4 — Breakdown Output (1 unit visual) — sedang dikerjakan sesi ini
+- **Tahap terakhir selesai:** Tahap 4 — Breakdown Output (draft `breakdown-output.md` tersimpan di branch; **berhenti di gerbang G1 Tahap 4 + G2 breakdown, menunggu keputusan pemilik**). Sebelumnya: G1 Tahap 1+2+3 disetujui & G2 naskah final DIKUNCI pemilik 2026-09-19.
+- **Tahap berikutnya:** Tahap 5 — Generate/Acquire Assets (1 gambar via `generate_image`, HANYA setelah G1 Tahap 4 disetujui DAN G2 breakdown dikunci)
 - **Output resmi:**
-  - `naskah-draft.md` (memuat: ide terpilih + cek pengulangan Tahap 1, konsep & angle Tahap 2, deskripsi karakter Tipe B, naskah caption 5 baris Tahap 3, evaluasi konsistensi Persona & Voice)
+  - `naskah-draft.md` (NASKAH FINAL — G2 dikunci 2026-09-19; memuat: ide terpilih + cek pengulangan Tahap 1, konsep & angle Tahap 2, deskripsi karakter Tipe B, naskah caption 5 baris Tahap 3, evaluasi konsistensi Persona & Voice)
+  - `breakdown-output.md` (draft Tahap 4; 1 unit "Post Visual Tunggal" 1:1 — prompt generate siap pakai [Prompt Master disalin persis sebagai jangkar + detail unit], referensi wajib `acuan-utama.png`, target asset `assets/unit-1-bangku-tua-di-depan-toko.png`)
 - **Sumber konteks yang dibaca:** `_sistem/01_BRAND_CORE.md` (masih template umum — Channel Brief punya catatan dependency eksplisit), `channel-brief.md` v1 Operational (+ diff PR #79 v1.1 yang menggantung), `model-konten/gambar-caption/brief.md` v1 Operational, `konsistensi-visual/bu-sinta/bank-konsistensi.md` Reference-Ready, `arsip-naskah/indeks.md` (kosong), `arsip-naskah/indeks-karakter.md` (kosong), `_sistem/05_CONTENT_PRODUCTION_PIPELINE.md`, `_sistem/06_PROMPT_LIBRARY.md`, `_sistem/STATUS_TEMPLATE.md`, STATUS + naskah + breakdown 2 unit in-progress (`toko-bu-sinta-pelanggan-tua-dan-cucu`, `toko-bu-sinta-stoples-kopi-tua`)
 - **Sumber eksternal dipakai:** `Tidak ada` (murni fiksi slice-of-life orisinal; tanpa klaim faktual/sejarah/ilmiah — `SUMBER.md` tidak berlaku)
 - **Keputusan baru:**
@@ -14,6 +15,8 @@
   - **2026-09-19 (keputusan pemilik):** backup "Teko yang Selalu Siaga di Kompor" disimpan untuk KONTEN BERIKUTNYA. Pencatatan ke Bank Ide Awal Channel Brief ditunda sadar — `channel-brief.md` sedang disentuh PR #79 yang menggantung; diusulkan ulang setelah PR #79 diputuskan.
   - Karakter Tipe B baru: penjual sayur keliling tanpa nama (~45 th) — cek A2: indeks-karakter kosong, tidak cocok dengan Tipe B Konten #1 (Pak Marto/Tari); pendaftaran ke `indeks-karakter.md` terjadi di Tahap 6.
   - Naskah caption ditulis patuh ganda: Channel Brief v1 (resmi di `main`) + aturan penutup v1.1 yang menggantung di PR #79 (penutup mendarat ke observasi benda fokus, tanpa generalisasi).
+  - Tahap 4: breakdown 1 unit visual mengikuti pola breakdown Konten #1; tidak ada elemen Bank Konsistensi Visual yang diubah (tidak perlu G2 terpisah); Tipe B dibawa sama persis dari naskah + penegas pembeda handuk polos vs lap kotak-kotak Bu Sinta di prompt.
+  - **Insiden platform 2026-09-19 (giliran ini):** sandbox ter-re-clone antar-giliran, branch lokal ter-reset ke `6798bb2`; remote head `999c0e9` utuh (verifikasi `ls-remote`); recovery `git reset --mixed 999c0e9` + commit anak `bac65be` + push fast-forward — TANPA force-push, tanpa kehilangan isi. Detail di LOG_SESI slot 32.
 - **Approval yang sudah diberikan:**
   - `G1 Tahap 1:` disetujui 2026-09-19 — ide "Bangku Tua di Depan Toko" dipakai (verbatim: "G1 Tahap 1: SETUJU — ide 'Bangku Tua di Depan Toko' dipakai; backup teko disimpan untuk konten berikutnya.")
   - `G1 Tahap 2:` disetujui 2026-09-19 (verbatim: "G1 Tahap 2: SETUJU.")
@@ -24,7 +27,7 @@
   - `G1 Tahap 5:` belum
   - `G2 konten final + metadata:` belum
   - `G3 merge:` belum
-- **Commit terakhir:** `212cf0a` (output Tahap 1+2+3) — log sesi: `_log-sesi/LOG_SESI_2026-09-19_32.md` (log awal `b1d4752`)
+- **Commit terakhir:** [commit output Tahap 4 ini — hash dicatat di LOG_SESI slot 32]; rantai sebelumnya: `b1d4752` → `212cf0a` → `999c0e9` → `bac65be` (sinkron approval + recovery insiden)
 - **PR terkait:** belum ada — PR direncanakan saat Tahap 6 (setelah G2 konten final); branch `arena/01a0b7ba-pembangun-sistem`
 - **Pekerjaan belum tersimpan:** Tidak ada
 - **Risiko atau blocker:** PR #79 (Channel Brief v1.1) masih OPEN dan belum diputuskan pemilik (merge/tutup) — naskah ini sudah ditulis kompatibel dengan kedua versi, tetapi status sumber resmi tetap v1 sampai PR #79 di-merge. Tidak ada blocker lain.
