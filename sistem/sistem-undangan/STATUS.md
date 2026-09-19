@@ -21,6 +21,15 @@
   menegur, dan validator benih yang dibangkitkan build_template.py ternyata **sudah lebih ketat** dari
   validator sistem nyata. **Diuji mutasi:** satu berkas manual dihapus → validator `exit 1` dengan pesan
   berkas mana yang hilang; dipulihkan → `exit 0`.
+- **Koreksi keadaan peringatan (19 Sep 2026, append — temuan #2 hakim putaran 5 PR #74):** butir di atas
+  menulis "**Warning validator repo kini 0**" sebagai klaim keadaan *sekarang*. Itu benar pada 18 Sep 2026
+  ketika pegangan W-01 dibuat, tetapi **basi terhadap head PR #74 sekarang**: `python3 tools/validate_repo.py`
+  mencetak `WARNINGS: 2`, keduanya di tier **berkas bukti historis yang append-only**
+  (`sistem/sistem-konten-kreator/ACCEPTANCE_TEST_LOG.md` baris 1870 dan 1956) — tier yang sah menurut
+  keputusan pemilik 18 Sep 2026 (riwayat tidak disunting demi kosmetika tabel). Teks lama tidak dihapus;
+  yang dikoreksi adalah kata "kini"-nya. **Peringatan di dokumen hidup tetap berarti butir ini belum lulus.**
+  Butir ini dieksekusi sesudah pesan commit `4f819d9` keliru menyatakannya tidak berlaku — koreksinya
+  dilaporkan terbuka di register T-53.
 - **Tahap berikutnya:** (a) PR ini direview **L1** dan di-merge pemilik — **tanpa auto-merge**;
   (b) sesudah merge: tulis **6 prompt Discovery detail** (dokumen 01, 02, 05, 06, 09, 10) — **bukan**
   langsung menulis isi sistemnya; (c) **SELESAI 18 Sep 2026** — pegangan pengguna W-01 sudah dibuat

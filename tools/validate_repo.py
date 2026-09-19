@@ -622,6 +622,43 @@ def scan_references():
 ref_docs, ref_checked, ref_warnings = scan_references()
 ref_warnings += stage_warnings
 
+# ---------------------------------------------------------------------------
+# Penjaga field `- **Keadaan:**` di setiap log sesi (usulan hakim putaran 5 PR #74,
+# temuan #6). Tanpa penjaga ini header "Keadaan Sesi" bisa BASI atau HILANG tanpa ada
+# yang protes - persis yang lolos pada LOG_SESI_2026-09-17.md (basi sejak 6f60c7c:
+# menulis folder sistem-undangan "belum dibuat" padahal ada) dan pada log lanjutan
+# slot 24 (tidak punya blok Keadaan Sesi sama sekali padahal template mewajibkannya).
+# Nilai yang sah hanya OPEN atau CLOSED; nilai lain ("menunggu gerbang ...") membuat
+# agent berikutnya tidak tahu apakah log ini masih hidup. Fail-closed: folder log yang
+# hilang atau kosong juga error. Cakupan: semua `_log-sesi/LOG_SESI_*.md`, termasuk
+# yang diturunkan ke folder sistem (butir warisan W-02).
+# ---------------------------------------------------------------------------
+_LOG_DIKECUALIKAN = {".git", "backups", "template_clean", "node_modules", "__pycache__"}
+_pola_keadaan = re.compile(r"^- \*\*Keadaan:\*\*\s*`?(OPEN|CLOSED)`?", re.M)
+_berkas_log = sorted(
+    p for p in ROOT.rglob("LOG_SESI_*.md")
+    if "_log-sesi" in p.parts and not (_LOG_DIKECUALIKAN & set(p.parts))
+)
+# Fail-closed HANYA bila folder lognya ada: repo meta wajib punya log sesi, sedangkan ekstrak
+# template (benih sistem baru) memang TIDAK memuat folder `_log-sesi/` karena riwayat sesi adalah
+# data personal yang sengaja dikecualikan dari template - menuntut log di sana akan merusak
+# TEMPLATE CLEAN BUILD. Kalau foldernya ada tapi kosong, itu berarti lognya dipindahkan/dihapus
+# untuk membungkam penjaga, dan itu error.
+if (ROOT / "_log-sesi").is_dir() and not _berkas_log:
+    errors.append(
+        "_log-sesi/: foldernya ada tetapi tidak memuat LOG_SESI_*.md - penjaga field "
+        "`- **Keadaan:**` tidak bisa berjalan (fail-closed: log sesi tidak boleh dipindahkan "
+        "atau dikosongkan untuk membungkam penjaga)"
+    )
+for _lg in _berkas_log:
+    if not _pola_keadaan.search(_lg.read_text(encoding="utf-8")):
+        errors.append(
+            f"{_lg.relative_to(ROOT)}: field wajib `- **Keadaan:**` bernilai OPEN atau CLOSED "
+            "tidak ada (atau nilainya di luar dua itu) - header 'Keadaan Sesi' harus menyatakan "
+            "keadaan log ini supaya agent berikutnya tahu log ini masih hidup atau sudah "
+            "arsip; tambahkan field-nya sebagai append bertanggal, jangan sunting riwayatnya"
+        )
+
 if errors:
     print("VALIDATION FAILED")
     print("\n".join(f"- {e}" for e in errors))

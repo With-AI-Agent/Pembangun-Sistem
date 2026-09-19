@@ -1374,6 +1374,32 @@ def review_prompt_scenarios(base_dir: Path):
         bool(hit19m),
     ))
 
+    # RP20 - penjaga field `- **Keadaan:**` di setiap log sesi (usulan hakim putaran 5 PR #74
+    # temuan #6). Cacat yang lolos tanpa penjaga: header "Keadaan Sesi" LOG_SESI_2026-09-17.md
+    # basi sejak 6f60c7c (menulis folder sistem-undangan "belum dibuat" padahal ada) dan log
+    # lanjutan slot 24 tidak punya blok itu sama sekali; dua log lama malah memakai nilai di luar
+    # OPEN/CLOSED ("menunggu gerbang ...") atau bentuk field lama (`- **Status:**`). RP20a
+    # memastikan validator lulus di salinan DAN daftar lognya tidak kosong (fail-closed: penjaga
+    # tidak boleh bisa dimatikan dengan memindahkan/mengosongkan folder log). RP20b kontrol
+    # mutasi: field-nya dicabut dari satu log -> validator WAJIB menolak, dan sesudah dipulihkan
+    # validator lulus lagi (bukti kegagalan tadi disebabkan mutasinya, bukan hal lain).
+    log20 = sorted((cp / "_log-sesi").glob("LOG_SESI_*.md"))
+    checks.append((
+        "RP20a validator PASS di salinan dan daftar LOG_SESI tidak kosong (penjaga field Keadaan aktif)",
+        bool(log20) and run_tool(cp, "tools/validate_repo.py") == 0,
+    ))
+    f20 = log20[0]
+    asli20 = f20.read_text(encoding="utf-8")
+    f20.write_text("\n".join(g for g in asli20.split("\n")
+                             if not g.startswith("- **Keadaan:**")) + "\n", encoding="utf-8")
+    rc20 = run_tool(cp, "tools/validate_repo.py")
+    f20.write_text(asli20, encoding="utf-8")
+    checks.append((
+        "RP20b diuji-mutasi: field `- **Keadaan:**` dicabut dari satu log -> validator MENOLAK, "
+        "dipulihkan -> lulus lagi",
+        rc20 != 0 and run_tool(cp, "tools/validate_repo.py") == 0,
+    ))
+
     return checks
 
 
