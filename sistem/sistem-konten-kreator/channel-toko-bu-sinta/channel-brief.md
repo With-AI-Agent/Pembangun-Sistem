@@ -20,7 +20,7 @@
 - [x] `arsip-naskah/indeks.md` dan `arsip-naskah/indeks-karakter.md` sudah dibuat
 - [x] Sudah `Merged` ke `main`
 
-**Versi:** `1` — **Terakhir diperbarui:** `2026-09-17` — **Diwarisi dari:** `_sistem/01_BRAND_CORE.md`
+**Versi:** `1.1` — **Terakhir diperbarui:** `2026-09-19` — **Diwarisi dari:** `_sistem/01_BRAND_CORE.md`
 
 > **Catatan dependency:** `_sistem/01_BRAND_CORE.md` di repo ini masih template umum belum terisi spesifik. Nilai-nilai channel ini dikunci mandiri di bagian 2, 3, dan 5 di bawah; bila Brand Core kelak diisi, brief ini dapat diselaraskan via G2 terpisah.
 
@@ -56,16 +56,19 @@
   - Bu Sinta (Karakter Utama) wajib tampil di gambar.
   - Format 1 gambar ilustrasi flat + caption 3–6 baris.
   - Struktur ritme caption: baris 1–2 pengamatan benda/situasi toko, baris 3–4 interaksi kecil atau ucapan singkat Bu Sinta, baris 5–6 refleksi penutup pendek yang hangat.
+  - **Aturan penutup wajib (mengikat semua konten):** Baris penutup caption HARUS berupa observasi terhadap benda yang menjadi fokus konten (benda yang sama yang muncul di gambar dan dibuka di baris awal). Dilarang menutup dengan generalisasi, nasihat, atau refleksi yang melompat ke pembaca/kehidupan umum. Penutup mendarat kembali ke benda, tidak melantur ke pesan universal.
   - Suasana toko kelontong yang bersahabat dan tenang.
 - **Hal yang TIDAK BOLEH ADA / dihindari di channel ini:**
   - Nama toko komersial atau brand nyata (hindari pelanggaran hak cipta dan kesan endorsement).
   - Judul/caption sensasional, umpan klik (clickbait), atau gaya tulisan memancing amarah.
   - Nasihat hidup menggurui atau khotbah moral eksplisit.
+  - **Penutup caption yang menggeneralisasi ke pembaca atau melompat ke nasihat/renungan umum** (mis. pola "Di toko kami, …" sebagai penutup, "Kadang tanda paling sederhana …", "begitu juga hidup …", "pelan-pelan aja …" tanpa objek benda yang dirujuk, dan sejenisnya yang meninggalkan benda fokus). Penutup wajib tetap berada di benda — observasi konkret, bukan wejangan.
   - Format video atau suara latar (voice over).
   - Humor kasar, berisik, atau slapstick.
 - **Contoh kalimat pembuka/penutup khas:**
   - *Pembuka:* "Di toko kami, stoples kopi ini jarang sekali bersuara keras." / "Pagi di toko kami selalu dimulai dari bunyi bel pintu yang sedikit serak." / "Di sudut dekat timbangan, selalu ada cerita yang tertinggal."
-  - *Penutup:* "Yang penting, hari ini toko tutup tepat waktu." / "Pelan-pelan aja, besok pagi toko buka lagi." / "Uang kembalian bisa dicari, tapi obrolan sore ini sudah lunas."
+  - *Penutup (pola yang BENAR — mendarat ke benda fokus):* "Stoples itu tinggal separuh, tapi aromanya masih memenuhi sudut meja kasir." / "Bel pintu tadi sudah berbunyi delapan kali — besok pagi ia akan berbunyi lagi." / "Timbangan bebek itu diam di tempatnya, jarumnya kembali ke nol seperti biasa."
+  - *Penutup (pola yang TIDAK BOLEH — generalisasi/nasihat yang meninggalkan benda):* ~~"Yang penting, hari ini toko tutup tepat waktu."~~ / ~~"Pelan-pelan aja, besok pagi toko buka lagi."~~ / ~~"Kadang tanda paling sederhana adalah yang paling berarti."~~
 
 ## 4. Konsistensi Visual
 
@@ -136,3 +139,4 @@ Folder `arsip-naskah/` disediakan untuk menyimpan naskah final setiap post yang 
 | 2026-09-17 | Batasan keras: tanpa nama toko/brand nyata, tanpa clickbait, tanpa bahasa gaul | Menjaga integritas slice-of-life bersahaja dan kepatuhan hak cipta. |
 | 2026-09-17 | Status naik ke `Merged` — PR #76 masuk `main` oleh pemilik | Channel Brief dan seluruh dependency (Bu Sinta Reference-Ready, indeks arsip) sudah ada di `main`. |
 | 2026-09-17 | Status naik ke `Operational` — sesi 25 | Semua checklist kelengkapan terpenuhi: bagian wajib terisi, checklist konsistensi terjawab, Bu Sinta Reference-Ready, indeks arsip ada, sudah merged. Channel siap produksi. |
+| 2026-09-19 | Aturan baru (mengikat semua konten): baris penutup caption WAJIB berupa observasi terhadap benda fokus konten; dilarang generalisasi/nasihat ke pembaca (pola "Di toko kami, …" atau "Kadang tanda paling sederhana …" sebagai penutup tidak boleh lagi dipakai). Contoh penutup lama yang melanggar dicoret dan diganti contoh yang mendarat ke benda. | Pemilik ingin penutup caption tetap berada di benda, tidak melompat ke nasihat/renungan umum — menjaga disiplin sudut pandang mikro yang menjadi pembeda channel. |
