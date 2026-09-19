@@ -23,7 +23,7 @@
   - `G1 Tahap 5:` belum
   - `G2 konten final + metadata:` belum
   - `G3 merge:` belum
-- **Commit terakhir:** [commit output Tahap 1+2+3 ini — hash dicatat di LOG_SESI slot 32]
+- **Commit terakhir:** `212cf0a` (output Tahap 1+2+3) — log sesi: `_log-sesi/LOG_SESI_2026-09-19_32.md` (log awal `b1d4752`)
 - **PR terkait:** belum ada — PR direncanakan saat Tahap 6 (setelah G2 konten final); branch `arena/01a0b7ba-pembangun-sistem`
 - **Pekerjaan belum tersimpan:** Tidak ada
 - **Risiko atau blocker:** PR #79 (Channel Brief v1.1) masih OPEN dan belum diputuskan pemilik (merge/tutup) — naskah ini sudah ditulis kompatibel dengan kedua versi, tetapi status sumber resmi tetap v1 sampai PR #79 di-merge. Tidak ada blocker lain.
