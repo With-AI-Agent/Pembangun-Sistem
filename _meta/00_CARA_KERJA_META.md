@@ -279,3 +279,33 @@ Lihat `02_PRINSIP_UNIVERSAL.md` untuk daftar lengkap + penjelasan. Ringkasnya: H
 ### Bukti numerik permanen (C5)
 
 Angka dalam Log Evolusi, manifest, atau indeks harus tetap benar setelah dokumen ditulis. Jumlah `rujukan` tidak stabil—entri `LOG_SESI` baru dapat mengubahnya—maka dilarang dikutip sama sekali. Verdict dan angka stabil (contoh: jumlah berkas wajib) tetap dikutip. Validator menegakkan aturan ini pada sel **Bukti** Log Evolusi; lihat AT-16. Empat siklus PR #21→#24 membuktikan bahwa mengejar angka bukti basi adalah masalah integritas, bukan gaya.
+
+### Gerbang diukur pada pohon yang di-commit (C6)
+
+Klaim gerbang di pesan commit wajib diukur pada **pohon yang persis akan di-commit**, sesudah SEMUA
+rekaman ditulis — bukan sebelumnya. Urutan yang benar: tulis seluruh perubahan (kode, dokumen, register,
+ledger, log, DISKUSI) → jalankan seluruh gerbang → baca angkanya dari cetakan alat → baru commit dengan
+angka itu di pesannya. Mengukur lebih dulu lalu menulis rekaman sesudahnya membuat pesan commit mengutip
+angka dari pohon yang sudah tidak ada: itu **klaim yang lahir sebelum buktinya**, kelas cacat yang sama
+dengan yang sudah pernah dilaporkan terbuka di PR #74 (pesan commit `4f819d9`).
+
+Kejadian nyata yang melahirkan aturan ini (19 Sep 2026, commit `6d7b1fb`): gerbang dijalankan sesudah
+perbaikan kode — FI mencetak 178 PASSED dan pin R7 terukur 5 — lalu rekaman ditulis (baris utang baru di
+register, ledger S-31, bagian DISKUSI), lalu commit dibuat **tanpa menjalankan gerbang lagi**. Pesan
+commitnya menulis "FI 178 PASSED" dan "pin R7 tetap 5", padahal pada pohon yang di-commit FI **GAGAL**:
+baris register yang baru menyebut path log sesi dengan folder `_log-sesi`, dan folder itu tidak ikut
+diekstrak ke benih sistem, sehingga warning rujukan ekstrak menjadi 6 dan **pin R7 bergeser**. Yang
+menangkap adalah regresi R7 sendiri — pada menjalankan berikutnya, bukan pada commit itu, jadi klaim
+palsu tersebut sempat terdorong ke remote dan baru dikoreksi terbuka sesudahnya.
+
+Dua aturan turunannya, keduanya sudah tercatat di tempat lain dan diulang di sini karena terbukti mudah
+dilanggar: **(i)** pin R7 tidak boleh bergeser tanpa izin pemilik; **(ii)** rekaman yang menyebut berkas
+di luar benih (log sesi, artefak internal, berkas bukti) wajib menyebut **nama**, bukan path — persis
+pelajaran yang sudah pernah dibayar mahal saat pin R7 nyaris tergeser oleh penulisan path ke dokumen
+hidup.
+
+Yang **tidak** dijamin aturan ini: kepatuhannya tidak bisa dikunci regresi, karena pesan commit ditulis
+di luar pohon yang diuji. Yang bisa dijaga alat adalah **akibatnya** (pin R7, jumlah skenario, sinkron
+dokumen vs cetakan alat), dan itu sudah dijaga. Karena itu C6 ditulis sebagai kebiasaan wajib, dan setiap
+pelanggaran yang ketahuan **dilaporkan terbuka, bukan dirapikan diam-diam** — termasuk yang ketahuan oleh
+agentnya sendiri sesudah commit terdorong.
