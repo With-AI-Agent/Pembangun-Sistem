@@ -3,8 +3,8 @@
 - **Status:** in-progress
 - **Channel:** Toko Bu Sinta (`channel-toko-bu-sinta`)
 - **Model konten:** Gambar Statis & Caption v1 (`model-konten/gambar-caption/brief.md`)
-- **Tahap terakhir selesai:** Tahap 5 — Generate/Acquire Assets (asset ter-generate & tersimpan di branch; **berhenti di gerbang G1 Tahap 5, menunggu keputusan pemilik**). Sebelumnya: G1 Tahap 4 & G2 breakdown dikunci 2026-09-19.
-- **Tahap berikutnya:** Tahap 6 — Assembly & Publish Prep (HANYA setelah G1 Tahap 5 disetujui)
+- **Tahap terakhir selesai:** Tahap 5 — Generate/Acquire Assets (G1 Tahap 5 disetujui pemilik 2026-09-19; putusan rasio: opsi (i) diterima untuk konten ini, perbaikan aturan rasio = backlog higiene)
+- **Tahap berikutnya:** Tahap 6 — Assembly & Publish Prep — SEDANG DIKERJAKAN sesi ini
 - **Output resmi:**
   - `naskah-draft.md` (NASKAH FINAL — G2 dikunci 2026-09-19; memuat: ide terpilih + cek pengulangan Tahap 1, konsep & angle Tahap 2, deskripsi karakter Tipe B, naskah caption 5 baris Tahap 3, evaluasi konsistensi Persona & Voice)
   - `breakdown-output.md` (TERKUNCI G2 2026-09-19; 1 unit "Post Visual Tunggal" — prompt generate [Prompt Master anchor + detail unit], referensi wajib `acuan-utama.png`, target asset)
@@ -26,7 +26,7 @@
   - `G2 naskah final:` disetujui/dikunci 2026-09-19 (verbatim: "G2 naskah final: DIKUNCI.") — naskah jadi dasar breakdown & arsip
   - `G1 Tahap 4:` disetujui 2026-09-19 (verbatim: "G1 Tahap 4: SETUJU.")
   - `G2 breakdown:` disetujui/dikunci 2026-09-19 (verbatim: "G2 breakdown: DIKUNCI.") — breakdown jadi dasar generate asset
-  - `G1 Tahap 5:` belum
+  - `G1 Tahap 5:` disetujui 2026-09-19 (verbatim: "G1 Tahap 5: SETUJU — asset diterima.") + putusan rasio opsi (i) untuk konten ini
   - `G2 konten final + metadata:` belum
   - `G3 merge:` belum
 - **Commit terakhir:** `022aba0` (asset Tahap 5); rantai: `b1d4752` → `212cf0a` → `999c0e9` → `bac65be` → `a8e6604` → `adc4b2f` (sinkron approval T4) → `022aba0`; log sesi: `_log-sesi/LOG_SESI_2026-09-19_32.md`
