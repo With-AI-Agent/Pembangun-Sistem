@@ -101,6 +101,38 @@ def run_tool(repo: Path, tool: str) -> int:
     ).returncode
 
 
+def run_tool_out(repo: Path, tool: str):
+    """Seperti `run_tool` tetapi mengembalikan (rc, keluaran gabungan).
+
+    Diperlukan RP23: penurunan severity menjadi WARNING hanya bisa dibuktikan kalau
+    teks warningnya dibaca, bukan cuma kode keluarnya - "lulus" dan "lulus karena
+    pemeriksaannya dilewati diam-diam" tidak bisa dibedakan dari rc saja."""
+    p = subprocess.run(
+        [sys.executable, str(repo / tool)],
+        capture_output=True, text=True,
+        env={**os.environ, "FI_SKIP_NESTED": "1"},
+    )
+    return p.returncode, p.stdout + p.stderr
+
+
+def _pindah_ke_kronologi(t: str, m) -> str:
+    """RP22f: buang baris cap dari blok header, taruh di kronologi (luar header)."""
+    baris = m.group(0)
+    tanpa = "\n".join(g for g in t.split("\n") if not g.startswith("- **Segar pada:**")) + "\n"
+    return tanpa.rstrip("\n") + "\n\n### Entri uji FI\n\n" + baris + "\n"
+
+
+def _duplikat_kontradiktif(t: str, m) -> str:
+    """RP22g: dua baris cap di blok header dengan angka FI yang berbeda."""
+    baris = m.group(0)
+    return t.replace(baris, baris + "\n" + baris.replace("FI " + m.group(2), "FI 1"), 1)
+
+
+def _bungkus_pagar_kode(t: str, m) -> str:
+    """RP22h: baris cap dibungkus pagar kode - contoh format, bukan field keadaan."""
+    return t.replace(m.group(0), "```\n" + m.group(0) + "\n```", 1)
+
+
 def root_production_unit_is_safe(unit: Path) -> bool:
     """Check the checkpoint contract for a root-level production unit.
 
@@ -1495,19 +1527,22 @@ def review_prompt_scenarios(base_dir: Path):
     ))
     f22 = open22[0]
     asli22 = f22.read_text(encoding="utf-8")
-    m22 = re.search(r"^- \*\*Segar pada:\*\* head `([0-9a-f]{7,40})` \u00b7 (\d{4}-\d{2}-\d{2}) "
-                    r"\u00b7 FI (\d+) \u00b7 manifest v(\d+\.\d+\.\d+)\s*$", asli22, re.M)
-    checks.append(("RP22a2 baris segar di log OPEN nyata terbaca oleh pola regresi (bukan cuma oleh validator)",
+    pola22 = (r"^- \*\*Segar pada:\*\* (\d{4}-\d{2}-\d{2}) \u00b7 FI (\d+) "
+              r"\u00b7 manifest v(\d+\.\d+\.\d+) \u00b7 head terukur `([0-9a-f]{7,40})`\s*$")
+    m22 = re.search(pola22, asli22, re.M)
+    checks.append(("RP22a2 baris segar FORMAT BARU di log OPEN nyata terbaca oleh pola regresi (bukan "
+                   "cuma oleh validator); format lama `head <sha> · <tanggal> · FI <N> · manifest v<X>` "
+                   "ditolak karena memasangkan sha dengan angka yang tidak pernah benar pada sha itu",
                    bool(m22)))
     if m22 is None:
         # Fail-closed dan TERBACA: kalau barisnya tidak ada, keempat uji mutasi di bawah tidak bisa
         # dijalankan. Melanjutkan akan membuat `m22.group(0)` melempar AttributeError - regresi yang
         # crash alih-alih melaporkan kegagalan adalah penjaga yang lebih buruk daripada tidak ada,
         # jadi kegagalannya dinyatakan sebagai empat check yang gagal dengan alasannya.
-        for tag22x in ("RP22b", "RP22c", "RP22d", "RP22e"):
+        for tag22x in ("RP22b", "RP22c", "RP22d", "RP22e", "RP22f", "RP22g", "RP22h"):
             checks.append((
-                f"{tag22x} TIDAK BISA DIUJI: tidak ada baris `- **Segar pada:**` yang cocok pola di "
-                "log OPEN pertama - tambahkan barisnya (bukan melonggarkan polanya)",
+                f"{tag22x} TIDAK BISA DIUJI: tidak ada baris `- **Segar pada:**` format baru di blok "
+                "header log OPEN pertama - migrasikan barisnya (bukan melonggarkan polanya)",
                 False,
             ))
         return checks
@@ -1515,16 +1550,26 @@ def review_prompt_scenarios(base_dir: Path):
         ("RP22b", lambda t, m: "\n".join(g for g in t.split("\n")
                                           if not g.startswith("- **Segar pada:**")) + "\n",
          "baris `- **Segar pada:**` dicabut dari log OPEN"),
-        ("RP22c", lambda t, m: t.replace(m.group(0), m.group(0).replace("FI " + m.group(3), "FI 1"), 1),
+        ("RP22c", lambda t, m: t.replace(m.group(0), m.group(0).replace("FI " + m.group(2), "FI 1"), 1),
          "angka FI di baris segar dibuat tidak cocok dengan dokumen FI hidup (persis bentuk cacat "
          "yang lolos tiga kali: header menulis FI 169 ketika repo sudah 172)"),
         ("RP22d", lambda t, m: t.replace(m.group(0),
-                                         m.group(0).replace("manifest v" + m.group(4), "manifest v0.0.1"), 1),
+                                         m.group(0).replace("manifest v" + m.group(3), "manifest v0.0.1"), 1),
          "versi manifest di baris segar dibuat tidak cocok dengan manifest hidup"),
-        ("RP22e", lambda t, m: t.replace(m.group(0), m.group(0).replace("\u00b7 " + m.group(2) + " \u00b7",
-                                                                        "\u00b7 2020-01-01 \u00b7"), 1),
+        ("RP22e", lambda t, m: t.replace(m.group(0), m.group(0).replace(m.group(1), "2020-01-01", 1), 1),
          "tanggal di baris segar dibuat lebih tua dari tanggal terbaru di log itu (kronologi append, "
          "header tidak disegarkan)"),
+        # TIGA mutasi baru - temuan #1 hakim B putaran 7: penjaga yang mencari baris cap di SELURUH
+        # berkas meluluskan log yang blok headernya tidak punya field itu, karena contoh di kronologi
+        # atau di dalam pagar kode sudah cukup untuk membuatnya "ditemukan".
+        ("RP22f", lambda t, m: _pindah_ke_kronologi(t, m),
+         "baris cap DIPINDAH ke kronologi, di luar blok header 'Keadaan Sesi' - teksnya masih ada di "
+         "berkas tetapi headernya tidak lagi punya keadaan terukur"),
+        ("RP22g", lambda t, m: _duplikat_kontradiktif(t, m),
+         "baris cap DIDUPLIKASI di blok header dengan angka FI berbeda - deklarasi ganda yang saling "
+         "bertentangan tidak boleh lulus"),
+        ("RP22h", lambda t, m: _bungkus_pagar_kode(t, m),
+         "baris cap dibungkus PAGAR KODE di dalam blok header - contoh format bukan field keadaan"),
     ):
         f22.write_text(ubah22(asli22, m22), encoding="utf-8")
         rc22 = run_tool(cp, "tools/validate_repo.py")
@@ -1533,6 +1578,98 @@ def review_prompt_scenarios(base_dir: Path):
             f"{tag22} diuji-mutasi: {pesan22} -> validator MENOLAK, dipulihkan -> lulus lagi",
             rc22 != 0 and run_tool(cp, "tools/validate_repo.py") == 0,
         ))
+
+    # ------------------------------------------------------------------
+    # RP23 - bagian (e) penjaga kesegaran (sha cap vs HEAD..HEAD~3) DIUJI DENGAN `.git` NYATA.
+    # Hakim C putaran 7 PR #74 menunjuk dua hal, keduanya direproduksi penulis sebelum diperbaiki:
+    #   (1) RP22a–e dijalankan pada salinan TANPA `.git` (harness meng-copy dengan ignore ".git"),
+    #       jadi bagian sha TIDAK PERNAH teruji - penjaga yang cabang utamanya tidak diuji, kelas
+    #       yang sama dengan RP17b dan cabang buta RP18d/RP21 yang sudah diakui penulis;
+    #   (2) penjaga itu membuat `main` VALIDATION FAILED SEKETIKA sesudah PR ini di-merge - pada
+    #       squash merge MAUPUN merge commit, lalu permanen sesudah satu commit apa pun di atasnya -
+    #       karena log OPEN milik sesi ini tidak bisa disegarkan oleh sesi lain (append-only +
+    #       kepemilikan log). Penjaga saya sendiri memerahkan gerbang wajib repo untuk semua sesi.
+    # Perbaikannya: bagian (b)(c)(e) hanya keras selama log "live" (disentuh salah satu dari 4 commit
+    # terakhir); sha yang tidak dikenal di repo (clone dangkal / squash merge) menurunkan (e) menjadi
+    # warning beralasan. Empat skenario di bawah mengunci keduanya - gigi penjaga tetap ada, dan
+    # commit sesi lain tidak lagi memerahkan gerbang.
+    # ------------------------------------------------------------------
+    git_ada = subprocess.run(["git", "--version"], capture_output=True, text=True).returncode == 0
+    if not git_ada:
+        checks.append((
+            "RP23 TIDAK BISA DIUJI: git tidak tersedia di lingkungan ini - bagian (e) penjaga "
+            "kesegaran tidak teruji. Fail-closed: dinyatakan GAGAL, bukan dilewati diam-diam",
+            False,
+        ))
+        return checks
+
+    def _g23(*a):
+        return subprocess.run(["git"] + list(a), cwd=str(cp), capture_output=True, text=True)
+
+    if not (cp / ".git").exists():
+        for cmd in (("init", "-q"), ("config", "user.email", "fi@uji.lokal"),
+                    ("config", "user.name", "Uji FI"), ("add", "-A"),
+                    ("commit", "-qm", "FI: pohon awal untuk menguji bagian (e) penjaga kesegaran")):
+            _g23(*cmd)
+    if not (cp / ".git").exists():
+        checks.append(("RP23 TIDAK BISA DIUJI: `git init` di salinan gagal - bagian (e) tidak teruji "
+                       "(fail-closed, dinyatakan GAGAL)", False))
+        return checks
+
+    def _cap23(sha):
+        t = f22.read_text(encoding="utf-8")
+        mm = re.search(pola22, t, re.M)
+        baru = (f"- **Segar pada:** {mm.group(1)} · FI {mm.group(2)} · manifest v{mm.group(3)} "
+                f"· head terukur `{sha}`")
+        f22.write_text(t.replace(mm.group(0), baru, 1), encoding="utf-8")
+
+    def _commit23(pesan, sentuh_log):
+        if not sentuh_log:
+            _g23("commit", "-q", "--allow-empty", "-m", pesan)
+            return
+        f22.write_text(f22.read_text(encoding="utf-8").rstrip("\n") + f"\n\n### {pesan}\n",
+                       encoding="utf-8")
+        _g23("add", str(f22.relative_to(cp)))
+        _g23("commit", "-qm", pesan)
+
+    rel23 = str(f22.relative_to(cp)).replace("\\", "/")
+    _cap23(_g23("rev-parse", "--short=7", "HEAD").stdout.strip())
+    _commit23("RP23: segarkan cap ke head terukur", True)
+    rc_a, out_a = run_tool_out(cp, "tools/validate_repo.py")
+    checks.append((
+        "RP23a kontrol positif dengan .git NYATA: cap menunjuk head terukur dan log disentuh commit "
+        "terbaru -> validator LULUS (supaya tiga skenario di bawah bukan tautologi)",
+        rc_a == 0,
+    ))
+    for i in range(3):
+        _commit23(f"RP23: append kronologi {i + 1} tanpa menyegarkan cap", True)
+    rc_b, out_b = run_tool_out(cp, "tools/validate_repo.py")
+    checks.append((
+        "RP23b GIGI bagian (e) - sebelumnya tidak pernah teruji: tiga commit menyentuh log tanpa "
+        "menyegarkan cap -> head terukur keluar dari jendela HEAD..HEAD~3 sementara log tetap live -> "
+        "validator MENOLAK dan menyebut berkas log itu",
+        rc_b != 0 and rel23 in out_b and "bukan HEAD maupun tiga commit" in out_b,
+    ))
+    for i in range(4):
+        _commit23(f"RP23: commit asing sesi lain {i + 1}", False)
+    rc_c, out_c = run_tool_out(cp, "tools/validate_repo.py")
+    checks.append((
+        "RP23c sebab MERAH putaran 7 disembuhkan: empat commit yang TIDAK menyentuh log (commit sesi "
+        "lain di atas merge) -> log tidak lagi live -> bagian (b)(c)(e) DITURUNKAN menjadi warning "
+        "beralasan dan validator LULUS - gerbang wajib repo tidak lagi merah untuk sesi lain",
+        rc_c == 0 and "WARNING kesegaran header" in out_c
+        and "tidak disentuh oleh 4 commit terakhir" in out_c,
+    ))
+    _cap23("deadbeef")
+    _commit23("RP23: cap memakai sha yang tidak dikenal (simulasi squash merge)", True)
+    rc_d, out_d = run_tool_out(cp, "tools/validate_repo.py")
+    checks.append((
+        "RP23d squash merge tidak memerahkan `main`: cap menunjuk sha yang tidak dikenal di repo ini "
+        "(riwayat branch dibuang squash) -> bagian (e) DITURUNKAN menjadi warning beralasan dan "
+        "validator LULUS - bukan FAILED, bukan mati senyap",
+        rc_d == 0 and "tidak dikenal di repo ini" in out_d,
+    ))
+    f22.write_text(asli22, encoding="utf-8")
 
     return checks
 
@@ -2193,8 +2330,8 @@ def run():
                     if not re.search(r"^- \*\*Keadaan:\*\*\s*`?OPEN`?", _t, re.M):
                         continue
                     _lg.write_text(re.sub(
-                        r"(^- \*\*Segar pada:\*\* head `[0-9a-f]{7,40}` \u00b7 \d{4}-\d{2}-\d{2} "
-                        r"\u00b7 FI \d+ \u00b7 manifest v)\d+\.\d+\.\d+",
+                        r"(^- \*\*Segar pada:\*\* \d{4}-\d{2}-\d{2} \u00b7 FI \d+ "
+                        r"\u00b7 manifest v)\d+\.\d+\.\d+",
                         lambda mo: mo.group(1) + _v, _t, flags=re.M), encoding="utf-8")
             r = subprocess.run([sys.executable, "tools/validate_repo.py"], cwd=cp,
                                capture_output=True, text=True)

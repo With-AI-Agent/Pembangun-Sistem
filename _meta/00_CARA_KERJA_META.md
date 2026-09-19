@@ -309,3 +309,45 @@ di luar pohon yang diuji. Yang bisa dijaga alat adalah **akibatnya** (pin R7, ju
 dokumen vs cetakan alat), dan itu sudah dijaga. Karena itu C6 ditulis sebagai kebiasaan wajib, dan setiap
 pelanggaran yang ketahuan **dilaporkan terbuka, bukan dirapikan diam-diam** — termasuk yang ketahuan oleh
 agentnya sendiri sesudah commit terdorong.
+
+### Jangan serahkan review sebelum kanalnya segar (C7)
+
+Serah terima review independen ke pemilik hanya boleh dilakukan sesudah **tiga hal selesai dan
+terverifikasi**: **(a)** semua commit sudah terdorong dan head tidak akan bergerak lagi; **(b)** prompt
+dibangkitkan alat pada head beku itu, ditempel ke kanal, dan permalink-nya tercetak; **(c)** judul dan
+body PR sudah di-PATCH ke head yang sama **dan diverifikasi dari API**, bukan dari payload lokal. Kalau
+salah satunya terblokir — token mati, berkas hilang, alat gagal — serah terima **DITAHAN** dan keadaan
+blokirnya dikatakan apa adanya, bukan diserahkan dengan kanal yang basi.
+
+Kejadian nyata yang melahirkan aturan ini: **tiga putaran berturut-turut (5, 6, dan 7) hakim menemukan
+"body PR basi terhadap head yang diadili"**. Sebabnya struktural, bukan kelalaian sesekali. Body di-PATCH
+paling akhir supaya tidak basi terhadap head (aturan itu benar), tetapi serah terima ke hakim dilakukan
+**sebelum** PATCH itu mendarat — jadi hakim selalu membaca body yang ketinggalan satu langkah dan temuannya
+selalu benar. Di putaran 7 penyebabnya ganda: PATCH-nya tertahan karena token GitHub mati di tengah
+giliran, sementara prompt putaran 7 sudah terlanjur diserahkan ke pemilik. Lingkaran semacam ini **tidak
+bisa konvergen**: selama urutannya begitu, temuan "basi" akan lahir lagi setiap putaran.
+
+Yang berubah: urutan **tulisan** tetap sama — commit → prompt → PATCH body sebagai tulisan terakhir dan
+tidak diikuti commit — tetapi **serah terima pindah ke sesudah PATCH**. Aturan lama "PATCH body selalu
+terakhir" tidak dilanggar: yang terakhir adalah tulisannya, bukan penyerahannya.
+
+### Penjaga baru wajib diuji terhadap `main` sesudah merge (C8)
+
+Sebelum commit, setiap penjaga baru yang membandingkan nilai hidup atau riwayat git wajib menjawab dua
+pertanyaan: **siapa yang bisa memperbaiki pelanggaran ini?** dan **apakah penjaga ini masih bisa dipatuhi
+sesudah branch di-merge ke `main`?** Kalau jawabannya "sesi lain yang tidak memiliki berkasnya" atau
+"sudah tidak bisa", penjaga itu **ranjau, bukan penjaga**: ia memerahkan gerbang wajib untuk orang yang
+tidak punya cara mematuhinya. Uji minimumnya, dijalankan di salinan sementara: checkout ujung `main`,
+gabungkan head branch dengan **kedua** cara merge yang ditawarkan GitHub (squash dan merge commit),
+jalankan gerbang wajib di sana, lalu buat satu commit di atasnya dan jalankan lagi. Semuanya harus lulus,
+atau gagal hanya karena sebab yang memang milik PR itu. Severity lalu dijajarkan dengan **siapa yang bisa
+bertindak**: keras selama pelanggarnya bisa memperbaiki, warning beralasan bila tidak.
+
+Kejadian nyata (19 Sep 2026, temuan #2 hakim C putaran 7 PR #74): penjaga kesegaran header yang
+ditambahkan sehari sebelumnya membuat `main` **`VALIDATION FAILED` seketika** sesudah merge — pada squash
+merge maupun merge commit, lalu permanen sesudah satu commit apa pun di atasnya — karena dua log OPEN
+milik sesi ini tidak bisa disegarkan oleh sesi lain (append-only + kepemilikan log). Penulis mereproduksi
+sendiri di clone terpisah pada `main` terbaru sebelum memperbaiki. Perbaikannya dikunci **RP23a–d** dengan
+`.git` **nyata**, karena bagian sha itu sebelumnya **tidak pernah teruji** — harness failure-injection
+meng-copy tanpa `.git`. Penjaga yang cabang utamanya tidak diuji adalah pola yang sudah tiga kali terjadi
+di PR ini (RP17b, cabang buta RP18d, RP21), dan tiap kali yang menemukan adalah pihak lain.

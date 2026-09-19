@@ -676,34 +676,59 @@ for _lg in _berkas_log:
 # Jadi: penjaga yang memaku keberadaan tanpa memaku kesegaran = penjaga yang tidak
 # menjaga, pola yang sama dengan RP17b dan cabang buta RP18/RP21.
 #
-# Aturan mekanisnya. Setiap log ber-`OPEN` wajib memuat SATU baris keadaan terukur
-# di blok header, bentuknya persis:
+# Aturan mekanisnya (VERSI 2 - tiga temuan putaran 7 PR #74 diperbaiki di sini).
+# Setiap log ber-`OPEN` wajib memuat SATU baris keadaan terukur di blok header
+# "Keadaan Sesi", bentuknya persis:
 #
-#   - **Segar pada:** head `<sha7>` · <YYYY-MM-DD> · FI <N> · manifest v<X.Y.Z>
+#   - **Segar pada:** <YYYY-MM-DD> · FI <N> · manifest v<X.Y.Z> · head terukur `<sha7>`
 #
-# dan tiap bagiannya dibandingkan dengan nilai HIDUP di repo:
-#   (a) barisnya ada dan formatnya sah (sha 7-40 hex + tanggal ISO);
-#   (b) <N> == jumlah skenario di `_meta/FAILURE_INJECTION_TESTS.md`;
-#   (c) v<X.Y.Z> == field `- **Versi:**` di `_meta/SYSTEM_MANIFEST.md`;
+# FORMATNYA DIUBAH KARENA FORMAT LAMA BERBOHONG (temuan #3 hakim C putaran 7).
+# Format lama `head <sha> · FI <N> · manifest v<X>` terbaca "pada sha itu FI-nya N
+# dan manifest-nya v<X>", padahal sha yang ditulis adalah head SEBELUM commit
+# penyegaran (sha commit sendiri tidak mungkin diketahui saat menulis) dan angka
+# FI/manifest adalah nilai SESUDAH commit itu. Pasangan yang tidak pernah benar
+# itu nyata ada di dua log OPEN: `head 30b3cb2 · FI 178 · manifest v1.34.0`
+# padahal pada 30b3cb2 FI terukur 172 dan manifest v1.33.0. Kata **"head terukur"**
+# sekarang menyatakan apa adanya: head yang terukur ketika header disegarkan.
+#
+# Pemeriksaan:
+#   (a) barisnya ADA **di dalam blok header** (bukan di kronologi, bukan di dalam
+#       pagar kode) dan jumlahnya **TEPAT SATU** - dua cap yang saling
+#       bertentangan ditolak. Sebelumnya penjaga mencari di SELURUH berkas, jadi
+#       contoh format di kronologi atau di dalam pagar kode meluluskan log yang
+#       headernya tidak punya field itu sama sekali (temuan #1 hakim B putaran 7);
+#   (b) <N> == jumlah skenario di `_meta/FAILURE_INJECTION_TESTS.md` HIDUP;
+#   (c) v<X.Y.Z> == field `- **Versi:**` di `_meta/SYSTEM_MANIFEST.md` HIDUP;
 #   (d) tanggal baris itu >= tanggal terbaru yang muncul di berkas log tersebut
 #       (kronologi tidak boleh lebih baru daripada header yang mengklaim segar);
-#   (e) bila git tersedia dan sha-nya dikenal: sha itu harus HEAD atau paling tua
-#       HEAD~3 - satu giliran boleh membuat sampai tiga commit (perbaikan, penutup
-#       utang, rekaman), lebih dari itu berarti header tidak ikut disegarkan.
-# Bagian (b)-(d) SENGAJA tidak bergantung git supaya bisa diuji di salinan repo
-# tanpa `.git` (harness failure-injection meng-copy dengan ignore ".git"); bagian
-# (e) dilewati dengan alasan tercetak bila git tidak tersedia atau objeknya tidak
-# ada (clone dangkal - platform sudah sembilan kali memulihkan workspace seperti
-# itu), tidak pernah mati senyap. Log CLOSED dikecualikan: isinya arsip, tidak ada
-# "keadaan sekarang" yang bisa basi.
+#   (e) sha-nya HEAD atau paling tua HEAD~3 - satu giliran boleh membuat sampai
+#       tiga commit (perbaikan, penutup utang, rekaman).
+#
+# (b), (c), (e) HANYA berlaku selama log itu "live", yaitu disentuh oleh salah satu
+# dari 4 commit terakhir. Sebabnya DIUKUR, bukan diduga (temuan #2 hakim C, saya
+# reproduksi sendiri di clone terpisah pada main terbaru): sesudah PR ini di-merge,
+# kedua log OPEN milik sesi ini tidak bisa lagi disegarkan oleh sesi lain
+# (append-only + kepemilikan log), sehingga `VALIDATION FAILED` terjadi SEKETIKA -
+# pada squash merge MAUPUN merge commit - dan permanen sesudah satu commit apa pun
+# di atasnya. Penjaga ini memerahkan gerbang wajib repo untuk SEMUA sesi lain. Bila
+# log tidak live, (b)(c)(e) DITURUNKAN menjadi warning beralasan; (d) tetap keras
+# karena pembandingnya ada di dalam berkas sendiri. Bila sha cap tidak dikenal di
+# repo ini (clone dangkal - platform sudah sepuluh kali memulihkan workspace seperti
+# itu - atau squash merge yang membuang riwayat branch), (e) juga diturunkan menjadi
+# warning. Tidak ada jalur yang mati senyap. Log CLOSED dikecualikan seluruhnya:
+# isinya arsip, tidak ada "keadaan sekarang" yang bisa basi - itu juga sebabnya
+# menutup log OPEN adalah syarat merge yang sah.
 # ---------------------------------------------------------------------------
 _pola_segar = re.compile(
-    r"^- \*\*Segar pada:\*\* head `([0-9a-f]{7,40})` \u00b7 (\d{4}-\d{2}-\d{2}) "
-    r"\u00b7 FI (\d+) \u00b7 manifest v(\d+\.\d+\.\d+)\s*$",
+    r"^- \*\*Segar pada:\*\* (\d{4}-\d{2}-\d{2}) \u00b7 FI (\d+) "
+    r"\u00b7 manifest v(\d+\.\d+\.\d+) \u00b7 head terukur `([0-9a-f]{7,40})`\s*$",
     re.M,
 )
+_pola_segar_lama = re.compile(r"^- \*\*Segar pada:\*\* head `[0-9a-f]{7,40}`", re.M)
 _pola_open = re.compile(r"^- \*\*Keadaan:\*\*\s*`?OPEN`?", re.M)
 _pola_tanggal = re.compile(r"\b(\d{4}-\d{2}-\d{2})\b")
+_pola_seksi = re.compile(r"^## ", re.M)
+_pola_pagar = re.compile(r"^```.*?^```\s*$", re.S | re.M)
 
 
 def _fi_hidup():
@@ -735,28 +760,133 @@ def _jendela_sha():
     return h.stdout.split()
 
 
+def _git(args):
+    """Jalankan git di ROOT. Kembalikan (rc, stdout); tidak pernah melempar."""
+    try:
+        p = subprocess.run(["git"] + args, cwd=str(ROOT), capture_output=True,
+                           text=True, timeout=60)
+        return p.returncode, p.stdout
+    except Exception:
+        return 1, ""
+
+
+def _log_live(relpath):
+    """True bila commit terakhir yang MENYENTUH log itu TERMASUK 4 commit terakhir HEAD.
+
+    Dua langkah, dan urutannya penting: `git rev-list -n 4 HEAD -- <path>` TIDAK
+    berarti "4 commit terakhir, apakah menyentuh path" - artinya "telusuri seluruh
+    riwayat sampai dapat 4 commit yang menyentuh path", jadi ia selalu menjawab ada
+    dan penjaganya tidak pernah turun severity. Versi pertama fungsi ini persis
+    salah begitu dan ditangkap oleh regresi RP23c yang menguncinya.
+
+    Merge commit yang isinya identik dengan salah satu induknya disederhanakan git,
+    jadi log hasil merge tidak lagi terhitung live - itulah yang membuat gerbang
+    wajib repo tidak merah untuk sesi lain sesudah merge."""
+    rc, jendela = _git(["rev-list", "-n", "4", "HEAD"])
+    if rc != 0 or not jendela.split():
+        return True
+    rc2, terakhir = _git(["rev-list", "-n", "1", "HEAD", "--", relpath])
+    if rc2 != 0:
+        return True
+    if not terakhir.strip():
+        # Log belum pernah di-commit (baru dibuat di pohon kerja): sesi pembuatnya
+        # jelas sesi yang sedang berjalan, jadi diperlakukan live.
+        return True
+    return terakhir.split()[0] in jendela.split()
+
+
+def _sha_dikenal(sha):
+    rc, _ = _git(["cat-file", "-e", f"{sha}^{{commit}}"])
+    return rc == 0
+
+
+def _blok_header_keadaan(text):
+    """Isi blok 'Keadaan Sesi' saja: dari headingnya sampai heading `## ` berikut.
+
+    Baris `Segar pada` di luar blok ini BUKAN header - penjaga yang mencari di
+    seluruh berkas meluluskan log yang fieldnya tidak ada di header (temuan #1
+    hakim B putaran 7)."""
+    i = text.find("## Keadaan Sesi")
+    if i < 0:
+        return ""
+    j = _pola_seksi.search(text, i + len("## Keadaan Sesi"))
+    return text[i:] if j is None else text[i:j.start()]
+
+
+def _tanpa_pagar_kode(text):
+    """Buang isi pagar kode ``` supaya contoh format tidak terbaca sebagai field."""
+    return _pola_pagar.sub("", text)
+
+
+# Warning kesegaran SENGAJA tidak masuk `ref_warnings`: jumlah daftar itu dicetak sebagai
+# "unresolved" di baris COVERAGE, dan mencampur dua hal berbeda membuat angka rujukan tak
+# terselesaikan berbohong (cacat yang sama sudah ada pada warning git-tidak-tersedia versi lama).
+segar_warnings = []
 _n_fi_hidup, _versi_manifest, _jendela = _fi_hidup(), _versi_hidup(), _jendela_sha()
-if _jendela is None and any(_pola_open.search(p.read_text(encoding="utf-8")) for p in _berkas_log):
-    ref_warnings.append(
+_git_ada = _jendela is not None
+if not _git_ada and any(_pola_open.search(p.read_text(encoding="utf-8")) for p in _berkas_log):
+    segar_warnings.append(
         "WARNING kesegaran header: git tidak tersedia atau riwayatnya terlalu dangkal di pohon ini, "
-        "jadi bagian (e) penjaga `- **Segar pada:**` (sha harus HEAD..HEAD~3) DILEWATI - bagian (b), "
-        "(c), (d) tetap dijalankan. Dilewati dengan alasan tercetak, bukan mati senyap"
+        "jadi bagian (e) penjaga `- **Segar pada:**` (sha harus HEAD..HEAD~3) DILEWATI dan semua log "
+        "OPEN diperlakukan sebagai live - bagian (b), (c), (d) tetap dijalankan. Dilewati dengan "
+        "alasan tercetak, bukan mati senyap"
     )
 for _lg in _berkas_log:
     _t = _lg.read_text(encoding="utf-8")
     if not _pola_open.search(_t):
         continue
     _rel = _lg.relative_to(ROOT)
-    _m = _pola_segar.search(_t)
-    if not _m:
+    _relstr = str(_rel).replace("\\", "/")
+    _hdr = _tanpa_pagar_kode(_blok_header_keadaan(_t))
+    _ms = list(_pola_segar.finditer(_hdr))
+    if not _ms:
+        if _pola_segar.search(_tanpa_pagar_kode(_t)):
+            errors.append(
+                f"{_rel}: baris `- **Segar pada:**` ADA tetapi LETAKNYA DI LUAR blok header "
+                "'Keadaan Sesi' (di kronologi, atau di dalam pagar kode sebagai contoh) - header "
+                "log OPEN itu tetap tidak punya keadaan terukur. Pindahkan ke blok header"
+            )
+        elif _pola_segar_lama.search(_t):
+            errors.append(
+                f"{_rel}: baris `- **Segar pada:**` memakai FORMAT LAMA `head <sha> · <tanggal> · "
+                "FI <N> · manifest v<X>` yang memasangkan sha dengan angka yang tidak pernah benar "
+                "pada sha itu. Bentuk wajib sekarang: "
+                "- **Segar pada:** <YYYY-MM-DD> · FI <N> · manifest v<X.Y.Z> · head terukur `<sha7>`"
+            )
+        else:
+            errors.append(
+                f"{_rel}: log OPEN tanpa baris `- **Segar pada:**` di blok header - kesegaran header "
+                "'Keadaan Sesi' tidak bisa dibuktikan. Bentuk wajib (satu baris, di dalam blok header, "
+                "dikecualikan dari append-only justru supaya disegarkan): "
+                "- **Segar pada:** <YYYY-MM-DD> · FI <N> · manifest v<X.Y.Z> · head terukur `<sha7>`"
+            )
+        continue
+    if len(_ms) > 1:
         errors.append(
-            f"{_rel}: log OPEN tanpa baris `- **Segar pada:**` di blok header - kesegaran header "
-            "'Keadaan Sesi' tidak bisa dibuktikan. Bentuk wajib (satu baris, di dalam blok header, "
-            "dikecualikan dari append-only justru supaya disegarkan): "
-            "- **Segar pada:** head `<sha7>` · <YYYY-MM-DD> · FI <N> · manifest v<X.Y.Z>"
+            f"{_rel}: {len(_ms)} baris `- **Segar pada:**` di blok header, isinya berbeda - deklarasi "
+            "ganda yang saling bertentangan tidak boleh dibiarkan lulus (temuan #1 hakim B putaran 7). "
+            "Tepat satu baris; yang lama dihapus karena blok header dikecualikan dari append-only"
         )
         continue
-    _sha, _tgl, _n, _ver = _m.group(1), _m.group(2), int(_m.group(3)), _m.group(4)
+    _m = _ms[0]
+    _tgl, _n, _ver, _sha = _m.group(1), int(_m.group(2)), _m.group(3), _m.group(4)
+    _tgl_berkas = sorted(_pola_tanggal.findall(_t))
+    if _tgl_berkas and _tgl < _tgl_berkas[-1]:
+        errors.append(
+            f"{_rel}: header OPEN disegarkan {_tgl} tetapi berkasnya memuat tanggal lebih baru "
+            f"{_tgl_berkas[-1]} - kronologi jalan sementara header tidak disegarkan"
+        )
+    _live = True if not _git_ada else _log_live(_relstr)
+    if not _live:
+        segar_warnings.append(
+            f"WARNING kesegaran header {_rel}: log OPEN ini tidak disentuh oleh 4 commit terakhir, "
+            "jadi sesi pemiliknya bukan sesi yang sedang berjalan. Bagian (b), (c), (e) DITURUNKAN "
+            "menjadi warning supaya commit sesi lain tidak memerahkan gerbang wajib repo - sebabnya "
+            "diukur: sesudah merge ke `main`, log OPEN milik sesi ini tidak bisa disegarkan sesi lain, "
+            "dan penjaga yang tetap keras membuat VALIDATION FAILED seketika (temuan #2 hakim C "
+            "putaran 7). Bagian (d) tetap dijalankan dan tetap keras"
+        )
+        continue
     if _n_fi_hidup is not None and _n != _n_fi_hidup:
         errors.append(
             f"{_rel}: header OPEN mengklaim FI {_n} padahal `_meta/FAILURE_INJECTION_TESTS.md` hidup "
@@ -768,17 +898,20 @@ for _lg in _berkas_log:
             f"{_rel}: header OPEN mengklaim manifest v{_ver} padahal `_meta/SYSTEM_MANIFEST.md` hidup "
             f"v{_versi_manifest} - header BASI"
         )
-    _tgl_berkas = sorted(_pola_tanggal.findall(_t))
-    if _tgl_berkas and _tgl < _tgl_berkas[-1]:
-        errors.append(
-            f"{_rel}: header OPEN disegarkan {_tgl} tetapi berkasnya memuat tanggal lebih baru "
-            f"{_tgl_berkas[-1]} - kronologi jalan sementara header tidak disegarkan"
+    if not _git_ada:
+        continue
+    if not _sha_dikenal(_sha):
+        segar_warnings.append(
+            f"WARNING kesegaran header {_rel}: head terukur `{_sha}` tidak dikenal di repo ini "
+            "(clone dangkal, atau squash merge yang membuang riwayat branch) - bagian (e) DITURUNKAN "
+            "menjadi warning dengan alasan tercetak, bukan FAILED dan bukan mati senyap"
         )
-    if _jendela is not None and not any(s.startswith(_sha) or _sha.startswith(s[:7]) for s in _jendela):
+        continue
+    if not any(s.startswith(_sha) or _sha.startswith(s[:7]) for s in _jendela):
         errors.append(
-            f"{_rel}: header OPEN menyebut head `{_sha}` yang bukan HEAD maupun tiga commit "
-            f"sebelumnya ({', '.join(s[:7] for s in _jendela)}) - header tidak disegarkan pada "
-            "pertukaran bermakna terakhir"
+            f"{_rel}: header OPEN menyebut head terukur `{_sha}` yang bukan HEAD maupun tiga commit "
+            f"sebelumnya ({', '.join(s[:7] for s in _jendela)}) padahal log ini disentuh commit "
+            "terbaru - header tidak disegarkan pada pertukaran bermakna terakhir"
         )
 
 
@@ -786,6 +919,8 @@ if errors:
     print("VALIDATION FAILED")
     print("\n".join(f"- {e}" for e in errors))
     for w in ref_warnings:
+        print(w)
+    for w in segar_warnings:
         print(w)
     sys.exit(1)
 
@@ -800,9 +935,11 @@ print(
 print(f"SYSTEMS CHECKED (inheritance contract): {len(index_folders)} registered + pilot excluded by design")
 for w in ref_warnings:
     print(w)
+for w in segar_warnings:
+    print(w)
 for w in tabel_warnings:
     print(w)
-_jumlah_warning = len(ref_warnings) + len(tabel_warnings)
+_jumlah_warning = len(ref_warnings) + len(segar_warnings) + len(tabel_warnings)
 if _jumlah_warning:
     print(f"WARNINGS: {_jumlah_warning} (warning tier, exit code unaffected)")
 else:

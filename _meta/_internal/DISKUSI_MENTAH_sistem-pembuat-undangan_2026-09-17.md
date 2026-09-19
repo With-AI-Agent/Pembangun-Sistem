@@ -2515,3 +2515,61 @@ keadaan git diverifikasi di awal **setiap** pemanggilan alat, bukan hanya di awa
 4. **Kriteria merge yang diusulkan ke pemilik: 3/3 HIJAU pada satu head beku + seluruh temuan lintas
    putaran tertutup dengan sha + gerbang hijau.** Keputusan merge tetap milik pemilik: PR ini mengubah alat
    pengadil, dan kedua hakim HIJAU putaran 6 pun menyatakan mereka dilarang merge.
+
+## Giliran 27 (19 Sep 2026) — "kayanya hasilnya merah… ga selesai selesai. Baiknya gimana ya?": pemilik lelah, meminta saran, dan memilih satu putaran penutup
+
+**Masukan pemilik, verbatim:**
+
+> 3 sesi hakim udh aku jalanin dan semuanya udh selesai. Tapi kayanya hasilnya merah. Gimana ya? ga
+> selesai selesai. Baiknya gimana ya?
+
+Ini pertama kalinya pemilik menyatakan **lelah** terhadap prosesnya sendiri, dan pertanyaannya bukan
+"apa temuannya" melainkan "baiknya bagaimana". Sesuai aturan tetap (*"Aku mau kamu kritisi, bukan asal
+meng-iya-kan saja"* dan *"Aku lebih suka diluruskan jika memang salah"*), jawabannya diberi sebagai saran
+terbuka, bukan sebagai laporan teknis, dan pemilik yang memutuskan.
+
+**Yang diukur lebih dulu sebelum menjawab** (bukan dari ingatan): kuorum putaran 7 **3/3 LENGKAP** pada
+head `51d7433` — `5742488182` HIJAU (14:03:38Z), `5742505880` MERAH (14:06:12Z, 2 temuan P2),
+`5742541085` MERAH (14:11:37Z, 3 temuan, nol BLOCKER). Agregat lintas putaran tetap
+`MERAH — JANGAN MERGE (15 dari 19 slot bukan hijau)`; tally kanal 19 slot hakim · 16 bukan-slot (35
+komentar). **Temuan #2 hakim C direproduksi sendiri di clone terpisah pada `main` terbaru `98d3cb7`
+sebelum dipercaya, dan hasilnya LEBIH PARAH dari laporannya:** hakim mengukur squash merge FAILED dan
+merge commit masih PASSED sampai ada satu commit asing; pada `main` yang sudah maju 27 commit, **keduanya
+FAILED seketika**. Jadi PR ini tidak boleh di-merge apa adanya: penjaga yang ditambahkan kemarin atas
+mandat pemilik akan memerahkan gerbang wajib repo untuk semua sesi lain yang sedang bekerja di `main`.
+
+**Empat pilihan yang ditawarkan ke pemilik (lewat antarmuka tanya-jawab, bahasa awam):**
+
+| Pilihan | Isi | Penilaian agent yang dinyatakan terbuka |
+|---|---|---|
+| **A** | Perbaiki 4 temuan + ubah **urutan proses** (kanal PR disegarkan dulu, baru diserahkan ke hakim) + tutup kedua log sesi supaya merge aman, lalu **putaran 8** dengan tiga hakim baru — dan **berhenti apa pun hasilnya** | **Saran agent.** Ini satu-satunya pilihan yang mematikan **sebab** lingkaran, bukan gejalanya: temuan "body basi" lahir tiga putaran berturut-turut karena urutannya, dan kelas "header basi" mati kalau lognya ditutup |
+| B | Perbaiki hanya yang membuat `main` merah + segarkan body, lalu **parkir** PR (tetap OPEN, tidak di-merge) dan pindah ke sistem undangan | Sah dan lebih cepat, tetapi meninggalkan dua temuan nyata yang sudah terukur |
+| C | Teruskan sampai **3/3 HIJAU** (fail-closed penuh) | Jujur: bisa beberapa putaran lagi, karena tiap perbaikan menggerakkan head dan tiap head baru melahirkan pemeriksaan baru |
+| D | Berhenti sekarang, tidak mengerjakan apa pun | **Tidak disarankan**: PR tetap OPEN dengan penjaga yang akan memerahkan `main` kalau suatu saat digabung orang lain |
+
+**Putusan pemilik: opsi A** — *"Satu putaran penutup, lalu BERHENTI"*. Konsekuensinya dinyatakan apa
+adanya, karena ini **perubahan aturan milik pemilik sendiri**: aturan fail-closed giliran 14 (*"Selagi ada
+yang merah, maka harus diperbaiki"*) tetap berlaku untuk perbaikan putaran ini, tetapi **putaran 8 adalah
+putaran terakhir PR ini** — sesudah verdict-nya masuk, pekerjaan review dihentikan apa pun hasilnya, dan
+keputusan berikutnya (merge, parkir, atau lanjut ke produk) diambil pemilik tanpa putaran baru. Yang tidak
+berubah: agent **tidak merge** (PR ini mengubah alat pengadil), dan kriteria merge yang diusulkan tetap
+3/3 HIJAU pada satu head beku + seluruh temuan tertutup dengan sha + gerbang hijau.
+
+**Kritik agent terhadap prosesnya sendiri, disampaikan ke pemilik dan diterima:** tujuh putaran review
+dihabiskan untuk infrastruktur dan kerapian catatan, sementara produk yang diminta pemilik di awal sesi
+(sistem undangan) masih kerangka. Dua sebab lingkaran yang tidak konvergen diakui sebagai buatan proses
+agent: **(i)** body PR selalu disegarkan paling akhir sehingga hakim selalu membacanya dalam keadaan
+ketinggalan — temuan yang sama lahir di putaran 5, 6, dan 7; **(ii)** penjaga yang membandingkan nilai
+hidup dipasang tanpa menguji apakah penjaga itu masih bisa dipatuhi sesudah merge. Keduanya kini jadi
+aturan yang diwariskan: **C7** (jangan serahkan review sebelum kanal segar pada head yang di-pin) dan
+**C8** (penjaga baru wajib diuji terhadap `main` sesudah merge, dengan kedua cara merge, sebelum
+di-commit).
+
+**Dua insiden platform di giliran ini, dicatat saat terjadi:** **(1)** token GitHub mati di tengah giliran
+sebelumnya sehingga PATCH body ke-13 tertahan — itu sebabnya hakim putaran 7 membaca body yang basi, dan
+temuan mereka benar; **(2)** workspace **di-re-clone platform untuk kesepuluh kalinya** di tengah giliran
+ini: `.git` lokal diganti clone dangkal di `eff7afa` sementara berkas kerja tetap baru, dan seluruh berkas
+di luar repo (termasuk skrip PATCH yang sudah diuji sintaksnya) hilang. Pemulihan: salin dulu berkas yang
+belum ter-commit, `git fetch --unshallow`, fetch refspec cabang secara eksplisit, lalu
+`git reset --mixed 51d7433…` — working tree tidak disentuh, jadi entri log yang belum ter-commit selamat
+dan diverifikasi byte-identik.
