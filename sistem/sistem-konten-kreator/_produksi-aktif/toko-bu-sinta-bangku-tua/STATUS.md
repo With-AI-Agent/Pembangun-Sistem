@@ -3,21 +3,22 @@
 - **Status:** in-progress
 - **Channel:** Toko Bu Sinta (`channel-toko-bu-sinta`)
 - **Model konten:** Gambar Statis & Caption v1 (`model-konten/gambar-caption/brief.md`)
-- **Tahap terakhir selesai:** Tahap 1+2+3 — Ideation, Konsep & Angle, Naskah Caption (draft tersimpan di branch; **berhenti di gerbang G1, menunggu keputusan pemilik**)
-- **Tahap berikutnya:** Tahap 4 — Breakdown Output (1 unit visual; HANYA setelah G1 Tahap 1+2+3 disetujui DAN G2 naskah final dikunci — keduanya diminta terpisah)
+- **Tahap terakhir selesai:** Tahap 3 — Naskah Caption (G1 Tahap 1+2+3 disetujui & G2 naskah final DIKUNCI pemilik 2026-09-19)
+- **Tahap berikutnya:** Tahap 4 — Breakdown Output (1 unit visual) — sedang dikerjakan sesi ini
 - **Output resmi:**
   - `naskah-draft.md` (memuat: ide terpilih + cek pengulangan Tahap 1, konsep & angle Tahap 2, deskripsi karakter Tipe B, naskah caption 5 baris Tahap 3, evaluasi konsistensi Persona & Voice)
 - **Sumber konteks yang dibaca:** `_sistem/01_BRAND_CORE.md` (masih template umum — Channel Brief punya catatan dependency eksplisit), `channel-brief.md` v1 Operational (+ diff PR #79 v1.1 yang menggantung), `model-konten/gambar-caption/brief.md` v1 Operational, `konsistensi-visual/bu-sinta/bank-konsistensi.md` Reference-Ready, `arsip-naskah/indeks.md` (kosong), `arsip-naskah/indeks-karakter.md` (kosong), `_sistem/05_CONTENT_PRODUCTION_PIPELINE.md`, `_sistem/06_PROMPT_LIBRARY.md`, `_sistem/STATUS_TEMPLATE.md`, STATUS + naskah + breakdown 2 unit in-progress (`toko-bu-sinta-pelanggan-tua-dan-cucu`, `toko-bu-sinta-stoples-kopi-tua`)
 - **Sumber eksternal dipakai:** `Tidak ada` (murni fiksi slice-of-life orisinal; tanpa klaim faktual/sejarah/ilmiah — `SUMBER.md` tidak berlaku)
 - **Keputusan baru:**
   - Ide terpilih: "Bangku Tua di Depan Toko" (halusan kandidat #2 pemilik); kandidat #1 ("Teko yang Selalu Siaga di Kompor") dihaluskan dan disimpan sebagai BACKUP — ditandai kedekatan tema dengan Konten #2 in-progress (ritual minuman hangat) dan kesamaan latar interior.
+  - **2026-09-19 (keputusan pemilik):** backup "Teko yang Selalu Siaga di Kompor" disimpan untuk KONTEN BERIKUTNYA. Pencatatan ke Bank Ide Awal Channel Brief ditunda sadar — `channel-brief.md` sedang disentuh PR #79 yang menggantung; diusulkan ulang setelah PR #79 diputuskan.
   - Karakter Tipe B baru: penjual sayur keliling tanpa nama (~45 th) — cek A2: indeks-karakter kosong, tidak cocok dengan Tipe B Konten #1 (Pak Marto/Tari); pendaftaran ke `indeks-karakter.md` terjadi di Tahap 6.
   - Naskah caption ditulis patuh ganda: Channel Brief v1 (resmi di `main`) + aturan penutup v1.1 yang menggantung di PR #79 (penutup mendarat ke observasi benda fokus, tanpa generalisasi).
 - **Approval yang sudah diberikan:**
-  - `G1 Tahap 1:` belum — menunggu keputusan pemilik
-  - `G1 Tahap 2:` belum — menunggu keputusan pemilik
-  - `G1 Tahap 3:` belum — menunggu keputusan pemilik
-  - `G2 naskah final:` belum — diminta TERPISAH dari G1; G1 tidak pernah berarti G2 (pelajaran MERAH-1 slot 25 diterapkan)
+  - `G1 Tahap 1:` disetujui 2026-09-19 — ide "Bangku Tua di Depan Toko" dipakai (verbatim: "G1 Tahap 1: SETUJU — ide 'Bangku Tua di Depan Toko' dipakai; backup teko disimpan untuk konten berikutnya.")
+  - `G1 Tahap 2:` disetujui 2026-09-19 (verbatim: "G1 Tahap 2: SETUJU.")
+  - `G1 Tahap 3:` disetujui 2026-09-19 (verbatim: "G1 Tahap 3: SETUJU.")
+  - `G2 naskah final:` disetujui/dikunci 2026-09-19 (verbatim: "G2 naskah final: DIKUNCI.") — naskah jadi dasar breakdown & arsip
   - `G1 Tahap 4:` belum
   - `G2 breakdown:` belum
   - `G1 Tahap 5:` belum

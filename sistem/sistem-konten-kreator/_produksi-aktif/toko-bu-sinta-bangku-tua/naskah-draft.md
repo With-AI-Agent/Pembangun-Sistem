@@ -4,7 +4,7 @@
 - **Model Konten:** Gambar Statis & Caption (`model-konten/gambar-caption/brief.md`)
 - **Format:** 1 Gambar Flat (1:1) + Caption 5 Baris
 - **Sumber Eksternal:** Tidak ada (murni cerita fiksi *slice-of-life* orisinal — tanpa klaim faktual, `SUMBER.md` tidak berlaku)
-- **Status naskah:** DRAFT — menunggu **G1 Tahap 1+2+3** dan **G2 naskah final** dari pemilik; keduanya belum diberikan
+- **Status naskah:** NASKAH FINAL — **G2 dikunci oleh pemilik 2026-09-19** (G1 Tahap 1+2+3 disetujui pada tanggal yang sama); tidak ada perubahan isi setelah dikunci
 
 ---
 
