@@ -59,6 +59,7 @@ Status butir 03_KONTRAK_WARISAN.md (provenance) untuk sistem ini — salinan bag
 | W-07 fakta platform | diterapkan | bagian Batasan Platform di bawah + diturunkan ke 01_ALUR_RUN dan turunan kit | — |
 | W-08 approval bertingkat | diterapkan | kriteria Besar/Kecil konkret dikunci di 00_RENCANA_KERANGKA.md Titik Penguncian + Bentuk Sistem di atas | — |
 | W-09 ringkasan cadangan | diterapkan — menyusuli alur (dibuat saat struktur stabil) | _cadangan-claude/RINGKASAN_sistem-klinik.md di master (belum dibuat — dicatat sadar, bukan kelalaian) | — |
+| W-10 audit isi + pengiriman hasil | **diterapkan sebagian** — mekanisme tersedia dari meta (tools/audit_prompt.py --objek sistem/<nama-folder-ini> + tools/ambil_verdict.py); **turunan self-contained di dalam folder sistem BELUM ada**, jadi saat folder ini diekstrak jadi repo mandiri mekanisme auditnya tidak ikut | mekanisme di root meta: tools/audit_prompt.py + tools/ambil_verdict.py + _meta/PROTOKOL_AUDIT_ISI.md (provenance — belum ada salinan/turunan di dalam folder ini) | — |
 
 ## Quality & Evolution
 

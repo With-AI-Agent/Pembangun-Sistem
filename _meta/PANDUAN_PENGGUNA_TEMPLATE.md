@@ -10,6 +10,99 @@
 
 ---
 
+## STANDAR KELULUSAN MANUAL — 5 syarat yang membuat pegangan boleh disebut selesai
+
+> Ditambahkan 17 Sep 2026 atas tuntutan pemilik setelah bukti lapangan: manual sistem lain terbukti
+> *"prompt tanpa panduan"*, *"tabel perintah tanpa penjelasan fungsi dan cara"*, dan ada kalimat yang
+> *"ditujukan ke pengguna, bukan ke agent"*. Standar kelulusannya dirumuskan pemilik sendiri:
+> **"bisa dipakai orang awam tanpa bertanya lagi."**
+> **Acuan bentuk yang sudah terbukti ada di repo ini:** pegangan sistem-presentasi (sistem/sistem-presentasi/PANDUAN_PENGGUNA.md — ditulis tanpa backtick sebagai provenance: berkas di dalam folder sistem tidak ikut ke ekstrak template bootstrap, dan rujukan ber-backtick ke sana akan menggeser pin R7 di tools/test_failure_injection.py)
+> (0 temuan bug/ambiguitas saat audit 17 Sep: punya frontmatter, pembuka "Apa ini", dan §review dengan
+> 5 langkah bernomor termasuk peringatan pasca-merge + jalur unduh berkas). **Jangan mengarang bentuk baru
+> kalau yang ini sudah cukup.**
+
+### Syarat 1 — setiap MEKANISME wajib punya 6 bidang
+
+Satu prompt saja **tidak cukup**. Prompt tanpa prosedur membuat pengguna menempel kalimat lalu tidak tahu
+apa yang seharusnya terjadi, dan tidak tahu apa yang harus dilakukan kalau hasilnya aneh.
+
+| # | Bidang | Pertanyaan yang dijawab |
+|---|---|---|
+| 1 | **Apa** | mekanisme ini apa, dalam 1–2 kalimat bahasa awam |
+| 2 | **Kapan** | situasi yang membuatnya perlu dipakai |
+| 3 | **Cara** | langkah bernomor — bukan paragraf |
+| 4 | **Prompt siap tempel** | blok berpagar, utuh, tanpa bagian yang harus dikarang sendiri |
+| 5 | **Sesudahnya** | apa yang akan terjadi setelah prompt ditempel — supaya pengguna bisa mengenali hasil normal |
+| 6 | **Kalau gagal** | gejala gagalnya apa, dan langkah pertamanya apa |
+
+**Uji cepat:** tutup bidang 3, 5, dan 6. Kalau pembaca masih bisa memakai mekanismenya tanpa bertanya,
+bidang itu memang tidak perlu. Kalau tidak bisa — **bidang itu wajib diisi**, bukan dihapus.
+
+### Syarat 2 — setiap PERINTAH MESIN wajib punya 5 kolom
+
+Tabel perintah yang hanya berisi perintah adalah tabel yang **terlihat rapi tetapi tidak bisa dipakai**.
+
+| Kolom | Isi |
+|---|---|
+| **Perintah** | persis seperti yang diketik, siap salin |
+| **Fungsi** | untuk apa — bukan terjemahan nama perintahnya |
+| **Kapan dipakai** | situasi pemakaiannya |
+| **Keluaran diharapkan** | apa yang muncul kalau berhasil, supaya berhasil bisa dikenali |
+| **Kalau gagal** | gejala + langkah pertama |
+
+Perintah di dalam blok `bash` pun wajib diberi **komentar penjelasan di barisnya**, bukan hanya disebut.
+
+### Syarat 3 — ATURAN ARAH BICARA (paling sering dilanggar, dan bisa diperiksa alat)
+
+Tiga aturan, masing-masing dengan alasan kausal:
+
+1. **Blok prompt yang akan ditempel ke agent wajib berkalimat PERINTAH KE AGENT** — "baca…", "verifikasi…",
+   "jalankan…", "laporkan…", "jangan…".
+   **Dilarang** berkalimat ke manusia di dalam blok itu: "kamu bisa…", "silakan…", "Anda akan…".
+   *Alasan:* prompt yang salah arah membuat agent mengira sedang membaca **penjelasan**, bukan **instruksi** —
+   dan agent bisa tidak mengerjakan apa pun sambil tetap terdengar meyakinkan.
+2. **Prosa dokumen DILARANG bersuara orang-pertama agent** — "aku", "ku-", "menurutku", "usulanku",
+   "aku jujur", "kamu benar".
+   *Alasan:* itu **residu chat** yang membeku jadi isi dokumen. Ia merujuk percakapan yang tidak ada di
+   dokumen ("ide kamu ini" — ide yang mana?), dan tidak bisa kedaluwarsa secara terlihat.
+   **Bukti nyata:** audit 17 Sep menemukan 2 baris seperti ini di pegangan sistem-building-aplikasi
+   (temuan F-05; nama berkas disebut tanpa backtick — alasan sama seperti di atas).
+3. **Bagian yang harus diisi pengguna wajib ditandai sebagai placeholder** — bentuk `[...]` atau `<...>`,
+   dan disebut di kalimat sebelumnya. *Alasan:* tanpa tanda, pengguna menempel prompt yang masih bolong
+   dan agent akan menebak.
+
+**Pengecualian yang sah** (jangan salah tangkap): di dalam blok prompt, kata **"aku" memang benar** kalau itu
+**suara pengguna** yang menempel — contoh: *"jangan mulai eksekusi sebelum **aku** konfirmasi tujuan sesi ini"*.
+Yang dilarang adalah **"aku" di prosa dokumen**, dan **"kamu" yang menunjuk manusia di dalam blok prompt**.
+
+### Syarat 4 — kelulusan TIDAK BOLEH dinyatakan sendiri oleh penulisnya
+
+Standar lulusnya **bukan** "sudah lengkap", melainkan: **"bisa dipakai orang awam tanpa bertanya lagi."**
+
+- Penulis (agent yang membuat pegangan) **dilarang** menyatakan standar ini terpenuhi.
+- **Wajib** diaudit oleh **sesi independen** memakai **lensa #5** `QUALITY_ASSURANCE_AND_EVOLUTION.md`
+  (*kemudahan pakai — kacamata pengguna awam*).
+- **Uji pemakaian nyata lebih kuat daripada audit:** pemilik menjalankan **satu alur** dari pegangan itu
+  tanpa bertanya. Kalau pemilik harus bertanya, **standarnya belum lulus** — dan pertanyaannya itu sendiri
+  adalah temuan yang wajib dicatat.
+- **Batas kejujuran:** agent **bukan** orang awam. Audit agent hanya bisa menyaring cacat bentuk;
+  kelulusan sesungguhnya tetap butuh manusia.
+
+### Syarat 5 — SATU SUMBER, jangan duplikasi di dalam dokumen yang sama
+
+**Dilarang menyalin tabel/blok/daftar dua kali di dalam satu dokumen** (misalnya tabel "Situasi" yang sama
+muncul di §4 dan §7). **Tunjuk satu sumber**, atau pindahkan isinya ke satu tempat saja.
+
+*Alasan kausal:* salinan kedua **akan** menyimpang — bukan "mungkin". **Bukti:** audit 17 Sep menemukan tabel
+kembar berheader "Situasi / Yang terjadi" di pegangan sistem-klinik baris 53 dan 77 yang **sudah
+menyimpang**: salinan kedua **kehilangan satu baris aturan** (K-10 "tanyanya diborong, bukan dicicil").
+Pembaca yang kebetulan membaca bagian 7 tidak pernah tahu aturan itu ada. Dokumen itu **sudah melewati run
+klinik dan review independen PR #63** — dua lapis pemeriksaan manusia — dan cacatnya tetap lolos,
+karena yang diminta template hanyalah *"cek diff keduanya"*, yaitu **perintah untuk diingat, bukan alat yang
+berjalan**. Lihat `tools/check_manuals.py`.
+
+---
+
 ## Isi WAJIB `PANDUAN_PENGGUNA.md` (per bagian)
 
 ### 1. Pembuka
@@ -56,3 +149,15 @@ Checkpoint tiap tahap + commit & push; **log sesi berkelanjutan** (`LOG_SESI_YYY
 - Prompt pembuka/penutup harus **portabel**: memakai path relatif folder sistem, tidak menggandeng path repo meta — supaya tetap benar saat sistem berdiri sebagai repo standalone.
 - Setiap perubahan aturan sistem yang memengaruhi alur sesi wajib diikuti pembaruan bagian 2–3 pegangan (agar satu-prompt tetep cukup).
 - Pegangan ikut dicek kelengkapannya oleh validator sistem (lihat `validate_system.py` masing-masing) dan `tools/validate_repo.py` (file root sistem).
+- **Syarat 1–5 di atas diperiksa oleh `tools/check_manuals.py`** — tetapi alat itu **penjaring kandidat, BUKAN pemberi putusan**. Rasio positif palsunya terukur **~65%** pada korpus audit 17 Sep (28 dari 43 kandidat dicabut setelah diverifikasi), jadi **setiap temuannya wajib dibaca di sumbernya sebelum dipercaya**. Menjalankannya lalu menelan keluarannya akan menghasilkan cacat jenis baru: laporan yang meyakinkan tetapi salah.
+- **Yang TIDAK bisa diperiksa alat:** apakah kalimatnya benar-benar bisa dipahami orang awam. Itu lensa #5, dan hanya bisa dinilai manusia (Syarat 4).
+
+---
+
+## Log Keputusan
+
+| Tanggal | Perubahan | Alasan |
+|---|---|---|
+| 2026-09-17 | **STANDAR KELULUSAN MANUAL ditambahkan** (Syarat 1–5): 6 bidang per mekanisme, 5 kolom per perintah, ATURAN ARAH BICARA (3 aturan + pengecualian yang sah), kelulusan tidak boleh dinyatakan penulis sendiri (wajib audit lensa #5 + uji pemakaian nyata oleh pemilik), dan SATU SUMBER jangan duplikasi. Bagian Catatan kualitas dirujuk ke `tools/check_manuals.py` dengan peringatan rasio positif palsu. **Tabel Log Keputusan ini dibuat** — template adalah dokumen hidup yang isinya berubah, jadi W-05 berlaku padanya, dan sebelumnya tabel ini tidak ada | Tuntutan pemilik T26 (giliran 5) berdasarkan **bukti lapangan** dari sistem lain: prompt tanpa panduan, tabel perintah tanpa penjelasan fungsi/cara, dan kecurigaan ada kalimat yang ditujukan ke pengguna bukan ke agent. Audit 17 Sep memverifikasi bukti itu di repo ini juga: F-05 (residu chat jadi isi manual) dan F-01 (tabel kembar yang sudah menyimpang). Syarat 5 lahir langsung dari F-01. Standar kelulusan memakai rumusan pemilik sendiri, bukan rumusan agent |
+| 2026-09-17 | **Catatan provenance tanpa backtick** disisipkan di 3 tempat pada dokumen ini (acuan pegangan sistem-presentasi, bukti F-05, bukti F-01) | **Pola kegagalan yang terjadi 3× pada hari yang sama saat dokumen ini ditulis:** menyebut berkas di dalam folder sistem dengan backtick dari dokumen `_meta/` membuat rujukan itu tak-terselesaikan di **ekstrak template bootstrap**, sehingga pin R7 (`EXPECTED_TEMPLATE_WARNINGS` = persis 5) bergeser dan `tools/test_failure_injection.py` MERAH. Gagalnya **tidak menyebut berkas mana** yang jadi penyebab, jadi diagnosis butuh skrip terpisah. Aturan praktisnya: **dari dokumen `_meta/`, sebut nama berkas folder sistem DAN berkas `_log-sesi/` TANPA backtick** (provenance) — kedua area itu tidak ikut ke ekstrak template. Yang **aman** ber-backtick: `tools/*.py`, `_meta/*.md`, dan (terverifikasi empiris 17 Sep) `_meta/_internal/`. **Kalau ragu, tulis tanpa backtick.** Aturan lengkap beserta alasan mekanisnya ada di `QUALITY_ASSURANCE_AND_EVOLUTION.md` bagian ATURAN CAKUPAN, catatan penulisan rujukan. Preseden lebih tua: v1.12.1 *"tidak menambah rujukan ber-backtick ke dokumen aktif"* |
+| 2026-09-05 | Template dibuat sebagai sumber W-01 (pegangan pengguna 2-file) | Butir kontrak warisan W-01; preseden M-15 (selisih diam-diam antar 2 file) |

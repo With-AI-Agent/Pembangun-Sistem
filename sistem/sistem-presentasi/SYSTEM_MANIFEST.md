@@ -97,6 +97,7 @@ Status butir `03_KONTRAK_WARISAN.md` meta v1.3.0 untuk sistem ini (disinkronkan 
 | W-07 fakta platform | diterapkan | bagian Batasan Platform di bawah (3 fakta inline) |
 | W-08 approval bertingkat | diterapkan | definisi G1/G2/G3 di `00_RENCANA_KERANGKA.md` + `_sistem/` |
 | W-09 ringkasan cadangan | diterapkan (disinkronkan 5 Sep) | `_cadangan-claude/RINGKASAN_sistem-presentasi.md` (root master; provenance — dibuat oleh meta, bukan bagian folder standalone) |
+| W-10 audit isi + pengiriman hasil | **diterapkan sebagian** — mekanisme tersedia dari meta (tools/audit_prompt.py --objek sistem/<nama-folder-ini> + tools/ambil_verdict.py); **turunan self-contained di dalam folder sistem BELUM ada**, jadi saat folder ini diekstrak jadi repo mandiri mekanisme auditnya tidak ikut | mekanisme di root meta: tools/audit_prompt.py + tools/ambil_verdict.py + _meta/PROTOKOL_AUDIT_ISI.md (provenance — belum ada salinan/turunan di dalam folder ini) |
 
 ## Batasan Platform
 

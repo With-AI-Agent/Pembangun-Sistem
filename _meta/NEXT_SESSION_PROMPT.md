@@ -20,6 +20,15 @@ Sebelum melakukan perubahan apa pun, lakukan bootstrap secara berurutan:
 5. Baca `_meta/PLATFORM_LMARENA.md` — fakta platform vs policy, wajib paham.
 6. Baca `_meta/_internal/HANDOFF_NEXT_SESSION.md`.
 7. Baca `_meta/INDEKS_SISTEM.md`.
+   **Lanjut baca dua berkas ini — WAJIB, bukan opsional** (keduanya diperiksa `tools/validate_repo.py`,
+   jadi kewajiban ini tidak bisa hilang diam-diam):
+   - `_meta/DAFTAR_PEKERJAAN_TERBUKA.md` — semua pekerjaan yang belum selesai ada di sini, dan berkas
+     ini **satu-satunya tempat sah** menaruhnya. Sesi yang tidak membacanya akan mengulang pekerjaan
+     yang sudah dijadwalkan atau **melupakan utang yang sudah dijanjikan ke pemilik**.
+   - `_meta/TANGGAPAN_MASUKAN_PEMILIK.md` — setiap masukan pemilik wajib punya **respons** dengan
+     kosakata status tertutup; **`TERCATAT` bukan status yang sah**. Kalau kerja sesi ini menyentuh
+     sebuah tuntutan, **perbarui barisnya sebelum sesi selesai**. Instruksi pemilik 17 Sep 2026:
+     *"jangan cuma dicatat tapi juga harus direspon/dieksekusi."*
 8. Baca `_meta/SESSION_REPORT_TEMPLATE.md` dan buat laporan awal sesi dengan
    format tersebut. Catat file yang dibaca, file yang dilewati, dan alasan
    setiap file kondisional dilewati. Catat juga diskusi penting yang belum jadi file (DISKUSI_MENTAH_*.md) jika ada.
