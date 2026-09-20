@@ -10,7 +10,7 @@ Verifikasi akhir atas pekerjaan yang berdampak permanen dilakukan oleh SESI AI L
 4. Independensi: reviewer tidak menulis di branch subjek/penulis; read-only terhadap branch orang lain.
 5. Batas jendela (6d generalisasi): selama jendela run/uji atau proses lain yang sedang berjalan, artefak yang dipublikasikan reviewer (komentar PR, log, branch) tidak boleh memuat rumusan jawaban/kriteria yang belum tertutup uji; gunakan pointer SHA+baris.
 6. Proporsional: kedalaman review mengikuti level trigger di bawah; review bukan ritual untuk pekerjaan remeh.
-7. Putaran terbatas: maksimal 2 putaran (review → koreksi → review ulang). Putaran ke-2 gagal = eskalasi ke pemilik untuk keputusan final (termasuk opsi membatalkan).
+7. Putaran terbatas: **default** maksimal 2 putaran (review → koreksi → review ulang). Putaran ke-2 gagal = eskalasi ke pemilik untuk keputusan final (termasuk opsi membatalkan). **Eskalasi bukan larangan: pemilik boleh membuka putaran tambahan secara eksplisit**, dan keputusan itu milik pemilik — bukan milik penulis, yang justru sedang diadili (preseden 18 Sep 2026, PR #74: 13 temuan gabungan tiga hakim putaran 2 ditutup dan diuji lebih dulu, baru pemilik memutuskan membuka putaran 3). **Nomor putaran dihitung alat** dari verdict yang sudah tertempel di kanal (`review_prompt.py` meminjam definisi slot hakim dari `ambil_verdict.py`), bukan ditebak hakim: tebakan yang salah membuat pengumpul verdict salah mengelompokkan slot.
 8. Append-only: hasil review dicatat apa adanya, termasuk RED FLAG dan verdict yang merevisi verdict sebelumnya; jangan menghapus riwayat, jangan menghaluskan.
 
 ## Level trigger
@@ -20,7 +20,20 @@ Verifikasi akhir atas pekerjaan yang berdampak permanen dilakukan oleh SESI AI L
 
 ## Anatomi prompt reviewer (wajib berisi)
 1. Identitas: "kamu reviewer independen PR #N; kamu memutuskan, bukan melanjutkan".
-2. Objek ter-pin: nomor PR + SHA basis + SHA head.
+2. Objek ter-pin: nomor PR + **TIGA sha** — base sha (ujung base SEKARANG), **merge-base sha** (titik
+   branch dibuat), dan head sha yang wajib disebut sebagai **OBJEK YANG HENDAK DIPUTUSKAN** — beserta
+   **DUA diff berlabel**: **(A)** merge-base ke head = perubahan yang diperkenalkan PR, dan **(B)** base sha
+   ke head = selisih langsung yang **ikut memuat perubahan yang masuk ke base SESUDAH branch dibuat**.
+   **Sebab aturan ini diperketat (temuan R3 review independen PR #74, nyata terjadi):** butir ini dulu hanya
+   berbunyi "SHA basis + SHA head", lalu prompt menyajikan diff **(B)** sebagai perintah wajib sementara
+   daftar berkasnya diambil dari diff **(A)** — **dua semantik berbeda disajikan sebagai satu objek**.
+   Selisihnya **terukur 4 berkas** (53 vs 49 saat reviewer mengukurnya; 59 vs 55 sesudahnya), dan reviewer
+   menghabiskan tenaga mencurigai **penghapusan bukti yang tidak pernah terjadi**.
+   **Kewajiban reviewer: nyatakan di verdict diff mana yang kamu pakai.** Cek append-only dan
+   kelengkapan-vs-isi-PR dilakukan pada **(A)**; delesi yang hanya muncul di **(B)** pada berkas yang tidak
+   ada di **(A)** **BUKAN** penghapusan oleh penulis PR melainkan base yang bergerak. Kalau merge-base tidak
+   bisa dihitung (objek tidak ada lokal, riwayat git terpotong), pembangkit prompt **wajib menyatakannya**
+   dan reviewer **tidak boleh** menggantinya dengan tebakan.
 3. Daftar pemeriksaan terverifikasi-able (append-only diff, grep audit, jalankan tools, cek status via API) — bukan pertanyaan opini.
 4. Bila ada sengketa penilaian (mis. materialitas paparan): pertanyaan yang harus dijawab EKSPLISIT + kalimat "kamu satu-satunya pemutus; jangan menelan mentah penilaian pihak yang dinilai".
 5. Batasan: aturan 6d di atas; larangan menyentuh branch orang; larangan mengutip jawaban selama jendela terbuka.
@@ -40,7 +53,235 @@ Alasan perubahan: **mekanisme harus bisa dipakai tanpa perantara sesi.** Sebelum
 ## Penulisan hasil
 - Meta: bagian baru di `_meta/ACCEPTANCE_TESTS.md` (log review per peristiwa singkat) atau `LOG_SESI` sesi reviewer; yang substantif di log acceptance sistem terkait.
 - Sistem domain: subbagian append-only di ACCEPTANCE_TEST_LOG.md-nya ("Koreksi pasca-review independen" adalah pola yang benar).
+- **Komentar verdict di GitHub dibaca ALAT, bukan manusia** (`tools/ambil_verdict.py`): baris pertama harus
+  judul Markdown yang memuat kata putusan (`MERAH` / `HIJAU` / `BERSIH` / `ADA TEMUAN` / `TIDAK BISA
+  DISIMPULKAN` / `APPROVE` / `REQUEST_CHANGES`), **tidak** memuat kata `penulis` / `koreksi terbuka` /
+  `tanggapan penulis`, dan **tidak** berada di dalam pagar kode. **Sebab aturan ini:** prompt pembangkit tidak
+  pernah menyebut syarat baca alat pengumpul, jadi verdict yang **sampai tetapi melenceng formatnya** tidak
+  terhitung sebagai slot dan kuorum gagal **diam-diam** (tanpa pesan error). **Batas klaim:**
+  kanal PR memuat komentar penulis dan verdict hakim yang bercampur, dan **jumlahnya bergerak setiap
+  sesi** — jadi hitungan SENGAJA TIDAK ditulis di sini sebagai fakta permanen. Salinan yang membeku
+  menjadi salah tanpa terlihat: review independen putaran 2 PR #74 menemukan angka "6 komentar" di
+  baris ini tersimpan seolah keadaan tetap, padahal ia hanya keadaan kanal pada satu hari. Yang
+  permanen adalah ATURANNYA: verdict yang **tidak pernah ditempel** tidak bisa dibedakan dari verdict
+  yang **gagal dibaca** kecuali kanalnya diperiksa langsung, dan keduanya sama-sama menggagalkan
+  kuorum. Aturan format ini menutup **modus kegagalan yang berbeda dan belum sempat terjadi**; ia **tidak**
+  menjelaskan kuorum 1/3 yang lama dan tidak boleh diklaim sebagai penjelasannya. Formatnya dicetak pembangkit
+  sebagai bagian 6a (termasuk kewajiban mengganti nomor putaran, bukan menyalin `putaran 1` mentah), dan
+  **kesepakatannya diuji lintas alat** — contoh judul yang diwajibkan prompt harus benar-benar terbaca oleh
+  `slot_hakim()` dan `simpulkan()`, bukan hanya terlihat benar di mata.
+- **Kalau PR menyentuh alat pengadil, perintah merge di prompt DIGANTI larangan.** Sebelum perbaikan ini
+  bagian "Aturan keputusan" mencetak `gh pr merge <N> --merge` untuk PR yang bagian "Pengecualian pengadil"-nya
+  sendiri **melarang** merge — kontradiksi di dalam satu dokumen, dan yang muncul lebih dulu adalah perintah
+  merge. Supresinya **bersyarat**: PR yang tidak menyentuh alat pengadil tetap memakai aturan merge normal,
+  dan **kedua arah** itu diuji (supresi tanpa syarat akan melumpuhkan review PR biasa).
 - Aturan lama penulis tetap berlaku: yang dilarang tetap dilarang (6a/6b/6d), reviewer hanya menambah lapisan verifikasi, tidak menghapus kewajiban self-check sebelum review.
 
 ## Warisan ke sistem domain
 Setiap sistem yang dibangun meta ini mengemban Protokol Review Independen dengan cara: (1) mendaftar L1/L2/L3 versinya di dokumen QA sistemnya; (2) menyebut "review independen" sebagai langkah wajib pada alur yang menutup klaim DONE/gate; (3) menyiapkan varian 1-baris trigger review di PROMPT_ENTRI/panduan penggunanya ("untuk [kategori pekerjaan], buka sesi baru dan tempel prompt reviewer sesuai protokol"). Sistem boleh menurunkan level hanya dengan override tercatat di manifest.
+
+---
+
+## Beberapa hakim sekaligus (ditambahkan 17 Sep 2026 atas keputusan pemilik)
+
+**Sebab bagian ini ada:** pemilik mengerahkan **3 sesi agent** untuk mereview PR #74, dan protokol ini
+**tidak punya satu pun ketentuan** tentang beberapa hakim atau verdict yang bertentangan — terhitung
+**0 sebutan** untuk kata "beberapa / multi / tiga / bertentangan / konflik / quorum / mayoritas".
+Aturan yang tidak ada akan diimprovisasi **sesudah** verdict masuk, yaitu saat paling buruk untuk
+mengarang aturan. Jadi ditulis **sebelum** verdict ke-2 dan ke-3 tiba.
+
+**Keputusan pemilik (verbatim):** *"Selagi ada yang merah, maka harus diperbaiki."*
+
+1. **Agregasi FAIL-CLOSED.** Beberapa verdict digabung dengan aturan: **satu saja bukan hijau → gabungan
+   MENAHAN merge.** **Tidak ada mayoritas, tidak ada rata-rata, tidak ada "2 dari 3 setuju".** Yang dicari
+   dari reviewer independen adalah **alasan untuk menolak**, bukan suara terbanyak — dua hakim yang puas
+   tidak membatalkan temuan terukur hakim ketiga.
+2. **"Tidak terbaca" BUKAN bersih.** Verdict yang tidak bisa ditentukan statusnya **menahan** merge,
+   sama seperti verdict merah. Alasannya sama dengan aturan repo yang lain: *ketiadaan bukti bukan bukti
+   ketiadaan masalah.*
+3. **Cakupan parsial tidak bisa dinaikkan jadi hijau oleh verdict lain.** Kalau seorang hakim menyatakan
+   laporannya **parsial** ("bukan review lengkap"), bagian yang belum diperiksanya **tetap belum
+   diverifikasi** — tidak menjadi hijau karena hakim lain lulus. Statusnya: **belum terverifikasi**.
+4. **Setiap verdict WAJIB menyebut SHA head yang dinilainya.** Head bisa bergerak selama review berjalan
+   (terjadi nyata di PR #74: reviewer menilai `3543612` sementara head sudah `17ada02`). Verdict tanpa
+   SHA head **tidak bisa dipetakan** ke keadaan mana pun dan harus diperlakukan sebagai **belum terverifikasi**.
+5. **Koreksi DITUNGGU sampai semua hakim masuk, lalu SATU putaran.** Alasannya: butir 7 di atas membatasi
+   **maksimal 2 putaran** (default; pemilik boleh membuka putaran tambahan — aturan 7). Mengoreksi tiap kali satu verdict masuk akan menghabiskan jatah putaran dan
+   membuat objek review hakim lain basi. Pengecualian: **perbaikan pada instrumen pengukur verdict itu
+   sendiri boleh segera** (kalau alatnya salah membaca, semua verdict berikutnya ikut salah terbaca).
+6. **Format verdict WAJIB terbaca mesin.** Putusan ditulis pada **baris judul Markdown** atau pada
+   **baris deklarasi eksplisit** berbentuk `**VERDICT:** MERAH` / `**VERDICT:** HIJAU`.
+   **Jangan menggantungkan putusan pada kata di dalam prosa.**
+   **Sebab aturan ini ada (cacat D-1, nyata terjadi):** alat penjemput verdict mengambil kecocokan
+   **pertama di mana saja**, dan kosakatanya **tidak memuat kata MERAH/HIJAU sama sekali** — akibatnya
+   laporan berjudul *"MERAH … Jangan merge"* terbaca sebagai **BERSIH** karena kata "bersih" muncul di
+   dalam **kalimat larangan** pada karakter ke-5646, sedangkan kata "MERAH" ada di karakter ke-35.
+   **Itu fail-open pada instrumen keselamatan.** Sudah diperbaiki + **diuji-mutasi**
+   (`python3 tools/ambil_verdict.py --uji`).
+7. **Alatnya:** `python3 tools/ambil_verdict.py --pr <N>` mencetak verdict per hakim **dan agregasi
+   fail-closed**-nya. **Membaca verdict ≠ menyetujuinya** — bertindak atas temuan tetap butuh keputusan
+   pemilik, dan PR yang mengubah alat pengadil **tidak boleh di-merge oleh reviewer**.
+8. **Verdict WAJIB mendarat di kanal tahan lama — komentar di utas PR — sebelum sesi hakim ditutup.**
+   **Sebab aturan ini ada (kejadian nyata 18 Sep 2026):** pemilik mengerahkan **3 hakim** untuk PR #74,
+   tetapi **hanya 1 verdict yang sampai ke GitHub**. Pencarian menyeluruh di **63 ref** (semua branch)
+   tidak menemukan jejak dua verdict lainnya: tidak ada komentar, tidak ada review resmi, tidak ada
+   komentar baris, tidak ada commit, tidak ada berkas log sesi. Hakim yang menyimpan laporannya hanya di
+   `/tmp` dan di chat sesinya **tidak meninggalkan bukti yang bisa diverifikasi oleh siapa pun** —
+   termasuk oleh pemiliknya sendiri, dan termasuk oleh sesi berikutnya yang harus menindaklanjuti.
+
+   **AMENDEMEN 18 Sep 2026 (keputusan pemilik, opsi A) — berkas BUKTI HISTORIS tidak boleh dipaksa
+   disunting demi kosmetika tabel.** Dua aturan repo ini sempat saling mengunci: penjaga integritas
+   tabel (T-47) mewajibkan pipa di dalam sel di-escape sebagai `\|`, sedangkan prinsip append-only
+   melarang suntingan pada rekaman peristiwa. Yang terjadi: 2 baris
+   `ACCEPTANCE_TEST_LOG.md` milik sistem konten-kreator tersunting (terukur `2 2` di numstat diff PR;
+   path lengkapnya sengaja TIDAK ditulis di sini — rujukan path baru di dokumen meta ikut terhitung
+   sebagai warning normalisasi template, dan **pin R7 = 5 tidak boleh digeser tanpa otorisasi
+   pemilik**, jadi namanya disebut tanpa path),
+   dan **ketiga hakim putaran 3** melaporkannya. Keputusan pemilik: kedua baris **dikembalikan ke byte
+   aslinya** (diff berkas itu terhadap merge-base kini KOSONG) dan kelas berkas bukti historis
+   **dikecualikan dari paksaan suntingan** — cacat tabel di sana dicetak `tools/validate_repo.py`
+   sebagai **PERINGATAN**, bukan kegagalan. Daftarnya sempit dan disebut eksplisit di
+   `POLA_BUKTI_HISTORIS`: `ACCEPTANCE_TEST_LOG.md`, `LOG_SESI_*.md`, `DISKUSI_MENTAH_*.md`,
+   `SESSION_REPORT_*`, `PILOT_REPORT_*`, `BEHAVIORAL_AUDIT_*`, `REGRESSION_AUDIT_*`,
+   `AUDIT_*_<tanggal>.md`, folder `_log-sesi/`, dan folder arsip `_internal/arsip-*`. Dokumen
+   hidup/normatif (manifest, protokol, register, ledger, Definition of Done, indeks, dokumen sistem)
+   **TETAP kegagalan keras**. Dikunci regresi **TI6** (bukti historis → peringatan, validator PASS) dan
+   **TI7** (cacat yang sama di dokumen hidup → tetap gagal, tanpa awalan WARNING), supaya pengecualian
+   ini tidak bisa melebar diam-diam. Prinsipnya: **bukti yang boleh dirapikan bukan bukti lagi.**
+9. **Kuorum DIHITUNG, bukan diasumsikan.** Yang mengumpulkan verdict WAJIB menjalankan
+   `python3 tools/ambil_verdict.py --pr <N> --harapkan <jumlah hakim yang dikerahkan>`. Bila slot yang
+   terbaca kurang dari jumlah itu, alat melaporkan **KUORUM BELUM TERPENUHI** dan hasilnya **tidak pernah
+   hijau** — hakim yang tidak menyerahkan laporan **bukan hakim yang puas**.
+   **Sebab aturan ini ada (cacat D-3, nyata terjadi):** alat lama menganggap **setiap komentar sebagai
+   slot hakim**, jadi 3 komentar penulis PR #74 ikut terhitung dan keluarannya berbunyi *"1 dari 4 verdict
+   bukan hijau"*. Itu terdengar seperti tiga hakim lain tidak menemukan apa-apa; yang sebenarnya terjadi
+   adalah **2 verdict hilang**. **Keheningan terbaca sebagai persetujuan** — persis kebalikan fail-closed.
+   Perbaikannya diuji-mutasi, dan `--uji` kini **memanggil fungsi kanal sungguhan** (regresi D-4: kanal
+   `--issue` dan kanal utama `--terbaru` dulu **crash `NameError`** setiap kali isunya punya komentar, dan
+   lolos dari `--uji` karena uji lama hanya menguji fungsi murni, tidak pernah fungsi kanal).
+
+   **AMENDEMEN 18 Sep 2026 (temuan #3 hakim putaran 3, P1) — kuorum dihitung PER PUTARAN.** Slot hakim
+   menumpuk lintas putaran, jadi kuorum yang dibandingkan terhadap SELURUH slot **fail-open di tingkat
+   putaran**: pada PR #74, `--harapkan 3` mencetak *"5 dari 5 slot"* (lalu *"7 dari 7"*) dan tidak pernah
+   bisa memberi tahu pemilik bahwa **2 dari 3 hakim putaran 3 belum menyerahkan laporan** — persis mode
+   kegagalan D-3 yang aturan ini dibuat untuk menutupnya. Kini `tools/ambil_verdict.py` mencetak blok
+   **KUORUM PER PUTARAN** (jumlah slot per putaran + putaran mana yang sedang diputus), dan `--putaran R`
+   memilih putaran yang hendak diputus (default: putaran terbaru di kanal). **Agregatnya tidak
+   dilonggarkan:** satu MERAH di putaran mana pun tetap menahan merge, verdict tak terbaca tetap menahan,
+   dan putaran yang diminta tapi tidak ada di kanal dinyatakan **belum diserahkan**, bukan bersih.
+   Dikunci 6 kasus + 1 mutasi di `ambil_verdict.py --uji` (33 → **40 pemeriksaan**; kini
+   **58 pemeriksaan** sesudah kunci T-59/T-60 ditambahkan 20 Sep 2026).
+10. **Verdict yang hilang = pekerjaan belum dilakukan, dan WAJIB diulang pada head yang berlaku.** Tidak
+    ada jalur "dianggap hijau karena tidak ada kabar", dan tidak ada jalur "sudah terlanjur, pakai yang
+    ada". Bila dua hakim memakai **branch atau slot log yang sama**, push yang datang kemudian **menimpa**
+    yang lebih dulu — karena itu tiap hakim wajib memakai branch/slot lognya sendiri, dan **menempel
+    verdictnya sebagai komentar PR sebelum sesi ditutup** (butir 8), supaya hasilnya tidak bergantung pada
+    umur branch mana pun.
+11. **Serah terima prompt review WAJIB memuat path berkas absolut DAN link-nya — DICETAK ALAT,
+    bukan ditulis tangan agent.** Aturan tetap pemilik (giliran 19, 18 Sep 2026): *"Seharusnya kamu
+    memberi tau nama file nya secara akurat dan path nya. Dan akan lebih baik lagi klo dia beri link
+    nya. Sehingga aku ga bingung cari file nya… Setiap menyiapkan review independen dan pemeriksaan
+    menyeluruh independen, agent harus beri link nya."* Karena itu `tools/review_prompt.py` mencetak
+    **BLOK SERAH TERIMA** di ujung prompt dan ke stderr: path absolut berkas, nama berkas + foldernya,
+    link PR, link daftar berkas yang berubah, permalink head yang di-pin, isi repo pada head itu,
+    perintah regenerasi kalau berkasnya hilang, perintah pengumpul verdict, dan empat hal yang wajib
+    diverifikasi sebelum diserahkan. `tools/audit_prompt.py` **meminjam fungsi yang sama**
+    (`handoff_block()`), karena aturan pemilik menyebut review independen DAN pemeriksaan menyeluruh
+    independen — satu definisi untuk dua alat, pola yang sama dengan `next_round()` meminjam
+    `slot_hakim()` dari `ambil_verdict.py`.
+    **Sebab aturan ini ada (kejadian nyata 18 Sep 2026):** prompt putaran 3 diserahkan ke pemilik
+    dengan menyebut nama berkas saja; pemilik — yang menyatakan tidak punya basic coding — harus
+    mencari sendiri berkasnya dan bingung. Link yang ditulis tangan agent bisa salah atau ketinggalan:
+    itu kelas cacat yang sama dengan angka beku yang ditutup RP9/RP10, jadi link DIRANGKAI DARI DATA
+    TERUKUR dan alatnya sendiri yang meneriakkannya. **Fail-closed:** kalau slug repo, sha head, atau
+    objek tidak terbaca, blok itu TIDAK mencetak link karangan — ia menyatakan tidak tercetak dan
+    menyuruh pembaca mengambilnya dari API/git, karena link palsu lebih merusak daripada tidak ada link.
+
+    **AMENDEMEN giliran 20 (18 Sep 2026) — link yang dimaksud adalah link ke BERKAS PROMPT ITU
+    SENDIRI, bukan hanya link ke PR.** Pemilik menegaskan: *"Apakah kamu paham bahwa yang aku maksud
+    adalah link ke file prompt perintah untuk sesi hakim dan reviewer/pemeriksa nya? Bukan hanya file
+    PR nya."* Sebabnya nyata: path yang dicetak blok serah terima (`/home/user/...`) hanya ada di
+    mesin kerja agent — pemilik tidak bisa membukanya, dan teman yang membuka sesi hakim juga tidak.
+    Link PR pun tidak cukup, karena yang dibutuhkan hakim adalah TEKS PROMPT-nya, bukan halaman PR-nya.
+    Karena itu `tools/review_prompt.py` punya `--umumkan`: prompt ditempel ke kanal PR sebagai
+    **komentar penulis** (bukan verdict) dan permalink-nya dicetak di blok serah terima sebagai
+    **LINK KE PROMPT INI**. Perintah lengkapnya: `python3 tools/review_prompt.py --pr <N> --out <path>
+    --umumkan`. Dua pengaman terhadap risiko prompt terbaca sebagai verdict (risiko nyata: prompt
+    memuat contoh judul verdict yang SENGAJA tidak dipagari), keduanya TERUKUR di regresi **RP13**:
+    (a) baris judul komentar menyebut `penulis`, dan `slot_hakim()` di `ambil_verdict.py` memeriksa
+    `PENULIS_RE` lebih dulu daripada token laporan — diuji LINTAS ALAT, badan komentar sungguhan
+    dimasukkan ke `slot_hakim()` dan harus BUKAN slot; (b) seluruh prompt dipagari pagar backtick yang
+    LEBIH PANJANG dari run terpanjang di dalam prompt, dan `strip_code_fences()` mengosongkannya
+    sebelum penggolongan. Uji mutasi membuktikan pengaman itu nyata, bukan hiasan: kalau label
+    `penulis` dibuang dari judul, komentar HARUS terbaca sebagai slot hakim.
+    **Fail-closed tiga lapis:** slug repo tak terbaca → tidak menempel dan tidak mencetak link; POST
+    gagal atau responsnya tak terbaca → tidak mencetak link; dan kalau komentar TETAP terbaca sebagai
+    slot hakim oleh alat pengumpul verdict → komentar **DIHAPUS lagi** dan link tidak dicetak, karena
+    kuorum palsu lebih merusak daripada tidak ada link. Kalau `--umumkan` tidak bisa dipakai (misalnya
+    kanal PR tidak tersedia), agent WAJIB menyatakan itu di pesan serah terima dan menyerahkan teks
+    prompt sebagai satu blok berpagar di badan pesan chat — tidak boleh diam-diam menyerahkan path
+    lokal saja.
+12. **Putaran yang SEDANG berjalan tidak boleh dinamai sebagai putaran berikutnya.** Nomor putaran
+    DICETAK ALAT (`hitung_putaran()` di `tools/review_prompt.py`), dan alat wajib mengenali putaran yang
+    masih berjalan: putaran R dinyatakan **masih berjalan** selama (a) slot hakim yang menamai R kurang
+    dari kuorum (`--harapkan N`, default 3), **atau** (b) head PR belum bergerak sejak verdict R tertempel
+    (sha head disebut di verdict itu) — artinya koreksi belum dibuat, jadi belum ada objek baru untuk
+    diadili. Hanya kalau keduanya tidak berlaku, prompt menamai R+1.
+    **Sebab aturan ini ada (temuan #2 hakim putaran 3, P1, terukur):** `next_round()` versi lama
+    mengembalikan `max(putaran tertempel) + 1`, sehingga begitu SATU hakim putaran 3 menempel verdictnya,
+    prompt yang dibangkitkan ulang pada head yang SAMA menulis **"putaran 4" tiga kali** — padahal pemilik
+    membuka putaran 3 dan dua hakim lain masih bekerja di bawah teks yang menulis "putaran 3". Karena
+    prompt menyuruh hakim menyalin angka itu apa adanya, catatan putaran di kanal jadi bercampur.
+    Dikunci regresi **RP14 (5 uji)**, termasuk kasus kuorum lebih besar dan komentar penulis yang menyebut
+    nomor putaran (tidak boleh ikut terhitung).
+13. **Nilai beku dari API tidak boleh dilabeli "SEKARANG", dan diff (B) wajib diukur ulang kalau base
+    bergerak.** `.base.sha` dari API **beku sejak PR dibuat**; ujung branch base yang sebenarnya diukur
+    terpisah (`git ls-remote origin <base ref>`, cadangan `gh api repos/<slug>/branches/<ref>`) dan
+    dicetak bersama **waktu pengukurannya**. Kalau keduanya berbeda, prompt wajib menyatakan **BASE SUDAH
+    BERGERAK** dan menyuruh reviewer mengukur (B) sendiri; kalau ujungnya tidak terbaca, prompt menyatakan
+    **TIDAK TERUKUR** dan memberi perintah ukurnya — tidak pernah menyamakan yang beku dengan yang hidup.
+    **Sebab aturan ini ada (temuan #7 hakim putaran 3, terukur):** prompt menulis *"Base sha — ujung base
+    SEKARANG"* untuk `c1d00c3` dan *"hanya di (B): 0 berkas"*, padahal `main` sudah bergerak ke `26147e1`
+    (PR lain di-merge 13:35Z) sehingga selisih yang sebenarnya memuat **11 berkas** yang masuk ke base
+    sesudah branch dibuat. Reviewer yang percaya angka itu menyimpulkan "base tidak bergerak" — kebalikan
+    kenyataan, dan persis kelas cacat R3/RP7/RP9 yang bagian 3a dibuat untuk menutupnya. Dikunci regresi
+    **RP16 (3 uji)**: base bergerak, base tidak bergerak, dan ujung tak terukur (fail-closed).
+14. **HIJAU BUTUH BUKTI IA BICARA TENTANG HEAD YANG DIADILI — pin SHA wajib cocok sebelum sebuah
+    laporan boleh dihitung sebagai kuorum hijau; MERAH tidak butuh bukti apa pun.** Aturan ini
+    **asimetris dengan sengaja**: laporan merah yang pin-nya salah paling jauh membuat kita berhenti
+    terlalu awal lalu bertanya, sedangkan laporan hijau yang pin-nya salah membuat kita merge benda
+    yang **tidak pernah diperiksa siapa pun**. Karena itu `tools/ambil_verdict.py` kini membaca sha
+    yang disebut laporan (`pin_verdict()`), membandingkannya dengan `headRefOid` PR yang diadili, dan
+    untuk **putaran yang diputus** menurunkan verdict hijau yang pin-nya `tanpa-pin`, `beda:<sha>`,
+    atau `head-tak-terbaca` menjadi `TIDAK SAH UNTUK HEAD INI` — sehingga kuorumnya terbaca
+    `kuorum SAH n/N BELUM LENGKAP`, bukan `LENGKAP`. Putaran lama tidak diubah verdictnya (hijau
+    mereka sah untuk head mereka sendiri) tetapi status pinnya **dicetak**, supaya riwayat tidak
+    terbaca sebagai bukti atas head hari ini. SHA yang hanya muncul di dalam pagar kode **bukan** pin.
+    **Sebab aturan ini ada (temuan P1 putaran 8 PR #74, direproduksi independen dua hakim):**
+    `cetak_pr()` menyimpan hasil `simpulkan()` + nomor putaran saja dan `headRefOid` cuma dicetak,
+    sehingga pemanggilan fungsi kanal nyata dengan tiga komentar hijau **tanpa SHA** menghasilkan
+    `HIJAU — semua 3 verdict hijau` + `kuorum 3/3 LENGKAP (0 bukan hijau)`. Dikunci **8 kasus
+    `KASUS_PIN` + 5 kasus `KASUS_PIN_KUORUM`** di `ambil_verdict.py --uji`, termasuk satu kasus
+    pasangan berunsur dua supaya pemanggil lama tidak berubah perilakunya diam-diam.
+15. **VERDICT PUTARAN PERTAMA TIDAK PERNAH MENUTUP PUTARAN SESUDAHNYA — kanal berkas append-only
+    diagregasi fail-closed.** `PROTOKOL_AUDIT_ISI.md` mengizinkan putaran lanjutan ditambahkan di
+    bawah laporan berkas yang sama, jadi ringkasan otomatis wajib membaca **semua** bagian
+    `## Putaran N` dan menahan bila satu saja bukan hijau (`ringkas_berkas()`); teks sebelum bagian
+    putaran pertama ikut dihitung, bukan dibuang. **Sebab aturan ini ada (temuan P1 putaran 8 PR #74,
+    dua hakim):** berkas berisi `Putaran 1: BERSIH` lalu `Putaran 2: ADA TEMUAN` diringkas
+    `VERDICT TERBACA OTOMATIS: BERSIH` karena `simpulkan()` mengambil kecocokan pertama — isi
+    putaran kedua tetap tercetak, tetapi yang dibaca pemilik adalah ringkasannya. Dikunci **5 kasus
+    `KASUS_BERKAS`**, termasuk kasus "temuan putaran 1 yang disebut sudah ditutup putaran 2 tetap
+    menahan", karena fail-closed tidak boleh ditawar oleh narasi di dalam laporan.
+16. **SATU KEPUTUSAN KANAL PENYERAHAN, BUKAN DUA PETUNJUK YANG BERSAING.** Kanal audit isi adalah
+    **Kanal A = berkas ter-commit** di `_meta/_internal/audit/` (UTAMA, terbukti berfungsi);
+    **Kanal B = GitHub Issue** adalah alternatif yang **terukur terblokir** HTTP 403 `Resource not
+    accessible by integration` (17 Sep 2026) dan tidak boleh disebut sebagai tujuan penyerahan tanpa
+    label itu. Setiap dokumen yang menyebut cara penyerahan wajib menyebut keputusan yang sama.
+    **Sebab aturan ini ada (temuan P2 putaran 8 PR #74, dua hakim):** `PANDUAN_PENGGUNA.md`
+    menetapkan Kanal A sebagai utama sekaligus — di dokumen yang sama — masih menyuruh auditor
+    menulis Issue; `PROMPT_ENTRI_UNIVERSAL.md`, langkah pelaksanaan `PROTOKOL_AUDIT_ISI.md`, dan
+    docstring `ambil_verdict.py`/`audit_prompt.py` juga masih menunjuk Issue polos. Diselaraskan di
+    lima tempat sebagai **T-61**, dan `ambil_verdict.py` kini mencetak **catatan kesegaran pin** di
+    kedua kanal audit (`catatan_pin_audit()`): laporan yang `@sha7`-nya bukan HEAD repo hari ini
+    dinyatakan sebagai riwayat, bukan sebagai kesimpulan atas isi terkini.

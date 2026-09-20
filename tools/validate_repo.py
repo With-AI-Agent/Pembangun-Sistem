@@ -20,7 +20,7 @@ independent review of PR #11 (findings F1–F16):
   (warning only when the manifest declares `Tahap: kerangka`).
 - Review F8: STATUS templates must parse to the exact safe value with the
   same shared parser (guidance text inside the field value = defect).
-- Review F9: Warisan enforcement — all nine items W-01..W-09 present in the
+- Review F9: Warisan enforcement — all ten items W-01..W-10 present in the
   system manifest; an 'override' row exempts the mechanical check of that
   item only with the full approval trail (alasan/dampak/tanggal/approval).
 - Review F13/F14: path-reference resolution is scoped per document (a doc
@@ -40,6 +40,7 @@ independent review of PR #11 (findings F1–F16):
 """
 from pathlib import Path
 import re
+import subprocess
 import sys
 
 import checkpoint_core as core
@@ -69,6 +70,137 @@ for p in ROOT.rglob("*.md"):
     if text.count("```") % 2:
         errors.append(f"unpaired code fence: {p.relative_to(ROOT)}")
 
+# --- Integritas tabel Markdown: SEMUA artefak repo, bukan hanya register & ledger -------------
+# Diperluas 18 Sep 2026 (T-47) sesudah **14 temuan nyata** ditemukan DI LUAR dua berkas yang dijaga
+# versi sebelumnya: dua baris Log Evolusi `_meta/SYSTEM_MANIFEST.md` yatim di tengah prosa (masuk
+# dari commit `1361f2f` dan `e78f59f` — pekerjaan agent ini sendiri, bentuknya 2 sel di tabel 5 sel),
+# empat baris register "Sudah ditutup" (T-39/T-40/T-43/T-41) terputus dari tabelnya oleh garis `---`,
+# lima baris berpipa tak ter-escape di dalam sel (manifest meta, kontrak warisan, dua di
+# ACCEPTANCE_TEST_LOG konten-kreator, manifest konten-kreator), dan dua baris tabel diputus baris
+# kosong (draft kerangka + `sistem-undangan/00_RENCANA_KERANGKA.md`). Penjaga versi lama hanya
+# membaca 2 berkas, jadi SEMUA itu lolos sementara validator mencetak PASS — persis pola "klaim
+# lebih luas dari cakupan" yang sudah dua kali ditutup di PR ini.
+#
+# PENJAGA INI BERBASIS BLOK, bukan streaming. Versi streaming yang sempat dibuat menandai BARIS
+# HEADER sebagai yatim (header selalu datang sebelum baris pemisah, jadi kolom harapan belum
+# diketahui) dan menghasilkan ratusan temuan palsu; ketahuan karena dijalankan pada pohon bersih
+# dulu. Aturan mainnya: baris pipa yang BERURUTAN = satu blok. Kalau baris kedua blok adalah pemisah
+# (`|---|`), blok itu tabel → setiap baris wajib se-kolom dengan header. Kalau tidak, seluruh baris
+# blok itu YATIM: tersisip di prosa, atau terputus dari tabelnya oleh baris kosong / garis `---` —
+# di Markdown keduanya dirender sebagai TEKS BIASA, jadi datanya "ada" tetapi tidak pernah tampil.
+#
+# Yang dilewati dan mengapa: folder vendor (`skills/` = dokumen pihak ketiga yang disalin apa adanya;
+# mengubahnya merusak provenance dan sinkronisasi hulu) dan ISI PAGAR KODE (pipa di dalam contoh kode
+# bukan sel tabel). Pipa ter-escape `\|` juga bukan pemisah sel.
+#
+# Aturan yang DILEPAS dengan sadar dari versi lama: "baris non-pipa tepat sesudah baris tabel". Pada
+# cakupan 2 berkas itu aman; pada seluruh repo ia menandai prosa yang wajar langsung mengikuti tabel.
+# Bentuk korupsi yang diincarnya tetap tertangkap aturan yatim/kolom di bawah.
+TABEL_VENDOR = ("skills", "node_modules", "backups", "template_clean", ".git", "__pycache__")
+SEP_TABLE_RE = re.compile(r"^\|(?:\s*:?-+:?\s*\|)+\s*$")
+
+# --- Berkas BUKTI HISTORIS: append-only menang atas kosmetika tabel ---------------------------------
+# Keputusan pemilik 18 Sep 2026 (opsi A), menutup temuan yang dilaporkan KETIGA hakim putaran 3 PR #74:
+# penjaga integritas tabel (T-47) mewajibkan pipa di dalam sel di-escape, sedangkan aturan append-only
+# melarang suntingan pada berkas bukti. Dua aturan itu saling mengunci, dan yang terjadi adalah riwayat
+# tersunting (2 baris `sistem/sistem-konten-kreator/ACCEPTANCE_TEST_LOG.md`, terukur `2 2` di numstat).
+# Keduanya sudah dikembalikan ke byte asli (diff-nya terhadap merge-base kini KOSONG), dan kelas berkas
+# ini dikecualikan dari PAKSAAN suntingan: cacat tabel di berkas bukti historis dicetak sebagai
+# PERINGATAN, bukan kegagalan. Dokumen hidup/normatif (manifest, protokol, register, ledger, DoD,
+# indeks, dokumen sistem) TETAP kegagalan keras — pengecualian ini sempit dan disebut eksplisit.
+# Sebabnya prinsip, bukan kenyamanan: bukti yang boleh dirapikan bukan bukti lagi.
+POLA_BUKTI_HISTORIS = (
+    re.compile(r"(?:^|/)ACCEPTANCE_TEST_LOG\.md$"),
+    re.compile(r"(?:^|/)LOG_SESI_[^/]*\.md$"),
+    re.compile(r"(?:^|/)DISKUSI_MENTAH_[^/]*\.md$"),
+    re.compile(r"(?:^|/)SESSION_REPORT_[^/]*\.md$"),
+    re.compile(r"(?:^|/)PILOT_REPORT_[^/]*\.md$"),
+    re.compile(r"(?:^|/)BEHAVIORAL_AUDIT_[^/]*\.md$"),
+    re.compile(r"(?:^|/)REGRESSION_AUDIT_[^/]*\.md$"),
+    re.compile(r"(?:^|/)AUDIT_[^/]*_\d{4}-\d{2}-\d{2}\.md$"),
+    re.compile(r"(?:^|/)_log-sesi/"),
+    re.compile(r"(?:^|/)_internal/arsip-"),
+)
+
+
+def berkas_bukti_historis(rel: str) -> bool:
+    """True kalau `rel` adalah rekaman peristiwa (append-only), bukan dokumen hidup/normatif."""
+    r = (rel or "").replace("\\", "/")
+    return any(p.search(r) for p in POLA_BUKTI_HISTORIS)
+
+
+tabel_warnings: list = []
+
+
+def _kolom(baris: str) -> int:
+    """Jumlah sel: pipa yang TIDAK di-escape (`\|` adalah pipa literal di dalam sel)."""
+    return len(re.findall(r"(?<!\\)\|", baris)) - 1
+
+
+def _berkas_markdown_own():
+    """Semua `.md` milik repo ini (bukan vendor), urut path supaya temuan deterministik."""
+    for _p in sorted(ROOT.rglob("*.md")):
+        _rel = _p.relative_to(ROOT)
+        if any(_v in _rel.parts for _v in TABEL_VENDOR):
+            continue
+        yield str(_rel).replace("\\", "/"), _p
+
+
+AWALAN_WARNING_BUKTI = ("WARNING tabel (berkas bukti historis — append-only menang atas kosmetika "
+                        "tabel, keputusan pemilik 18 Sep 2026; JANGAN sunting riwayatnya): ")
+
+
+def _nilai_blok_tabel(rel, blok, errors, warnings=None):
+    """Nilai satu blok baris pipa berurutan: tabel sehat, kolom salah, atau baris yatim.
+
+    Untuk **berkas bukti historis** (`berkas_bukti_historis`) temuan dialihkan ke `warnings` — bukan
+    karena cacatnya tidak nyata, tetapi karena memperbaikinya berarti MENYUNTING riwayat, dan itu
+    dilarang (keputusan pemilik 18 Sep 2026, opsi A). Semua berkas lain tetap masuk `errors`.
+    """
+    if not blok:
+        return
+    _bukti = warnings is not None and berkas_bukti_historis(rel)
+    tujuan = warnings if _bukti else errors
+    awalan = AWALAN_WARNING_BUKTI if _bukti else ""
+    if len(blok) >= 2 and SEP_TABLE_RE.match(blok[1][1]):
+        harap = _kolom(blok[0][1])
+        for no, teks in blok[2:]:
+            if _kolom(teks) != harap:
+                tujuan.append(
+                    f"{awalan}{rel}:{no}: baris tabel punya {_kolom(teks)} kolom padahal header tabelnya "
+                    f"{harap} — baris patah/tersisip salah tempat, atau ada pipa di dalam sel yang "
+                    "belum di-escape sebagai \\|"
+                )
+        return
+    for no, teks in blok:
+        tujuan.append(
+            f"{awalan}{rel}:{no}: BARIS TABEL YATIM — baris `|…|` yang tidak punya header+pemisah tabel "
+            f"di atasnya ({teks[:60]}). Sebab umumnya: tersisip di tengah prosa, atau terputus dari "
+            "tabelnya oleh baris kosong / garis `---`. Di Markdown ini dirender sebagai TEKS BIASA, "
+            "jadi datanya ada di berkas tetapi tidak pernah tampil sebagai tabel"
+        )
+
+
+for _rel, _path in _berkas_markdown_own():
+    _garis = _path.read_text(encoding="utf-8", errors="replace").splitlines()
+    _blok: list = []
+    _pagar = False
+    for _no, _line in enumerate(_garis, 1):
+        _s = _line.strip()
+        if _s.startswith("```"):
+            _pagar = not _pagar
+            _nilai_blok_tabel(_rel, _blok, errors, tabel_warnings)
+            _blok = []
+            continue
+        if _pagar:
+            continue
+        if _s.startswith("|") and _s.endswith("|"):
+            _blok.append((_no, _s))
+            continue
+        _nilai_blok_tabel(_rel, _blok, errors, tabel_warnings)
+        _blok = []
+    _nilai_blok_tabel(_rel, _blok, errors, tabel_warnings)
+
 # --- Volatile corpus counts are forbidden in permanent evidence (C5/AT-16) --
 manifest_path = ROOT / "_meta/SYSTEM_MANIFEST.md"
 if manifest_path.is_file():
@@ -83,6 +215,191 @@ if manifest_path.is_file():
         evidence = cells[3]
         if re.search(r"\d+\s+(?:" + corpus_terms + r")|(?:" + corpus_terms + r")\s*[:=]?\s*\d+", evidence, re.IGNORECASE):
             errors.append(f"SYSTEM_MANIFEST Log Evolusi:{lineno}: sel Bukti mengutip angka korpus; angka ini bergerak setiap kali LOG_SESI ditulis sehingga tidak bisa menjadi bukti permanen")
+
+# --- Induk TUNDUK pada kontrak warisannya sendiri (17 Sep 2026) --------------
+# Instruksi eksplisit pemilik: mekanisme wajib tertanam di META-SISTEM juga,
+# bukan hanya di sistem yang dibangunnya. Sebelum cek ini ada, meta dikecualikan
+# secara struktural: kontrak hanya menyebut "sistem yang dibangun oleh meta",
+# INDEKS menyatakan meta "bukan salah satu isinya", dan validator hanya memeriksa
+# sistem terdaftar. Tiga gap nyata (W-03/W-07/W-09) lolos tanpa terdeteksi.
+#
+# Yang ditagih di sini = DEKLARASI STATUS tiap butir (termasuk gap yang dinyatakan
+# jujur), BUKAN keberadaan artefak. Sengaja begitu: bentuk beberapa butir memang
+# berbeda di level meta (meta tidak punya "unit kerja" ber-STATUS.md), dan memaksa
+# artefak yang seragam akan menghasilkan KEPATUHAN PALSU — centang tanpa substansi.
+_meta_manifest = ROOT / "_meta/SYSTEM_MANIFEST.md"
+if _meta_manifest.is_file():
+    _mt = _meta_manifest.read_text(encoding="utf-8")
+    _potong = re.split(r"^## Warisan Meta\b", _mt, maxsplit=1, flags=re.M)
+    if len(_potong) < 2:
+        errors.append(
+            "_meta/SYSTEM_MANIFEST.md: bagian '## Warisan Meta' TIDAK ADA — induk wajib "
+            "menyatakan kepatuhannya pada kontrak warisannya sendiri (permintaan pemilik 17 Sep 2026)"
+        )
+    else:
+        _badan = re.split(r"^## ", _potong[1], maxsplit=1, flags=re.M)[0]
+        # Butir wajib muncul sebagai BARIS TABEL deklarasinya (`| W-nn …`), bukan sekadar
+        # disebut di prosa. Versi pertama cek ini memakai `\bW-nn\b` pada seluruh badan
+        # bagian dan TERBUKTI menghasilkan PASS palsu: kalimat penjelas "menyebut semua
+        # butir (W-01…W-10)" sudah memenuhi syarat walau baris deklarasinya dihapus.
+        # Tertangkap oleh uji mutasi pada hari yang sama — pola "PASS palsu" yang sama
+        # dengan temuan review independen PR #11.
+        _baris_dideklarasikan = {
+            m.group(1)
+            for m in re.finditer(r"^\|\s*(W-\d{2})\b", _badan, re.M)
+        }
+        for _w in core.WARISAN_ITEMS:
+            if _w not in _baris_dideklarasikan:
+                errors.append(
+                    f"_meta/SYSTEM_MANIFEST.md Warisan Meta: butir {_w} tidak punya BARIS deklarasi "
+                    "`| " + _w + " …` — induk wajib menyatakan statusnya sendiri (gap boleh, "
+                    "tapi wajib dinyatakan sebagai baris, bukan disebut di prosa)"
+                )
+
+# --- Daftar Pekerjaan Terbuka: utang tidak boleh DITUTUP tanpa bukti ---------
+# Dibuat 17 Sep 2026 menjawab pertanyaan pemilik "nantinya semuanya diselesaikan dan
+# dimatangkan tanpa ada yang terlupakan kan?". Daftar yang hanya hidup di ingatan agent
+# atau tersebar di beberapa dokumen TIDAK bisa menjawab itu. Yang bisa: daftar yang
+# (a) tidak bisa dihapus tanpa validator protes — berkasnya ada di CORE_REQUIRED, dan
+# (b) tidak bisa ditutup tanpa bukti — dicek di sini.
+_daftar_path = ROOT / "_meta/DAFTAR_PEKERJAAN_TERBUKA.md"
+if _daftar_path.is_file():
+    _STATUS_SAH = {"TERBUKA", "TERTAHAN", "SELESAI", "DITOLAK"}
+    _dt = core.strip_code_fences(_daftar_path.read_text(encoding="utf-8"))
+    _ids: list[str] = []
+    for _ln, _l in enumerate(_dt.splitlines(), 1):
+        if not _l.lstrip().startswith("|"):
+            continue
+        _sel = [x.strip() for x in _l.strip().strip("|").split("|")]
+        if len(_sel) < 4 or not re.fullmatch(r"T-\d{2}", _sel[0]):
+            continue  # header, pemisah, atau baris non-item
+        _ids.append(_sel[0])
+        _status = next((x for x in _sel if x in _STATUS_SAH), "")
+        if not _status:
+            errors.append(
+                f"_meta/DAFTAR_PEKERJAAN_TERBUKA.md:{_ln}: item {_sel[0]} tidak punya status sah "
+                f"(salah satu {sorted(_STATUS_SAH)}) — item tanpa status tidak bisa dilacak"
+            )
+        elif _status == "SELESAI" and not re.search(r"\b[0-9a-f]{7,40}\b", _sel[-1]):
+            errors.append(
+                f"_meta/DAFTAR_PEKERJAAN_TERBUKA.md:{_ln}: item {_sel[0]} ber-status SELESAI tetapi "
+                "sel Bukti tidak menyebut sha commit — MENUTUP UTANG TANPA BUKTI dilarang "
+                "(kalau fix-nya belum di-commit, biarkan TERBUKA dan tulis sha-nya nanti)"
+            )
+    for _d in sorted({i for i in _ids if _ids.count(i) > 1}):
+        errors.append(
+            f"_meta/DAFTAR_PEKERJAAN_TERBUKA.md: ID {_d} dipakai lebih dari sekali — ID wajib unik "
+            "dan tidak boleh dipakai ulang, termasuk untuk item yang sudah ditutup"
+        )
+    if not _ids:
+        errors.append(
+            "_meta/DAFTAR_PEKERJAAN_TERBUKA.md tidak memuat satu pun baris item berpola `| T-nn …` — "
+            "daftar utang yang kosong tanpa deklarasi eksplisit tidak bisa dibedakan dari daftar yang rusak"
+        )
+
+# --- Masukan pemilik yang TERCATAT wajib punya RESPONS yang bisa diperiksa ----
+# Instruksi pemilik 17 Sep 2026: "jangan cuma dicatat tapi juga harus direspon/dieksekusi".
+# Tiga hal ditegakkan di sini, karena "harus dibaca" yang hanya berupa imbauan akan dilupakan:
+#   (a) setiap penanda tuntutan T<n> di DISKUSI_MENTAH wajib punya baris di ledger tanggapan;
+#   (b) status ledger wajib dari kosakata tertutup - "TERCATAT" BUKAN status sah;
+#   (c) status TERJADWAL wajib menunjuk ID item yang BENAR-BENAR ADA di daftar utang;
+#   (d) kewajiban membaca kedua berkas di langkah awal sesi tidak boleh hilang diam-diam.
+_LEDGER = ROOT / "_meta/TANGGAPAN_MASUKAN_PEMILIK.md"
+_DAFTAR_UTANG = ROOT / "_meta/DAFTAR_PEKERJAAN_TERBUKA.md"
+_STATUS_RESPONS = {"DIEKSEKUSI", "DIJAWAB", "DITOLAK", "MENUNGGU PEMILIK", "TERJADWAL"}
+if _LEDGER.is_file():
+    _lt = core.strip_code_fences(_LEDGER.read_text(encoding="utf-8"))
+    _baris_ledger: dict[str, tuple[int, str, str]] = {}
+    for _ln, _l in enumerate(_lt.splitlines(), 1):
+        if not _l.lstrip().startswith("|"):
+            continue
+        _sel = [y.strip() for y in _l.strip().strip("|").split("|")]
+        # T<n> tanpa strip = tuntutan pemilik; S-<nn> = instruksi berdiri.
+        # JANGAN disamakan dengan T-<nn> (dengan strip) = item utang di daftar pekerjaan terbuka.
+        if len(_sel) < 3 or not re.fullmatch(r"T\d{1,2}|S-\d{2}", _sel[0]):
+            continue
+        _baris_ledger[_sel[0]] = (_ln, _sel[-2], _sel[-1])
+
+    # (a) setiap T<n> yang tercatat di DISKUSI_MENTAH wajib punya baris tanggapan
+    _t_tercatat: set[str] = set()
+    for _d in sorted((ROOT / "_meta" / "_internal").glob("DISKUSI_MENTAH_*.md")):
+        for _m in re.finditer(r"\bT(\d{1,2})\b", core.strip_code_fences(
+                _d.read_text(encoding="utf-8", errors="replace"))):
+            _t_tercatat.add(f"T{int(_m.group(1))}")
+    for _tid in sorted(_t_tercatat):
+        if _tid not in _baris_ledger:
+            errors.append(
+                f"_meta/TANGGAPAN_MASUKAN_PEMILIK.md: tuntutan {_tid} TERCATAT di DISKUSI_MENTAH tetapi "
+                "TIDAK PUNYA BARIS TANGGAPAN - pemilik menginstruksikan 17 Sep 2026 bahwa yang tercatat "
+                "wajib direspons/dieksekusi, bukan cuma dicatat"
+            )
+
+    # (b)+(c) status sah + bukti tidak kosong + TERJADWAL menunjuk item nyata
+    _teks_utang = (_DAFTAR_UTANG.read_text(encoding="utf-8")
+                   if _DAFTAR_UTANG.is_file() else "")
+    _id_utang = set(re.findall(r"^\|\s*(T-\d{2})\b", _teks_utang, re.M))
+    for _tid, (_ln, _status, _bukti) in sorted(_baris_ledger.items()):
+        if _status not in _STATUS_RESPONS:
+            errors.append(
+                f"_meta/TANGGAPAN_MASUKAN_PEMILIK.md:{_ln}: {_tid} ber-status '{_status}' yang TIDAK SAH "
+                f"(wajib salah satu {sorted(_STATUS_RESPONS)}) - 'TERCATAT'/'terbuka'/kosong "
+                "bukan tanggapan"
+            )
+        elif not _bukti or _bukti in {"-", "—", ""}:
+            errors.append(
+                f"_meta/TANGGAPAN_MASUKAN_PEMILIK.md:{_ln}: {_tid} ber-status {_status} tetapi sel bukti "
+                "KOSONG - tanggapan tanpa bukti tidak bisa diperiksa"
+            )
+        elif _status == "TERJADWAL":
+            _dirujuk = set(re.findall(r"\bT-\d{2}\b", _bukti))
+            if not _dirujuk:
+                errors.append(
+                    f"_meta/TANGGAPAN_MASUKAN_PEMILIK.md:{_ln}: {_tid} ber-status TERJADWAL tetapi tidak "
+                    "menunjuk ID item di _meta/DAFTAR_PEKERJAAN_TERBUKA.md - 'nanti dikerjakan' tanpa "
+                    "tempat di daftar utang = memindahkan diam ke tempat lain"
+                )
+            else:
+                for _r in sorted(_dirujuk - _id_utang):
+                    errors.append(
+                        f"_meta/TANGGAPAN_MASUKAN_PEMILIK.md:{_ln}: {_tid} ber-status TERJADWAL menunjuk "
+                        f"item {_r} yang TIDAK ADA di _meta/DAFTAR_PEKERJAAN_TERBUKA.md"
+                    )
+
+    # (d) kewajiban membaca di langkah awal sesi tidak boleh hilang
+    _nsp = ROOT / "_meta/NEXT_SESSION_PROMPT.md"
+    if _nsp.is_file():
+        _nt = _nsp.read_text(encoding="utf-8")
+        for _wajib in ("_meta/DAFTAR_PEKERJAAN_TERBUKA.md", "_meta/TANGGAPAN_MASUKAN_PEMILIK.md"):
+            if _wajib not in _nt:
+                errors.append(
+                    f"_meta/NEXT_SESSION_PROMPT.md tidak mewajibkan membaca {_wajib} di langkah awal sesi "
+                    "- daftar yang tidak pernah dibaca akan dilupakan walaupun isinya lengkap"
+                )
+
+# --- Meta manifest: Status dan Versi harus bergerak bersama -----------------
+# Sebab cek ini ada (ditemukan 18 Sep 2026, bukan dicari-cari): pada dua bump terakhir
+# field `Versi` dinaikkan sementara `Status` tertinggal di `Released — v1.20.0`, padahal
+# di `main` keduanya sama dan di commit v1.20.0 keduanya sama. Dua angka di dua tempat
+# tanpa penjaga adalah pola D-2 yang sudah pernah menggigit repo ini (jumlah skenario FI
+# vs dokumennya), jadi dijaga alat — bukan mata, dan bukan dicatat lalu ditinggal.
+_MM = ROOT / "_meta/SYSTEM_MANIFEST.md"
+if _MM.is_file():
+    _mmt = _MM.read_text(encoding="utf-8")
+    _st = re.search(r"^- \*\*Status:\*\* `Released — v([0-9]+\.[0-9]+\.[0-9]+)`$", _mmt, re.MULTILINE)
+    _vs = re.search(r"^- \*\*Versi:\*\* `([0-9]+\.[0-9]+\.[0-9]+)`$", _mmt, re.MULTILINE)
+    if not _st:
+        errors.append(
+            "_meta/SYSTEM_MANIFEST.md: field Status tidak berbentuk `Released — vX.Y.Z` - "
+            "bentuk itu yang dipakai mendeteksi drift terhadap field Versi"
+        )
+    elif not _vs:
+        errors.append("_meta/SYSTEM_MANIFEST.md: field Versi tidak berbentuk `X.Y.Z`")
+    elif _st.group(1) != _vs.group(1):
+        errors.append(
+            f"_meta/SYSTEM_MANIFEST.md: Status menyebut v{_st.group(1)} tetapi Versi {_vs.group(1)} - "
+            "keduanya bergerak bersama (di main dan di commit v1.20.0 keduanya sama). Naikkan KEDUANYA "
+            "di commit yang sama; JANGAN melonggarkan cek ini supaya cocok dengan manifest yang tertinggal."
+        )
 
 # --- Index-driven system coverage (inheritance contract) -------------------
 INDEX_PATH = ROOT / "_meta/INDEKS_SISTEM.md"
@@ -306,10 +623,371 @@ def scan_references():
 ref_docs, ref_checked, ref_warnings = scan_references()
 ref_warnings += stage_warnings
 
+# ---------------------------------------------------------------------------
+# Penjaga field `- **Keadaan:**` di setiap log sesi (usulan hakim putaran 5 PR #74,
+# temuan #6). Tanpa penjaga ini header "Keadaan Sesi" bisa BASI atau HILANG tanpa ada
+# yang protes - persis yang lolos pada LOG_SESI_2026-09-17.md (basi sejak 6f60c7c:
+# menulis folder sistem-undangan "belum dibuat" padahal ada) dan pada log lanjutan
+# slot 24 (tidak punya blok Keadaan Sesi sama sekali padahal template mewajibkannya).
+# Nilai yang sah hanya OPEN atau CLOSED; nilai lain ("menunggu gerbang ...") membuat
+# agent berikutnya tidak tahu apakah log ini masih hidup. Fail-closed: folder log yang
+# hilang atau kosong juga error. Cakupan: semua `_log-sesi/LOG_SESI_*.md`, termasuk
+# yang diturunkan ke folder sistem (butir warisan W-02).
+# ---------------------------------------------------------------------------
+_LOG_DIKECUALIKAN = {".git", "backups", "template_clean", "node_modules", "__pycache__"}
+_pola_keadaan = re.compile(r"^- \*\*Keadaan:\*\*\s*`?(OPEN|CLOSED)`?", re.M)
+_berkas_log = sorted(
+    p for p in ROOT.rglob("LOG_SESI_*.md")
+    if "_log-sesi" in p.parts and not (_LOG_DIKECUALIKAN & set(p.parts))
+)
+# Fail-closed HANYA bila folder lognya ada: repo meta wajib punya log sesi, sedangkan ekstrak
+# template (benih sistem baru) memang TIDAK memuat folder `_log-sesi/` karena riwayat sesi adalah
+# data personal yang sengaja dikecualikan dari template - menuntut log di sana akan merusak
+# TEMPLATE CLEAN BUILD. Kalau foldernya ada tapi kosong, itu berarti lognya dipindahkan/dihapus
+# untuk membungkam penjaga, dan itu error.
+if (ROOT / "_log-sesi").is_dir() and not _berkas_log:
+    errors.append(
+        "_log-sesi/: foldernya ada tetapi tidak memuat LOG_SESI_*.md - penjaga field "
+        "`- **Keadaan:**` tidak bisa berjalan (fail-closed: log sesi tidak boleh dipindahkan "
+        "atau dikosongkan untuk membungkam penjaga)"
+    )
+for _lg in _berkas_log:
+    if not _pola_keadaan.search(_lg.read_text(encoding="utf-8")):
+        errors.append(
+            f"{_lg.relative_to(ROOT)}: field wajib `- **Keadaan:**` bernilai OPEN atau CLOSED "
+            "tidak ada (atau nilainya di luar dua itu) - header 'Keadaan Sesi' harus menyatakan "
+            "keadaan log ini supaya agent berikutnya tahu log ini masih hidup atau sudah "
+            "arsip; tambahkan field-nya sebagai append bertanggal, jangan sunting riwayatnya"
+        )
+
+# ---------------------------------------------------------------------------
+# Penjaga KESEGARAN header "Keadaan Sesi" (temuan #3 hakim putaran 6 PR #74 +
+# temuan sapuan penulis pada log OPEN yang lain, 19 Sep 2026). Penjaga field
+# `- **Keadaan:**` di atas hanya memaku KEBERADAAN field-nya; apakah isinya SEGAR
+# tidak terjaga, dan kelas cacat "header basi" sudah tiga kali lolos:
+#   * LOG_SESI_2026-09-17.md menulis folder `sistem-undangan` "belum dibuat" dan
+#     R-05 "belum dibangun" padahal keduanya ada (basi sejak 6f60c7c);
+#   * log slot 24 tidak punya blok Keadaan Sesi sama sekali (ditutup RP20a-b);
+#   * header slot 24 BASI LAGI pada head 30b3cb2 - masih menulis 63 commit,
+#     +12.737/-85, FI 169, "REST PATCH body sepuluh kali", "putaran 6 belum punya
+#     slot hakim" sementara head terukur 66 commit, +12.951/-85, FI 172, body
+#     kesebelas, dan tiga verdict putaran 6 sudah masuk - padahal dua commit
+#     terakhir hanya append kronologi.
+# Jadi: penjaga yang memaku keberadaan tanpa memaku kesegaran = penjaga yang tidak
+# menjaga, pola yang sama dengan RP17b dan cabang buta RP18/RP21.
+#
+# Aturan mekanisnya (VERSI 2 - tiga temuan putaran 7 PR #74 diperbaiki di sini).
+# Setiap log ber-`OPEN` wajib memuat SATU baris keadaan terukur di blok header
+# "Keadaan Sesi", bentuknya persis:
+#
+#   - **Segar pada:** <YYYY-MM-DD> · FI <N> · manifest v<X.Y.Z> · head terukur `<sha7>`
+#
+# FORMATNYA DIUBAH KARENA FORMAT LAMA BERBOHONG (temuan #3 hakim C putaran 7).
+# Format lama `head <sha> · FI <N> · manifest v<X>` terbaca "pada sha itu FI-nya N
+# dan manifest-nya v<X>", padahal sha yang ditulis adalah head SEBELUM commit
+# penyegaran (sha commit sendiri tidak mungkin diketahui saat menulis) dan angka
+# FI/manifest adalah nilai SESUDAH commit itu. Pasangan yang tidak pernah benar
+# itu nyata ada di dua log OPEN: `head 30b3cb2 · FI 178 · manifest v1.34.0`
+# padahal pada 30b3cb2 FI terukur 172 dan manifest v1.33.0. Kata **"head terukur"**
+# sekarang menyatakan apa adanya: head yang terukur ketika header disegarkan.
+#
+# Pemeriksaan:
+#   (a) barisnya ADA **di dalam blok header** (bukan di kronologi, bukan di dalam
+#       pagar kode) dan jumlahnya **TEPAT SATU** - dua cap yang saling
+#       bertentangan ditolak. Sebelumnya penjaga mencari di SELURUH berkas, jadi
+#       contoh format di kronologi atau di dalam pagar kode meluluskan log yang
+#       headernya tidak punya field itu sama sekali (temuan #1 hakim B putaran 7);
+#   (b) <N> == jumlah skenario di `_meta/FAILURE_INJECTION_TESTS.md` HIDUP;
+#   (c) v<X.Y.Z> == field `- **Versi:**` di `_meta/SYSTEM_MANIFEST.md` HIDUP;
+#   (d) tanggal baris itu >= tanggal terbaru yang muncul di berkas log tersebut
+#       (kronologi tidak boleh lebih baru daripada header yang mengklaim segar);
+#   (e) sha-nya HEAD atau paling tua HEAD~3 - satu giliran boleh membuat sampai
+#       tiga commit (perbaikan, penutup utang, rekaman).
+#
+# (b), (c), (e) HANYA berlaku selama log itu "live", yaitu disentuh oleh salah satu dari 4 commit
+# terakhir, DAN tidak ada merge commit di dalam jendela itu (RP24, 20 Sep 2026). Sebabnya DIUKUR,
+# bukan diduga (temuan #2 hakim C, saya
+# reproduksi sendiri di clone terpisah pada main terbaru): sesudah PR ini di-merge,
+# kedua log OPEN milik sesi ini tidak bisa lagi disegarkan oleh sesi lain
+# (append-only + kepemilikan log), sehingga `VALIDATION FAILED` terjadi SEKETIKA -
+# pada squash merge MAUPUN merge commit - dan permanen sesudah satu commit apa pun
+# di atasnya. Penjaga ini memerahkan gerbang wajib repo untuk SEMUA sesi lain. Bila
+# log tidak live, (b)(c)(e) DITURUNKAN menjadi warning beralasan; (d) tetap keras
+# karena pembandingnya ada di dalam berkas sendiri. Bila sha cap tidak dikenal di
+# repo ini (clone dangkal - platform sudah sepuluh kali memulihkan workspace seperti
+# itu - atau squash merge yang membuang riwayat branch), (e) juga diturunkan menjadi
+# warning. Tidak ada jalur yang mati senyap. Log CLOSED dikecualikan seluruhnya:
+# isinya arsip, tidak ada "keadaan sekarang" yang bisa basi - itu juga sebabnya
+# menutup log OPEN adalah syarat merge yang sah.
+# ---------------------------------------------------------------------------
+_pola_segar = re.compile(
+    r"^- \*\*Segar pada:\*\* (\d{4}-\d{2}-\d{2}) \u00b7 FI (\d+) "
+    r"\u00b7 manifest v(\d+\.\d+\.\d+) \u00b7 head terukur `([0-9a-f]{7,40})`\s*$",
+    re.M,
+)
+_pola_segar_lama = re.compile(r"^- \*\*Segar pada:\*\* head `[0-9a-f]{7,40}`", re.M)
+_pola_open = re.compile(r"^- \*\*Keadaan:\*\*\s*`?OPEN`?", re.M)
+_pola_tanggal = re.compile(r"\b(\d{4}-\d{2}-\d{2})\b")
+_pola_seksi = re.compile(r"^## ", re.M)
+_pola_pagar = re.compile(r"^```.*?^```\s*$", re.S | re.M)
+
+
+def _fi_hidup():
+    d = ROOT / "_meta" / "FAILURE_INJECTION_TESTS.md"
+    if not d.is_file():
+        return None
+    m = re.search(r"\*\*Jumlah:\*\*\s*(\d+)\s*skenario", d.read_text(encoding="utf-8"))
+    return int(m.group(1)) if m else None
+
+
+def _versi_hidup():
+    d = ROOT / "_meta" / "SYSTEM_MANIFEST.md"
+    if not d.is_file():
+        return None
+    m = re.search(r"^- \*\*Versi:\*\*\s*`?(\d+\.\d+\.\d+)`?",
+                  d.read_text(encoding="utf-8"), re.M)
+    return m.group(1) if m else None
+
+
+def _jendela_sha():
+    """[HEAD, HEAD~1, HEAD~2, HEAD~3] atau None bila git/objeknya tidak tersedia."""
+    try:
+        h = subprocess.run(["git", "rev-list", "-n", "4", "HEAD"], cwd=str(ROOT),
+                           capture_output=True, text=True, timeout=60)
+    except Exception:
+        return None
+    if h.returncode != 0 or not h.stdout.split():
+        return None
+    return h.stdout.split()
+
+
+def _git(args):
+    """Jalankan git di ROOT. Kembalikan (rc, stdout); tidak pernah melempar."""
+    try:
+        p = subprocess.run(["git"] + args, cwd=str(ROOT), capture_output=True,
+                           text=True, timeout=60)
+        return p.returncode, p.stdout
+    except Exception:
+        return 1, ""
+
+
+def _log_live(relpath):
+    """True bila commit terakhir yang MENYENTUH log itu TERMASUK 4 commit terakhir HEAD.
+
+    Dua langkah, dan urutannya penting: `git rev-list -n 4 HEAD -- <path>` TIDAK
+    berarti "4 commit terakhir, apakah menyentuh path" - artinya "telusuri seluruh
+    riwayat sampai dapat 4 commit yang menyentuh path", jadi ia selalu menjawab ada
+    dan penjaganya tidak pernah turun severity. Versi pertama fungsi ini persis
+    salah begitu dan ditangkap oleh regresi RP23c yang menguncinya.
+
+    Merge commit yang isinya identik dengan salah satu induknya disederhanakan git,
+    jadi log hasil merge tidak lagi terhitung live - itulah yang membuat gerbang
+    wajib repo tidak merah untuk sesi lain sesudah merge."""
+    rc, jendela = _git(["rev-list", "-n", "4", "HEAD"])
+    if rc != 0 or not jendela.split():
+        return True
+    rc2, terakhir = _git(["rev-list", "-n", "1", "HEAD", "--", relpath])
+    if rc2 != 0:
+        return True
+    if not terakhir.strip():
+        # Log belum pernah di-commit (baru dibuat di pohon kerja): sesi pembuatnya
+        # jelas sesi yang sedang berjalan, jadi diperlakukan live.
+        return True
+    return terakhir.split()[0] in jendela.split()
+
+
+def _sha_dikenal(sha):
+    rc, _ = _git(["cat-file", "-e", f"{sha}^{{commit}}"])
+    return rc == 0
+
+
+def _ada_merge_di_jendela():
+    """True bila satu dari 4 commit terakhir HEAD adalah MERGE COMMIT.
+
+    Tidak boleh dipakai `git rev-list --merges -n 4 HEAD`: artinya "telusuri seluruh
+    riwayat sampai dapat 4 merge", bukan "apakah ada merge di 4 commit terakhir" -
+    kekeliruan yang sama dengan yang sempat membuat `_log_live` selalu true."""
+    rc, jendela = _git(["rev-list", "-n", "4", "HEAD"])
+    if rc != 0:
+        return False
+    for s in jendela.split():
+        rc2, parents = _git(["show", "--no-patch", "--format=%P", s])
+        if rc2 == 0 and len(parents.split()) > 1:
+            return True
+    return False
+
+
+def _leluhur(sha):
+    """True bila sha itu leluhur HEAD. False = ciri squash merge (riwayat branch dibuang)."""
+    rc, _ = _git(["merge-base", "--is-ancestor", sha, "HEAD"])
+    return rc == 0
+
+
+def _blok_header_keadaan(text):
+    """Isi blok 'Keadaan Sesi' saja: dari headingnya sampai heading `## ` berikut.
+
+    Baris `Segar pada` di luar blok ini BUKAN header - penjaga yang mencari di
+    seluruh berkas meluluskan log yang fieldnya tidak ada di header (temuan #1
+    hakim B putaran 7)."""
+    i = text.find("## Keadaan Sesi")
+    if i < 0:
+        return ""
+    j = _pola_seksi.search(text, i + len("## Keadaan Sesi"))
+    return text[i:] if j is None else text[i:j.start()]
+
+
+def _tanpa_pagar_kode(text):
+    """Buang isi pagar kode ``` supaya contoh format tidak terbaca sebagai field."""
+    return _pola_pagar.sub("", text)
+
+
+# Warning kesegaran SENGAJA tidak masuk `ref_warnings`: jumlah daftar itu dicetak sebagai
+# "unresolved" di baris COVERAGE, dan mencampur dua hal berbeda membuat angka rujukan tak
+# terselesaikan berbohong (cacat yang sama sudah ada pada warning git-tidak-tersedia versi lama).
+segar_warnings = []
+_n_fi_hidup, _versi_manifest, _jendela = _fi_hidup(), _versi_hidup(), _jendela_sha()
+_git_ada = _jendela is not None
+# RP24 (ditemukan dari uji sesudah-merge pada pohon yang sudah di-commit, aturan C8, saat menutup
+# putaran 8 PR #74): merge commit di jendela 4 commit berarti pohon ini BARU MENYERAP pekerjaan sesi
+# lain. Cap `- **Segar pada:**` di log OPEN milik sesi yang digabung tidak bisa disegarkan oleh sesi
+# yang menyerapnya (kepemilikan log + append-only kronologi), jadi bagian (b) dan (c) diperlakukan
+# sama seperti bagian (e): turun menjadi warning beralasan. Sebelumnya hanya (e) yang mengenal
+# keadaan ini, akibatnya merge sebuah PR yang membawa log OPEN + dokumen FI yang bergerak di sisi
+# `main` membuat VALIDATION FAILED di pohon hasil merge - penjaga memerahkan pohon yang tidak bisa
+# memperbaikinya, persis kelas cacat yang C8 larang. Gigi penjaga TIDAK dilonggarkan untuk keadaan
+# biasa: tanpa merge di jendela, (b) dan (c) tetap keras (dikunci RP24a).
+_merge_di_jendela = bool(_git_ada) and _ada_merge_di_jendela()
+if not _git_ada and any(_pola_open.search(p.read_text(encoding="utf-8")) for p in _berkas_log):
+    segar_warnings.append(
+        "WARNING kesegaran header: git tidak tersedia atau riwayatnya terlalu dangkal di pohon ini, "
+        "jadi bagian (e) penjaga `- **Segar pada:**` (sha harus HEAD..HEAD~3) DILEWATI dan semua log "
+        "OPEN diperlakukan sebagai live - bagian (b), (c), (d) tetap dijalankan. Dilewati dengan "
+        "alasan tercetak, bukan mati senyap"
+    )
+for _lg in _berkas_log:
+    _t = _lg.read_text(encoding="utf-8")
+    if not _pola_open.search(_t):
+        continue
+    _rel = _lg.relative_to(ROOT)
+    _relstr = str(_rel).replace("\\", "/")
+    _hdr = _tanpa_pagar_kode(_blok_header_keadaan(_t))
+    _live = True if not _git_ada else _log_live(_relstr)
+    _ms = list(_pola_segar.finditer(_hdr))
+    if not _ms or len(_ms) > 1:
+        if not _ms:
+            if _pola_segar.search(_tanpa_pagar_kode(_t)):
+                _pesan = ("baris `- **Segar pada:**` ADA tetapi LETAKNYA DI LUAR blok header "
+                          "'Keadaan Sesi' (di kronologi, atau di dalam pagar kode sebagai contoh) - "
+                          "header log OPEN itu tetap tidak punya keadaan terukur. Pindahkan ke blok header")
+            elif _pola_segar_lama.search(_t):
+                _pesan = ("baris `- **Segar pada:**` memakai FORMAT LAMA `head <sha> · <tanggal> · "
+                          "FI <N> · manifest v<X>` yang memasangkan sha dengan angka yang tidak pernah "
+                          "benar pada sha itu. Bentuk wajib sekarang: - **Segar pada:** <YYYY-MM-DD> · "
+                          "FI <N> · manifest v<X.Y.Z> · head terukur `<sha7>`")
+            else:
+                _pesan = ("log OPEN tanpa baris `- **Segar pada:**` di blok header - kesegaran header "
+                          "'Keadaan Sesi' tidak bisa dibuktikan. Bentuk wajib (satu baris, di dalam blok "
+                          "header, dikecualikan dari append-only justru supaya disegarkan): "
+                          "- **Segar pada:** <YYYY-MM-DD> · FI <N> · manifest v<X.Y.Z> · head terukur `<sha7>`")
+        else:
+            _pesan = (f"{len(_ms)} baris `- **Segar pada:**` di blok header, isinya berbeda - deklarasi "
+                      "ganda yang saling bertentangan tidak boleh dibiarkan lulus (temuan #1 hakim B "
+                      "putaran 7). Tepat satu baris; yang lama dihapus karena blok header dikecualikan "
+                      "dari append-only")
+        if _live:
+            errors.append(f"{_rel}: {_pesan}")
+        else:
+            # C8: penjaga tidak boleh memerahkan pohon yang tidak bisa memperbaikinya. Log OPEN yang
+            # tidak live milik sesi lain (atau arsip yang belum sempat ditutup): sesi yang sedang
+            # berjalan tidak berhak menyuntingnya, jadi temuannya warning beralasan, bukan FAILED.
+            # Tanpa ini, satu log OPEN tanpa cap yang sudah ada di `main` cukup untuk memerahkan
+            # gerbang wajib repo segera sesudah PR mana pun yang membawa penjaga ini digabung.
+            segar_warnings.append(
+                f"WARNING kesegaran header {_rel}: {_pesan} - DITURUNKAN menjadi warning karena log ini "
+                "tidak disentuh oleh 4 commit terakhir, jadi yang bisa memperbaikinya bukan sesi yang "
+                "sedang berjalan (aturan C8)"
+            )
+        continue
+    _m = _ms[0]
+    _tgl, _n, _ver, _sha = _m.group(1), int(_m.group(2)), _m.group(3), _m.group(4)
+    _tgl_berkas = sorted(_pola_tanggal.findall(_t))
+    if _tgl_berkas and _tgl < _tgl_berkas[-1]:
+        errors.append(
+            f"{_rel}: header OPEN disegarkan {_tgl} tetapi berkasnya memuat tanggal lebih baru "
+            f"{_tgl_berkas[-1]} - kronologi jalan sementara header tidak disegarkan"
+        )
+    if not _live:
+        segar_warnings.append(
+            f"WARNING kesegaran header {_rel}: log OPEN ini tidak disentuh oleh 4 commit terakhir, "
+            "jadi sesi pemiliknya bukan sesi yang sedang berjalan. Bagian (b), (c), (e) DITURUNKAN "
+            "menjadi warning supaya commit sesi lain tidak memerahkan gerbang wajib repo - sebabnya "
+            "diukur: sesudah merge ke `main`, log OPEN milik sesi ini tidak bisa disegarkan sesi lain, "
+            "dan penjaga yang tetap keras membuat VALIDATION FAILED seketika (temuan #2 hakim C "
+            "putaran 7). Bagian (d) tetap dijalankan dan tetap keras"
+        )
+        continue
+    if _n_fi_hidup is not None and _n != _n_fi_hidup:
+        _pesan_b = (f"header OPEN mengklaim FI {_n} padahal `_meta/FAILURE_INJECTION_TESTS.md` hidup "
+                    f"mencetak {_n_fi_hidup} - header BASI (segarkan baris `- **Segar pada:**`, jangan "
+                    "sunting kronologinya)")
+        if _merge_di_jendela:
+            segar_warnings.append(
+                f"WARNING kesegaran header {_rel}: {_pesan_b} - DITURUNKAN menjadi warning karena satu "
+                "dari 4 commit terakhir adalah MERGE COMMIT: pohon ini baru menyerap pekerjaan sesi lain "
+                "dan cap log OPEN milik sesi yang digabung tidak bisa disegarkan oleh sesi yang "
+                "menyerapnya (aturan C8, alasan yang sama dengan bagian (e))")
+        else:
+            errors.append(f"{_rel}: {_pesan_b}")
+    if _versi_manifest is not None and _ver != _versi_manifest:
+        _pesan_c = (f"header OPEN mengklaim manifest v{_ver} padahal `_meta/SYSTEM_MANIFEST.md` hidup "
+                    f"v{_versi_manifest} - header BASI")
+        if _merge_di_jendela:
+            segar_warnings.append(
+                f"WARNING kesegaran header {_rel}: {_pesan_c} - DITURUNKAN menjadi warning karena satu "
+                "dari 4 commit terakhir adalah MERGE COMMIT: pohon ini baru menyerap pekerjaan sesi lain "
+                "dan cap log OPEN milik sesi yang digabung tidak bisa disegarkan oleh sesi yang "
+                "menyerapnya (aturan C8, alasan yang sama dengan bagian (e))")
+        else:
+            errors.append(f"{_rel}: {_pesan_c}")
+    if not _git_ada:
+        continue
+    if not _sha_dikenal(_sha):
+        segar_warnings.append(
+            f"WARNING kesegaran header {_rel}: head terukur `{_sha}` tidak dikenal di repo ini "
+            "(clone dangkal, atau squash merge yang membuang riwayat branch) - bagian (e) DITURUNKAN "
+            "menjadi warning dengan alasan tercetak, bukan FAILED dan bukan mati senyap"
+        )
+        continue
+    if not any(s.startswith(_sha) or _sha.startswith(s[:7]) for s in _jendela):
+        if not _leluhur(_sha):
+            segar_warnings.append(
+                f"WARNING kesegaran header {_rel}: head terukur `{_sha}` BUKAN leluhur HEAD - ciri "
+                "SQUASH MERGE (riwayat branch dibuang, satu commit baru dibuat di atas batang utama), "
+                "jadi cap dari branch yang digabung tidak mungkin disegarkan oleh merge itu sendiri. "
+                "Bagian (e) DITURUNKAN menjadi warning beralasan (aturan C8), bukan FAILED dan bukan "
+                "mati senyap"
+            )
+        elif _ada_merge_di_jendela():
+            segar_warnings.append(
+                f"WARNING kesegaran header {_rel}: head terukur `{_sha}` di luar jendela HEAD..HEAD~3, "
+                "tetapi satu dari 4 commit terakhir adalah MERGE COMMIT - pohon ini baru menyerap "
+                "branch lain, dan merge itu tidak bisa menyegarkan header log milik sesi yang "
+                "digabung. Bagian (e) DITURUNKAN menjadi warning beralasan (aturan C8)"
+            )
+        else:
+            errors.append(
+                f"{_rel}: header OPEN menyebut head terukur `{_sha}` yang bukan HEAD maupun tiga commit "
+                f"sebelumnya ({', '.join(s[:7] for s in _jendela)}) padahal log ini disentuh commit "
+                "terbaru - header tidak disegarkan pada pertukaran bermakna terakhir"
+            )
+
+
 if errors:
     print("VALIDATION FAILED")
     print("\n".join(f"- {e}" for e in errors))
     for w in ref_warnings:
+        print(w)
+    for w in segar_warnings:
         print(w)
     sys.exit(1)
 
@@ -324,7 +1002,12 @@ print(
 print(f"SYSTEMS CHECKED (inheritance contract): {len(index_folders)} registered + pilot excluded by design")
 for w in ref_warnings:
     print(w)
-if ref_warnings:
-    print(f"WARNINGS: {len(ref_warnings)} (warning tier, exit code unaffected)")
+for w in segar_warnings:
+    print(w)
+for w in tabel_warnings:
+    print(w)
+_jumlah_warning = len(ref_warnings) + len(segar_warnings) + len(tabel_warnings)
+if _jumlah_warning:
+    print(f"WARNINGS: {_jumlah_warning} (warning tier, exit code unaffected)")
 else:
     print("WARNINGS: none")

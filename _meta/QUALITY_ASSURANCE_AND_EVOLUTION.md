@@ -216,10 +216,82 @@ Sistem tidak perlu mengaudit mekanisme auditnya pada setiap output. Audit mekani
 
 ---
 
+## ATURAN CAKUPAN — cakupan membatasi pencarian dan klaim, TIDAK PERNAH membatasi laporan
+
+Ditambahkan 17 Sep 2026. Aturan ini **melengkapi** Batasan anti-recursion di atas, dan keduanya menjawab
+masalah yang berbeda — mencampuradukkannya adalah sumber kesalahan nyata:
+
+- **Batasan anti-recursion** membatasi **LOOP** (berapa dalam/berapa kali audit boleh berulang).
+- **Aturan cakupan** membatasi **RENCANA PENCARIAN dan KLAIM** (apa yang diperiksa sistematis, dan apa yang
+  boleh dinyatakan sudah diperiksa).
+- **Tidak satu pun dari keduanya membatasi LAPORAN.**
+
+### Aturannya
+
+> **Cakupan membatasi RENCANA PENCARIAN dan KLAIM. Cakupan TIDAK PERNAH membatasi LAPORAN.**
+
+**Yang dibatasi cakupan:**
+1. Apa yang dicari **secara sistematis** — yaitu checklist wajib audit.
+2. Apa yang boleh **DIKLAIM** sudah diperiksa. Menyebut cakupan lebih luas dari yang dikerjakan adalah
+   kebohongan, dan itu dilarang.
+
+**Yang TIDAK BOLEH dibatasi cakupan:**
+3. Apa yang boleh **DILAPORKAN**. Temuan di luar cakupan **WAJIB tetap dilaporkan**.
+
+**Kewajiban saat menemukan sesuatu di luar cakupan:**
+- laporkan dengan label **"di luar cakupan"**;
+- beri **klasifikasi** (`B`/`A`/`G`/`N`/`P`) + **prioritas** (`P1`–`P3`) + **dasar bukti** — sama seperti
+  temuan dalam cakupan, karena nilainya tidak lebih rendah hanya karena tidak diminta;
+- **jangan bertindak** atasnya tanpa mandat — **menemukan ≠ memperbaiki** (Prinsip 2 di atas:
+  *"Pemeriksaan tidak sama dengan perubahan"*);
+- kalau menyadari telah membaca sesuatu di luar jalur yang diizinkan, **ungkapkan (disclosure)** — jangan
+  disembunyikan, dan jangan dipakai diam-diam sebagai dasar kesimpulan.
+
+**Yang dilarang:**
+- **mengklaim** cakupan lebih luas dari yang benar-benar dikerjakan;
+- **membuang atau menghaluskan** temuan karena tidak diminta (ini juga melanggar prinsip append-only
+  `PROTOKOL_REVIEW_INDEPENDEN.md` #8: *"jangan menghaluskan"*);
+- **menyaring** temuan supaya laporan "muat" dalam cakupan yang diminta.
+
+### Kenapa aturan ini perlu ditulis eksplisit
+
+Pemicunya adalah kalimat nyata dari seorang reviewer yang dibaca pemilik repo ini: *"Saya baca dulu aturan
+pemeriksa laporan supaya laporannya memenuhi syarat **tanpa melebih-lebihkan cakupan**."* Kalimat itu
+**ambigu** — bisa berarti disiplin anti-overclaim (benar), bisa berarti penyaringan temuan (berbahaya).
+Pemilik menyatakan kejanggalannya, dan **kejanggulan itu sah**.
+
+Aturan ini **bukan karangan baru** — repo ini sudah mempraktikkannya. Enam preseden yang memeriksanya
+(17 Sep 2026):
+
+| Preseden | Apa yang terjadi |
+|---|---|
+| berkas log sesi _log-sesi/LOG_SESI_2026-09-15_3.md (tanpa backtick — lihat catatan di bawah tabel) | Log `OPEN` basi milik sesi lain **DITEMUKAN tapi TIDAK DISENTUH** — hanya **dicatat + dilaporkan** |
+| berkas log sesi _log-sesi/LOG_SESI_2026-09-16_11.md + body PR #35 (tanpa backtick, alasan sama) | **"disklor paparan"**: sesi **mengungkapkan** telah membuka berkas di luar jalur baca wajib **sebelum** keputusan pertama ter-commit |
+| `_meta/_internal/HOUSEKEEPING_2026-09-16.md` | 5 branch diverged + log `OPEN` milik sesi lain ditemukan di luar mandat → **dilaporkan lengkap dengan rekomendasi**, tanpa menghapus/menindak |
+| Prinsip pada dokumen ini sendiri | *"Temuan tanpa bukti terverifikasi dicatat sebagai 'dugaan' dan tidak boleh langsung jadi perbaikan"* — temuan **lemah** pun dicatat, bukan dibuang |
+| Skema klasifikasi `B`/`A`/`G`/`N`/`P` | Adanya kategori **`N` (kebutuhan baru)** dan **`P` (preferensi/housekeeping)** = **slot struktural** untuk temuan yang bukan objek utama. Skema ini hanya masuk akal kalau temuan di luar cakupan memang **ditampung** |
+| `PROTOKOL_REVIEW_INDEPENDEN.md` #8 | **append-only**, *"jangan menghapus riwayat, jangan menghaluskan"* |
+
+> **Catatan penulisan rujukan (belajar dari 4 kejadian nyata pada 17 Sep 2026):** nama berkas di
+> `_log-sesi/` dan di dalam folder sistem **ditulis tanpa backtick** di dokumen `_meta/`. Alasannya mekanis,
+> bukan gaya: kedua area itu **tidak ikut ke ekstrak template bootstrap**, sehingga rujukan ber-backtick ke
+> sana menjadi **tak-terselesaikan** di ekstrak, menggeser pin `EXPECTED_TEMPLATE_WARNINGS` (harus persis 5)
+> dan membuat `tools/test_failure_injection.py` MERAH — **tanpa pesan yang menyebut berkas penyebabnya**.
+> Yang **aman** diberi backtick: `tools/*.py` dan berkas `_meta/*.md` (ikut ke ekstrak), serta `_meta/_internal/`
+> (terverifikasi empiris tidak memicu warning). Aturan umumnya: **kalau ragu, tulis tanpa backtick sebagai
+> provenance.** Preseden lebih tua: v1.12.1 *"tidak menambah rujukan ber-backtick ke dokumen aktif"*.
+
+**Penerapan pada audit 17 Sep 2026:** audit itu dimandatkan untuk **manual pengguna**. Enam temuan di luar
+cakupan (allowlist jaringan yang belum tercatat sebagai fakta platform; tidak ada butir warisan untuk
+mekanisme audit-isi; `review_prompt.py` hanya terikat PR; tidak ada pengambilan hasil otomatis; `gh issue
+create` belum teruji) **tetap dilaporkan** dengan label, dan **tidak satu pun ditindak tanpa mandat**.
+Lihat `_meta/_internal/AUDIT_MANUAL_DAN_MEKANISME_REVIEW_2026-09-17.md` bagian 4.
+
+---
 ## Log minimum
 
 Gunakan log keputusan pada level yang terdampak. Untuk perubahan besar, catat juga di changelog/release notes:
 
 | Tanggal | Lapisan | Observasi | Perubahan | Alasan | Bukti | Versi | Approval | Rollback |
 |---|---|---|---|---|---|---|---|---|
-| | | | | | | | | |
+| 2026-09-17 | Lapisan 1 (meta) | Tabel log ini **ditemukan KOSONG** padahal dokumen ini jelas berevolusi — bagian "Lensa audit" menyebut pengkodifikasiannya sendiri terjadi 5 Sep 2026 (temuan M-08), tetapi tidak ada satu pun baris log yang mencatatnya. **Entri sebelum 17 Sep 2026 TIDAK direkonstruksi**: menulis riwayat yang tidak kusaksikan sendiri = fabrikasi, dan itu lebih buruk daripada tabel yang kosong. Yang dicatat sebagai gantinya: **fakta bahwa tabelnya kosong**, sebagai temuan pelanggaran W-05 pada dokumen hidup | **ATURAN CAKUPAN ditambahkan** sebagai bagian baru: cakupan membatasi RENCANA PENCARIAN dan KLAIM, **TIDAK PERNAH** membatasi LAPORAN. Termasuk kewajiban melabeli + mengklasifikasi temuan di luar cakupan, larangan menyaring/menghaluskan, larangan bertindak tanpa mandat, dan kewajiban disclosure. **6 preseden repo** dicantumkan sebagai bukti bahwa aturan ini bukan karangan baru | Instruksi eksplisit pemilik 17 Sep 2026 (T31) setelah membaca kalimat reviewer *"supaya laporannya memenuhi syarat tanpa melebih-lebihkan cakupan"* dan menyatakan kejanggalannya: *"seharusnya jika memang ada yang perlu dilaporkan maka seharusnya itu tetap dilaporkan biarpun tidak masuk dalam cakupan yang diminta."* **Verdict agent: pemilik BENAR** — kalimat itu ambigu, dan yang diputuskan adalah aturannya supaya ambiguitas tidak bisa muncul lagi | `_meta/_internal/AUDIT_MANUAL_DAN_MEKANISME_REVIEW_2026-09-17.md` bagian 4 (penerapan nyata: 6 temuan di luar cakupan dilaporkan, tidak ditindak); `_meta/_internal/DISKUSI_MENTAH_sistem-pembuat-undangan_2026-09-17.md` bagian L.3 (6 preseden diverifikasi per berkas); seluruh 7 alat PASS setelah perubahan | meta v1.15.0 | Mandat pemilik T31 + delegasi "lakukan yang terbaik"; menunggu review independen **L1** (perubahan struktural `_meta/` = L1 wajib per `PROTOKOL_REVIEW_INDEPENDEN.md` baris 17) | revert commit yang menambah bagian ATURAN CAKUPAN (aditif murni, tanpa migrasi data) |

@@ -32,6 +32,7 @@ import json
 import re
 import subprocess
 import sys
+from datetime import datetime, timezone
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[1]
@@ -39,6 +40,12 @@ ROOT = Path(__file__).resolve().parents[1]
 PLACEHOLDER_PR = "<NOMOR PR>"
 PLACEHOLDER_BASE = "<BASE SHA>"
 PLACEHOLDER_HEAD = "<HEAD SHA>"
+PLACEHOLDER_MERGE_BASE = "<MERGE-BASE SHA>"
+
+# Kuorum hakim default: aturan pemilik 17 Sep 2026 ("Selagi ada yang merah, maka harus diperbaiki")
+# dijalankan dengan 3 hakim independen. Dipakai hitung_putaran() untuk memutuskan apakah satu putaran
+# masih berjalan; bisa diganti lewat --harapkan N.
+KUORUM_HAKIM_DEFAULT = 3
 
 # Pin regresi hanya dihitung bila sebuah tools/*.py benar-benar MENDEFINISIKAN
 # konstanta yang dipin. Mencari nama konstanta sebagai substring membuat alat
@@ -55,7 +62,21 @@ PIN_DEFINITION_RE = re.compile(
 ARBITER_PATH_REASONS = {
     "tools/test_failure_injection.py": "alat injeksi kegagalan dan pin regresi",
     "_meta/PROTOKOL_REVIEW_INDEPENDEN.md": "protokol review independen",
+    # Alasan di bawah ini DIPIN oleh uji regresi RP1 di tools/test_failure_injection.py
+    # (tuple persis ("tools/review_prompt.py", True, "pembangkit prompt pengadil")).
+    # 17 Sep 2026: string ini sempat diubah jadi "pembangkit prompt pengadil (kanal PR)"
+    # untuk kejelasan, dan RP1 langsung MERAH. Yang dikembalikan adalah SUNTINGANNYA,
+    # BUKAN pin-nya — menggeser pin agar cocok dengan suntingan kosmetik akan
+    # menghancurkan alasan pin itu ada (mendeteksi perubahan diam-diam pada pengadil).
     "tools/review_prompt.py": "pembangkit prompt pengadil",
+    # Ditambahkan 17 Sep 2026: mekanisme AUDIT ISI (kanal non-PR) lahir. Alat dan
+    # protokolnya adalah pengadil juga — PR yang mengubahnya tidak boleh dieksekusi
+    # oleh pengadil yang diubahnya. Daftar ini SELARAS dengan ARBITER_PATHS di
+    # tools/audit_prompt.py; kalau salah satunya bertambah, yang lain WAJIB ikut
+    # (dua sumber yang saling menunjuk; ketidaksinkronannya = temuan audit).
+    "tools/audit_prompt.py": "pembangkit prompt pengadil (kanal audit isi)",
+    "tools/ambil_verdict.py": "pengambil hasil pengadil dari GitHub",
+    "_meta/PROTOKOL_AUDIT_ISI.md": "protokol audit isi",
 }
 ARBITER_PATHS = tuple(ARBITER_PATH_REASONS)
 
@@ -318,6 +339,16 @@ def reading_order(files: list[str]) -> list[str]:
             relevan.append((rel, f"`{rel}` — dokumen sistem yang disentuh PR"))
         elif rel.endswith(".md"):
             relevan.append((rel, f"`{rel}` — dokumen root yang disentuh PR"))
+        else:
+            # Temuan hakim putaran 3 PR #74 (#6): semua cabang di atas hanya menerima `*.md` (plus apa
+            # pun di bawah `tools/`), sehingga berkas non-Markdown di LUAR tools/ jatuh DIAM-DIAM dari
+            # daftar wajib baca. Terukur pada PR ini: `_meta/_internal/uji/uji_upscaling.py` (skrip
+            # pengukuran yang menopang klaim judul PR) dan
+            # `sistem/sistem-undangan/_sistem/validate_system.py` (validator mandiri sistem baru) tidak
+            # muncul di bagian 2 — 58 dari 60 berkas. Daftar baca yang tidak lengkap membuat hakim
+            # merasa sudah membaca semuanya, jadi cabang terakhir ini WAJIB ada: tidak boleh ada berkas
+            # yang berubah tanpa masuk daftar.
+            relevan.append((rel, f"`{rel}` — berkas non-Markdown yang disentuh PR (baca isinya dan diff-nya)"))
     seen, dedup = set(), []
     for rel, item in relevan:
         if rel in seen:
@@ -403,6 +434,126 @@ def open_test_window(files: list[str] | None = None) -> tuple[list[str], list[st
     return blocking, writer_hits
 
 
+def objek_diff(base_sha: str, head_sha: str, ujung_hidup: str | None = None) -> dict:
+    """Tiga sha + dua daftar berkas, DIUKUR lokal. Fail-closed: kalau tidak bisa dihitung, katakan.
+
+    Sebab fungsi ini ada (temuan **R3** review independen PR #74): prompt versi lama menyajikan
+    `git diff <base sha> <head sha>` sebagai perintah wajib, sementara daftar berkasnya diambil dari
+    **diff PR terhadap MERGE-BASE** (`gh api pulls/N/files`). Keduanya **berbeda** begitu base bergerak
+    sejak branch dibuat - pada PR #74 reviewer mengukur selisih 4 berkas (53 vs 49 pada head saat
+    itu; ANGKA INI HISTORIS dan bergerak setiap kali base/head bergerak, jadi ia SENGAJA TIDAK
+    PERNAH dicetak ke prompt - prompt menghitung sendiri lewat `objek_diff()`). Reviewer menghabiskan tenaga
+    mencurigai penghapusan bukti yang tidak pernah dilakukan penulis. Yang salah bukan datanya:
+    **dua semantik berbeda disajikan sebagai satu objek.**
+    """
+    hasil: dict = {"merge_base": None, "nama_merge_base": None, "nama_langsung": None,
+                   "nama_ujung_hidup": None, "ujung_hidup": None, "kesalahan": []}
+    code, out, err = _run(["git", "merge-base", base_sha, head_sha])
+    if code != 0 or not out.strip():
+        hasil["kesalahan"].append(
+            f"merge-base tidak bisa dihitung dari {base_sha[:12]} dan {head_sha[:12]} "
+            f"(git keluar {code}): {(err or out).strip()[:200] or '(kosong)'} - "
+            "kemungkinan objek tidak ada lokal (repo shallow / belum fetch). "
+            "Prompt TIDAK boleh mengklaim selisih yang tidak terukur."
+        )
+        return hasil
+    mb = out.strip()
+    hasil["merge_base"] = mb
+    for kunci, kiri in (("nama_merge_base", mb), ("nama_langsung", base_sha)):
+        c2, o2, e2 = _run(["git", "diff", "--name-only", kiri, head_sha])
+        if c2 != 0:
+            hasil["kesalahan"].append(
+                f"git diff --name-only {kiri[:12]} {head_sha[:12]} gagal (keluar {c2}): "
+                f"{(e2 or o2).strip()[:200] or '(kosong)'}"
+            )
+        else:
+            hasil[kunci] = sorted({ln.strip() for ln in o2.splitlines() if ln.strip()})
+    # (B-hidup): selisih terhadap UJUNG BASE YANG SEBENARNYA, bukan terhadap base sha beku dari API.
+    if ujung_hidup and ujung_hidup != base_sha:
+        hasil["ujung_hidup"] = ujung_hidup
+        c3, o3, e3 = _run(["git", "diff", "--name-only", ujung_hidup, head_sha])
+        if c3 != 0:
+            hasil["kesalahan"].append(
+                f"objek ujung base terukur {ujung_hidup[:12]} tidak ada lokal, jadi (B-hidup) TIDAK "
+                f"terukur (git keluar {c3}: {(e3 or o3).strip()[:160] or '(kosong)'}). Jalankan "
+                "`git fetch origin <base ref>` lebih dulu lalu ukur sendiri — prompt ini tidak menebak.")
+        else:
+            hasil["nama_ujung_hidup"] = sorted({ln.strip() for ln in o3.splitlines() if ln.strip()})
+    return hasil
+
+
+def ujung_base_hidup(base_ref: str, slug: str | None = None) -> dict:
+    """Ujung branch base YANG SEBENARNYA saat ini + waktu pengukurannya. Fail-closed.
+
+    **Sebab fungsi ini ada (temuan hakim putaran 3 PR #74, #7).** Prompt mencetak baris
+    "**Base sha — ujung base SEKARANG**" dari `.base.sha` API. Nilai itu **BEKU sejak PR dibuat**:
+    pada 18 Sep 2026 `main` bergerak ke `26147e1` (PR lain di-merge 13:35Z) sementara `.base.sha`
+    PR #74 tetap `c1d00c3`, sehingga prompt menulis "hanya di (B): 0 berkas" padahal selisih terhadap
+    ujung `main` yang sebenarnya memuat 11 berkas tambahan. Melabeli nilai beku sebagai "SEKARANG"
+    adalah kebalikan dari kenyataan, dan bagian 3a justru dibuat untuk MENAMPAKKAN pergerakan base.
+    """
+    hasil: dict = {"sha": None, "sumber": None, "waktu_utc": None, "kesalahan": []}
+    hasil["waktu_utc"] = datetime.now(timezone.utc).strftime("%Y-%m-%dT%H:%M:%SZ")
+    if not base_ref or base_ref.startswith("<"):
+        hasil["kesalahan"].append(
+            "base ref tidak terbaca (mode --generic?) — ujung base yang sebenarnya TIDAK DIUKUR")
+        return hasil
+    code, out, err = _run(["git", "ls-remote", "origin", f"refs/heads/{base_ref}"])
+    if code == 0 and out.strip():
+        hasil["sha"] = out.split()[0].strip()
+        hasil["sumber"] = f"git ls-remote origin refs/heads/{base_ref}"
+        return hasil
+    slug = slug or repo_slug()
+    if slug and "/" in slug and "<" not in slug:
+        c2, o2, _ = _run(["gh", "api", f"repos/{slug}/branches/{base_ref}", "--jq", ".commit.sha"])
+        if c2 == 0 and o2.strip():
+            hasil["sha"] = o2.strip()
+            hasil["sumber"] = f"gh api repos/{slug}/branches/{base_ref}"
+            return hasil
+    hasil["kesalahan"].append(
+        f"ujung branch `{base_ref}` tidak terbaca (git ls-remote keluar {code}: "
+        f"{(err or '').strip()[:160] or '(kosong)'}) — TIDAK diklaim sama dengan base sha PR")
+    return hasil
+
+
+def baris_ujung_base(base_pr: str, ujung: dict | None) -> tuple[list[str], list[str]]:
+    """(baris tabel, peringatan) soal base. MURNI — tidak menyentuh git/jaringan, jadi bisa diuji.
+
+    Tidak pernah melabeli base sha dari API sebagai "sekarang"; kalau ujung yang sebenarnya tidak
+    terukur, ia menyatakan itu dan memberi perintah ukurnya (fail-closed), bukan menyamakan keduanya.
+    """
+    tabel: list[str] = []
+    peringatan: list[str] = []
+    tabel.append(f"| Base sha yang tercatat di PR (**BEKU sejak PR dibuat** — BUKAN ujung base sekarang) "
+                 f"| `{base_pr}` |")
+    if not ujung or not ujung.get("sha"):
+        alasan = "; ".join((ujung or {}).get("kesalahan") or []) or "tidak terukur"
+        tabel.append("| Ujung branch base TERUKUR saat prompt dibangkitkan | **TIDAK TERUKUR** |")
+        peringatan.append(f"> **Fail-closed:** ujung branch base yang sebenarnya TIDAK TERUKUR ({alasan}).")
+        peringatan.append("> Prompt ini karena itu TIDAK mengklaim base tidak bergerak, dan angka (B) di")
+        peringatan.append("> bawah — kalau ada — dihitung terhadap base sha yang beku. Ukur sendiri:")
+        peringatan.append("> `git ls-remote origin <base ref>` lalu `git diff --name-only <ujung itu> <head sha>`.")
+        return tabel, peringatan
+    sha = ujung["sha"]
+    waktu = ujung.get("waktu_utc") or "(waktu pengukuran tidak tercatat)"
+    sumber = ujung.get("sumber") or "git ls-remote"
+    tabel.append(f"| **Ujung branch base TERUKUR** saat prompt dibangkitkan ({waktu}, lewat `{sumber}`) "
+                 f"| `{sha}` |")
+    if sha == base_pr:
+        peringatan.append(f"> Ujung base terukur **sama** dengan base sha yang tercatat di PR (`{sha[:12]}`) pada")
+        peringatan.append("> saat prompt ini dibangkitkan. Itu TIDAK menjamin base diam sesudah prompt dibaca:")
+        peringatan.append("> ukur ulang (`git ls-remote origin <base ref>`) sebelum menyimpulkan apa pun dari (B).")
+    else:
+        peringatan.append(f"> **BASE SUDAH BERGERAK** sejak PR dibuat: yang tercatat di PR `{base_pr[:12]}`, ujung")
+        peringatan.append(f"> terukur saat prompt dibangkitkan `{sha[:12]}`. Akibatnya diff **(B) yang dicetak prompt")
+        peringatan.append("> ini bisa MENGERDILKAN keadaan** — ia dihitung terhadap base sha yang beku. Kalau angka")
+        peringatan.append("> '(B-hidup)' ada di bawah, itulah selisih terhadap ujung terukur; kalau tidak ada,")
+        peringatan.append("> **wajib ukur sendiri sebelum menyimpulkan:**")
+        peringatan.append(f"> `git fetch origin <base ref> && git diff --name-only {sha[:12]} <head sha>`, lalu sebut")
+        peringatan.append("> angka pengukuranmu sendiri di verdict — bukan angka prompt ini.")
+    return tabel, peringatan
+
+
 def head_sha_of_worktree() -> str:
     code, out, _ = _run(["git", "rev-parse", "HEAD"])
     return out.strip() if code == 0 else "(tidak terbaca)"
@@ -411,7 +562,93 @@ def head_sha_of_worktree() -> str:
 # --------------------------------------------------------------------------
 # Render
 # --------------------------------------------------------------------------
-def render(pr: dict | None, files: list[str], generic: bool) -> tuple[str, list[str]]:
+def repo_slug() -> str:
+    """`owner/repo` tempat PR ini hidup, untuk mencetak perintah tempel verdict yang benar.
+
+    Fail-closed ke placeholder: prompt yang mencetak slug karangan lebih berbahaya daripada prompt
+    yang menyuruh pembaca mengisinya sendiri.
+    """
+    code, out, _err = _run(["gh", "repo", "view", "--json", "nameWithOwner", "-q", ".nameWithOwner"])
+    slug = (out or "").strip()
+    return slug if code == 0 and "/" in slug else "<OWNER>/<REPO>"
+
+
+def hitung_putaran(data: dict, kuorum: int = KUORUM_HAKIM_DEFAULT, head_sha: str | None = None) -> int:
+    """Putaran yang HARUS dinamai prompt — dihitung dari kanal PR. MURNI: tidak menyentuh jaringan.
+
+    **Sebab aturan ini ada (temuan hakim putaran 3 PR #74, #2, P1).** Versi sebelumnya selalu
+    mengembalikan `max(putaran yang tertempel) + 1`. Akibatnya begitu SATU hakim putaran 3 menempel
+    verdictnya, setiap pembangkitan ulang pada head yang SAMA menamai putaran yang sedang berjalan
+    sebagai "putaran 4" — padahal pemilik membuka putaran 3 dan dua hakim lain masih bekerja di bawah
+    teks yang menulis "putaran 3". Karena prompt menyuruh hakim menyalin angka itu apa adanya, catatan
+    putaran di kanal jadi bercampur.
+
+    Putaran R dinyatakan **MASIH BERJALAN** selama salah satu dari ini benar:
+      (a) jumlah slot hakim yang menamai R **kurang dari kuorum** — hakim yang belum menyerahkan
+          laporan bukan hakim yang puas; atau
+      (b) head PR **belum bergerak** sejak verdict R tertempel (sha head disebut di dalam verdict itu)
+          — artinya koreksi belum dibuat, jadi belum ada objek baru untuk diadili.
+    Hanya kalau keduanya tidak berlaku, putaran berikutnya = R + 1. Arah kegagalannya sengaja
+   konservatif: lebih baik menamai putaran yang sama dua kali daripada melompati satu putaran.
+    """
+    tools_dir = str(Path(__file__).resolve().parent)
+    if tools_dir not in sys.path:
+        sys.path.insert(0, tools_dir)
+    import ambil_verdict as av                      # definisi "slot hakim" DIPINJAM, bukan diduplikasi
+
+    per_putaran: dict[int, int] = {}
+    menyebut_head: set[int] = set()
+    pendek = (head_sha or "")[:7]
+    for kelompok in ("comments", "reviews"):
+        for k in data.get(kelompok) or []:
+            teks = (k or {}).get("body") or ""
+            if not av.slot_hakim(teks):
+                continue
+            m = re.search(r"putaran\s+(\d+)", teks, re.I)
+            if not m:
+                continue
+            r = int(m.group(1))
+            per_putaran[r] = per_putaran.get(r, 0) + 1
+            if pendek and (head_sha in teks or pendek in teks):
+                menyebut_head.add(r)
+    if not per_putaran:
+        return 1
+    R = max(per_putaran)
+    if per_putaran[R] < max(1, int(kuorum or 1)):
+        return R                                    # (a) kuorum putaran R belum lengkap
+    if head_sha and R in menyebut_head:
+        return R                                    # (b) head belum bergerak sejak verdict R
+    return R + 1
+
+
+def next_round(number: int, kuorum: int = KUORUM_HAKIM_DEFAULT, head_sha: str | None = None) -> int | None:
+    """Hitung nomor putaran review BERIKUTNYA dari verdict yang sudah tertempel di kanal PR.
+
+    Sebab: prompt versi lama menyuruh hakim MENEBAK ("ganti `putaran 1` dengan angka putaran yang
+    sebenarnya") dan menyebut "maksimal 2 putaran" sebagai fakta tetap. Keduanya salah begitu pemilik
+    membuka putaran tambahan (18 Sep 2026: PR #74 putaran 3 dibuka pemilik sesudah 13 temuan gabungan
+    putaran 2 ditutup). Nomor putaran adalah DATA yang ada di kanal, jadi dihitung di sini — dan
+    definisi "slot hakim" DIPINJAM dari `ambil_verdict.py` supaya tidak ada dua definisi yang bisa
+    saling bertentangan.
+
+    Fail-closed: kalau kanal tidak terbaca, kembalikan None. Prompt lalu menyuruh hakim menghitung
+    sendiri secara eksplisit dan TIDAK mencetak angka yang bisa salah.
+    """
+    tools_dir = str(Path(__file__).resolve().parent)
+    if tools_dir not in sys.path:
+        sys.path.insert(0, tools_dir)
+    try:
+        import ambil_verdict as av
+        data = av.ambil_pr(number)
+    except Exception:
+        return None
+    return hitung_putaran(data, kuorum, head_sha)
+
+
+def render(pr: dict | None, files: list[str], generic: bool,
+           objek: dict | None = None,
+           putaran: int | None = None,
+           ujung_base: dict | None = None) -> tuple[str, list[str]]:
     if generic:
         num, base, head = PLACEHOLDER_PR, PLACEHOLDER_BASE, PLACEHOLDER_HEAD
         title = "<JUDUL PR>"
@@ -455,25 +692,107 @@ def render(pr: dict | None, files: list[str], generic: bool) -> tuple[str, list[
     for i, item in enumerate(reading_order(files), start=1):
         a(f"{i}. {item}")
     a("")
+    # R3: tiga sha, bukan dua. Merge-base = titik branch dibuat; base sha yang TERCATAT DI PR beku
+    # sejak PR dibuat, dan ujung base yang SEBENARNYA diukur terpisah lewat ujung_base_hidup()
+    # (temuan #7 hakim putaran 3: melabeli nilai beku sebagai "SEKARANG" adalah kebalikan kenyataan).
+    if generic:
+        mb = PLACEHOLDER_MERGE_BASE
+        daftar_a: list[str] | None = None
+        daftar_b: list[str] | None = None
+        daftar_hidup: list[str] | None = None
+        err_objek = ["mode --generic: tidak ada PR, jadi merge-base dan selisihnya tidak bisa diukur"]
+    else:
+        objek = objek or {}
+        mb = objek.get("merge_base") or "TIDAK TERHITUNG"
+        daftar_a = objek.get("nama_merge_base")
+        daftar_b = objek.get("nama_langsung")
+        daftar_hidup = objek.get("nama_ujung_hidup")
+        err_objek = list(objek.get("kesalahan") or [])
+
     a("## 3. Objek ter-pin")
     a("")
     a("| Objek | Nilai |")
     a("|---|---|")
     a(f"| PR | {pr_ref} — {title} |")
     a(f"| Base ref | `{base_ref}` |")
-    a(f"| Base sha | `{base}` |")
+    _tabel_base, _peringatan_base = baris_ujung_base(base, ujung_base)
+    for _b in _tabel_base:
+        a(_b)
+    a(f"| **Merge-base sha — titik branch ini dibuat** | `{mb}` |")
     a(f"| Head ref | `{head_ref}` |")
-    a(f"| Head sha | `{head}` |")
-    a(f"| Berkas berubah | {len(files)} |")
+    a(f"| **Head sha — OBJEK YANG HENDAK DIPUTUSKAN** | `{head}` |")
+    a(f"| Berkas menurut data PR (semantik merge-base) | {len(files)} |")
     a("")
-    a("Semua pemeriksaan dilakukan **pada dua sha itu**, bukan pada \"main terbaru\" atau pada branch yang bergerak:")
+    for _p in _peringatan_base:
+        a(_p)
+    a("")
+    a("**Verdict wajib menyebut head sha di atas.** Head bisa bergerak selama review berjalan; verdict")
+    a("yang tidak menyebut sha tidak bisa dipetakan ke keadaan mana pun dan diperlakukan sebagai belum")
+    a('terverifikasi (protokol review independen, bagian "Beberapa hakim sekaligus").')
+    a("")
+    a("### 3a. Dua diff yang BERBEDA — jangan ditukar")
+    a("")
+    a("**Sebab bagian ini ada:** prompt versi lama menyajikan `git diff <base sha> <head sha>` sebagai")
+    a("perintah wajib, sementara daftar berkasnya berasal dari **diff PR terhadap merge-base**. Keduanya")
+    a("**berbeda** begitu base bergerak sejak branch dibuat. Selisihnya **DIHITUNG dan DICETAK di bawah** —")
+    a("prompt ini sengaja TIDAK mengutip angka dari PR mana pun, karena angka yang dibekukan di kode akan")
+    a("membantah pengukurannya sendiri begitu base atau head bergerak (itu terjadi, dan jadi temuan review).")
     a("")
     a("```bash")
+    a("# (A) PERUBAHAN YANG DIPERKENALKAN PR — semantik daftar berkas di bagian 3b. PAKAI INI untuk menilai isi PR.")
+    a(f"git diff --stat {mb} {head}")
+    a(f"git diff --numstat {mb} {head}")
+    a("")
+    a("# (B) SELISIH LANGSUNG ujung base ke head — IKUT memuat perubahan yang masuk ke base SESUDAH branch dibuat.")
     a(f"git diff --stat {base} {head}")
-    a(f"git diff --numstat {base} {head}")
     a("```")
     a("")
-    a("Berkas yang di-declare berubah oleh data PR:")
+    a("**Aturan pakai:** cek *kelengkapan vs isi PR* dan *append-only* dilakukan pada **(A)**. Kalau kamu")
+    a("memakai (B) lalu menemukan delesi pada berkas yang tidak ada di (A), itu **BUKAN penghapusan oleh")
+    a("penulis PR** — itu base yang bergerak. **Nyatakan di verdict-mu diff mana yang kamu pakai.**")
+    a("")
+    if err_objek:
+        a("**Yang TIDAK bisa diukur, dinyatakan (fail-closed — jangan disimpulkan sendiri):**")
+        a("")
+        for e in err_objek:
+            a(f"- {e}")
+        a("")
+    if daftar_a is not None and daftar_b is not None:
+        hanya_b = [x for x in daftar_b if x not in set(daftar_a)]
+        hanya_a = [x for x in daftar_a if x not in set(daftar_b)]
+        a(f"**Selisih terukur (A) vs (B) — angka, bukan perkiraan, diukur saat prompt dibangkitkan:**")
+        a(f"(A) {len(daftar_a)} berkas, (B) {len(daftar_b)} berkas — (B) dihitung terhadap base sha yang")
+        a("**tercatat di PR (beku)**, bukan terhadap ujung branch base yang sebenarnya.")
+        a("")
+        if daftar_hidup is not None:
+            hanya_hidup = [x for x in daftar_hidup if x not in set(daftar_a)]
+            a(f"**(B-hidup) terhadap ujung base TERUKUR `{(objek or {}).get('ujung_hidup', '')[:12]}`: "
+              f"{len(daftar_hidup)} berkas, {len(hanya_hidup)} di antaranya hanya ada di (B-hidup)** —")
+            a("inilah selisih yang sesungguhnya kalau base sudah bergerak. Sebut angka ini (atau hasil")
+            a("pengukuranmu sendiri) di verdict, dan JANGAN memakai '0 berkas hanya di (B)' dari prompt")
+            a("versi lama sebagai fakta.")
+            for rel in hanya_hidup[:15]:
+                a(f"  - `{rel}`")
+            if len(hanya_hidup) > 15:
+                a(f"  - … dan {len(hanya_hidup) - 15} berkas lagi (ukur sendiri untuk daftar lengkap)")
+            a("")
+        a(f"- **hanya di (B), jadi BUKAN perubahan PR ini: {len(hanya_b)} berkas**"
+          + (" — berkas-berkas ini masuk ke base SESUDAH branch ini dibuat" if hanya_b else ""))
+        for rel in hanya_b[:15]:
+            a(f"  - `{rel}`")
+        if len(hanya_b) > 15:
+            a(f"  - … dan {len(hanya_b) - 15} lainnya")
+        a(f"- hanya di (A): {len(hanya_a)} berkas")
+        for rel in hanya_a[:15]:
+            a(f"  - `{rel}`")
+        a("")
+        sama = "SAMA" if sorted(files) == daftar_a else "BERBEDA"
+        a(f"**Konsistensi daftar:** data PR lewat API menyebut **{len(files)}** berkas; diff lokal (A)")
+        a(f"menyebut **{len(daftar_a)}** berkas → **{sama}**."
+          + ("" if sama == "SAMA" else
+             " Selisihnya wajib dinyatakan di verdict, jangan dipilih salah satu diam-diam."))
+        a("")
+    a("### 3b. Berkas yang di-declare berubah oleh data PR (semantik diff A)")
     a("")
     if files:
         for rel in files:
@@ -485,7 +804,8 @@ def render(pr: dict | None, files: list[str], generic: bool) -> tuple[str, list[
     a("")
     a("1. **Kelengkapan vs isi PR** — setiap hal yang dijanjikan body PR benar-benar ada di diff; setiap hal di diff")
     a("   punya penjelasan di body. Selisih dua arah = temuan.")
-    a("2. **Append-only** — `git diff --numstat <base> <head>` untuk berkas log/bukti (`LOG_SESI_*.md`,")
+    a("2. **Append-only** — `git diff --numstat <merge-base> <head>` (diff **A**, lihat bagian 3a) untuk")
+    a("   berkas log/bukti (`LOG_SESI_*.md`,")
     a("   `ACCEPTANCE_TEST_LOG.md`, dokumen bukti): kolom delesi **harus 0** — KECUALI blok header")
     a("   \"Keadaan Sesi\" pada `LOG_SESI_*.md`. Blok itu WAJIB disegarkan saat penutupan sesi (header")
     a("   `OPEN` menjadi `CLOSED`, ringkasan keadaan diperbarui), jadi perubahan baris DI DALAM blok itu")
@@ -515,7 +835,13 @@ def render(pr: dict | None, files: list[str], generic: bool) -> tuple[str, list[
     a("Regresi wajib dijalankan di salinan `/tmp` pada head sha:")
     a("")
     a("```bash")
-    a("python3 tools/validate_repo.py          # harus PASS, 0 warning")
+    a("python3 tools/validate_repo.py          # harus PASS; baris 'WARNINGS: N' dikutip apa adanya")
+    a("#   warning tier HANYA sah untuk berkas bukti historis yang append-only (keputusan pemilik")
+    a("#   18 Sep 2026: riwayat tidak disunting demi kosmetika tabel). Warning di dokumen HIDUP")
+    a("#   = MERAH. Syarat lama (lulus tanpa satu pun peringatan) dilaporkan tidak terukur oleh")
+    a("#   hakim putaran 4, lalu dicabut penulis PR atas izin pemilik (giliran 22) berdasar warning")
+    a("#   tier keputusan pemilik 18 Sep 2026 - hakim melaporkan, pemilik memutuskan, penulis")
+    a("#   melaksanakan. (Atribusi ini dibetulkan 19 Sep 2026, temuan #2 hakim putaran 5.)")
     a("python3 tools/test_failure_injection.py # harus PASS; jumlah skenario = _meta/FAILURE_INJECTION_TESTS.md")
     a("```")
     a("")
@@ -540,25 +866,114 @@ def render(pr: dict | None, files: list[str], generic: bool) -> tuple[str, list[
             a("")
     a("## 6. Aturan keputusan")
     a("")
-    a("**Semua cek hijau, tanpa satu pun BLOCKER:**")
-    a("")
-    a("```bash")
-    a(f"gh pr merge {merge_num} --merge")
-    a("```")
-    a("")
-    a("lalu jalankan ulang di `main` terbaru dan **tempel keluaran persisnya** di komentar review:")
-    a("")
-    a("```bash")
-    a("python3 tools/validate_repo.py")
-    a("python3 tools/test_failure_injection.py")
-    a("```")
+    if arbiter:
+        a("**PERHATIAN — PR INI MENYENTUH ALAT PENGADIL: perintah merge di bagian ini DIGANTI LARANGAN.**")
+        a("Rinciannya di bagian 7. Ringkasnya: **`gh pr merge` DILARANG untuk PR ini, sekalipun semua cek")
+        a("hijau** — pengadil tidak mengeksekusi perubahan atas dirinya sendiri, jadi penggabungan adalah")
+        a("keputusan pemilik langsung. Tugasmu berhenti pada **melaporkan**.")
+        a("")
+        a("**Semua cek hijau, tanpa satu pun BLOCKER:** JANGAN merge. Jalankan ulang dua alat ini di `main`")
+        a("terbaru, **tempel keluaran persisnya** di komentar verdict-mu, dan tulis verdict **HIJAU** dengan")
+        a("format bagian 6a:")
+        a("")
+        a("```bash")
+        a("python3 tools/validate_repo.py")
+        a("python3 tools/test_failure_injection.py")
+        a("```")
+    else:
+        a("**Semua cek hijau, tanpa satu pun BLOCKER:**")
+        a("")
+        a("```bash")
+        a(f"gh pr merge {merge_num} --merge")
+        a("```")
+        a("")
+        a("lalu jalankan ulang di `main` terbaru dan **tempel keluaran persisnya** di komentar review:")
+        a("")
+        a("```bash")
+        a("python3 tools/validate_repo.py")
+        a("python3 tools/test_failure_injection.py")
+        a("```")
     a("")
     a("**Ada satu saja MERAH:** jangan menggabungkan apa pun. Tulis komentar terstruktur:")
     a("")
     a("- **temuan** (satu kalimat, tanpa hedging) → **bukti** (perintah + keluaran + sha/baris) → **perintah perbaikan**")
     a("  (apa yang harus diubah, oleh siapa).")
-    a("- Sebut **putaran ke berapa** review ini (maksimal 2 putaran; putaran ke-2 gagal = eskalasi ke pemilik).")
+    if putaran:
+        a(f"- Review ini **putaran {putaran}** — angkanya DIHITUNG alat dari verdict yang sudah tertempel di")
+        a("  kanal PR ini (definisi slot hakim dipinjam dari `ambil_verdict.py`), bukan ditebak. Aturan default:")
+        a("  maksimal 2 putaran lalu eskalasi ke pemilik; **pemilik boleh membuka putaran tambahan secara")
+        a("  eksplisit** (preseden 18 Sep 2026, PR #74: 13 temuan putaran 2 ditutup lebih dulu, lalu pemilik")
+        a("  memutuskan membuka putaran 3).")
+    else:
+        a("- Sebut **putaran ke berapa** review ini — HITUNG dari verdict yang sudah tertempel di kanal PR,")
+        a("  jangan menebak. Aturan default: maksimal 2 putaran lalu eskalasi ke pemilik; pemilik boleh")
+        a("  membuka putaran tambahan secara eksplisit (aturan 7 protokol).")
     a("- PR dibiarkan `OPEN`.")
+    a("")
+    a("## 6a. Format komentar verdict — WAJIB persis, karena dibaca ALAT bukan manusia")
+    a("")
+    a(f"Verdict-mu dikumpulkan pemilik dengan `python3 tools/ambil_verdict.py --pr {merge_num} --harapkan 3`.")
+    a("Alat itu **tidak membaca prosa**: keputusan diambil dari **BARIS BERPARKAH PERTAMA** (judul Markdown,")
+    a("atau baris diawali `-`/`*`/`>` lalu `**VERDICT:**`) dan hanya kata putusan tertentu yang dihitung.")
+    a("Kalau formatmu melenceng sedikit saja, komentarmu **tidak terhitung sebagai slot hakim** dan kuorum")
+    a("gagal **diam-diam**: tidak ada pesan error, PR hanya terbaca kekurangan hakim. **Batas klaim (preseden")
+    a("di repo ini, BUKAN diagnosis PR yang sedang kamu hadapi):** pada satu PR, dua verdict putaran pertama")
+    a("**tidak pernah ditempel sama sekali** — itu modus kegagalan yang BERBEDA dan tidak disembuhkan oleh format.")
+    a("Yang disembuhkan format adalah verdict yang **sudah ditulis tetapi tidak terbaca** oleh alat. Periksa kanal")
+    a("PR INI untuk tahu mana yang sedang terjadi; **jangan mewarisi diagnosis PR lain** (prompt ini pernah")
+    a("membekukan angka dan riwayat satu PR sehingga tercetak untuk semua PR — itu temuan review, sudah ditutup).")
+    a("")
+    a("**Baris PERTAMA komentar PR-mu harus persis berbentuk ini** (satu baris, TANPA pagar kode):")
+    a("")
+    if putaran:
+        a(f"## Review independen PR #{merge_num} — putaran {putaran} — VERDICT: MERAH")
+        a("")
+        a(f"**Angka putaran {putaran} di atas DIHITUNG ALAT** dari verdict yang sudah tertempel di kanal PR ini —")
+        a("**salin apa adanya, jangan diubah.** Untuk putusan hijau, ganti kata `MERAH` dengan `HIJAU`.")
+    else:
+        a(f"## Review independen PR #{merge_num} — putaran 1 — VERDICT: MERAH")
+        a("")
+        a("**Ganti `putaran 1` dengan angka putaran yang sebenarnya** — jangan disalin mentah. Kanal PR tidak")
+        a("terbaca saat prompt ini dibangkitkan, jadi **hitung sendiri**: buka daftar komentar PR, cari verdict")
+        a("hakim yang sudah tertempel, pakai angka berikutnya. Untuk putusan hijau, ganti `MERAH` jadi `HIJAU`.")
+    a("Lalu di")
+    a("badan komentar, tulis sekali lagi sebagai baris berpemarkah:")
+    a("")
+    a("- **VERDICT:** MERAH — jangan merge; jumlah temuan: N (lalu uraikan satu per satu di bawahnya)")
+    a("")
+    a("**Cara menempelkannya — dan ini WAJIB ditempel, bukan disimpan di sesi.** Pada satu putaran")
+    a("sebelumnya di repo ini, dua dari tiga verdict **tidak pernah sampai ke GitHub** dan kuorum gagal")
+    a("tanpa pesan error; kerjanya hilang karena tidak ada yang menempel. Pakai jalur REST:")
+    a("")
+    a("```bash")
+    a("# 1) tulis verdictmu ke berkas, lalu bungkus jadi JSON dengan satu kunci bernama body")
+    a(f"# 2) tempel sebagai komentar PR (slug repo ini: {repo_slug()})")
+    a(f"gh api repos/{repo_slug()}/issues/{merge_num}/comments --input /tmp/verdict.json")
+    a("# 3) VERIFIKASI tertempel — WAJIB, jangan mengandalkan exit code:")
+    a(f"gh api repos/{repo_slug()}/issues/{merge_num}/comments --jq '.[-1] | .body[0:90]'")
+    a("```")
+    a("")
+    a(f"`gh pr comment {merge_num}` **jangan diandalkan di lingkungan seperti ini**: keluarga perintah")
+    a("`gh pr` memakai GraphQL, dan `gh pr edit` terukur GAGAL di repo ini (field `projectCards` sudah")
+    a("didepresiasi) dengan gejala menipu — perintah keluar membawa pesan, tetapi body **tidak berubah**.")
+    a("Kalau perintahmu keluar dengan pesan galat atau keluar tanpa efek, **baca ulang dari API** sebelum")
+    a("menyimpulkan berhasil.")
+    a("")
+    a("**Syarat keras — semuanya diukur dari alatnya, bukan selera:**")
+    a("")
+    a("1. Baris pertama **harus judul Markdown** (diawali `#`) dan **harus memuat** salah satu kata putusan:")
+    a("   `MERAH`, `HIJAU`, `BERSIH`, `ADA TEMUAN`, `TIDAK BISA DISIMPULKAN`, `APPROVE`, `REQUEST_CHANGES`.")
+    a("   Menyertakan `review independen` + `putaran N` di baris yang sama membuat penggolongan slot kokoh.")
+    a("2. Baris pertama **TIDAK BOLEH memuat** kata `penulis`, `koreksi terbuka`, atau `tanggapan penulis` —")
+    a("   alat menggolongkan baris semacam itu sebagai komentar penulis PR dan **membuangnya** dari kuorum.")
+    a("3. **JANGAN menaruh baris judul atau baris VERDICT di dalam pagar kode**: alat mengosongkan isi pagar")
+    a("   kode lebih dulu, jadi verdict di dalamnya tidak terbaca. Contoh di atas sengaja tidak dipagari —")
+    a("   salin sebagai teks biasa.")
+    a("4. Kata putusan di dalam **prosa tidak dihitung**; hanya baris berpemarkah yang dibaca.")
+    a("5. Fail-closed: kalau kamu tidak bisa menyimpulkan, tulis `TIDAK BISA DISIMPULKAN` — itu **menahan**")
+    a("   merge, dan memang begitu seharusnya. Jangan mengosongkan verdict, jangan menutup sesi tanpa komentar.")
+    a("6. **Jangan mengutip prompt ini ke dalam komentar PR.** Contoh judul di atas adalah teks hidup: kalau")
+    a("   ikut tersalin, alat bisa membacanya sebagai verdict dan kuorum jadi palsu.")
     a("")
     a("**Tidak pernah, dalam keadaan apa pun:** memperbaiki sendiri versi, wording, pin, transkrip, atau isi berkas")
     a("penulis. Reviewer yang menambal temuannya sendiri sudah berhenti jadi reviewer.")
@@ -608,6 +1023,253 @@ def render(pr: dict | None, files: list[str], generic: bool) -> tuple[str, list[
 
 
 # --------------------------------------------------------------------------
+# RP12 (18 Sep 2026): BLOK SERAH TERIMA — path absolut + link, DICETAK ALAT, bukan ditulis tangan.
+# Sebab (aturan tetap pemilik, giliran 19): "Setiap menyiapkan review independen dan pemeriksaan
+# menyeluruh independen, agent harus beri link nya." Sebelumnya prompt diserahkan dengan menyebut
+# nama berkas saja; pemilik — yang menyatakan tidak punya basic coding — harus mencari sendiri
+# berkasnya dan bingung. Link yang ditulis tangan bisa salah atau ketinggalan: itu kelas cacat yang
+# sama dengan angka beku yang ditutup RP9/RP10, jadi link DIRANGKAI DARI DATA TERUKUR dan alatnya
+# sendiri yang meneriakkannya ke stderr supaya agent tidak bisa "lupa".
+# --------------------------------------------------------------------------
+# --------------------------------------------------------------------------
+# T-48 (18 Sep 2026): link ke BERKAS PROMPT ITU SENDIRI, bukan hanya link ke PR.
+# Koreksi pemilik giliran 20: *"Apakah kamu paham bahwa yang aku maksud adalah link ke file prompt
+# perintah untuk sesi hakim dan reviewer/pemeriksa nya? Bukan hanya file PR nya."* Path di mesin kerja
+# agent (`/home/user/...`) tidak bisa dibuka pemilik, dan tidak bisa dibuka teman yang membuka sesi
+# hakim — jadi yang dibutuhkan adalah URL. Prompt ditempel ke kanal PR sebagai KOMENTAR PENULIS dan
+# permalink-nya dicetak di blok serah terima.
+# --------------------------------------------------------------------------
+def bangun_komentar_pengumuman(teks_prompt: str, number: int | None = None,
+                               head_sha: str | None = None, out_path: str | None = None) -> str:
+    """Badan komentar PR yang memuat prompt, berlabel KOMENTAR PENULIS (bukan verdict).
+
+    Dua pengaman, keduanya TERUKUR (bukan diasumsikan):
+      1. baris judul menyebut `penulis` — `slot_hakim()` di `ambil_verdict.py` memeriksa `PENULIS_RE`
+         LEBIH DULU daripada token laporan, jadi komentar ini tidak pernah jadi slot hakim;
+      2. seluruh prompt dipagari pagar backtick yang LEBIH PANJANG dari pagar terpanjang di dalam
+         prompt, dan `strip_code_fences()` mengosongkan isi pagar sebelum penggolongan (terbukti juga
+         untuk pagar 4-backtick), sehingga contoh judul verdict di dalam prompt tidak terbaca.
+    """
+    runs = re.findall(r"`+", teks_prompt or "")
+    pagar = "`" * max(4, max((len(r) for r in runs), default=0) + 1)
+    b: list[str] = []
+    a = b.append
+    a("## Komentar penulis PR — BUKAN verdict: prompt review independen siap salin")
+    a("")
+    a("Komentar ini dari **penulis PR** (agent yang pekerjaannya sedang dinilai), ditempel oleh")
+    a("`tools/review_prompt.py --umumkan` atas aturan tetap pemilik 18 Sep 2026: *setiap menyiapkan")
+    a("review independen atau pemeriksaan menyeluruh independen, agent wajib menyerahkan path berkas")
+    a("DAN link-nya* — dan yang dimaksud pemilik (koreksi giliran 20) adalah **link ke berkas prompt")
+    a("itu sendiri**, bukan hanya link ke PR, supaya siapa pun yang membuka sesi hakim bisa membuka")
+    a("dan menyalin teksnya tanpa perlu akses ke mesin kerja agent.")
+    a("")
+    a("**Ini BUKAN verdict dan BUKAN laporan review.** `tools/ambil_verdict.py` menggolongkannya")
+    a("sebagai komentar penulis karena baris judul di atas menyebut `penulis` (diperiksa lebih dulu")
+    a("daripada token laporan), dan seluruh isi prompt dipagari sehingga contoh judul verdict di")
+    a("dalamnya tidak bisa terbaca sebagai verdict. Kalau penggolongan itu gagal, alat **menghapus")
+    a("komentar ini lagi** dan tidak mencetak link (fail-closed).")
+    a("")
+    if number and number > 0:
+        a(f"- PR: #{number}")
+    if head_sha:
+        a(f"- Prompt ini pin ke head `{head_sha}`. Kalau head PR sudah bergerak, prompt ini **BASI** —")
+        a("  bangkitkan ulang, jangan dipakai.")
+    if out_path:
+        a(f"- Berkas di mesin kerja agent: `{Path(out_path).resolve()}` (tidak bisa dibuka orang lain —")
+        a("  itu sebabnya link ini ada)")
+    a("- Bangkitkan ulang: `python3 tools/review_prompt.py --pr "
+      f"{number if number and number > 0 else '<N>'} --out <path> --umumkan`")
+    a("")
+    a("**Cara memakai:** buka sesi hakim baru, lalu salin SELURUH isi di dalam pagar di bawah ini")
+    a("(tanpa ikut pagarnya) sebagai satu pesan.")
+    a("")
+    a(pagar)
+    a((teks_prompt or "").rstrip("\n"))
+    a(pagar)
+    a("")
+    return "\n".join(b) + "\n"
+
+
+def umumkan_prompt(number: int, teks_prompt: str, slug: str | None = None,
+                   head_sha: str | None = None, out_path: str | None = None):
+    """Tempel prompt ke kanal PR sebagai komentar penulis; kembalikan (permalink, catatan).
+
+    Fail-closed tiga lapis — lebih baik tidak ada link daripada link palsu atau kuorum palsu:
+      1. slug repo tak terbaca            -> tidak menempel, tidak mencetak link;
+      2. POST gagal / respons tak terbaca -> tidak mencetak link;
+      3. komentar TETAP terbaca sebagai slot hakim oleh `ambil_verdict.slot_hakim()` -> DIHAPUS lagi.
+    """
+    if slug is None:
+        slug = repo_slug()
+    if not slug or "/" not in slug or "<" in slug:
+        return None, f"slug repo tidak terbaca ({slug!r}) — prompt tidak ditempel, link tidak dicetak"
+    badan = bangun_komentar_pengumuman(teks_prompt, number, head_sha, out_path)
+    r = subprocess.run(
+        ["gh", "api", "-X", "POST", f"repos/{slug}/issues/{number}/comments", "--input", "-"],
+        input=json.dumps({"body": badan}), capture_output=True, text=True)
+    if r.returncode != 0:
+        return None, f"POST komentar gagal: {((r.stderr or r.stdout) or '').strip()[:200]}"
+    try:
+        data = json.loads(r.stdout)
+        url, cid = data.get("html_url"), data.get("id")
+    except Exception as exc:
+        return None, f"respons POST tidak terbaca sebagai JSON ({exc}) — link tidak dicetak"
+    if not url or not cid:
+        return None, "respons POST tidak memuat html_url/id — link tidak dicetak"
+    try:
+        sys.path.insert(0, str(Path(__file__).resolve().parent))
+        import ambil_verdict as av
+        terbaca_slot = bool(av.slot_hakim(badan))
+    except Exception as exc:
+        subprocess.run(["gh", "api", "-X", "DELETE", f"repos/{slug}/issues/comments/{cid}"],
+                       capture_output=True, text=True)
+        return None, f"verifikasi penggolongan gagal ({exc}) — komentar DIHAPUS lagi (fail-closed)"
+    if terbaca_slot:
+        subprocess.run(["gh", "api", "-X", "DELETE", f"repos/{slug}/issues/comments/{cid}"],
+                       capture_output=True, text=True)
+        return None, ("komentar TERBACA sebagai slot hakim oleh ambil_verdict.slot_hakim() — "
+                      "DIHAPUS lagi supaya kuorum tidak palsu")
+    return url, "tertempel dan terverifikasi BUKAN slot hakim"
+
+
+def verifikasi_berkas_prompt(path) -> str:
+    """RP18: klaim "berkas prompt ada" wajib DIUKUR sesudah ditulis, bukan diasumsikan dari argumen.
+
+    Mengembalikan satu baris verifikasi untuk ditempel ke akhir berkas oleh pemanggil. Fail-closed:
+    kalau berkasnya tidak ada, barisnya menyatakan GAGAL — bukan diam, dan bukan klaim sukses.
+    Cacat yang ditutup: `handoff_block()` pernah mencetak "TIDAK ditulis ke berkas" padahal
+    berkasnya ditulis (temuan #1 hakim C putaran 5 PR #74) — pernyataan palsu di alat pengadil,
+    tepat di blok yang menjalankan aturan tetap pemilik "serahkan path + link".
+    """
+    p = Path(path).resolve()
+    if not p.exists():
+        return ("- **Verifikasi sesudah ditulis:** GAGAL — berkas TIDAK ADA di disk sesudah "
+                "penulisan. Jangan serahkan path ini ke pemilik; periksa alatnya.")
+    ukuran = p.stat().st_size
+    baris = len(p.read_text(encoding="utf-8").splitlines())
+    return (f"- **Verifikasi sesudah ditulis (diukur, bukan diklaim):** berkas ADA di disk — "
+            f"{ukuran:,} byte / {baris:,} baris, diukur sesudah penulisan dan sebelum baris "
+            f"verifikasi ini ditambahkan.")
+
+
+def handoff_block(number: int | None = None, head_sha: str | None = None,
+                  out_path: str | None = None, slug: str | None = None,
+                  objek: str | None = None,
+                  jenis: str = "review independen",
+                  permalink: str | None = None) -> str:
+    """Blok serah terima untuk PEMILIK: di mana berkasnya, dan link apa saja yang bisa diklik.
+
+    Fail-closed: kalau slug repo atau sha head tidak terbaca, blok ini TIDAK mencetak link karangan.
+    Link palsu lebih berbahaya daripada tidak ada link — pemilik akan mengkliknya dan mendapat 404,
+    lalu kehilangan kepercayaan pada semua link berikutnya.
+    """
+    if slug is None:
+        slug = repo_slug()
+    slug_ok = bool(slug) and "/" in slug and "<" not in slug
+    sha_ok = bool(head_sha) and len(head_sha or "") >= 7 and "<" not in (head_sha or "")
+    b: list[str] = []
+    a = b.append
+    a("")
+    a("---")
+    a("")
+    a("## BLOK SERAH TERIMA — untuk pemilik dan agent yang menyiapkan; BUKAN bagian tugas hakim")
+    a("")
+    a("Hakim/auditor boleh melewati bagian ini. Ia ada karena pemilik menetapkan aturan tetap")
+    a("(18 Sep 2026): *setiap menyiapkan review independen atau pemeriksaan menyeluruh")
+    a("independen, agent wajib menyerahkan path berkas DAN link-nya*, bukan hanya nama berkas.")
+    a(f"Yang diserahkan kali ini: **{jenis}**.")
+    a("")
+    _akar = Path(__file__).resolve().parent.parent   # root repo, BUKAN folder kerja sekarang
+    if out_path:
+        p = Path(out_path).resolve()
+        a(f"- **Berkas prompt (path absolut — salin persis):** `{p}`")
+        a(f"- **Nama berkas:** `{p.name}` · **di dalam folder:** `{p.parent}`")
+        # RP18 (temuan #1 hakim C putaran 5 PR #74): blok ini dirangkai SEBELUM alat menulis
+        # berkas, jadi ia tidak boleh mengklaim keberadaan berkas. Yang diklaim di sini hanya
+        # path tujuannya; keberadaannya DIUKUR sesudah penulisan dan ditempel ke akhir berkas
+        # oleh pemanggil (lihat `verifikasi_berkas_prompt`).
+        # RP21 (ditemukan sendiri 19 Sep 2026 saat membangkitkan ulang prompt putaran 6 PR #74):
+        # cabang lama `if p.exists(): "ADA di disk, N byte"` MENGUKUR SEBELUM MENULIS. Ketika path
+        # tujuan masih berisi berkas dari pembangkitan sebelumnya, angka yang tercetak adalah ukuran
+        # berkas LAMA — lalu berkas itu ditimpa, sehingga angka yang diserahkan ke pemilik tidak sama
+        # dengan berkas yang diserahkan (terukur: blok mencetak 27.678 byte, `ls -l` hasil penulisan
+        # 27.598 byte). Blok ini dirangkai sebelum penulisan, jadi ia TIDAK BOLEH mengklaim ukuran
+        # sama sekali; klaim yang benar hanya ada di baris verifikasi yang ditempel SESUDAH penulisan
+        # (`verifikasi_berkas_prompt`). Keberadaan berkas lama dinyatakan apa adanya: akan ditimpa.
+        a("- **Verifikasi berkas:** diukur SESUDAH alat menulisnya — baris verifikasi terukur")
+        a("  ditambahkan alat ke akhir berkas. Blok ini dirangkai sebelum penulisan, jadi ia")
+        a("  tidak boleh mendahului pengukuran; periksa dengan `ls -l` sesudah alat selesai.")
+        if p.exists():
+            a(f"- **Berkas lama akan DITIMPA:** `{p.name}` sudah ada di path itu sebelum penulisan,")
+            a("  dan ukuran apa pun pada berkas lama BUKAN ukuran berkas yang diserahkan — alat ini")
+            a("  sengaja tidak mencetak angka yang diukur sebelum berkasnya ditulis (RP21).")
+    else:
+        a("- **Berkas prompt:** TIDAK ditulis ke berkas (keluar ke stdout). Jalankan ulang dengan")
+        a("  `--out <path>` supaya ada berkas yang bisa diberi path dan link.")
+    if permalink:
+        a(f"- **LINK KE PROMPT INI (tahan lama, bisa dibuka siapa pun):** {permalink}")
+        a("  Komentar **penulis PR**, BUKAN verdict: alat pengumpul verdict menggolongkannya"
+          " sebagai komentar penulis dan isinya dipagari, jadi contoh judul verdict di dalamnya"
+          " tidak bisa terbaca. Ini link yang diserahkan ke pemilik dan ke siapa pun yang"
+          " membuka sesi hakim — path di atas hanya ada di mesin kerja agent.")
+    if objek:
+        a(f"- **Objek yang diperiksa:** `{objek}` (relatif dari root repo)")
+        if slug_ok and sha_ok:
+            _o = _akar / objek
+            if _o.exists():
+                _macam = "tree" if _o.is_dir() else "blob"
+                a(f"- **Objek itu pada sha yang di-pin:** "
+                  f"https://github.com/{slug}/{_macam}/{head_sha}/{objek}")
+            else:
+                a(f"- **Objek itu pada sha yang di-pin:** TIDAK DICETAK — `{objek}` tidak ditemukan")
+                a("  di root repo. Link karangan lebih buruk daripada tidak ada link.")
+    if number and number > 0 and slug_ok:
+        a(f"- **PR yang dinilai:** https://github.com/{slug}/pull/{number}")
+        a(f"- **Daftar berkas yang berubah:** https://github.com/{slug}/pull/{number}/files")
+        if sha_ok:
+            a(f"- **Head yang di-pin (permalink permanen):** https://github.com/{slug}/commit/{head_sha}")
+            a(f"- **Isi repo pada head itu:** https://github.com/{slug}/tree/{head_sha}")
+        else:
+            a(f"- **Head yang di-pin:** TIDAK TERBACA dari API. Jangan menulis sha dari ingatan —")
+            a(f"  baca ulang `gh api repos/{slug}/pulls/{number} --jq .head.sha` sampai cocok,")
+            a("  baru serahkan prompt-nya ke pemilik.")
+    elif number and number > 0:
+        a(f"- **Link PR: TIDAK DICETAK** karena slug repo tidak terbaca (terbaca: `{slug}`).")
+        a("  Ambil slugnya dengan `gh repo view --json nameWithOwner -q .nameWithOwner`, rangkai")
+        a("  `https://github.com/<slug>/pull/<N>`, lalu serahkan link itu ke pemilik.")
+    elif objek:
+        a("- **Link PR:** tidak ada — pemeriksaan menyeluruh (audit isi) tidak menunjuk PR;")
+        a("  kanal penyerahannya Issue atau berkas ter-commit (`_meta/PROTOKOL_AUDIT_ISI.md`).")
+    else:
+        a("- **Link PR:** tidak dicetak — mode `--generic` tidak menunjuk PR tertentu.")
+    tujuan = out_path or "<path>"
+    if number and number > 0:
+        a(f"- **Regenerasi kalau berkasnya hilang:** `python3 tools/review_prompt.py --pr {number}"
+          f" --out {tujuan}`")
+        a(f"- **Kumpulkan verdict sesudah hakim selesai:** `python3 tools/ambil_verdict.py"
+          f" --pr {number} --harapkan <jumlah hakim>`")
+    elif objek:
+        a(f"- **Regenerasi kalau berkasnya hilang:** `python3 tools/audit_prompt.py"
+          f" --objek {objek} --out {tujuan}`")
+        a("- **Kumpulkan hasil sesudah auditor selesai:**"
+          " `python3 tools/ambil_verdict.py --terbaru`")
+    a("- **Sebelum diserahkan, agent WAJIB memverifikasi (bukan mengandalkan ingatan):**")
+    if number and number > 0:
+        a("  1. sha head di dalam prompt == sha head PR dari API;")
+        a("  2. nomor putaran dicetak alat, bukan ditebak;")
+    elif objek:
+        a("  1. sha pin di dalam prompt == sha HEAD dari git (`git rev-parse HEAD`);")
+        a("  2. objek yang disebut di prompt == objek yang diminta pemilik, bukan ditebak;")
+    else:
+        a("  1. prompt ini versi placeholder — JANGAN diserahkan sebagai prompt kerja;")
+        a("  2. jalankan ulang dengan `--pr <N>` (review) atau `--objek <path>` (audit isi);")
+    a("  3. setiap link di atas benar-benar terbuka;")
+    a("  4. path absolut di atas benar-benar ada di disk (`ls -l`).")
+    a("")
+    return "\n".join(b) + "\n"
+
+
+# --------------------------------------------------------------------------
 def main(argv: list[str] | None = None) -> int:
     ap = argparse.ArgumentParser(
         prog="review_prompt.py",
@@ -616,7 +1278,18 @@ def main(argv: list[str] | None = None) -> int:
     ap.add_argument("--pr", type=int, default=None, help="nomor PR")
     ap.add_argument("--generic", action="store_true", help="cetak versi placeholder (tanpa memanggil GitHub)")
     ap.add_argument("--out", default="-", help="'-' (default, stdout) atau path berkas")
+    ap.add_argument("--harapkan", type=int, metavar="N", default=KUORUM_HAKIM_DEFAULT,
+                    help=f"kuorum hakim untuk memutuskan apakah satu putaran masih berjalan "
+                         f"(default {KUORUM_HAKIM_DEFAULT})")
+    ap.add_argument("--umumkan", action="store_true",
+                    help="tempel prompt ke kanal PR sebagai komentar penulis (BUKAN verdict) "
+                         "lalu cetak permalink-nya di blok serah terima")
     args = ap.parse_args(argv)
+
+    # RP12: kedua nilai ini yang dipakai blok serah terima. Default None supaya mode --generic
+    # (tanpa GitHub) tidak pernah mencetak nomor PR atau sha karangan.
+    number: int | None = None
+    head_sha: str | None = None
 
     try:
         if args.generic:
@@ -629,16 +1302,54 @@ def main(argv: list[str] | None = None) -> int:
                 raise ToolError(f"nomor PR tidak masuk akal: {number}")
             data = fetch_pr(number)
             files = resolve_pr_files(number, data)
-            text, windows = render(data, files, generic=False)
+            # R3: objek diff DIUKUR sebelum prompt dicetak, bukan diserahkan ke reviewer untuk ditebak.
+            head_sha = data["headRefOid"]  # RP12: sha untuk permalink di blok serah terima
+            # Temuan #7: ujung base yang SEBENARNYA diukur, bukan diambil dari base sha beku di API.
+            ujung_base = ujung_base_hidup(data["baseRefName"])
+            # R3: objek diff DIUKUR sebelum prompt dicetak, bukan diserahkan ke reviewer untuk ditebak.
+            objek = objek_diff(data["baseRefOid"], head_sha, ujung_hidup=(ujung_base or {}).get("sha"))
+            # Temuan #2: putaran dihitung dari kanal + kuorum + head, supaya putaran yang sedang
+            # berjalan tidak dinamai sebagai putaran berikutnya.
+            putaran = next_round(data["number"], args.harapkan, head_sha)
+            text, windows = render(data, files, generic=False, objek=objek, putaran=putaran,
+                                   ujung_base=ujung_base)
     except ToolError as exc:
         print(f"review_prompt: GAGAL — {exc}", file=sys.stderr)
         return 2
+
+    # RP12: blok serah terima ditempel ke prompt DAN diteriakkan ke stderr. Dua kanal, bukan satu:
+    # berkasnya memuat link untuk pemilik, stderr memaksa agent yang menjalankan alat melihatnya.
+    # T-48: tempel prompt ke kanal PR lebih dulu (isi komentarnya = prompt murni, tanpa blok
+    # serah terima), lalu permalink-nya masuk ke blok serah terima di berkas.
+    permalink: str | None = None
+    if args.umumkan:
+        if not number or number <= 0:
+            print("--umumkan butuh nomor PR (pakai --pr N); prompt generic tidak punya kanal PR",
+                  file=sys.stderr)
+        else:
+            permalink, catatan = umumkan_prompt(
+                number, text, head_sha=head_sha,
+                out_path=None if args.out == "-" else args.out)
+            print(f"pengumuman: {catatan}" + (f" -> {permalink}" if permalink else ""),
+                  file=sys.stderr)
+
+    teks_serah = handoff_block(number, head_sha, None if args.out == "-" else args.out,
+                               permalink=permalink)
+    text = text + "\n" + teks_serah
 
     if args.out == "-":
         print(text)
     else:
         Path(args.out).write_text(text + "\n", encoding="utf-8")
-        print(f"ditulis: {args.out}", file=sys.stderr)
+        # RP18: bukti keberadaan berkas diukur SESUDAH ditulis, lalu ditempel ke berkas itu sendiri
+        # supaya klaim di blok serah terima didukung pengukuran, bukan urutan kode.
+        _baris_verif = verifikasi_berkas_prompt(args.out)
+        with Path(args.out).open("a", encoding="utf-8") as _fverif:
+            _fverif.write(_baris_verif + "\n")
+        _pverif = Path(args.out).resolve()
+        print(f"ditulis: {_pverif} ({_pverif.stat().st_size:,} byte sesudah verifikasi ditempel)",
+              file=sys.stderr)
+    print(teks_serah, file=sys.stderr)
 
     if windows:
         print(

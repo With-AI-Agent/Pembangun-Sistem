@@ -22,7 +22,7 @@ Setelah 1 sistem berhasil dibangun dan teruji (Sistem Konten Kreator — lihat `
 
 > **Setiap sistem wajib menyertakan PEGANGAN PENGGUNA (buku pedoman) di dalam foldernya.** (Prinsip tambahan, dinyatakan pengguna 5 Sep 2026.) Standar mudahnya: **sama dengan meta-sistem ini sendiri** — pengguna cukup membuka sesi dengan **SATU prompt pembuka universal** yang sudah disiapkan, lalu agent otomatis terorientasi penuh (apa sistemnya, cara kerja, ketentuan, kondisi repo, PR menggantung) tanpa perlu ditempel manual. Bentuknya dua file di dalam folder sistem: `PROMPT_ENTRI_UNIVERSAL.md` (satu blok prompt pembuka siap tempel) + `PANDUAN_PENGGUNA.md` (pedoman lengkap: prompt pembuka + **prompt penutup sesi**, istilah awam, kalimat per situasi, cara review & merge, kebiasaan). Ikuti struktur `_meta/PANDUAN_PENGGUNA_TEMPLATE.md`. Preceden: meta-sistem sendiri (`PANDUAN_PENGGUNA.md` di root repo) dan `sistem-konten-kreator/` (`PANDUAN_PENGGUNA.md` + `PROMPT_ENTRI_UNIVERSAL.md`).
 
-> **Pegangan pengguna + self-containment + checkpoint + log sesi diringkas menjadi KONTRAK WARISAN** (`03_KONTRAK_WARISAN.md`, 5 Sep 2026 — permintaan pengguna pasca audit menyeluruh). Semua butir yang wajib tertanam di SETIAP sistem (W-01…W-09) ada di satu daftar induk: **default aktif** — agent membangun menerapkan dan MELAPORKAN seluruhnya tanpa perlu diminta maupun menawarkan satu-satu; yang butuh keputusan pengguna hanyalah **penonaktifan** (override), yang wajib tercatat dengan alasan + approval. Butir yang bisa dicek mekanis ditegakkan `tools/validate_repo.py` untuk semua sistem terdaftar di `INDEKS_SISTEM.md` — termasuk yang belum lahir.
+> **Pegangan pengguna + self-containment + checkpoint + log sesi diringkas menjadi KONTRAK WARISAN** (`03_KONTRAK_WARISAN.md`, 5 Sep 2026 — permintaan pengguna pasca audit menyeluruh). Semua butir yang wajib tertanam di SETIAP sistem (W-01…W-10) ada di satu daftar induk: **default aktif** — agent membangun menerapkan dan MELAPORKAN seluruhnya tanpa perlu diminta maupun menawarkan satu-satu; yang butuh keputusan pengguna hanyalah **penonaktifan** (override), yang wajib tercatat dengan alasan + approval. Butir yang bisa dicek mekanis ditegakkan `tools/validate_repo.py` untuk semua sistem terdaftar di `INDEKS_SISTEM.md` — termasuk yang belum lahir.
 
 ---
 
@@ -61,7 +61,10 @@ repo-utama/
 │                                        bukan instruksi aktif; tdk ikut template)
 │
 ├── tools/                            ← regression check struktural (stdlib-only):
-│   ├── validate_repo.py              ← PASS wajib 0-warning; menegakkan kontrak
+│   ├── validate_repo.py              ← harus PASS; baris 'WARNINGS: N' dikutip apa adanya
+│   │                                    (warning hanya sah di berkas bukti historis append-only;
+│   │                                    warning di dokumen hidup = belum lulus) — selaras dengan
+│   │                                    aturan regresi struktural di bawah; menegakkan kontrak
 │   │                                    warisan generik utk tiap sistem di INDEKS
 │   ├── test_failure_injection.py     ← cek fail-closed checkpoint
 │   ├── backup_verify.py              ← backup esensial + uji restore byte-per-byte
@@ -128,7 +131,7 @@ Berlaku sama seperti yang sudah terbukti penting di Sistem Konten Kreator: GitHu
 3. Cek `INDEKS_SISTEM.md` untuk tahu sistem apa saja yang ada dan statusnya.
 4. Cari `LOG_SESI_*.md` **terbaru** (folder `_log-sesi/` / folder sistem / folder unit kerja). Kalau yang terbaru berkeadaan `OPEN` → baca, laporkan keadaannya, dan konfirmasi ke pengguna sebelum lanjut — itu konteks yang tidak boleh ditanya ulang. (Langkah ini dulu hanya ada di dokumen lain; diselaraskan ke sini 5 Sep 2026, temuan M-05.)
 
-Regresi struktural tersedia sebagai alat — jalankan saat menyentuh `_meta/`/`tools/` atau menyelesaikan audit: `python3 tools/validate_repo.py` (harus PASS 0 warning), `tools/test_failure_injection.py`, `tools/backup_verify.py`, `tools/build_template.py`, dan `tools/check_selfcontained.py --semua --report` untuk status deliverable folder sistem; `tools/checkpoint_core.py` adalah parser bersama yang diimpor validator & FI (tidak dijalankan langsung) (temuan M-07: blok struktur dulu tidak menyebut `tools/`).
+Regresi struktural tersedia sebagai alat — jalankan saat menyentuh `_meta/`/`tools/` atau menyelesaikan audit: `python3 tools/validate_repo.py` (harus PASS; baris `WARNINGS: N` dikutip apa adanya — warning hanya sah di berkas bukti historis append-only, warning di dokumen hidup = belum lulus), `tools/test_failure_injection.py`, `tools/backup_verify.py`, `tools/build_template.py`, dan `tools/check_selfcontained.py --semua --report` untuk status deliverable folder sistem; `tools/checkpoint_core.py` adalah parser bersama yang diimpor validator & FI (tidak dijalankan langsung) (temuan M-07: blok struktur dulu tidak menyebut `tools/`).
 
 Baru setelah itu, arahkan sesuai tujuan. Jika state tidak konsisten, gunakan `FAILURE_INJECTION_TESTS.md` sebagai aturan berhenti dan recovery:
 
@@ -270,9 +273,99 @@ Lihat `02_PRINSIP_UNIVERSAL.md` untuk daftar lengkap + penjelasan. Ringkasnya: H
 - **Entry Point**: di awal sesi baru, cek dulu status kerja yang menggantung, tanya tujuan sesi ini, baca file relevan sendiri — tidak perlu ditempel manual. Verifikasi branch aktif via `git branch --show-current` karena branch `arena/...` dibuat otomatis (fakta platform).
 - **Log sesi berkelanjutan (`LOG_SESI`)**: Setiap sesi memelihara `LOG_SESI_YYYY-MM-DD.md` di folder scope kerja (unit/sistem, atau folder `_log-sesi/` untuk level repo/meta) — append + commit + push segera setelah tiap pertukaran yang menghasilkan informasi baru. Header "Keadaan Sesi" (di mana kita, apa yang disepakati, apa yang terbuka) selalu segar. **Yang dicatat:** keputusan/koreksi/kendala/preferensi pengguna (near-verbatim), proposal penting + dasarnya, kesepakatan & penolakan + alasan, fakta terverifikasi, state kerja, pertanyaan terbuka. **Yang TIDAK dicatat:** konfirmasi, basa-basi, ulang isi STATUS.md/Log, dump chat. **Alasan kausal:** Sesi bisa crash kapan saja (fakta platform #3) dan agent sesi baru tidak punya akses ke chat lama — ingatan yang bertahan hanya file. Mekanisme lama "checkpoint kalau >5 giliran" diganti karena berbasis ambang+judgment: sebelum ambang, tidak ada yang tercatat. Detail: `PROTOKOL_CHECKPOINT_RECOVERY.md` + format `TEMPLATE_LOG_SESI.md`.
 - **1 dokumen direvisi/dibangun penuh dulu, baru lanjut ke dokumen berikutnya** — bukan banyak sekaligus, supaya kesalahan kecil tidak menyebar sebelum ketahuan
-- **Checklist penutupan sesi:** PR dibuka → `tools/review_prompt.py --pr <N>` dijalankan dan keluarannya ditempel sebagai SATU BLOK BERPAGAR di badan pesan chat terakhir sesi (bukan keluaran perintah yang terlipat). Jika blok itu tidak ada di badan pesan, penutupan BELUM dikerjakan dan PR belum boleh dinilai; pemilik dapat membuka sesi baru dari main lalu menjalankan `python3 tools/review_prompt.py --pr <N>` sendiri (aturan lengkap: `PROTOKOL_REVIEW_INDEPENDEN.md` §"Sumber prompt")
+- **Checklist penutupan sesi:** PR dibuka → `tools/review_prompt.py --pr <N>` dijalankan dan keluarannya ditempel sebagai SATU BLOK BERPAGAR di badan pesan chat terakhir sesi (bukan keluaran perintah yang terlipat). Jika blok itu tidak ada di badan pesan, penutupan BELUM dikerjakan dan PR belum boleh dinilai; pemilik dapat membuka sesi baru dari main lalu menjalankan `python3 tools/review_prompt.py --pr <N>` sendiri (aturan lengkap: `PROTOKOL_REVIEW_INDEPENDEN.md` §"Sumber prompt"). **Penyerahannya wajib menyebut path absolut berkas + link-nya** (link PR, permalink head yang di-pin, daftar berkas yang berubah) — `tools/review_prompt.py` mencetak **BLOK SERAH TERIMA** itu sendiri ke ujung prompt dan ke stderr; agent tidak boleh menulis link dari ingatan (`PROTOKOL_REVIEW_INDEPENDEN.md` aturan 11, aturan tetap pemilik 18 Sep 2026). **Dan link yang dimaksud pemilik adalah link ke BERKAS PROMPT ITU SENDIRI, bukan hanya link ke PR** (penegasan giliran 20): tambahkan `--umumkan` supaya prompt ditempel ke kanal PR sebagai komentar penulis — bukan verdict, teruji lintas alat di regresi RP13 — lalu permalink-nya ikut tercetak di blok serah terima dan bisa dibuka siapa pun yang akan menjalankan sesi hakim (`python3 tools/review_prompt.py --pr <N> --out <path> --umumkan`). **Sesudah verdict masuk, kuorum dibaca PER PUTARAN** (`python3 tools/ambil_verdict.py --pr <N> --harapkan <jumlah hakim> [--putaran R]` — blok KUORUM PER PUTARAN memberi tahu berapa hakim putaran itu yang sungguh menyerahkan laporan, dan agregat lintas putaran tetap fail-closed), dan **prompt yang dibangkitkan ulang pada head yang sama tetap menamai putaran yang sedang berjalan** — nomor putaran tidak boleh melompat sendiri (`PROTOKOL_REVIEW_INDEPENDEN.md` aturan 9 amendemen, aturan 12 dan 13)
 
 
 ### Bukti numerik permanen (C5)
 
 Angka dalam Log Evolusi, manifest, atau indeks harus tetap benar setelah dokumen ditulis. Jumlah `rujukan` tidak stabil—entri `LOG_SESI` baru dapat mengubahnya—maka dilarang dikutip sama sekali. Verdict dan angka stabil (contoh: jumlah berkas wajib) tetap dikutip. Validator menegakkan aturan ini pada sel **Bukti** Log Evolusi; lihat AT-16. Empat siklus PR #21→#24 membuktikan bahwa mengejar angka bukti basi adalah masalah integritas, bukan gaya.
+
+### Gerbang diukur pada pohon yang di-commit (C6)
+
+Klaim gerbang di pesan commit wajib diukur pada **pohon yang persis akan di-commit**, sesudah SEMUA
+rekaman ditulis — bukan sebelumnya. Urutan yang benar: tulis seluruh perubahan (kode, dokumen, register,
+ledger, log, DISKUSI) → jalankan seluruh gerbang → baca angkanya dari cetakan alat → baru commit dengan
+angka itu di pesannya. Mengukur lebih dulu lalu menulis rekaman sesudahnya membuat pesan commit mengutip
+angka dari pohon yang sudah tidak ada: itu **klaim yang lahir sebelum buktinya**, kelas cacat yang sama
+dengan yang sudah pernah dilaporkan terbuka di PR #74 (pesan commit `4f819d9`).
+
+Kejadian nyata yang melahirkan aturan ini (19 Sep 2026, commit `6d7b1fb`): gerbang dijalankan sesudah
+perbaikan kode — FI mencetak 178 PASSED dan pin R7 terukur 5 — lalu rekaman ditulis (baris utang baru di
+register, ledger S-31, bagian DISKUSI), lalu commit dibuat **tanpa menjalankan gerbang lagi**. Pesan
+commitnya menulis "FI 178 PASSED" dan "pin R7 tetap 5", padahal pada pohon yang di-commit FI **GAGAL**:
+baris register yang baru menyebut path log sesi dengan folder `_log-sesi`, dan folder itu tidak ikut
+diekstrak ke benih sistem, sehingga warning rujukan ekstrak menjadi 6 dan **pin R7 bergeser**. Yang
+menangkap adalah regresi R7 sendiri — pada menjalankan berikutnya, bukan pada commit itu, jadi klaim
+palsu tersebut sempat terdorong ke remote dan baru dikoreksi terbuka sesudahnya.
+
+Dua aturan turunannya, keduanya sudah tercatat di tempat lain dan diulang di sini karena terbukti mudah
+dilanggar: **(i)** pin R7 tidak boleh bergeser tanpa izin pemilik; **(ii)** rekaman yang menyebut berkas
+di luar benih (log sesi, artefak internal, berkas bukti) wajib menyebut **nama**, bukan path — persis
+pelajaran yang sudah pernah dibayar mahal saat pin R7 nyaris tergeser oleh penulisan path ke dokumen
+hidup.
+
+Yang **tidak** dijamin aturan ini: kepatuhannya tidak bisa dikunci regresi, karena pesan commit ditulis
+di luar pohon yang diuji. Yang bisa dijaga alat adalah **akibatnya** (pin R7, jumlah skenario, sinkron
+dokumen vs cetakan alat), dan itu sudah dijaga. Karena itu C6 ditulis sebagai kebiasaan wajib, dan setiap
+pelanggaran yang ketahuan **dilaporkan terbuka, bukan dirapikan diam-diam** — termasuk yang ketahuan oleh
+agentnya sendiri sesudah commit terdorong.
+
+### Jangan serahkan review sebelum kanalnya segar (C7)
+
+Serah terima review independen ke pemilik hanya boleh dilakukan sesudah **tiga hal selesai dan
+terverifikasi**: **(a)** semua commit sudah terdorong dan head tidak akan bergerak lagi; **(b)** prompt
+dibangkitkan alat pada head beku itu, ditempel ke kanal, dan permalink-nya tercetak; **(c)** judul dan
+body PR sudah di-PATCH ke head yang sama **dan diverifikasi dari API**, bukan dari payload lokal. Kalau
+salah satunya terblokir — token mati, berkas hilang, alat gagal — serah terima **DITAHAN** dan keadaan
+blokirnya dikatakan apa adanya, bukan diserahkan dengan kanal yang basi.
+
+Kejadian nyata yang melahirkan aturan ini: **tiga putaran berturut-turut (5, 6, dan 7) hakim menemukan
+"body PR basi terhadap head yang diadili"**. Sebabnya struktural, bukan kelalaian sesekali. Body di-PATCH
+paling akhir supaya tidak basi terhadap head (aturan itu benar), tetapi serah terima ke hakim dilakukan
+**sebelum** PATCH itu mendarat — jadi hakim selalu membaca body yang ketinggalan satu langkah dan temuannya
+selalu benar. Di putaran 7 penyebabnya ganda: PATCH-nya tertahan karena token GitHub mati di tengah
+giliran, sementara prompt putaran 7 sudah terlanjur diserahkan ke pemilik. Lingkaran semacam ini **tidak
+bisa konvergen**: selama urutannya begitu, temuan "basi" akan lahir lagi setiap putaran.
+
+Yang berubah: urutan **tulisan** tetap sama — commit → prompt → PATCH body sebagai tulisan terakhir dan
+tidak diikuti commit — tetapi **serah terima pindah ke sesudah PATCH**. Aturan lama "PATCH body selalu
+terakhir" tidak dilanggar: yang terakhir adalah tulisannya, bukan penyerahannya.
+
+### Penjaga baru wajib diuji terhadap `main` sesudah merge (C8)
+
+Sebelum commit, setiap penjaga baru yang membandingkan nilai hidup atau riwayat git wajib menjawab dua
+pertanyaan: **siapa yang bisa memperbaiki pelanggaran ini?** dan **apakah penjaga ini masih bisa dipatuhi
+sesudah branch di-merge ke `main`?** Kalau jawabannya "sesi lain yang tidak memiliki berkasnya" atau
+"sudah tidak bisa", penjaga itu **ranjau, bukan penjaga**: ia memerahkan gerbang wajib untuk orang yang
+tidak punya cara mematuhinya. Uji minimumnya, dijalankan di salinan sementara: checkout ujung `main`,
+gabungkan head branch dengan **kedua** cara merge yang ditawarkan GitHub (squash dan merge commit),
+jalankan gerbang wajib di sana, lalu buat satu commit di atasnya dan jalankan lagi. Semuanya harus lulus,
+atau gagal hanya karena sebab yang memang milik PR itu. Severity lalu dijajarkan dengan **siapa yang bisa
+bertindak**: keras selama pelanggarnya bisa memperbaiki, warning beralasan bila tidak.
+
+Dua syarat tambahan yang lahir dari pengalaman, bukan dari rencana. **Pertama, uji sesudah-merge wajib
+dijalankan pada pohon yang SUDAH DI-COMMIT** — checkout sha-nya di clone terpisah, bukan mengukur working
+tree lalu menyimpulkan. Pada 19 Sep 2026 perbaikan pertama lolos di working tree, di-commit sebagai
+`9f1106f`, dan baru ketika sha itu sendiri yang di-merge ke `main` `98d3cb7` ketahuan bahwa squash merge
+dan merge commit **masih `VALIDATION FAILED`**: live-scoping saja hanya menyembuhkan kasus keempat (empat
+commit asing di atasnya). Klaim "keduanya lulus" di baris utang ikut dikoreksi, bukan dibiarkan berdiri.
+**Kedua, uji penjaga wajib membawa uji prasyaratnya sendiri.** Skenario yang salah bangun menghasilkan
+"lulus" yang kosong: dengan empat commit cabang, isi jendela `rev-list -n 4 HEAD` sesudah merge bergantung
+urutan tanggal commit sehingga sha cap kadang masih ada di dalamnya; dan cap yang diisi sha HEAD saat
+cabang dibuat ternyata nenek moyang bersama trunk dan cabang, jadi sesudah `merge --squash` ia tetap leluhur
+HEAD dan keadaan "bukan leluhur" tidak pernah terbentuk. Karena itu RP23e/RP23f didampingi pemeriksaan yang
+memastikan log benar-benar live, sha cap benar-benar di luar jendela, dan HEAD benar-benar merge commit atau
+sha cap benar-benar bukan leluhur — kalau prasyaratnya tidak terbentuk, ujinya GAGAL dengan alasan yang
+dicetak, bukan lulus senyap.
+
+Kejadian nyata (19 Sep 2026, temuan #2 hakim C putaran 7 PR #74): penjaga kesegaran header yang
+ditambahkan sehari sebelumnya membuat `main` **`VALIDATION FAILED` seketika** sesudah merge — pada squash
+merge maupun merge commit, lalu permanen sesudah satu commit apa pun di atasnya — karena dua log OPEN
+milik sesi ini tidak bisa disegarkan oleh sesi lain (append-only + kepemilikan log). Penulis mereproduksi
+sendiri di clone terpisah pada `main` terbaru sebelum memperbaiki. Perbaikannya dikunci **RP23a–d** dengan
+`.git` **nyata**, karena bagian sha itu sebelumnya **tidak pernah teruji** — harness failure-injection
+meng-copy tanpa `.git`. Penyembuhan itu ternyata **belum lengkap**: pada pohon `9f1106f` yang sudah
+di-commit, squash merge dan merge commit masih FAILED, jadi severity digeneralisasi (cap yang bukan leluhur
+HEAD, merge commit di dalam jendela, dan log OPEN yang tidak live untuk semua bagian) dan dikunci
+**RP23a–f**. Penjaga yang cabang utamanya tidak diuji adalah pola yang sudah tiga kali terjadi
+di PR ini (RP17b, cabang buta RP18d, RP21), dan tiap kali yang menemukan adalah pihak lain.

@@ -1,4 +1,4 @@
-> Salinan turunan. Sumber: _meta/PLATFORM_LMARENA.md sha 1f8aa6b9031af3c636695f9b8d099d8eb148e932 tanggal 2026-09-09 versi-meta 1.13.0
+> Salinan turunan. Sumber: _meta/PLATFORM_LMARENA.md sha 1b7b88ba45b94eb4191db002baba3cf8e31cb624 tanggal 2026-09-20 versi-meta 1.35.5
 > Perbedaan: tidak ada
 > Pemakaian: fakta platform yang dirujuk bagian Batasan Platform manifest dan _sistem/00_CARA_PAKAI_SISTEM.md (butir W-07 kontrak warisan) — dibawa agar folder ini berdiri sendiri tanpa _meta/.
 # Platform lmarena — Fakta vs Policy
@@ -43,6 +43,63 @@ Sumber resmi: help.arena.ai/articles/5432423882-how-to-use-agent-mode (diakses 2
 
 **Kenapa penting:** Protokol checkpoint harus memperhitungkan crash platform, bukan hanya kesalahan agent.
 
+### 4. Jaringan sesi dibatasi ke allowlist — hanya registry paket + GitHub
+
+**Fakta:** Proses yang berjalan **di dalam sesi agent** hanya bisa menjangkau sebagian kecil host. Diukur
+2026-09-17 (18 host, `curl`), bukan diasumsikan:
+
+- **✅ Terjangkau:** `registry.npmjs.org` · `pypi.org` · `api.github.com` (via `gh`, terautentikasi) ·
+  `github.com` (web + `git clone`/`push`/`fetch`)
+- **❌ Terblokir** — gejala seragam `curl: (35) OpenSSL SSL_connect: SSL_ERROR_SYSCALL`, HTTP `000`:
+  `skills.sh` · `raw.githubusercontent.com` · `fonts.google.com` · `fonts.gstatic.com` · `api.cloudflare.com` ·
+  `dash.cloudflare.com` · `developers.cloudflare.com` · `api.supabase.com` · `api.vercel.com` ·
+  `api.whatsapp.com` · `graph.facebook.com` · `midtrans.com` · `api.qrserver.com` · `unpkg.com` ·
+  `cdn.jsdelivr.net` · `objects.githubusercontent.com` · `google.com` · `remotion.dev`
+
+**Akibat:**
+- **CLI cloud tidak bisa dipakai untuk memublikasikan.** `wrangler deploy`, `vercel deploy`, dan sejenisnya
+  **tidak bisa** dijalankan agent dari sesi karena API-nya terblokir. Jalur publikasi yang tetap hidup =
+  **`git push` ke GitHub → hosting membangun otomatis**. Penyambungan awal hosting↔GitHub adalah
+  **tindakan pengguna di browser**, bukan kerja agent.
+- **`npx skills find` GAGAL-DIAM.** Mengembalikan "No skills found" untuk kueri apa pun — termasuk kueri yang
+  pasti ada hasilnya (`react`, `nextjs`) — karena registry `skills.sh` tak terjangkau. **Berbahaya justru karena
+  keluarannya terlihat seperti jawaban yang sah** ("tidak ada skill untuk X"), padahal alatnya yang mati.
+  **Wajib uji kontrol** sebelum menyimpulkan apa pun dari alat ini.
+- **Aset dari CDN tidak bisa diunduh/diuji di sesi.** Font dan library **wajib dibundel lokal**. Jalur terbukti:
+  paket npm **`@fontsource/*`** (diverifikasi `@fontsource/playfair-display` v5.3.0 tersedia). Ini sekaligus
+  self-hosting yang memang lebih cepat dan lebih aman untuk privasi.
+- **WAKTU-PAKAI ≠ WAKTU-BANGUN.** Yang terblokir adalah **proses di sesi agent**. **Browser pengguna akhir
+  tidak terblokir**, jadi aplikasi yang sudah tayang **tetap bisa** memanggil API eksternal (database, auth,
+  WhatsApp). Konsekuensinya: provisioning (membuat database, memasang secret) = **tindakan pengguna di browser**;
+  agent menyiapkan kode + migrasi + instruksinya.
+
+**Kenapa penting:** Alat platform **`web_search`/`fetch_page` tetap berfungsi** karena jalurnya berbeda dari
+`curl` proses sandbox — jadi riset internet tetap bisa dijalankan. Tetapi **mekanisme apa pun yang dirancang
+bergantung pada `curl`/`wget` ke situs umum akan gagal**, dan gagal dengan cara yang mudah disalahartikan
+sebagai "situsnya yang error". Aturan yang mewajibkan agent "riset internet" **wajib menyebut alat platform**,
+bukan perintah shell.
+
+### 5. Riwayat git lokal bisa terpotong atau ter-reset DI TENGAH sesi
+
+**Fakta:** Dalam **satu** sesi (2026-09-17, branch `arena/01a0ae7a-pembangun-sistem`) terjadi **tiga kali**:
+1. HEAD branch lokal **ter-reset ke basis sesi** sementara working tree dipertahankan → commit yang sudah
+   ter-push dan terverifikasi ada di server **tidak lagi terlihat di riwayat lokal**, dan push berikutnya
+   ditolak `! [rejected] … (fetch first)`.
+2. **Pola yang sama terulang** di giliran lain (4 commit "hilang" dari riwayat lokal, utuh di server).
+3. **`.git/shallow` muncul kembali** di antara giliran padahal sudah di-unshallow di awal sesi →
+   `origin/main` hanya terlihat **1 commit**, `git merge-base HEAD origin/main` **kosong**, dan `git merge`
+   ditolak **"refusing to merge unrelated histories"**.
+
+**Akibat:**
+- **Tidak ada konten yang hilang** pada ketiga kejadian — yang rusak adalah **posisi HEAD** dan **kedalaman
+  riwayat**. Keduanya bisa dipulihkan tanpa force-push.
+- Gejala ini **menyerupai** konflik kerja nyata, jadi mudah salah diobati. **`git merge --allow-unrelated-histories`
+  adalah obat yang SALAH** untuk kejadian #3: itu menyembunyikan penyebabnya dan berisiko menimpa sejarah.
+- `git pull --rebase` juga **bukan** obat yang aman di sini: berkas log yang sama akan bentrok add/add.
+
+**Kenapa penting:** Karena kejadian ini **berulang dalam satu sesi**, pemeriksaan riwayat **tidak cukup dilakukan
+sekali di awal sesi** — harus dilakukan **sebelum tiap operasi yang bergantung riwayat**. Lihat policy **P6**.
+
 ---
 
 ## Policy Sistem (harus / sebaiknya — aturan kita dengan alasan kausal)
@@ -77,6 +134,41 @@ Policy ini dibuat **karena** fakta platform di atas, bukan aturan sembarang.
 
 **Alasan kausal:** Karena fakta #2 (tidak bisa push setelah merge). Ini bukan larangan moral, tapi konsekuensi fisik.
 
+### P5 — Desain untuk allowlist jaringan, bukan untuk internet bebas
+
+**Policy:** Setiap sistem yang dibangun di repo ini **wajib mengasumsikan fakta #4**. Konkret: (a) publikasi lewat
+**git push + build otomatis di sisi hosting**, bukan lewat CLI cloud; (b) **semua aset dibundel lokal** (font via
+`@fontsource/*` atau berkas di repo), **dilarang** bergantung CDN saat bangun; (c) API pihak ketiga hanya boleh
+dipanggil dari **waktu-pakai** (browser pengguna akhir), **tidak pernah** dari alat/perintah yang dijalankan agent
+di sesi; (d) aturan yang mewajibkan "riset internet" **wajib menyebut alat platform** (`web_search`/`fetch_page`),
+bukan `curl`/`wget`; (e) sebelum menyimpulkan apa pun dari alat yang mengakses jaringan, **jalankan uji kontrol**
+dengan masukan yang pasti berhasil.
+
+**Alasan kausal:** Karena fakta #4, desain yang mengasumsikan internet bebas **akan gagal di produksi** — dan
+gagalnya sering **diam** (contoh nyata: `npx skills find` mengembalikan "No skills found", yang terbaca seperti
+jawaban sah). Desain untuk jalur terbatas **tetap benar** di lingkungan yang lebih bebas, tetapi tidak sebaliknya.
+Jadi memilih jalur ketat **tidak punya biaya** dan **menghilangkan** satu kelas kegagalan.
+
+### P6 — Tiga pemeriksaan sebelum operasi yang bergantung riwayat
+
+**Policy:** Sebelum **operasi apa pun yang bergantung riwayat git** (merge, rebase, `merge-base`, cek leluhur,
+`git log` lintas-branch, dan **sebelum setiap commit**), agent **wajib** memeriksa tiga hal:
+1. `git rev-parse --is-shallow-repository` → **harus `false`**
+2. HEAD lokal **mengandung** sha remote branch sesi → `git ls-remote --heads origin <branch>` lalu
+   `git merge-base --is-ancestor <sha-remote> HEAD`
+3. `git rev-list --count origin/main` → **masuk akal** (ratusan, bukan 1)
+
+Kalau salah satu gagal: **pulihkan dulu** — `git fetch --unshallow --prune` untuk shallow, atau
+`git fetch` + **`git reset --mixed <sha remote>`** untuk HEAD yang ter-reset (`--mixed`, **bukan** `--hard`:
+working tree tidak boleh disentuh). **Verifikasi byte-identik** sebelum commit ulang. **Dilarang** memakai
+`--allow-unrelated-histories` atau `pull --rebase` untuk mengatasi gejala ini.
+
+**Alasan kausal:** Karena fakta #5, riwayat lokal **tidak bisa dipercaya** hanya karena tadi sudah diperiksa.
+`reset --mixed` memindahkan HEAD **tanpa** menyentuh working tree, jadi pemulihan **tidak bisa** menghilangkan
+pekerjaan yang belum ter-commit — inilah sebabnya itu satu-satunya jalur yang diizinkan. Tiga kejadian nyata di
+satu sesi (2026-09-17) semuanya pulih **tanpa kehilangan satu byte pun** dan **tanpa force-push**, karena
+prosedur ini diikuti.
+
 ---
 
 ## Bagaimana menanam di sistem yang dihasilkan
@@ -87,7 +179,7 @@ Setiap sistem domain yang akan dipakai via lmarena harus memiliki bagian "Batasa
 ## Batasan Platform
 
 - **Dipakai via lmarena?** Ya
-- **Jika Ya:** rujuk ke `_meta/PLATFORM_LMARENA.md` untuk fakta platform. Terapkan P1-P4 sesuai bentuk sistem ini (bertinjkat/flat/siklus).
+- **Jika Ya:** rujuk ke `_meta/PLATFORM_LMARENA.md` untuk **5** fakta platform. Terapkan **P1–P6** sesuai bentuk sistem ini (bertinjkat/flat/siklus).
 - **Jika Tidak:** tulis alasan override eksplisit (misal: sistem ini manual 100% Obsidian, tidak via agent)
 ```
 
@@ -108,4 +200,5 @@ Jika sebuah sistem memang tidak dipakai via lmarena sama sekali, maka fakta plat
 | Tanggal | Keputusan | Alasan |
 |---|---|---|
 | 2026-09-04 | Buat dokumen ini | Menutup gap asumsi agent tentang lifecycle sesi lmarena, setelah observasi pengguna dan verifikasi docs resmi Arena. Fakta platform sebelumnya tidak eksplisit di meta, menyebabkan risiko file terjebak setelah merge dan diskusi hilang saat crash. |
+| 2026-09-17 | **Fakta platform #4 (allowlist jaringan) + #5 (riwayat git bisa terpotong/ter-reset di tengah sesi) DITAMBAH**; policy **P5** (desain untuk allowlist) + **P6** (3 pemeriksaan sebelum operasi bergantung riwayat) ditambahkan; bagian "Bagaimana menanam" diperbarui dari 3 fakta/P1-P4 jadi **5 fakta/P1–P6** | Keduanya **diukur/dialami langsung** di sesi `arena/01a0ae7a-pembangun-sistem` 2026-09-17, bukan dugaan: #4 dari uji `curl` ke 18 host (bukti: berkas _meta/_internal/DISKUSI_MENTAH_sistem-pembuat-undangan_2026-09-17.md bagian M — ditulis tanpa backtick sebagai provenance, karena dokumen kerja internal sesi ini memang TIDAK disalin ke folder sistem); #5 dari **3 kejadian nyata dalam satu sesi** (2× HEAD ter-reset, 1× `.git/shallow` muncul lagi → merge ditolak). Ditemukan saat audit (temuan X-01/X-02 di berkas _meta/_internal/AUDIT_MANUAL_DAN_MEKANISME_REVIEW_2026-09-17.md (provenance tanpa backtick, alasan sama)): dokumen ini sebelumnya hanya memuat 3 fakta dan **tidak menyebut allowlist sama sekali**, padahal pemilik mengonfirmasi produksi = lmarena — jadi ini batasan produksi nyata. `npx skills find` dicatat khusus karena **gagal-diam**: keluarannya terlihat seperti jawaban sah |
 | 2026-09-04 | Bedakan fakta (tidak bisa/otomatis) vs policy (harus/jangan + alasan kausal) | Agar agent tidak salah kalibrasi — tahu mana yang tidak bisa secara fisik vs mana yang sebaiknya jangan karena risiko. Sesuai prinsip Log Keputusan di 02_PRINSIP_UNIVERSAL.md. |

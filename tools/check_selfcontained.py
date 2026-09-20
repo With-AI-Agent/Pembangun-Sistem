@@ -435,6 +435,70 @@ def render_result(result: SystemResult, report: bool) -> None:
     print("")
 
 
+def sinkronkan_salinan(targets: list[str], tanggal: str) -> int:
+    """Tulis ulang salinan berlabel dari sumber masternya (PERBAIKAN, bukan hanya deteksi).
+
+    Hanya salinan yang mendeklarasikan "tidak ada perbedaan" yang disinkronkan. Salinan yang
+    mendeklarasikan perbedaan nyata adalah penyimpangan yang DISENGAJA dan diputuskan orang lain;
+    menimpanya diam-diam akan menghapus keputusan itu, jadi ia dilewati dan dilaporkan.
+
+    Label `versi-meta` ikut disegarkan: ia menyatakan keadaan sinkron terakhir, dan keadaan itu termasuk
+    versi meta saat sinkron — jadi versi yang tertinggal juga alasan untuk menulis ulang, bukan hanya sha
+    atau badan yang berbeda.
+
+    Definisi sha dan versi meta DIPINJAM dari build_template (satu definisi, bukan dua):
+    `source_sha()` dan `current_meta_version()`.
+    """
+    import build_template as bt
+
+    versi = bt.current_meta_version()
+    n = 0
+    for system in targets:
+        for path in sorted((ROOT / system).rglob("*")):
+            if not path.is_file():
+                continue
+            try:
+                data = path.read_bytes()
+            except OSError:
+                continue
+            if not data.startswith(b"> Salinan turunan."):
+                continue
+            split = split_label(data)
+            if split is None:
+                continue
+            first3, _body = split
+            m = LABEL_RE.match(first3[0])
+            if not m:
+                print(f"  DILEWATI (label tidak terparse, perbaiki tangan): {path.relative_to(ROOT)}")
+                continue
+            diff_match = re.match(r"^>\s*Perbedaan\s*:\s*(.*)$", first3[1], re.IGNORECASE)
+            declared = diff_match.group(1).strip() if diff_match else ""
+            rel = path.relative_to(ROOT).as_posix()
+            if declared.lower() not in NO_DIFF_VALUES:
+                print(f"  DILEWATI (menyatakan perbedaan nyata, tidak boleh ditimpa): {rel}")
+                continue
+            src_rel = m.group("src")
+            src = ROOT / src_rel
+            if not src.is_file():
+                print(f"  DILEWATI (sumber tidak ada di master): {rel}")
+                continue
+            src_bytes = src.read_bytes()
+            sha = bt.source_sha(src)
+            if sha == m.group("sha") and _body == src_bytes and m.group("meta") == versi:
+                continue  # sudah sinkron: sha sumber, badan, DAN versi meta pada label semuanya cocok
+            baru = (
+                f"> Salinan turunan. Sumber: {src_rel} sha {sha} tanggal {tanggal} "
+                f"versi-meta {versi}\n".encode("utf-8")
+                + first3[1].encode("utf-8") + b"\n"
+                + first3[2].encode("utf-8") + b"\n"
+                + src_bytes
+            )
+            path.write_bytes(baru)
+            n += 1
+            print(f"  DISINKRONKAN: {rel} <- {src_rel} (sha {sha[:12]}, versi-meta {versi})")
+    return n
+
+
 def main(argv: list[str] | None = None) -> int:
     ap = argparse.ArgumentParser(
         prog="check_selfcontained.py",
@@ -445,6 +509,10 @@ def main(argv: list[str] | None = None) -> int:
     group.add_argument("--semua", action="store_true", help="cek semua sistem terdaftar")
     ap.add_argument("--keep", action="store_true", help="pertahankan salinan sementara")
     ap.add_argument("--report", action="store_true", help="cetak detail salinan berlabel, semua temuan, rujukan historis (tidak ditegakkan), dan sebutan area")
+    ap.add_argument("--sinkronkan", action="store_true",
+                    help="PERBAIKAN: tulis ulang salinan berlabel dari sumber masternya, lalu cek seperti "
+                         "biasa. Hanya salinan yang menyatakan 'tidak ada perbedaan'; yang menyatakan "
+                         "perbedaan nyata dilewati dan dilaporkan (keputusan orang lain tidak ditimpa).")
     args = ap.parse_args(argv)
 
     if not is_master_repo():
@@ -489,6 +557,14 @@ def main(argv: list[str] | None = None) -> int:
     print("mode: " + ("--semua" if args.semua else f"--sistem {args.sistem}"))
     print("aturan: salin HANYA folder sistem; jalankan validator sistem di salinan; cakupan pemindaian rujukan = dokumen aktif (satu definisi checkpoint_core.dokumen_aktif); rujukan ber-backtick ke BERKAS _meta/tools di dokumen aktif harus punya salinan berlabel; rujukan ke folder sendiri harus relatif; rujukan berbentuk direktori = sebutan area, bukan kegagalan; area yang tidak boleh keluar dari master ditulis sebagai provenance tanpa backtick, bukan disalin")
     print("")
+
+    if args.sinkronkan:
+        import datetime
+        tanggal = datetime.datetime.now(datetime.timezone.utc).date().isoformat()
+        print(f"sinkronisasi salinan berlabel dari master (tanggal UTC {tanggal}):")
+        jumlah = sinkronkan_salinan(targets, tanggal)
+        print(f"  salinan ditulis ulang: {jumlah}")
+        print("")
 
     results = [check_one(system, args.keep) for system in targets]
     try:

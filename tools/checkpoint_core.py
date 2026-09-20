@@ -22,7 +22,7 @@ their own (drifting) copy of the same judgments. This module holds:
     one used to be invisible), protocol formats (`- Status: approved`)
     recognized, not only the literal bold form.
   * Warisan / Tahap parsing for the inheritance-contract enforcement (F9):
-    all 9 items W-01..W-09 must be present in a system manifest; an
+    all 10 items W-01..W-10 must be present in a system manifest; an
     'override' row only exempts the mechanical check of that item when the
     full approval trail (alasan:, dampak:, tanggal:, approval:) is present.
   * dokumen_aktif — the single active-document definition introduced by
@@ -52,18 +52,22 @@ CORE_META_FILES = [
     "_meta/02_PRINSIP_UNIVERSAL.md",
     "_meta/03_KONTRAK_WARISAN.md",
     "_meta/ACCEPTANCE_TESTS.md",
+    "_meta/DAFTAR_PEKERJAAN_TERBUKA.md",
     "_meta/DEFINITION_OF_DONE.md",
     "_meta/FAILURE_INJECTION_TESTS.md",
     "_meta/INDEKS_SISTEM.md",
     "_meta/NEXT_SESSION_PROMPT.md",
     "_meta/PANDUAN_PENGGUNA_TEMPLATE.md",
     "_meta/PLATFORM_LMARENA.md",
+    "_meta/PROTOKOL_AUDIT_ISI.md",
     "_meta/PROTOKOL_CHECKPOINT_RECOVERY.md",
+    "_meta/PROTOKOL_REVIEW_INDEPENDEN.md",
     "_meta/QUALITY_ASSURANCE_AND_EVOLUTION.md",
     "_meta/SESSION_REPORT_TEMPLATE.md",
     "_meta/SYSTEM_MANIFEST.md",
     "_meta/SYSTEM_MANIFEST_TEMPLATE.md",
     "_meta/TEMPLATE_LOG_SESI.md",
+    "_meta/TANGGAPAN_MASUKAN_PEMILIK.md",
     "_meta/TEMPLATE_RELEASE.md",
 ]
 CORE_ROOT_FILES = ["PANDUAN_PENGGUNA.md", "PROMPT_ENTRI_UNIVERSAL.md"]
@@ -75,6 +79,21 @@ CORE_TOOL_FILES = [
     "tools/build_template.py",
     "tools/check_selfcontained.py",
     "tools/review_prompt.py",
+    # Ditambahkan 17 Sep 2026 sesudah AUDIT menemukan A-01/A-02: ketiga artefak mekanisme audit-isi
+    # yang dibangun hari itu TIDAK terdaftar di inventaris ini, sehingga MENGHAPUSNYA tidak membuat
+    # alat mana pun gagal (terverifikasi: salinan repo penuh di /tmp/full, hapus 3 berkas,
+    # `validate_repo.py` tetap exit 0). Prinsip inventaris — "kewajiban tidak diturunkan dari
+    # keberadaan" — ternyata tidak diterapkan pada mekanisme yang dibangun untuk menegakkannya.
+    # `tools/build_template.py` sudah terdaftar sebelumnya; `check_manuals.py` menyusul di sini.
+    "tools/audit_prompt.py",
+    "tools/ambil_verdict.py",
+    "tools/check_manuals.py",
+    # `tools/build_template.py` PERNAH tercantum dua kali di daftar ini (ditambahkan lagi pada
+    # 17 Sep 2026 padahal sudah ada di atas) sehingga `CORE_REQUIRED` menghitung 35 sementara
+    # berkas wajib UNIK-nya 34 — dan angka 35 itulah yang dicetak validator lalu tersebar ke
+    # dokumen dan log. Temuan review independen putaran 2 PR #74 ( ketiga hakim, saling bebas).
+    # Duplikatnya dihapus DI SINI, bukan dengan mengubah angka yang dicetak: ini konstanta PIN,
+    # jadi perubahannya dilaporkan ke pemilik, tidak diputuskan sendiri.
 ]
 CORE_REQUIRED = CORE_META_FILES + CORE_ROOT_FILES + CORE_TOOL_FILES
 
@@ -220,7 +239,14 @@ def unit_status_files(sys_dir: Path):
 
 
 # --- Warisan / Tahap (F9) ------------------------------------------------------
-WARISAN_ITEMS = [f"W-{i:02d}" for i in range(1, 10)]
+# Daftar butir ditulis EKSPLISIT di sini dan JUGA di _meta/03_KONTRAK_WARISAN.md
+# (dua sumber). Menambah butir di kontrak TANPA menambah di sini = butir tidak
+# diperiksa; menambah di sini TANPA menanam di manifest = 4 sistem terdaftar gagal.
+# Keduanya wajib dikerjakan bersamaan. Sengaja TIDAK diturunkan otomatis dari
+# dokumen kontrak: penurunan otomatis membuat butir baru langsung mewajibkan
+# kepatuhan sebelum butir itu bisa ditanam (alatnya belum ada) — kontrak aturan 3
+# menuntut penonaktifan/penundaan diputuskan sadar, bukan jatuh sebagai error.
+WARISAN_ITEMS = [f"W-{i:02d}" for i in range(1, 11)]
 OVERRIDE_LABELS = ("alasan:", "dampak:", "tanggal:", "approval:")
 
 
@@ -233,19 +259,27 @@ def manifest_tahap(text: str) -> str:
 
 
 def warisan_rows(text: str):
-    """Yield (item, row) for each manifest table row starting '| W-0n'."""
+    """Yield (item, row) for each manifest table row starting '| W-nn'.
+
+    Regex sengaja `W-\d{2}`, BUKAN `W-0\d`: pola lama diam-diam berhenti
+    mengenali baris begitu kontrak warisan melewati W-09 (W-10 dan seterusnya
+    tidak akan ter-parse), sehingga mekanisme override + pengecualian mekanis
+    di bawahnya lumpuh untuk butir baru TANPA ada error yang terlihat. Diperbaiki
+    2026-09-17 saat audit menemukan batas ini (sesi arena/01a0ae7a); perbaikan
+    ini tidak mengubah perilaku untuk W-01..W-10.
+    """
     out = []
     for line in text.splitlines():
         s = line.strip()
         if s.startswith("|"):
-            m = re.match(r"\|\s*(W-0\d)\b", s)
+            m = re.match(r"\|\s*(W-\d{2})\b", s)
             if m:
                 out.append((m.group(1), s))
     return out
 
 
 def warisan_errors(name: str, text: str):
-    """F9: all nine items must be present; an 'override' row without the
+    """F9: all ten items must be present; an 'override' row without the
     full approval trail is NOT a valid override (contract rule 3) and is an
     error. Format-agnostic presence (table rows or prose enumeration); the
     mechanical exemption (overridden_items) only applies to table rows."""

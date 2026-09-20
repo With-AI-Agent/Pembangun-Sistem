@@ -29,9 +29,9 @@ Sepanjang sesi: pelihara LOG_SESI di _log-sesi/ (aturannya ada di `10_LOG_SESI.m
 Tutup sesi ini:
 1. Perbarui `STATUS.md` di folder sistem ini — field deterministik wajib benar: Pekerjaan belum tersimpan = "Tidak ada" hanya bila working tree memang bersih dan seluruh commit ter-push
 2. Perbarui header LOG_SESI sesi ini: CLOSED (atau OPEN + "dilanjutkan di mana" bila disengaja)
-3. Perbarui tanggal "terakhir disentuh" dan status sistem ini di _meta/INDEKS_SISTEM.md — pencatatan manual, TIDAK mengandalkan git history
+3. Perbarui tanggal "terakhir disentuh" dan status sistem ini di INDEKS_SISTEM.md repo induk — pencatatan manual, TIDAK mengandalkan git history. Kalau sistem ini sudah berdiri sebagai repo mandiri (tidak lagi di dalam repo induk), lewati langkah ini dan pastikan `STATUS.md` + `SYSTEM_MANIFEST.md` folder ini yang memuat tanggal serta status terbaru
 4. Kalau kerja berlanjut lintas sesi: tinggalkan handoff di log sesi + STATUS supaya sesi baru melanjutkan tanpa ditanya ulang dari nol
 5. Commit + push semua yang bermakna; buka PR dengan deskripsi lengkap (apa yang dikerjakan, gerbang yang diberikan/ditunda, nomor PR dicatat di commit terakhir). SEBELUM merge/close apa pun: pastikan semua sudah ter-push — setelah itu sesi ini TIDAK BISA push lagi (fakta platform); kerja lanjutan dari sesi baru yang dibuka dari main
-6. Jalankan pembangkit prompt review repo induk (tools/review_prompt.py --pr <nomor>) dan tempel keluarannya sebagai SATU BLOK BERPAGAR di badan pesan chat TERAKHIR sesi — tanpa blok itu, penutupan dianggap belum dikerjakan dan PR belum boleh dinilai
+6. Jalankan pembangkit prompt review milik repo tempat sistem ini hidup (di repo induk: tools/review_prompt.py --pr <nomor>; di repo mandiri: pembangkit prompt review repo itu) dan tempel keluarannya sebagai SATU BLOK BERPAGAR di badan pesan chat TERAKHIR sesi — tanpa blok itu, penutupan dianggap belum dikerjakan dan PR belum boleh dinilai
 7. Jangan pernah auto-merge — merge selalu keputusanku
 ```

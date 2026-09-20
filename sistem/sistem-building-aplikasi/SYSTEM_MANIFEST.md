@@ -61,6 +61,7 @@ Status butir 03_KONTRAK_WARISAN untuk sistem ini — default SEMUA diterapkan (G
 | W-07 fakta platform | diterapkan | PANDUAN_PENGGUNA.md + bagian Batasan Platform di bawah | — |
 | W-08 approval bertingkat | diterapkan | kriteria Besar/Kecil di Bentuk Sistem + AGENT_SYSTEM.md | — |
 | W-09 ringkasan cadangan | diterapkan | _cadangan-claude/RINGKASAN_sistem-building-aplikasi.md (root meta) | — |
+| W-10 audit isi + pengiriman hasil | **diterapkan sebagian** — mekanisme tersedia dari meta (tools/audit_prompt.py --objek sistem/<nama-folder-ini> + tools/ambil_verdict.py); **turunan self-contained di dalam folder sistem BELUM ada**, jadi saat folder ini diekstrak jadi repo mandiri mekanisme auditnya tidak ikut | mekanisme di root meta: tools/audit_prompt.py + tools/ambil_verdict.py + _meta/PROTOKOL_AUDIT_ISI.md (provenance — belum ada salinan/turunan di dalam folder ini) | — |
 
 ## Quality & Evolution
 
