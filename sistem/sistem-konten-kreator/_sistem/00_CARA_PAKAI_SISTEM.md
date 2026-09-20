@@ -48,10 +48,10 @@ Kedua dokumen ini (Bank Konsistensi Visual dan Persona & Voice) TETAP terpisah s
 - Kalau kamu memberi jawaban ambigu ("bagus", "sip") pada G2/G3, agent WAJIB minta penegasan eksplisit, bukan menafsirkannya sebagai approval.
 - Semua approval yang sudah diberikan dicatat di `STATUS.md` beserta kode gerbangnya — supaya sesi berikutnya tahu persis sampai mana izin yang sudah ada (lihat `STATUS_TEMPLATE.md`).
 
-**Prinsip Checkpoint & Verifikasi Konsistensi.** Karena sesi kerja bisa sangat panjang, ada 2 lapis pertahanan terhadap risiko agent "melenceng" dari yang sudah disepakati:
+**Prinsip Checkpoint & Verifikasi Konsistensi.** Karena sesi kerja bisa sangat panjang, ada 3 lapis pertahanan terhadap risiko agent "melenceng" dari yang sudah disepakati:
 - **Checkpoint otomatis** — setiap kali sesi pindah dari 1 tahap besar ke tahap besar berikutnya, agent WAJIB berhenti sejenak dan meringkas ulang apa yang sudah disepakati, dengan cara membaca ulang sumber resmi (bukan mengandalkan ingatan sesi).
 - **Perintah manual "cek konsistensi"** — bisa kamu panggil kapan saja, agent akan membandingkan hasil kerja terbaru dengan sumber resmi (Channel Brief, Bank Konsistensi Visual, Persona & Voice) dan melaporkan kalau ada yang melenceng.
-- **Sync check sebelum melanjutkan setelah jeda** — setiap kali kerja dilanjutkan setelah jeda (jendela chat sama yang baru dibuka lagi, sesi baru, atau setelah menunggu approval lama di gerbang), agent WAJIB dulu membandingkan branch dengan `main` (mis. `git fetch origin`, lalu `git merge-base --is-ancestor origin/main HEAD` — exit 1 = `main` sudah lebih maju). Kalau `main` sudah maju: rebase branch ke `origin/main`, **baca ulang** dokumen yang berubah (terutama Channel Brief), asesmen dampak terhadap output yang sudah dikunci; kalau dampaknya kategori Besar → minta approval ulang bagian terdampak sesuai gerbangnya (G2/G3); catat di Log Keputusan. Kata "lanjut"/"setuju" dari pemilik adalah approval isi, **bukan pengganti** sync check ini.
+- **Sync check sebelum melanjutkan setelah jeda** — setiap kali kerja dilanjutkan setelah jeda (jendela chat sama yang baru dibuka lagi, sesi baru, jeda cukup lama di jendela yang masih terbuka sehingga `main` bisa sudah maju, atau setelah menunggu approval lama di gerbang), agent WAJIB dulu membandingkan branch dengan `main` (mis. `git fetch origin`, lalu `git merge-base --is-ancestor origin/main HEAD` — exit 1 = `main` sudah lebih maju). Kalau `main` sudah maju: rebase branch ke `origin/main`, **baca ulang** dokumen yang berubah (terutama Channel Brief), asesmen dampak terhadap output yang sudah dikunci; kalau dampaknya kategori Besar → minta approval ulang bagian terdampak sesuai gerbangnya (G2/G3); catat di Log Keputusan. Kata "lanjut"/"setuju" dari pemilik adalah approval isi, **bukan pengganti** sync check ini.
 
 ---
 
@@ -177,7 +177,7 @@ Sistem ini dipakai via lmarena Agent Mode. Platform memiliki perilaku otomatis y
 
 Di awal sesi lmarena Agent, kamu bisa memilih repo DAN branch yang mau dipakai — termasuk melihat daftar branch lama yang belum di-merge dan memilih salah satu secara sengaja. Ini membedakan 2 skenario:
 
-**Skenario A — Lanjut di jendela chat yang sama** (belum ditutup, cuma jeda): tidak butuh langkah khusus, lanjut seperti biasa. Checkpoint otomatis akan tetap jalan kalau kamu pindah ke tahap besar berikutnya.
+**Skenario A — Lanjut di jendela chat yang sama** (belum ditutup, cuma jeda): tidak butuh langkah khusus, lanjut seperti biasa. Checkpoint otomatis akan tetap jalan kalau kamu pindah ke tahap besar berikutnya. Kalau jeda cukup lama sehingga `main` bisa sudah maju, berlaku sync check (Prinsip Checkpoint — sync check sebelum melanjutkan setelah jeda).
 
 **Skenario B — Buka chat/sesi baru** (baik untuk kerjaan baru maupun nerusin branch lama yang sudah dipilih): agent WAJIB menjalankan urutan ini di awal sesi, sebelum mengerjakan apa pun:
 
