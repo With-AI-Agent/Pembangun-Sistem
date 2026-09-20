@@ -1,6 +1,6 @@
 # Status Pembangunan — Sistem Undangan (unit pembangunan sistem ini)
 
-- **Status:** `isi-draft` — **v0.3.0**, `Status Draft`. Rencana kerangka **FINAL** (dikonfirmasi pemilik 17 Sep 2026; kategori **BESAR** → direview isi lengkapnya, bukan konfirmasi ringan). **Isi sistem: 1 dari 11 dokumen domain terisi** — `01_IDENTITAS_PEMILIK.md` (Discovery 01, 20 Sep 2026, **G0 LULUS — review isi lengkap oleh pemilik + PR #86 MERGED** (merge commit `36c63d4`, 20 Sep 2026 14:10 UTC; tanpa auto-merge)); 10 lainnya masih kerangka.
+- **Status:** `isi-draft` — **v0.4.0**, `Status Draft`. Rencana kerangka **FINAL** (dikonfirmasi pemilik 17 Sep 2026; kategori **BESAR** → direview isi lengkapnya, bukan konfirmasi ringan). **Isi sistem: 2 dari 11 dokumen domain terisi** — `01_IDENTITAS_PEMILIK.md` (Discovery 01, 20 Sep 2026, **G0 LULUS — review isi lengkap oleh pemilik + PR #86 MERGED** (merge commit `36c63d4`, 20 Sep 2026 14:10 UTC; tanpa auto-merge)) dan `02_PROFIL_JENIS_ACARA.md` (Discovery 02, 20 Sep 2026 — jenis acara pertama **pernikahan**, cakupan umum; **G1: menunggu review isi lengkap pemilik di PR — tanpa auto-merge**; benturan klasifikasi G1 antar-dokumen dilaporkan terbuka di banner + Log Keputusan dokumen 02); 9 lainnya masih kerangka.
   17 Sep 2026; kategori **BESAR** → direview isi lengkapnya, bukan konfirmasi ringan). **Belum ada isi
   sistem**: 11 dokumen domain masih berupa kerangka.
 - **Sistem:** Sistem Undangan — lihat SYSTEM_MANIFEST.md dan 00_RENCANA_KERANGKA.md di folder ini.
@@ -26,6 +26,22 @@
   manifest — **diuji mutasi**), manifest v0.2.0→**v0.3.0** · Tahap kerangka→**draft** · Status Proposed→**Draft**,
   STATUS.md (berkas ini) diperbarui. Berikutnya: PR kategori **BESAR** (review isi lengkap pemilik, tanpa
   auto-merge) → **G0 dinyatakan lulus hanya oleh pemilik** (Syarat 4).
+- **Tahap terakhir selesai (tambahan 20 Sep 2026, kedua):** **Discovery 02 (L2 Profil Jenis Acara — PERNIKAHAN) tuntas sampai draft** —
+  diskusi 3 giliran dengan pemilik (prompt `_sistem/PROMPT_DISCOVERY_02_PROFIL_JENIS_ACARA.md`; log sesi
+  `_log-sesi/LOG_SESI_2026-09-20_43.md`): cakupan **umum** (semua bentuk pengesahan), **semua variasi dicakup sejak awal**,
+  approval per butir atas (a) kata baku & etika + titik sensitif selalu konfirmasi, (b) waktu & siklus (sebar digital
+  H-30..H-14, reminder H-7..H-1, field wajib-ubah-setelah-tayang), (c) sortir fitur bawaan-L2 (11) vs per-undangan (9),
+  (d) konvensi desain + 9 pantangan, (e) hal konsisten 9 butir, (f) field WAJIB 7/OPSIONAL 14/TIDAK BERLAKU per bentuk,
+  terminologi default "Resepsi Pernikahan" + opsi "Walimatul Ursy", pendekatan antar-mazhab = kandidat kecil + pilihan per
+  undangan; **KOREKSI pemilik terkunci:** katalog 8 model = *"sekedar pilihan otomatis ketika ga ada keterangan detail"* —
+  bukan aturan kaku (diberlakukan umum ke seluruh isi L2 sebagai catatan agent, dinyatakan sadar). Butir "kurang paham"
+  (kata baku, siklus) digali agent lewat riset web sesuai Prinsip Kerja Dasar L1 — sumber tercatum per bagian di dokumen 02.
+  Pengisian `02_PROFIL_JENIS_ACARA.md` + **mekanika prompt 02 dalam SATU commit**: banner kerangka dicabut,
+  `_sistem/validate_system.py` diperluas (10 kerangka → 9 kerangka + 2 terisi; bagian isi wajib 02 — **diuji mutasi**),
+  manifest v0.3.0→**v0.4.0**, STATUS.md (berkas ini), baris Log Keputusan W-05 di `00_RENCANA_KERANGKA.md`. Berikutnya:
+  PR kategori **BESAR** per prompt 02 (review isi lengkap pemilik, tanpa auto-merge) → **G1 dinyatakan lulus hanya oleh
+  pemilik**. Sesudah G1 lulus: dokumen 03/04 bisa dibuat sebagai template biasa (prompt 02 "Setelah selesai" butir 3),
+  dan/atau putaran jenis acara berikutnya.
 
   `PROMPT_ENTRI_UNIVERSAL.md`, sekaligus menutup temuan **R1** review independen PR #74 (validator
   mengeluarkan 2 peringatan karena pegangan belum ada). **Warning validator repo kini 0**, dicapai dengan
@@ -44,7 +60,7 @@
   yang dikoreksi adalah kata "kini"-nya. **Peringatan di dokumen hidup tetap berarti butir ini belum lulus.**
   Butir ini dieksekusi sesudah pesan commit `4f819d9` keliru menyatakannya tidak berlaku — koreksinya
   dilaporkan terbuka di register T-53.
-- **Tahap berikutnya:** (a) **SELESAI 20 Sep 2026 — PR #86 di-merge, G0 lulus (dinyatakan pemilik)**; (b) **sedang berjalan: jalankan** `_sistem/PROMPT_DISCOVERY_02_PROFIL_JENIS_ACARA.md` (L2 mewarisi L1 — urutannya tidak boleh dibalik); (c) kelulusan pegangan W-01 belum dinilai (audit lensa kemudahan pakai + uji pemakaian nyata pemilik — Syarat 4); (d) buat `12_LOG_SESI.md` (W-02) + `QUALITY_ASSURANCE_AND_EVOLUTION.md` turunan (W-06); (e) **1 keputusan pemilik terbuka: lisensi Remotion** vs alternatif berlisensi longgar — data terukur 20 Sep 2026: **free license ≤3 orang membolehkan komersial** (studio 1 orang termasuk); keputusan final tetap milik pemilik sebelum `08_PIPELINE_VIDEO.md` diisi; (f) turunan mekanisme audit isi self-contained (W-10, item T-07); (g) item **"Belum Ditentukan" di `01_IDENTITAS_PEMILIK.md`** (rekening/QRIS/kontak pemilik; angka harga pasca-fase-portofolio) diisi saat momennya tiba — lalu tercatat di Log Keputusan dokumen 01.
+- **Tahap berikutnya:** (a) **SELESAI 20 Sep 2026 — PR #86 di-merge, G0 lulus (dinyatakan pemilik)**; (b) **Discovery 02 tuntas sampai draft 20 Sep 2026 — G1 MENUNGGU review isi lengkap pemilik di PR (tanpa auto-merge)**; sesudah G1 lulus: buat `03_TEMPLATE_DATA_ACARA.md` + `04_TEMPLATE_BRIEF_UNDANGAN.md` sebagai template biasa (prompt 02 "Setelah selesai" butir 3) dan/atau jalankan prompt 02 untuk jenis acara berikutnya (satu jenis per putaran); (c) kelulusan pegangan W-01 belum dinilai (audit lensa kemudahan pakai + uji pemakaian nyata pemilik — Syarat 4); (d) buat `12_LOG_SESI.md` (W-02) + `QUALITY_ASSURANCE_AND_EVOLUTION.md` turunan (W-06); (e) **1 keputusan pemilik terbuka: lisensi Remotion** vs alternatif berlisensi longgar — data terukur 20 Sep 2026: **free license ≤3 orang membolehkan komersial** (studio 1 orang termasuk); keputusan final tetap milik pemilik sebelum `08_PIPELINE_VIDEO.md` diisi; (f) turunan mekanisme audit isi self-contained (W-10, item T-07); (g) item **"Belum Ditentukan" di `01_IDENTITAS_PEMILIK.md`** (rekening/QRIS/kontak pemilik; angka harga pasca-fase-portofolio) diisi saat momennya tiba — lalu tercatat di Log Keputusan dokumen 01; (h) **benturan klasifikasi G1** (prompt 02 BESAR vs manifest Kecil vs rencana kerangka bagian 4 gerbang produksi-Sedang) — keputusan penyelarasan di tangan pemilik saat/sesudah review PR G1.
   (b) sesudah merge: tulis **6 prompt Discovery detail** (dokumen 01, 02, 05, 06, 09, 10) — **bukan**
   langsung menulis isi sistemnya; (c) **SELESAI 18 Sep 2026** — pegangan pengguna W-01 sudah dibuat
   (lihat butir "tahap terakhir selesai" di atas); **yang masih kurang untuk naik ke `siap-pakai`: kelulusan
@@ -55,7 +71,7 @@
   (Motion Canvas MIT / HyperFrames Apache 2.0) untuk dokumen 08;
   (f) turunan mekanisme audit isi self-contained (W-10) — **belum ada di sistem anak mana pun**, item T-07.
 - **Pekerjaan belum tersimpan:** Tidak ada
-- **Waktu pembaruan:** 2026-09-20 — Discovery 01 tuntas; `01_IDENTITAS_PEMILIK.md` terisi (**v0.3.0**, Tahap `draft`); **T-69 dieksekusi** (validator diperluas + manifest + STATUS, satu commit; diuji mutasi). Sebelumnya 2026-09-18: pegangan pengguna W-01 dibuat (menutup temuan R1 review PR #74); validator mandiri diperketat 2 → 4 berkas wajib.
+- **Waktu pembaruan:** 2026-09-20 (kedua) — Discovery 02 tuntas sampai draft; `02_PROFIL_JENIS_ACARA.md` terisi (jenis acara: pernikahan, cakupan umum) — **v0.4.0**, Tahap tetap `draft`; mekanika prompt 02 dieksekusi (validator diperluas 9 kerangka + 2 terisi + manifest + STATUS, satu commit; diuji mutasi); **G1 menunggu review isi lengkap pemilik di PR**. Sebelumnya 2026-09-20: Discovery 01 tuntas, G0 LULUS (PR #86 merged `36c63d4`), T-69 dieksekusi. 2026-09-18: pegangan pengguna W-01 dibuat (menutup temuan R1 review PR #74); validator mandiri diperketat 2 → 4 berkas wajib.
   `arena/01a0ae7a-pembangun-sistem` (Discovery Level-0 + finalisasi rencana kerangka).
 - **Risiko aktif:** (1) **pegangan pengguna sudah ADA (18 Sep 2026) tetapi kelulusannya belum
   dinilai dan log sesi (W-02) belum dibuat** — sistem ini **belum bisa dipakai** siapa pun sampai
