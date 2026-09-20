@@ -20,7 +20,7 @@
 - [x] `arsip-naskah/indeks.md` dan `arsip-naskah/indeks-karakter.md` sudah dibuat
 - [x] Sudah `Merged` ke `main`
 
-**Versi:** `1.1` — **Terakhir diperbarui:** `2026-09-19` — **Diwarisi dari:** `_sistem/01_BRAND_CORE.md`
+**Versi:** `1.2` — **Terakhir diperbarui:** `2026-09-20` — **Diwarisi dari:** `_sistem/01_BRAND_CORE.md`
 
 > **Catatan dependency:** `_sistem/01_BRAND_CORE.md` di repo ini masih template umum belum terisi spesifik. Nilai-nilai channel ini dikunci mandiri di bagian 2, 3, dan 5 di bawah; bila Brand Core kelak diisi, brief ini dapat diselaraskan via G2 terpisah.
 
@@ -57,18 +57,25 @@
   - Format 1 gambar ilustrasi flat + caption 3–6 baris.
   - Struktur ritme caption: baris 1–2 pengamatan benda/situasi toko, baris 3–4 interaksi kecil atau ucapan singkat Bu Sinta, baris 5–6 refleksi penutup pendek yang hangat.
   - **Aturan penutup wajib (mengikat semua konten):** Baris penutup caption HARUS berupa observasi terhadap benda yang menjadi fokus konten (benda yang sama yang muncul di gambar dan dibuka di baris awal). Dilarang menutup dengan generalisasi, nasihat, atau refleksi yang melompat ke pembaca/kehidupan umum. Penutup mendarat kembali ke benda, tidak melantur ke pesan universal.
+  - **Aturan kutipan & observasi (mengikat semua konten):** Ucapan Bu Sinta WAJIB berupa kutipan langsung dalam tanda petik ("..." atau "..."), 1 kalimat (maksimal 2 kalimat pendek) dengan total ≤15 kata, ditempatkan di baris 3–4 caption, memakai diksi khas Bu Sinta yang bersahaja. Narator di luar kutipan WAJIB tetap sebagai pengamat luar: hanya melaporkan gerak/ucapan/bunyi/aroma yang teramati, tidak menafsirkan perasaan atau pikiran tokoh.
   - Suasana toko kelontong yang bersahabat dan tenang.
 - **Hal yang TIDAK BOLEH ADA / dihindari di channel ini:**
   - Nama toko komersial atau brand nyata (hindari pelanggaran hak cipta dan kesan endorsement).
   - Judul/caption sensasional, umpan klik (clickbait), atau gaya tulisan memancing amarah.
   - Nasihat hidup menggurui atau khotbah moral eksplisit.
   - **Penutup caption yang menggeneralisasi ke pembaca atau melompat ke nasihat/renungan umum** (mis. pola "Di toko kami, …" sebagai penutup, "Kadang tanda paling sederhana …", "begitu juga hidup …", "pelan-pelan aja …" tanpa objek benda yang dirujuk, dan sejenisnya yang meninggalkan benda fokus). Penutup wajib tetap berada di benda — observasi konkret, bukan wejangan.
+  - **Kutipan Bu Sinta yang dipanjangkan atau diparafrase menjadi ceramah/motivasi** (mis. "Hidup itu seperti stoples ini, harus sabar menunggu…" dalam mulut Bu Sinta — terlalu panjang, menggurui, bukan suara Bu Sinta 52 tahun yang hemat kata; kutipan wajib ≤15 kata, 1 kalimat langsung).
+  - **Narator menebak isi hati/pikiran/perasaan tokoh (mind-reading)** (mis. "Bu Sinta tersenyum ikhlas meski hatinya lelah", "ia merasa bangga", "dalam hati ia bersyukur" — narator tidak boleh masuk ke dalam kepala tokoh; cukup laporkan apa yang terlihat/terdengar/tercium).
+  - **Sapaan atau ajakan langsung ke pembaca di caption** (mis. "Pernahkah kamu…?", "Kalau kamu lewat toko kami…", "Tulis di komen toko favoritmu!", "Save & share ya!" — channel ini tidak menyapa pembaca sebagai "kamu/kalian/kita" dan tidak memakai pertanyaan retoris atau CTA engagement; cerita tetap berada di toko).
   - Format video atau suara latar (voice over).
   - Humor kasar, berisik, atau slapstick.
 - **Contoh kalimat pembuka/penutup khas:**
   - *Pembuka:* "Di toko kami, stoples kopi ini jarang sekali bersuara keras." / "Pagi di toko kami selalu dimulai dari bunyi bel pintu yang sedikit serak." / "Di sudut dekat timbangan, selalu ada cerita yang tertinggal."
   - *Penutup (pola yang BENAR — mendarat ke benda fokus):* "Stoples itu tinggal separuh, tapi aromanya masih memenuhi sudut meja kasir." / "Bel pintu tadi sudah berbunyi delapan kali — besok pagi ia akan berbunyi lagi." / "Timbangan bebek itu diam di tempatnya, jarumnya kembali ke nol seperti biasa."
   - *Penutup (pola yang TIDAK BOLEH — generalisasi/nasihat yang meninggalkan benda):* ~~"Yang penting, hari ini toko tutup tepat waktu."~~ / ~~"Pelan-pelan aja, besok pagi toko buka lagi."~~ / ~~"Kadang tanda paling sederhana adalah yang paling berarti."~~
+  - *Kutipan Bu Sinta (pola BENAR — pendek, bersahaja, ≤15 kata, di baris 3–4):* "Sudah makan belum?" / "Pelan-pelan aja, nggak usah buru-buru." / "Uang bisa dicari, teman susah."
+  - *Kutipan / narasi (pola TIDAK BOLEH — ceramah, mind-reading):* ~~"Hidup itu seperti kopi, harus sabar menunggu ampasnya turun baru terasa nikmatnya."~~ / ~~"Bu Sinta tersenyum ikhlas meski hatinya lelah seharian."~~
+  - *Sapaan pembaca (pola TIDAK BOLEH — menyapa/CTA):* ~~"Pernahkah kamu merindukan toko seperti ini?"~~ / ~~"Tulis di komen kenanganmu di toko kelontong!"~~
 
 ## 4. Konsistensi Visual
 
@@ -105,6 +112,9 @@
 - **Pakaian Bu Sinta melenceng:** Kardigan kuning mustard di atas kemeja putih sering kali tertukar warna jika tidak disebut eksplisit.
 - **Gaya caption menjadi ceramah/quotes motivasi:** AI sering kali tergoda membuat kalimat penutup bernada sok bijak; wajib ditegaskan agar tetap santai, membumi, dan tidak menggurui.
 - **Ucapan Bu Sinta melenceng menjadi bahasa gaul/slang modern:** Wajib ditegaskan bahwa Bu Sinta adalah wanita berumur 52 tahun yang bicaranya tenang, pendek, dan bersahaja ("pelan-pelan aja", "uang bisa dicari, teman susah").
+- **Kutipan Bu Sinta kepanjangan / bernada ceramah:** AI sering membuat Bu Sinta berorasi 2–3 kalimat panjang berisi motivasi; wajib dipaksa 1 kalimat pendek ≤15 kata dalam tanda kutip di baris 3–4, bukan parafrase narator.
+- **Narator menebak perasaan (mind-reading):** AI tergoda menambahkan "dengan ikhlas", "hatinya hangat", "ia merasa lega" — narator harus hanya observasi indrawi (gerak, bunyi, aroma, ucapan yang terdengar), bukan interpretasi batin.
+- **Sapaan/CTA ke pembaca menyusup:** AI sering menutup dengan pertanyaan ke pembaca ("Pernahkah kamu…?") atau ajakan komen/save/share; channel ini dilarang menyapa "kamu/kalian/kita" sebagai pembaca dan dilarang CTA engagement apa pun — cerita tetap berada di toko.
 - **Kemunculan brand produk nyata di rak toko:** Gambar rak barang rentan menampilkan kemasan merek terkenal; prompt harus selalu mengarahkan ke kemasan polos atau toples kaca tanpa label merk komersial nyata.
 
 ## 7. Bank Ide Awal
@@ -141,3 +151,4 @@ Folder `arsip-naskah/` disediakan untuk menyimpan naskah final setiap post yang 
 | 2026-09-17 | Status naik ke `Operational` — sesi 25 | Semua checklist kelengkapan terpenuhi: bagian wajib terisi, checklist konsistensi terjawab, Bu Sinta Reference-Ready, indeks arsip ada, sudah merged. Channel siap produksi. |
 | 2026-09-19 | Aturan baru (mengikat semua konten): baris penutup caption WAJIB berupa observasi terhadap benda fokus konten; dilarang generalisasi/nasihat ke pembaca (pola "Di toko kami, …" atau "Kadang tanda paling sederhana …" sebagai penutup tidak boleh lagi dipakai). Contoh penutup lama yang melanggar dicoret dan diganti contoh yang mendarat ke benda. | Pemilik ingin penutup caption tetap berada di benda, tidak melompat ke nasihat/renungan umum — menjaga disiplin sudut pandang mikro yang menjadi pembeda channel. |
 | 2026-09-19 | Konflik versi acuan + resolusi (append-only, entri lama tidak diedit): konten #3 "Bangku Tua di Depan Toko" (produksi slot 32, branch `arena/01a0b7ba`) diproduksi saat sumber resmi masih v1 sementara v1.1 menunggu merge PR #79; strategi produksi = kepatuhan ganda v1+v1.1. Setelah PR #79 merge (merge commit `21fcfd3`, 2026-09-19T07:06:59Z), branch di-rebase ke main v1.1 TANPA konflik teks (file produksi disjoint dari file brief). Asesmen dampak pasca-rebase: naskah caption (termasuk penutup "Sore nanti bangku itu masih di situ juga — papan cekungnya hangat, menunggu siapa saja yang lewat.") PATUH aturan penutup v1.1 tanpa perubahan isi; breakdown, asset, dan arsip Tahap 6 tanpa dampak substansi; hanya pernyataan status "PR menggantung" dikoreksi di file produksi/arsip. Approval ulang bagian terdampak (penutup caption) diajukan terpisah ke pemilik sebelum G2 konten final. | Menjaga jejak keputusan konten terkunci yang diproduksi melintasi pergantian versi brief; resolusi tercatat transparan tanpa mengedit riwayat entri Log Keputusan. |
+| 2026-09-20 | Aturan baru v1.2 (mengikat semua konten): Disiplin Kutipan & Observasi — ucapan Bu Sinta WAJIB kutipan langsung 1 kalimat (maks 2 pendek) total ≤15 kata dalam tanda petik di baris 3–4; narator WAJIB tetap sebagai pengamat luar (hanya gerak/bunyi/aroma yang teramati, dilarang mind-reading "ikhlas/lelah di hati"); caption DILARANG menyapa/menunjuk pembaca ("kamu/kalian/kita") atau memakai pertanyaan retoris/CTA engagement. Contoh benar/salah ditambahkan untuk kutipan dan sapaan pembaca; Area Berisiko diperluas untuk ketiga celah. | Menjaga suara tetap observasional dan hemat kata: mencegah Bu Sinta menjadi penceramah motivasi, mencegah narator menebak isi hati tokoh, dan mencegah gaya engagement-bait yang merusak keheningan slice-of-life — melengkapi disiplin penutup v1.1 agar keseluruhan caption tetap berada di toko, bukan melompat ke pembaca. |
