@@ -319,7 +319,40 @@ POLA_SEGAR_PADA = (r"^- \*\*Segar pada:\*\* (\d{4}-\d{2}-\d{2}) \u00b7 FI (\d+) 
                  r"\u00b7 manifest v(\d+\.\d+\.\d+) \u00b7 head terukur `([0-9a-f]{7,40})`\s*$")
 
 
-def pilih_log_untuk_uji_kesegaran(log_dir: Path):
+def segarkan_cap_log_sintetis(log_path: Path, root: Path) -> bool:
+    """Segarkan angka FI + versi manifest pada cap log yang BARU dibuka oleh fallback, DI SALINAN.
+
+    Kenapa perlu: fallback membuka log `CLOSED` yang cap-nya benar **pada saat log itu ditutup**. Di pohon
+    hasil merge populasinya bisa berbeda (`main` menambah unit produksi, jadi jumlah skenario hidup naik),
+    sehingga cap lama membuat validator MENOLAK dan seluruh keluarga RP22 gagal — bukan karena penjaganya
+    salah, melainkan karena log sintetis yang dibangun harness sendiri tidak sah. Terukur 20 Sep 2026 pada
+    merge PR #74 ke `main` `a2efcae`: cap menulis FI 199, dokumen hidup sudah 200.
+
+    Cap log `OPEN` sungguhan TIDAK PERNAH disentuh fungsi ini: menyegarkannya akan menyembunyikan kebasiannya,
+    padahal kebasiannya justru yang harus ditangkap penjaga. Tanggal dan sha cap dibiarkan apa adanya — di
+    salinan belum ada `.git` pada tahap ini, jadi bagian sha tidak diperiksa, dan tanggal lama masih sah.
+    """
+    teks = log_path.read_text(encoding="utf-8")
+    m = re.search(POLA_SEGAR_PADA, teks, re.M)
+    if m is None:
+        return False
+    fi_doc = root / "_meta" / "FAILURE_INJECTION_TESTS.md"
+    manifes = root / "_meta" / "SYSTEM_MANIFEST.md"
+    if not (fi_doc.is_file() and manifes.is_file()):
+        return False
+    fm = re.search(r"^\*\*Jumlah:\*\*\s*(\d+)\s*skenario di master",
+                   fi_doc.read_text(encoding="utf-8"), re.M)
+    vm = re.search(r"^-\s*\*\*Versi:\*\*\s*`?(\d+\.\d+\.\d+)`?",
+                   manifes.read_text(encoding="utf-8"), re.M)
+    if not (fm and vm):
+        return False
+    baru = (f"- **Segar pada:** {m.group(1)} · FI {fm.group(1)} · manifest v{vm.group(1)} "
+            f"· head terukur `{m.group(4)}`")
+    log_path.write_text(teks.replace(m.group(0), baru, 1), encoding="utf-8")
+    return True
+
+
+def pilih_log_untuk_uji_kesegaran(log_dir: Path, root: Path = None):
     """Pilih log OPEN untuk menguji penjaga kesegaran; bila tidak ada, buka log terbaru DI SALINAN.
 
     Mengembalikan `(daftar_log, dibuka_di_salinan)`. Ditemukan 19 Sep 2026: sesudah kedua log sesi PR #74
@@ -344,6 +377,8 @@ def pilih_log_untuk_uji_kesegaran(log_dir: Path):
     if m is None:
         return [], False
     f.write_text(teks.replace(m.group(0), m.group(0).replace("CLOSED", "OPEN", 1), 1), encoding="utf-8")
+    if root is not None:
+        segarkan_cap_log_sintetis(f, root)
     return [f], True
 
 
@@ -1609,7 +1644,7 @@ def review_prompt_scenarios(base_dir: Path):
     # bergantung git supaya bisa diuji di salinan tanpa `.git` (harness ini ignore ".git");
     # bagian sha (HEAD..HEAD~3) hanya jalan bila git tersedia.
     # ------------------------------------------------------------------
-    open22, dibuka22 = pilih_log_untuk_uji_kesegaran(cp / "_log-sesi")
+    open22, dibuka22 = pilih_log_untuk_uji_kesegaran(cp / "_log-sesi", cp)
     checks.append((
         "RP22a kontrol positif: salinan punya log OPEN berbaris `- **Segar pada:**` dan validator "
         "LULUS - supaya empat uji mutasi di bawah bukan tautologi"
@@ -2729,6 +2764,29 @@ def run():
             _dibuka3 is False and [f.name for f in _pilih3] == ["LOG_SESI_2026-09-03.md"]
             and "`CLOSED`" in (_lc / "LOG_SESI_2026-09-01.md").read_text(encoding="utf-8"),
         ))
+    with TemporaryDirectory() as _d22e:
+        _le = Path(_d22e)
+        (_le / "_log-sesi").mkdir()
+        (_le / "_meta").mkdir()
+        (_le / "_meta" / "FAILURE_INJECTION_TESTS.md").write_text(
+            "**Jumlah:** 200 skenario di master (39 sintetis + 20 unit nyata)\n", encoding="utf-8")
+        (_le / "_meta" / "SYSTEM_MANIFEST.md").write_text(
+            "- **Status:** `Released — v9.9.9`\n- **Versi:** `9.9.9`\n", encoding="utf-8")
+        (_le / "_log-sesi" / "LOG_SESI_2026-09-05.md").write_text(
+            "# Log\n\n## Keadaan Sesi\n- **Keadaan:** `CLOSED` — selesai\n"
+            "- **Segar pada:** 2026-09-05 · FI 199 · manifest v1.35.2 · head terukur `d0e352b`\n",
+            encoding="utf-8")
+        _pilih5, _dibuka5 = pilih_log_untuk_uji_kesegaran(_le / "_log-sesi", _le)
+        _cap5 = _pilih5[0].read_text(encoding="utf-8") if _pilih5 else ""
+        checks.append((
+            "RP22-pre5 log sintetis hasil fallback DISÉGARKAN cap-nya dari dokumen hidup salinan (FI dan "
+            "versi manifest), supaya di pohon hasil merge - tempat jumlah skenario hidup naik karena unit "
+            "dari garis lain - RP22a tidak gagal akibat cap basi buatan harness sendiri; tanggal dan sha "
+            "dibiarkan, dan log OPEN sungguhan tidak pernah disentuh",
+            _dibuka5 is True and "FI 200 · manifest v9.9.9 · head terukur `d0e352b`" in _cap5
+            and "2026-09-05" in _cap5,
+        ))
+
     with TemporaryDirectory() as _d22b:
         _pilih4, _dibuka4 = pilih_log_untuk_uji_kesegaran(
             Path(_d22b) / "folder-log-yang-tidak-ada")
