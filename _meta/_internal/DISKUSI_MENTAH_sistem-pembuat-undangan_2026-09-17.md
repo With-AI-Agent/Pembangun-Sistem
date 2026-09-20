@@ -2992,3 +2992,44 @@ Tautan merge diserahkan ke pemilik.
 menjawab belum sempat memeriksa. Pemetaan 805 skill di bagian D di atas tetap tersedia untuk diputuskan
 nanti; temuan **0 skill `cloudflare`/`wrangler`** di hub itu tetap berlaku dan tetap penting, karena stack
 yang diputuskan adalah Cloudflare.
+
+---
+
+## Giliran 32 (20 Sep 2026) — pemilik me-merge PR #74, lalu bertanya cara lanjut
+
+### Kutipan UTUH pemilik
+
+> Aku udh merge. Sekarang gimana klo mau lanjut? Aku pake prompt entri universal atau gimana?
+
+### Verifikasi (merge dipercaya hanya sesudah diukur)
+
+`gh pr view 74` → `state=MERGED`, `mergedAt=2026-09-20T06:01:32Z`, `mergeCommit=ed3abb6`,
+`headRefOid=3ea796a`. `git ls-remote origin main` → `ed3abb6`. Garis sesi ini 1 di belakang (commit
+merge-nya saja) dan 10 di depan; selisih isi pohon sebelum penyerapan = 11 berkas kerja sesi ini.
+Merge `ed3abb6` diserap `--no-ff`, rc=0, **nol konflik**.
+
+### Jawaban atas pertanyaannya
+
+- **Di sesi yang sedang berjalan: tidak perlu prompt apa pun.** Konteks sudah penuh; yang dibutuhkan
+  hanya keputusan lanjut.
+- **Untuk membuka sesi baru: pakai prompt entri universal yang di ROOT repo.** Yang di dalam folder
+  sistem undangan adalah prompt untuk **membuat undangan** (dipakai client/pemilik saat memproduksi),
+  bukan untuk **membangun sistem** — keduanya berbeda dan jangan tertukar.
+- Prompt entri universal root menyuruh agent baru: baca cara kerja meta → laporan awal sesuai template
+  → cek PR menggantung → cek indeks sistem → **cari LOG_SESI terbaru dan kalau `OPEN` baca + lapor,
+  jangan minta pemilik menjelaskan ulang** → baru tanya tujuan. Log sesi slot 41 berstatus `OPEN`
+  dengan blok keadaan yang disegarkan, jadi sesi baru otomatis menangkap keadaan.
+
+### Yang langsung dieksekusi (syarat "sesudah merge" di langkah 6 kini terpenuhi)
+
+**T-70** — 6 prompt Discovery detail + README dipindahkan dari staging ke subfolder `_sistem/` folder
+sistem, commit `70d50bc`. **Isi sistem tidak disentuh**: 11 dokumen domain tetap kerangka, persis
+perintah langkah 6 (*"tulis 6 prompt Discovery detail — **bukan** langsung menulis isi sistemnya"*).
+Gerbang memaksa dua kelas perbaikan (SELF-PREFIX 11; MISSING-LABELED-COPY 3 → provenance tanpa
+backtick, alasan dinyatakan di README). Semua gerbang rc=0; pin R7 tetap tepat 5 warning template.
+**T-69 tetap TERBUKA** dan memang belum boleh dikerjakan: validator sistem diperluas saat dokumen
+kerangka pertama diisi, bukan sebelumnya.
+
+**Langkah berikutnya menurut rencana kerangka bagian 11 butir 5:** menjalankan prompt-prompt itu satu
+persatu **bersama pemilik**, dimulai dari prompt 01 (identitas pemilik, gerbang G0) karena L2 mewarisi
+L1 — lalu 02, 06 (sebelum aset apa pun dijanjikan ke client), 10, 09, dan 05 per undangan.
