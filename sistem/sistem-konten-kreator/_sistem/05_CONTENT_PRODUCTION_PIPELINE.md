@@ -22,6 +22,8 @@ Selain itu, tiap konten bisa butuh urutan yang sedikit berbeda: ada yang perlu r
 
 **Checkpoint & verifikasi konsistensi:** setiap kali pindah dari 1 tahap besar ke tahap besar berikutnya, agent WAJIB berhenti sejenak dan meringkas ulang apa yang sudah disepakati — dengan membaca ulang sumber resmi (Channel Brief, Bank Konsistensi Visual, Persona & Voice), bukan mengandalkan ingatan sesi. Di titik manapun, perintah **"cek konsistensi"** bisa dipanggil untuk membandingkan hasil kerja terbaru dengan sumber resmi.
 
+**Melanjutkan setelah jeda = sync check WAJIB.** Setiap kali agent melanjutkan setelah jeda — jendela chat sama yang baru dibuka lagi, sesi baru, jeda cukup lama di jendela yang masih terbuka sehingga `main` bisa sudah maju, atau setelah menunggu approval lama di gerbang — agent WAJIB menjalankan sync check dengan `main` (aturan lengkap: `00_CARA_PAKAI_SISTEM.md`, Prinsip Checkpoint) SEBELUM mengeksekusi langkah berikutnya. Kata "lanjut"/"setuju" dari pemilik adalah approval isi, **bukan pengganti** sync check.
+
 ---
 
 ## Alur 6 Tahap (Kerangka Besar)
