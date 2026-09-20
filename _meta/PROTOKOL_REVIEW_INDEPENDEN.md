@@ -169,7 +169,8 @@ mengarang aturan. Jadi ditulis **sebelum** verdict ke-2 dan ke-3 tiba.
    memilih putaran yang hendak diputus (default: putaran terbaru di kanal). **Agregatnya tidak
    dilonggarkan:** satu MERAH di putaran mana pun tetap menahan merge, verdict tak terbaca tetap menahan,
    dan putaran yang diminta tapi tidak ada di kanal dinyatakan **belum diserahkan**, bukan bersih.
-   Dikunci 6 kasus + 1 mutasi di `ambil_verdict.py --uji` (33 → **40 pemeriksaan**).
+   Dikunci 6 kasus + 1 mutasi di `ambil_verdict.py --uji` (33 → **40 pemeriksaan**; kini
+   **58 pemeriksaan** sesudah kunci T-59/T-60 ditambahkan 20 Sep 2026).
 10. **Verdict yang hilang = pekerjaan belum dilakukan, dan WAJIB diulang pada head yang berlaku.** Tidak
     ada jalur "dianggap hijau karena tidak ada kabar", dan tidak ada jalur "sudah terlanjur, pakai yang
     ada". Bila dua hakim memakai **branch atau slot log yang sama**, push yang datang kemudian **menimpa**
@@ -245,4 +246,42 @@ mengarang aturan. Jadi ditulis **sebelum** verdict ke-2 dan ke-3 tiba.
     sesudah branch dibuat. Reviewer yang percaya angka itu menyimpulkan "base tidak bergerak" — kebalikan
     kenyataan, dan persis kelas cacat R3/RP7/RP9 yang bagian 3a dibuat untuk menutupnya. Dikunci regresi
     **RP16 (3 uji)**: base bergerak, base tidak bergerak, dan ujung tak terukur (fail-closed).
-
+14. **HIJAU BUTUH BUKTI IA BICARA TENTANG HEAD YANG DIADILI — pin SHA wajib cocok sebelum sebuah
+    laporan boleh dihitung sebagai kuorum hijau; MERAH tidak butuh bukti apa pun.** Aturan ini
+    **asimetris dengan sengaja**: laporan merah yang pin-nya salah paling jauh membuat kita berhenti
+    terlalu awal lalu bertanya, sedangkan laporan hijau yang pin-nya salah membuat kita merge benda
+    yang **tidak pernah diperiksa siapa pun**. Karena itu `tools/ambil_verdict.py` kini membaca sha
+    yang disebut laporan (`pin_verdict()`), membandingkannya dengan `headRefOid` PR yang diadili, dan
+    untuk **putaran yang diputus** menurunkan verdict hijau yang pin-nya `tanpa-pin`, `beda:<sha>`,
+    atau `head-tak-terbaca` menjadi `TIDAK SAH UNTUK HEAD INI` — sehingga kuorumnya terbaca
+    `kuorum SAH n/N BELUM LENGKAP`, bukan `LENGKAP`. Putaran lama tidak diubah verdictnya (hijau
+    mereka sah untuk head mereka sendiri) tetapi status pinnya **dicetak**, supaya riwayat tidak
+    terbaca sebagai bukti atas head hari ini. SHA yang hanya muncul di dalam pagar kode **bukan** pin.
+    **Sebab aturan ini ada (temuan P1 putaran 8 PR #74, direproduksi independen dua hakim):**
+    `cetak_pr()` menyimpan hasil `simpulkan()` + nomor putaran saja dan `headRefOid` cuma dicetak,
+    sehingga pemanggilan fungsi kanal nyata dengan tiga komentar hijau **tanpa SHA** menghasilkan
+    `HIJAU — semua 3 verdict hijau` + `kuorum 3/3 LENGKAP (0 bukan hijau)`. Dikunci **8 kasus
+    `KASUS_PIN` + 5 kasus `KASUS_PIN_KUORUM`** di `ambil_verdict.py --uji`, termasuk satu kasus
+    pasangan berunsur dua supaya pemanggil lama tidak berubah perilakunya diam-diam.
+15. **VERDICT PUTARAN PERTAMA TIDAK PERNAH MENUTUP PUTARAN SESUDAHNYA — kanal berkas append-only
+    diagregasi fail-closed.** `PROTOKOL_AUDIT_ISI.md` mengizinkan putaran lanjutan ditambahkan di
+    bawah laporan berkas yang sama, jadi ringkasan otomatis wajib membaca **semua** bagian
+    `## Putaran N` dan menahan bila satu saja bukan hijau (`ringkas_berkas()`); teks sebelum bagian
+    putaran pertama ikut dihitung, bukan dibuang. **Sebab aturan ini ada (temuan P1 putaran 8 PR #74,
+    dua hakim):** berkas berisi `Putaran 1: BERSIH` lalu `Putaran 2: ADA TEMUAN` diringkas
+    `VERDICT TERBACA OTOMATIS: BERSIH` karena `simpulkan()` mengambil kecocokan pertama — isi
+    putaran kedua tetap tercetak, tetapi yang dibaca pemilik adalah ringkasannya. Dikunci **5 kasus
+    `KASUS_BERKAS`**, termasuk kasus "temuan putaran 1 yang disebut sudah ditutup putaran 2 tetap
+    menahan", karena fail-closed tidak boleh ditawar oleh narasi di dalam laporan.
+16. **SATU KEPUTUSAN KANAL PENYERAHAN, BUKAN DUA PETUNJUK YANG BERSAING.** Kanal audit isi adalah
+    **Kanal A = berkas ter-commit** di `_meta/_internal/audit/` (UTAMA, terbukti berfungsi);
+    **Kanal B = GitHub Issue** adalah alternatif yang **terukur terblokir** HTTP 403 `Resource not
+    accessible by integration` (17 Sep 2026) dan tidak boleh disebut sebagai tujuan penyerahan tanpa
+    label itu. Setiap dokumen yang menyebut cara penyerahan wajib menyebut keputusan yang sama.
+    **Sebab aturan ini ada (temuan P2 putaran 8 PR #74, dua hakim):** `PANDUAN_PENGGUNA.md`
+    menetapkan Kanal A sebagai utama sekaligus — di dokumen yang sama — masih menyuruh auditor
+    menulis Issue; `PROMPT_ENTRI_UNIVERSAL.md`, langkah pelaksanaan `PROTOKOL_AUDIT_ISI.md`, dan
+    docstring `ambil_verdict.py`/`audit_prompt.py` juga masih menunjuk Issue polos. Diselaraskan di
+    lima tempat sebagai **T-61**, dan `ambil_verdict.py` kini mencetak **catatan kesegaran pin** di
+    kedua kanal audit (`catatan_pin_audit()`): laporan yang `@sha7`-nya bukan HEAD repo hari ini
+    dinyatakan sebagai riwayat, bukan sebagai kesimpulan atas isi terkini.

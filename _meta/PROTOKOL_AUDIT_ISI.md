@@ -20,7 +20,7 @@ Mekanisme untuk **memeriksa isi** repo, sebuah sistem, sebuah folder, atau sebua
 |---|---|---|
 | Objek | satu PR (base sha ↔ head sha) | **satu jalur** di pohon kerja, di-pin ke satu sha |
 | Keluaran | verdict + keputusan merge | **laporan temuan** — tidak ada merge |
-| Kanal | komentar PR | **GitHub Issue** berpola tetap |
+| Kanal | komentar PR | **berkas ter-commit** di `_meta/_internal/audit/` (Kanal A = UTAMA); GitHub Issue = Kanal B, alternatif yang terukur terblokir HTTP 403 |
 | Alat pembangkit | `tools/review_prompt.py --pr N` | **`tools/audit_prompt.py --objek <path>`** |
 | Alat pengambil | `tools/ambil_verdict.py --pr N` | **`tools/ambil_verdict.py --terbaru`** |
 | Siapa yang memperbaiki | penulis PR, setelah verdict | **tidak ditentukan di sini** — butuh mandat terpisah |
@@ -56,7 +56,9 @@ sesuatu tanpa mandat (menemukan ≠ memperbaiki, QA Prinsip 2).
    ```
    Ganti `--objek` dengan yang mau diperiksa. **Jangan menulis prompt audit sendiri** — lihat "Kalau gagal".
 3. **Tempel seluruh keluaran perintah itu** ke sesi auditor sebagai pesan pertama.
-4. Tunggu. Auditor akan menyerahkan hasilnya ke sebuah GitHub Issue.
+4. Tunggu. Auditor menyerahkan hasilnya sebagai **berkas ter-commit** di `_meta/_internal/audit/`
+   (Kanal A = UTAMA). GitHub Issue hanyalah Kanal B, alternatif yang terukur **terblokir HTTP 403**
+   di lingkungan ini — jangan diandalkan selama izin `issues:write` belum diberikan.
 5. Kembali ke sesi yang sedang berjalan dan **cukup bilang**: *"audit sudah selesai."*
    Sesi itu akan mengambil hasilnya sendiri:
    ```bash
@@ -69,7 +71,10 @@ sesuatu tanpa mandat (menemukan ≠ memperbaiki, QA Prinsip 2).
 1. Baca prompt yang ditempel — **jangan menambah, memotong, atau menyuntingnya**.
 2. Ikuti 13 bagiannya berurutan. Bagian yang paling sering dilanggar: **bagian 6 ATURAN CAKUPAN** dan
    **bagian 8 verifikasi adversarial**.
-3. Serahkan hasil ke GitHub Issue sesuai bagian 10 prompt (judul + label berpola tetap).
+3. Serahkan hasil sesuai bagian 10 prompt: **Kanal A = berkas ter-commit** di
+   `_meta/_internal/audit/` dengan baris pertama `# AUDIT <objek> @<sha7>` (UTAMA, terbukti
+   berfungsi). Kanal B = GitHub Issue berpola judul + label yang sama, hanya alternatif selama
+   izin `issues:write` belum ada (terukur HTTP 403). Jangan menulis ke dua kanal sekaligus.
 
 ### Bagi sesi yang diaudit (setelah pemilik bilang "audit sudah selesai")
 

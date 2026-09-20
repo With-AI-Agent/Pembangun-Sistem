@@ -1,4 +1,4 @@
-> Salinan turunan. Sumber: _meta/PLATFORM_LMARENA.md sha 1b7b88ba45b94eb4191db002baba3cf8e31cb624 tanggal 2026-09-20 versi-meta 1.35.3
+> Salinan turunan. Sumber: _meta/PLATFORM_LMARENA.md sha 1b7b88ba45b94eb4191db002baba3cf8e31cb624 tanggal 2026-09-20 versi-meta 1.35.4
 > Perbedaan: tidak ada
 > Pemakaian: fakta platform yang dirujuk bagian Batasan Platform manifest sistem ini (butir W-07) — dibawa agar folder ini berdiri sendiri tanpa _meta/.
 # Platform lmarena — Fakta vs Policy

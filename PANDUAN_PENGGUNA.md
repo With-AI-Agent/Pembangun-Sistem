@@ -184,10 +184,15 @@ berkala; kalau kamu minta *"periksa semuanya"* tanpa menunjuk PR; atau kalau kam
 
 ### Apa yang terjadi sesudahnya
 
-Auditor menulis Issue berisi 6 bagian wajib: **VERDICT** satu baris → **ringkasan angka** (berapa berkas
+Auditor menulis **satu berkas laporan** (Kanal A = UTAMA) di `_meta/_internal/audit/` berisi 6 bagian
+wajib: **VERDICT** satu baris → **ringkasan angka** (berapa berkas
 diperiksa, berapa kandidat, berapa dicabut) → **tabel temuan** terklasifikasi (`B`/`A`/`G`/`N`/`P` +
 prioritas + bukti) → **temuan DI LUAR CAKUPAN** → **kandidat yang DICABUT** → **batasan audit**.
-Putaran lanjutan ditambahkan sebagai **komentar**, tidak pernah menyunting temuan putaran pertama.
+Putaran lanjutan **ditambahkan**, tidak pernah menyunting temuan putaran pertama: di Kanal A sebagai
+bagian `## Putaran 2` di berkas yang sama (atau berkas baru dengan sha baru); di Kanal B (GitHub
+Issue — alternatif yang terukur **terblokir HTTP 403**, jangan diandalkan) sebagai komentar baru.
+`tools/ambil_verdict.py` mengagregasi **semua** putaran secara fail-closed: satu putaran bukan hijau
+menahan, dan verdict putaran pertama tidak pernah menutup putaran sesudahnya (T-60).
 
 **Sesi yang diaudit kemudian membaca semuanya sendiri** — termasuk bagian "di luar cakupan" dan
 "kandidat yang dicabut", karena keduanya bagian dari laporan, bukan sampah. **Membaca verdict ≠
