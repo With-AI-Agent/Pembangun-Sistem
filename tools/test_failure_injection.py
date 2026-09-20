@@ -1890,6 +1890,104 @@ def review_prompt_scenarios(base_dir: Path):
         "yang mau diuji benar-benar terbentuk di repo uji, jadi RP23e dan RP23f di atas bukan kebetulan",
         ok_e and ok_f,
     ))
+    # ------------------------------------------------------------------
+    # RP24 - bagian (b) dan (c) penjaga kesegaran (angka FI dan versi manifest di cap vs dokumen HIDUP)
+    # ikut mengenal keadaan "pohon ini baru menyerap merge", sama seperti bagian (e). Ditemukan dari
+    # uji sesudah-merge pada pohon yang sudah di-commit (aturan C8) saat menutup putaran 8 PR #74:
+    # merge PR ini ke `main` terbaru menghasilkan VALIDATION FAILED karena log OPEN milik PR ini
+    # TERMASUK live (baru diserap merge) sementara `main` menambah satu unit produksi sehingga dokumen
+    # FI hidup mencetak angka yang lebih besar daripada cap-nya. Sesi yang menyerap merge tidak bisa
+    # menyegarkan cap log milik sesi yang digabung (kepemilikan log + kronologi append-only), jadi itu
+    # persis keadaan yang C8 larang: penjaga memerahkan pohon yang tidak bisa memperbaikinya.
+    # Diuji DUA ARAH supaya penurunan severity bukan amnesti umum: (a) TANPA merge di jendela mismatch
+    # yang sama tetap MENOLAK; (b) DENGAN merge commit di jendela mismatch itu jadi warning beralasan.
+    fi_doc24 = cp / "_meta" / "FAILURE_INJECTION_TESTS.md"
+
+    def _naikkan_angka_fi24(delta=1):
+        t = fi_doc24.read_text(encoding="utf-8")
+        m = re.search(r"\*\*Jumlah:\*\* (\d+) skenario di master", t)
+        if not m:
+            return None
+        baru = int(m.group(1)) + delta
+        fi_doc24.write_text(
+            t.replace(m.group(0), f"**Jumlah:** {baru} skenario di master", 1), encoding="utf-8")
+        return baru
+
+    def _prasyarat24(ada_merge):
+        jendela = _g23("rev-list", "-n", "4", "HEAD").stdout.split()
+        terakhir = _g23("rev-list", "-n", "1", "HEAD", "--", rel23).stdout.split()
+        merges = [x for x in jendela
+                  if len(_g23("show", "--no-patch", "--format=%P", x).stdout.split()) > 1]
+        cap = re.search(pola22, f22.read_text(encoding="utf-8"), re.M)
+        nama_syarat_merge = ("ada merge commit di jendela" if ada_merge
+                             else "tidak ada merge commit di jendela")
+        syarat = {
+            "log live": bool(terakhir) and terakhir[0] in jendela,
+            "sha cap di dalam jendela HEAD..HEAD~3": bool(cap) and any(
+                x.startswith(cap.group(4)) for x in jendela),
+            nama_syarat_merge: (bool(merges) if ada_merge else not merges),
+        }
+        return all(syarat.values()), "; ".join(k for k, v in syarat.items() if not v) or "lengkap"
+
+    for i in range(3):
+        _commit23(f"RP24: commit biasa {i + 1} (mendorong merge RP23 keluar dari jendela)", False)
+    _cap23(_g23("rev-parse", "--short=7", "HEAD").stdout.strip())
+    _commit23("RP24: segarkan cap lalu sentuh log supaya tetap live", True)
+    angka24 = _naikkan_angka_fi24()
+    if angka24 is None:
+        checks.append(("RP24 TIDAK BISA DIUJI: baris `**Jumlah:**` tidak ditemukan di salinan dokumen FI "
+                       "- fail-closed, dinyatakan GAGAL, bukan dilewati diam-diam", False))
+    else:
+        _g23("add", str(fi_doc24.relative_to(cp)))
+        _g23("commit", "-qm", f"RP24: dokumen FI hidup naik ke {angka24} tanpa menyegarkan cap")
+        ok24a, alasan24a = _prasyarat24(False)
+        rc24a, out24a = run_tool_out(cp, "tools/validate_repo.py")
+        checks.append((
+            "RP24a-prasyarat: log live, sha cap di dalam jendela, dan TIDAK ada merge commit di jendela "
+            "4 commit - supaya skenario di bawahnya menguji bagian (b), bukan kebetulan",
+            ok24a,
+        ))
+        checks.append((
+            f"RP24a GIGI bagian (b) tetap ada: cap mengklaim FI yang tidak sama dengan dokumen hidup "
+            f"({angka24}) dan tidak ada merge di jendela -> validator MENOLAK dan menyebut berkas lognya "
+            "(penurunan severity hanya untuk pohon yang baru menyerap merge, bukan amnesti umum)",
+            ok24a and rc24a != 0 and rel23 in out24a and "header OPEN mengklaim FI" in out24a,
+        ))
+        # Cap disegarkan lebih dulu supaya sha-nya TETAP di dalam jendela HEAD..HEAD~3 sesudah merge
+        # menambah commit. Tanpa ini yang ikut teruji adalah bagian (e) (sha keluar jendela), padahal
+        # yang mau dikunci di sini adalah bagian (b)/(c) - dua penurunan severity yang berbeda alasan.
+        _cap23(_g23("rev-parse", "--short=7", "HEAD").stdout.strip())
+        _commit23("RP24: segarkan cap sesudah dokumen bergerak (supaya bagian (e) tidak ikut campur)", True)
+        # Cabang sejajar harus punya commit SENDIRI: `merge --no-ff` ke branch yang menunjuk HEAD
+        # persis dijawab "Already up to date" dan TIDAK membuat merge commit, jadi keadaan yang mau
+        # diuji tidak pernah terbentuk. Versi pertama uji ini gagal persis di situ - dan kegagalannya
+        # tampak seperti "perbaikannya tidak jalan" padahal yang rusak skenarionya (kelas kekeliruan
+        # yang sama dengan catatan RP23e tentang sha nenek moyang bersama).
+        trunk24 = _g23("rev-parse", "--abbrev-ref", "HEAD").stdout.strip()
+        _g23("checkout", "-q", "-b", "rp24-cabang")
+        _commit23("RP24: commit kosong di cabang sejajar", False)
+        _g23("checkout", "-q", trunk24)
+        _g23("merge", "--no-ff", "-qm", "RP24: merge cabang sejajar (isi tidak berubah)", "rp24-cabang")
+        ok24b, alasan24b = _prasyarat24(True)
+        rc24b, out24b = run_tool_out(cp, "tools/validate_repo.py")
+        checks.append((
+            "RP24b-prasyarat: sesudah merge, log masih live, sha cap masih di dalam jendela, dan satu "
+            "dari 4 commit terakhir adalah merge commit",
+            ok24b,
+        ))
+        checks.append((
+            "RP24b MERGE tidak memerahkan pohon hasil merge untuk bagian (b)/(c): mismatch angka FI yang "
+            "SAMA PERSIS dengan RP24a kini DITURUNKAN menjadi warning beralasan dan validator LULUS, "
+            "sebab sesi yang menyerap merge tidak bisa menyegarkan cap log milik sesi yang digabung (C8)",
+            ok24b and rc24b == 0 and "MERGE COMMIT" in out24b and "header OPEN mengklaim FI" in out24b,
+        ))
+        checks.append((
+            f"RP24 catatan prasyarat (tanpa merge: {alasan24a} · dengan merge: {alasan24b}) - kata "
+            "'lengkap' berarti kedua keadaan yang diuji benar-benar terbentuk di repo uji, jadi RP24a "
+            "dan RP24b di atas bukan kebetulan",
+            ok24a and ok24b,
+        ))
+
     f22.write_text(asli22, encoding="utf-8")
 
     return checks

@@ -1,4 +1,4 @@
-> Salinan turunan. Sumber: _meta/PROTOKOL_REVIEW_INDEPENDEN.md sha c62ee3b340cd610eabade828f9bda7d13f1f53e1 tanggal 2026-09-20 versi-meta 1.35.4
+> Salinan turunan. Sumber: _meta/PROTOKOL_REVIEW_INDEPENDEN.md sha c62ee3b340cd610eabade828f9bda7d13f1f53e1 tanggal 2026-09-20 versi-meta 1.35.5
 > Perbedaan: tidak ada
 > Pemakaian: protokol yang dirujuk bagian "Review independen (sesi lain)" di ACCEPTANCE_TESTS.md sistem ini; dipakai saat penutupan gate acceptance dan klaim permanen (level L1).
 # Protokol Review Independen (Sesi Lain)
