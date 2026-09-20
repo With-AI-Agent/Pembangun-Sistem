@@ -20,15 +20,21 @@ perlu diperiksa. Bukan soal PR dan bukan soal merge."*
 ATURAN PAKAI (baca sebelum menjalankan)
 ---------------------------------------
 * Prompt audit **tidak boleh dikarang atau disunting** oleh sesi yang objeknya diaudit.
-  Kalau auditor butuh konteks tambahan, konteks itu masuk ke **badan Issue**, bukan ke prompt.
+  Kalau auditor butuh konteks tambahan, konteks itu masuk ke **badan laporan** auditor (Kanal A:
+  berkas ter-commit; Kanal B: Issue bila kelak hidup), bukan ke prompt.
 * Objek **wajib ada** dan **di-pin ke satu sha**. Alat ini **menolak** mencetak prompt dengan
   sha kosong atau objek yang tidak ditemukan — pola fail-closed yang diwarisi dari
   `review_prompt.py` ("Nomor PR TIDAK ditebak").
 * **INDUK JUGA OBJEK YANG SAH.** `--objek _meta` dan `--objek tools` sama sahnya dengan
   `--objek sistem/<nama>` — instruksi pemilik 17 Sep 2026: mekanisme ini harus tertanam di
   meta-sistem juga, bukan hanya di sistem yang dibangunnya.
-* Hasil audit dikirim ke **GitHub Issue** (bukan PR) supaya sesi yang sedang berjalan bisa
-  **mengambilnya sendiri** tanpa pemilik menyalin apa pun — lihat `tools/ambil_verdict.py`.
+* Hasil audit diserahkan ke **KANAL A = berkas ter-commit** di `_meta/_internal/audit/` (UTAMA),
+  **bukan** ke PR, supaya sesi yang sedang berjalan bisa **mengambilnya sendiri** tanpa pemilik
+  menyalin apa pun — lihat `tools/ambil_verdict.py`. **Kanal B = GitHub Issue** tetap ada sebagai
+  alternatif, tetapi terukur TERBLOKIR HTTP 403 `Resource not accessible by integration` di
+  lingkungan ini (17 Sep 2026), jadi jangan pernah disebut sebagai tujuan tanpa label itu.
+  Satu keputusan kanal ini menutup T-61 (temuan P2 putaran 8 PR #74): empat tempat sebelumnya
+  memberi petunjuk yang saling bertentangan tentang ke mana hasil audit diserahkan.
 
 Pemakaian:
   python3 tools/audit_prompt.py --objek _meta
@@ -185,7 +191,8 @@ def render(objek: str, sha: str, kedalaman: str, generic: bool) -> str:
     a("")
     a("> Dibangkitkan `tools/audit_prompt.py` dari **isi pohon kerja pada sha yang di-pin** — bukan dari")
     a("> narasi pihak yang diaudit. Prompt ini **tidak boleh dikarang, ditambah, dipotong, atau disunting**")
-    a("> oleh sesi yang objeknya sedang diaudit. Butuh menambah konteks? Tulis di **badan Issue**, bukan di sini.")
+    a("> oleh sesi yang objeknya sedang diaudit. Butuh menambah konteks? Tulis di **badan")
+    a("> laporanmu** (Kanal A: berkas ter-commit; Kanal B: Issue bila kelak hidup), bukan di sini.")
     a("")
     a("## 1. Siapa kamu")
     a("")

@@ -2627,3 +2627,75 @@ kerapian catatan, sementara produk yang diminta di awal sesi masih kerangka.
 menurut pemilik di awal sesi adalah tujuan sebenarnya — masih di tahap **kerangka** (16 berkas). Itu
 pekerjaan yang bernilai berikutnya, dan tidak ada review independen yang diwajibkan untuknya karena
 mekanisme review untuk sistem baru sudah dimatikan dulu oleh pemilik.
+
+## Giliran 29 (20 Sep 2026) — "3 sesi reviewer sedang berjalan. Sekarang harus apa?": jawaban "tunggu, jangan sentuh repo", dan insiden re-clone platform ke-11
+
+**Pemilik (verbatim):**
+
+> 3 sesi reviewer sedang berjalan. Sekarang harus apa? Bisa segera selesai dan siap matang ga? Apa aja yang masih harus dilakuin?
+
+**Jawaban agent (inti):** selama tiga hakim berjalan, repo **tidak boleh disentuh** — head yang diadili
+dibekukan di `e698272`, dan commit apa pun mengulang persis cacat C7 yang membuat tiga putaran
+sebelumnya menilai keadaan yang sudah tidak ada. Yang tersisa tiga hal: pemilik membiarkan hakim
+selesai, agent membaca verdict **sekali** lalu berhenti (keputusan pemilik giliran 27: putaran 8
+terakhir, tidak ada putaran 9), pemilik memutuskan merge.
+
+**Dipisahkan dengan jujur dua arti "siap matang":** lingkaran review PR ini selesai sekarang; tetapi
+`sistem-undangan` — tujuan awal sesi — masih **kerangka**, jadi "matang" sebagai produk belum mulai
+dikerjakan. Delapan putaran isinya memeriksa kerapian catatan dan alat pembangun sistem, bukan
+memeriksa apakah sistem undangannya jalan.
+
+**INSIDEN PLATFORM KE-11 (terjadi di giliran ini, tercatat apa adanya):** di tengah giliran, `.git`
+lokal diganti clone **dangkal** di `eff7afa` sementara berkas kerja tetap baru, sehingga 64 berkas
+tampak sebagai perubahan tak ter-commit, dan folder `_meta/_internal/backups/` (diabaikan git) ikut
+terhapus — bundle cadangan, draft body, skrip PATCH, dan berkas prompt putaran 8 hilang dari disk.
+**Tidak ada yang hilang sungguhan**: seluruh commit sudah di remote. Pemulihan sesuai playbook:
+`git fetch --unshallow` + fetch refspec eksplisit **lebih dulu**, lalu `git reset --mixed e698272`
+(bukan `--hard`), lalu verifikasi — HEAD == remote == `e698272`, 0 perubahan tak ter-commit, isi
+pohon benar (manifest v1.35.3, FI 200, fungsi `segarkan_cap_log_sintetis` ada), `validate_repo`
+PASSED. Berkas prompt dibangkitkan ulang dengan perintah yang memang tercetak di blok serah terima
+(`review_prompt.py --pr 74 --out ...`, 28.411 byte, pin `e698272`); yang **otoritatif untuk hakim
+tetap komentar GitHub 5746789896**, karena path `/home/user/...` adalah path sandbox agent yang
+tidak bisa dibuka pemilik. Pelajaran yang diperkuat: satu-satunya tempat tahan lama untuk artefak
+serah terima adalah kanal PR, bukan disk sandbox.
+
+## Giliran 30 (20 Sep 2026) — "Aduh, merah lagi merah lagi… Aku capek": verdict putaran 8 masuk 3 MERAH, pemilik minta dibereskan, dan menyerahkan rancangan website pengelola
+
+**Pemilik (verbatim, utuh — pemilik meminta tidak ada yang terlupakan sedikit pun):**
+
+> Aduh, merah lagi merah lagi. Ada verdict merah. Aku capek. Tolong bereskan semuanya dan pastikan ga bakal ada masalah lagi. Aku udh capek. Ga beres-beres. Gimana sebaiknya nih? Kapan sistem nya bisa dipake klo gini terus?
+>
+> Chat aku ini agak panjang, jadi pastikan ga ada yang terlupakan sedikitpun. Semua harus terrespon.
+>
+> kamu kan udh tau bahwa sistem ini nantinya perlu semacam website yang aku akses buat mantau segala yang perlu dipantau dan mengelola semuanya. Nah, aku juga mau website itu terhubung ke github. Aku mau nanti ada beberapa macam mekanisme kerja:
+>
+> 1. Yang sebelumnya kan kamu udh tau, aku klo mau buat undangan tinggal buka sesi baru dan dan masukin satu prompt generik dan setelah itu agent bakal terus membimbing dan mengerjakan semuanya sampe selesai.
+> 2. Aku mau cara opsi 2, yaitu aku tinggal input di website. jadi di website itu ada semacam laman yang di situ aku bisa milih untuk buat undangan, kemudian ngisi semua info yang dibutuhkan, ada yang dibuat sistematis (tabel-tabel atau form yang diisi sesuai fungsinya seperti nama acara, tanggal, dan sebagainya. Dan bahkan itu selain bisa diisi manual dia bisa juga pake semacam select/pilih opsi2 yg udh tersedia), ada juga kolom buat isi hal lain-lain (misalnya ada detai yang mau aku jelasin secara manual). Dan bahkan ada juga template yang bisa dipilih. Setelah semu info itu aku masukin, aku tinggal klik semacam suatu tombol, misalnya tombol kirim ke agent. Maka itu otomatis akan masuk github. Dan setelah itu aku tinggal jalanin suatu prompt ke sesi lmarena agent, maka agent akan mengeksekusi semua yang harus dieksekusi, bahkan jika ada beberapa projek sekaligus maka agent akan melakukan sistem maraton untuk selesaikan semuanya, dan tidak berhenti kecuali setelah selesai atau ketika ada yang mengaruskan berhenti (seperti ada yang harus aku putuskan dan sebagainya). Paham kan maksud aku? Bagus ga ide aku&gt; Dan mungkin ga itu diterapin? Tolong krtisi dan beri saran terbaik.
+> 3. Selain yang nomor 2, aku juga mau ada fitur editor seperti photoshop atau canva dan sejenisnya. Jadi di situ aku bisa ubah hal-hal yang perlu aku ubah secara manual, seperti teks, objek, dan sebagainya. Dan itu juga ditenagai dengan sambungan ke agent juga. Jadi nanti aku bisa pilih suatu objek atau bahkan beberapa objek sekaligus atau bahkan halaman, kemudian aku masukkan hal yang mau aku ubah (misalnya aku mau regenerate untuk objek png bunga nya atau mau ubah gaya teks nya dan sebagainya), kemudian aku klik semacam tombol, maka itu terkirim ke github, dan nanti aku tinggal jalanin prompt generik yang sama seperti di cara 2, maka agent akan eksekusi semuanya.
+>
+> Di website itu juga aku mau bisa atur segalanya, kelola segalanya. Bisa kan? Tolong kritisi ini semua, maksimalkan ide ini untuk bisa dieksekusi. Kamu bisa gunakan skill mu untuk kebutuhan ini jika memang ada skill yang relevan dan kamu juga bisa lakukan riset di internet jika itu dibutuhkan.
+
+**Yang dibaca agent dari pesan itu (empat permintaan, tidak ada yang boleh hilang):** (1) bereskan
+temuan verdict merah dan usahakan tidak ada masalah lagi; (2) jawab "gimana sebaiknya" dan "kapan
+sistemnya bisa dipakai"; (3) kritisi dan maksimalkan rancangan **website pengelola** yang terhubung
+ke GitHub dengan tiga mekanisme kerja — prompt generik (sudah ada), form-isian → GitHub → prompt
+generik → eksekusi **maraton** sampai selesai atau sampai butuh keputusan pemilik, dan **editor
+visual** mirip Photoshop/Canva yang selections-nya bisa dikirim ke agent; (4) website itu juga harus
+bisa "atur segalanya, kelola segalanya". Pemilik mengizinkan pemakaian skill dan riset internet.
+
+**Hasil pembacaan verdict putaran 8 (kuorum 3/3, semuanya MERAH — 6 temuan unik setelah
+digabungkan, tidak ada yang menyentuh `sistem-undangan`):** dua P1 di alat pengumpul verdict
+(pin SHA tidak divalidasi; kanal berkas berhenti di verdict putaran pertama), satu P1 di body PR
+(perubahan berkas pelindung tidak dideklarasikan), satu P2 di tiga dokumen (petunjuk kanal
+penyerahan audit saling bertentangan), dan dua P2 angka di body PR (irisan dengan `main` ditulis 0
+padahal terukur 3 berkas; "+14.900-an baris" padahal terukur +14.708/−86). Tiga temuan pertama
+ditutup di commit ini sebagai T-59/T-60/T-61; tiga temuan body ditutup lewat PATCH REST sebagai
+T-62 tanpa commit baru.
+
+**Sikap agent terhadap "pastikan ga bakal ada masalah lagi" (jujur, bukan menenangkan):** yang bisa
+dijanjikan secara mekanis adalah (a) setiap temuan ditutup dengan **kunci regresi** sehingga cacat
+yang sama tidak bisa kembali diam-diam, (b) default alat dibuat **fail-closed**, dan (c) tidak ada
+lagi putaran review yang memperpanjang lingkaran ini — sesuai keputusan pemilik giliran 27. Yang
+**tidak** bisa dijanjikan siapa pun adalah "nol temuan selamanya": perbaikan di commit ini
+diverifikasi oleh alat dan gerbang repo, **bukan** oleh hakim independen, karena putaran 8 adalah
+putaran terakhir. Itu risiko sisa yang dinyatakan terbuka, bukan disembunyikan.

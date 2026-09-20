@@ -11,10 +11,16 @@ sedang berjalan → sesi membacanya. Pemilik jadi kurir. Permintaan pemilik (T30
   review/audit udh selesai, dan dia otomatis tau semua hasilnya."*
 
 Alat ini menutup sisi **pengambilannya**. Sisi pengirimannya ada di prompt yang dibangkitkan
-`tools/audit_prompt.py` bagian 10 (kirim ke GitHub Issue dengan judul + label berpola tetap).
+`tools/audit_prompt.py` bagian 10.
 
-SATU ALAT, DUA KANAL — sengaja tidak dibuat dua alat:
-  * audit ISI (non-PR) → **GitHub Issue**, judul `AUDIT <objek> @<sha7>`, label `audit-independen`
+SATU ALAT, DUA KANAL — sengaja tidak dibuat dua alat, dan urutannya SATU keputusan, bukan dua
+pilihan yang bersaing (T-61, temuan P2 putaran 8 PR #74: petunjuk penyerahan di empat tempat
+saling bertentangan, sebagian masih menyebut Issue sebagai tujuan tanpa label apa pun):
+  * audit ISI (non-PR) → **KANAL A = berkas ter-commit** di `_meta/_internal/audit/`, baris pertama
+                         `# AUDIT <objek> @<sha7>` — UTAMA dan terbukti berfungsi. **Kanal B = GitHub
+                         Issue** berlabel `audit-independen` adalah ALTERNATIF yang terukur TERBLOKIR
+                         HTTP 403 `Resource not accessible by integration` (17 Sep 2026), jadi jangan
+                         pernah disebut sebagai tujuan penyerahan tanpa label alternatif-terblokir itu
   * review PR          → **komentar PR** (kanal lama yang sudah terbukti; verdict ditempel sebagai
                          satu komentar, preseden log sesi 16 Sep 2026)
 
@@ -203,6 +209,117 @@ def putaran_dari(teks: str) -> int | None:
     return int(m.group(1)) if m else None
 
 
+# ---------------------------------------------------------------------------
+# Validasi pin SHA laporan (T-59 — temuan P1 putaran 8 PR #74, direproduksi dua hakim)
+# ---------------------------------------------------------------------------
+# Cacat yang ditutup: `cetak_pr()` hanya menyimpan hasil `simpulkan()` + nomor putaran, dan
+# `headRefOid` cuma DICETAK di baris head, tidak pernah dipakai memvalidasi apa pun. Akibatnya
+# tiga laporan yang tidak menyebut SHA — atau menyebut SHA head lain — bisa menjadi bukti HIJAU
+# sekaligus kuorum LENGKAP untuk head yang sedang diadili. Reproduksi hakim: memanggil fungsi
+# kanal nyata `cetak_pr(999, 3, 8)` dengan fixture tiga komentar hijau berformat sah tetapi tanpa
+# SHA menghasilkan "HIJAU — semua 3 verdict hijau" dan "kuorum 3/3 LENGKAP (0 bukan hijau)".
+# Prinsip penggantinya fail-closed dan SENGAJA asimetris:
+#   * HIJAU butuh bukti bahwa ia bicara tentang head yang diadili -> pin SHA wajib cocok;
+#   * MERAH tidak butuh bukti apa pun                             -> selalu menahan, pin atau tidak.
+# Merah yang salah pin paling jauh membuat kita berhenti terlalu awal dan bertanya; hijau yang
+# salah pin membuat kita merge benda yang tidak pernah diperiksa siapa pun.
+SHA_HEX_RE = re.compile(r"\b[0-9a-f]{7,40}\b")
+KONTEKS_PIN_RE = re.compile(
+    r"(?:\b(?:head|pin|pinned|terpin|ter-pin|dinilai|diadili|objek|commit|sha|revisi)\b|@)",
+    re.I,
+)
+
+
+def pin_verdict(teks: str, head: str | None) -> str:
+    """Status pin SHA sebuah laporan terhadap head yang diadili.
+
+    Keluaran: ``"cocok"`` | ``"tanpa-pin"`` | ``"beda:<sha7>[|<sha7>...]"`` | ``"head-tak-terbaca"``.
+
+    Hanya SHA di baris BERKONTEKS pin (menyebut head/pin/objek/commit/sha, atau pola judul
+    ``@<sha7>``) yang dihitung, dan isi pagar kode dikosongkan lebih dulu — jadi SHA yang cuma
+    nongol di dalam contoh perintah `git diff` tidak diklaim sebagai pin. Ketatnya sengaja:
+    salah menolak laporan hijau yang sah hanya membuat kita berhenti dan bertanya, sedangkan
+    salah menerima laporan hijau untuk head lain membuat kita merge benda yang tak pernah diperiksa.
+    """
+    if not head or not head.strip():
+        return "head-tak-terbaca"
+    head = head.strip().lower()
+    disebut: list[str] = []
+    for baris in strip_code_fences(teks or "").splitlines():
+        if not KONTEKS_PIN_RE.search(baris):
+            continue
+        disebut += [t.lower() for t in SHA_HEX_RE.findall(baris)]
+    if not disebut:
+        return "tanpa-pin"
+    for t in disebut:
+        if t == head or head.startswith(t) or t.startswith(head):
+            return "cocok"
+    unik = sorted({t[:7] for t in disebut})
+    return "beda:" + "|".join(unik[:3]) + ("|..." if len(unik) > 3 else "")
+
+
+def sah_untuk_head(status_pin: str) -> bool:
+    """Hanya pin yang COCOK yang boleh menjadi bukti hijau. Fail-closed, tanpa pengecualian."""
+    return status_pin == "cocok"
+
+
+# ---------------------------------------------------------------------------
+# Agregasi kanal berkas append-only (T-60 — temuan P1 putaran 8 PR #74, dua hakim)
+# ---------------------------------------------------------------------------
+# Cacat yang ditutup: `_meta/PROTOKOL_AUDIT_ISI.md` (bagian "Apa yang terjadi sesudahnya")
+# mengizinkan putaran lanjutan ditambahkan di bawah laporan berkas yang sama, tetapi
+# `cetak_berkas()` meringkas dengan `simpulkan(teks)` yang mengambil kecocokan PERTAMA — jadi
+# berkas berisi "Putaran 1: BERSIH" lalu "Putaran 2: ADA TEMUAN" diringkas BERSIH. Isi putaran
+# kedua memang ikut tercetak; yang salah adalah ringkasan keputusan otomatisnya, dan ringkasan
+# itulah yang dibaca pemilik. Fail-closed: satu putaran bukan hijau -> gabungan menahan.
+PUTARAN_HEADING_RE = re.compile(r"^[ \t]{0,3}#{2,6}[ \t]*putaran[ \t]+(\d+)[ \t]*$", re.I | re.M)
+
+
+def pecah_putaran(teks: str) -> list[tuple[int | None, str]]:
+    """Pecah laporan append-only per bagian `## Putaran N`.
+
+    Teks sebelum putaran pertama (judul, metadata) dikembalikan sebagai ``(None, ...)``, supaya
+    verdict yang ditulis di luar bagian putaran tetap ikut dihitung dan tidak hilang diam-diam.
+    """
+    bersih = strip_code_fences(teks or "")
+    potong = [(m.group(1), m.start()) for m in PUTARAN_HEADING_RE.finditer(bersih)]
+    if not potong:
+        return [(None, bersih)]
+    hasil: list[tuple[int | None, str]] = []
+    if potong[0][1] > 0:
+        hasil.append((None, bersih[:potong[0][1]]))
+    for i, (nomor, awal) in enumerate(potong):
+        akhir = potong[i + 1][1] if i + 1 < len(potong) else len(bersih)
+        hasil.append((int(nomor), bersih[awal:akhir]))
+    return hasil
+
+
+def verdict_per_putaran(teks: str) -> list[tuple[int | None, str]]:
+    """[(nomor putaran, verdict)] hanya untuk bagian yang verdict-nya TERBACA."""
+    hasil: list[tuple[int | None, str]] = []
+    for nomor, bagian in pecah_putaran(teks):
+        v = simpulkan(bagian)
+        if v.startswith("TIDAK DITEMUKAN"):
+            continue
+        hasil.append((nomor, v))
+    return hasil
+
+
+def ringkas_berkas(teks: str) -> str:
+    """Ringkasan fail-closed kanal berkas: agregasi SEMUA putaran, bukan verdict pertama."""
+    bagian = verdict_per_putaran(teks)
+    if len(bagian) <= 1:
+        return simpulkan(teks)
+    label = ", ".join(f"putaran {n if n is not None else '?'}: {v}" for n, v in bagian)
+    bukan_hijau = [(n, v) for n, v in bagian if v not in HIJAU_SET]
+    if bukan_hijau:
+        rinci = ", ".join(f"putaran {n if n is not None else '?'}: {v}" for n, v in bukan_hijau)
+        token = "/".join(sorted({v for _, v in bukan_hijau}))
+        return (f"{token} — MENAHAN: {len(bukan_hijau)} dari {len(bagian)} putaran bukan hijau ({rinci}). "
+                f"Verdict putaran pertama TIDAK menutup putaran sesudahnya. Semua putaran: {label}")
+    return f"HIJAU — semua {len(bagian)} putaran hijau ({label})"
+
+
 def kuorum_putaran(pasangan: list[tuple[str, int | None]], diharapkan: int | None = None,
                    putaran: int | None = None) -> str:
     """Laporan kuorum PER PUTARAN (temuan #3 hakim putaran 3 PR #74, P1).
@@ -221,20 +338,26 @@ def kuorum_putaran(pasangan: list[tuple[str, int | None]], diharapkan: int | Non
     """
     b: list[str] = []
     a = b.append
-    per: dict[int, list[str]] = {}
+    per: dict[int, list[tuple[str, bool]]] = {}
     tanpa_nomor: list[str] = []
-    for v, r in pasangan or []:
+    for item in pasangan or []:
+        # Tripel (verdict, putaran, sah-pin) sejak T-59; pasangan lama (2 unsur) tetap diterima
+        # dan dianggap sah supaya pemanggil lama tidak berubah perilakunya diam-diam.
+        v, r = item[0], item[1]
+        sah = True if len(item) < 3 else bool(item[2])
         if r is None:
             tanpa_nomor.append(v or "TIDAK TERBACA")
         else:
-            per.setdefault(r, []).append(v or "TIDAK TERBACA")
+            per.setdefault(r, []).append((v or "TIDAK TERBACA", sah))
     a("  KUORUM PER PUTARAN (agregat fail-closed di atas tetap berlaku lintas putaran):")
     if not per and not tanpa_nomor:
         a("    belum ada slot hakim yang terbaca — belum ada putaran yang bisa dilaporkan")
     for r in sorted(per):
-        vs = per[r]
+        vs = [v for v, _ in per[r]]
+        tak_sah = sum(1 for _, sh in per[r] if not sh)
         ringkas = ", ".join(sorted(set(vs)))
-        a(f"    putaran {r}: {len(vs)} slot — {ringkas}")
+        ekor = f" · {tak_sah} slot pin SHA-nya tidak cocok dengan head yang diadili" if tak_sah else ""
+        a(f"    putaran {r}: {len(vs)} slot — {ringkas}{ekor}")
     if tanpa_nomor:
         a(f"    (tanpa nomor putaran: {len(tanpa_nomor)} slot — {', '.join(sorted(set(tanpa_nomor)))}; "
           "tidak bisa dipetakan ke putaran mana pun, jadi TIDAK dihitung sebagai kuorum putaran)")
@@ -247,20 +370,27 @@ def kuorum_putaran(pasangan: list[tuple[str, int | None]], diharapkan: int | Non
         a("     Artinya verdict belum diserahkan, BUKAN bersih. Jangan merge, jangan simpulkan hijau.")
         return "\n".join(b)
     n = len(per[target])
-    merah = [v for v in per[target] if v not in HIJAU_SET]
+    n_sah = sum(1 for _, sh in per[target] if sh)
+    merah = [v for v, _ in per[target] if v not in HIJAU_SET]
     if diharapkan is None:
-        a(f"  >> PUTARAN YANG DIPUTUS: {target} ({asal}) — {n} slot terbaca, "
-          f"{len(merah)} di antaranya bukan hijau.")
+        a(f"  >> PUTARAN YANG DIPUTUS: {target} ({asal}) — {n} slot terbaca ({n_sah} ter-pin pada head "
+          f"yang diadili), {len(merah)} di antaranya bukan hijau.")
         a("     Kuorum TIDAK DINYATAKAN: jalankan dengan `--harapkan N` (N = jumlah hakim yang sungguh")
         a("     kamu kerahkan) supaya verdict yang tidak sampai terbaca sebagai KUORUM BELUM LENGKAP.")
-    elif n < diharapkan:
-        a(f"  >> PUTARAN YANG DIPUTUS: {target} ({asal}) — kuorum {n}/{diharapkan} "
-          f"**BELUM LENGKAP**: {diharapkan - n} hakim belum menyerahkan laporan atau laporannya tidak")
-        a("     terbaca. Hakim yang hening bukan hakim yang puas: jangan bertindak atas putaran ini")
-        a("     seolah-olah lengkap, dan jangan menyimpulkan apa pun dari putaran yang belum penuh.")
+    elif n_sah < diharapkan:
+        a(f"  >> PUTARAN YANG DIPUTUS: {target} ({asal}) — kuorum SAH {n_sah}/{diharapkan} "
+          f"**BELUM LENGKAP**.")
+        if n_sah < n:
+            a(f"     {n - n_sah} dari {n} slot yang terbaca TIDAK SAH untuk head ini: pin SHA-nya absent")
+            a("     atau menunjuk head lain. Laporan yang tidak bisa dipetakan ke head yang diadili BUKAN")
+            a("     bukti hijau — hijau hanya boleh dinyatakan dari pemeriksaan atas benda yang akan di-merge.")
+        else:
+            a(f"     {diharapkan - n_sah} hakim belum menyerahkan laporan atau laporannya tidak terbaca.")
+        a("     Hakim yang hening bukan hakim yang puas: jangan bertindak atas putaran ini seolah-olah")
+        a("     lengkap, dan jangan menyimpulkan apa pun dari putaran yang belum penuh.")
     else:
-        a(f"  >> PUTARAN YANG DIPUTUS: {target} ({asal}) — kuorum {n}/{diharapkan} LENGKAP "
-          f"({len(merah)} bukan hijau).")
+        a(f"  >> PUTARAN YANG DIPUTUS: {target} ({asal}) — kuorum {n_sah}/{diharapkan} LENGKAP "
+          f"({len(merah)} bukan hijau) · semua slot ter-pin pada head yang diadili.")
     return "\n".join(b)
 
 
@@ -271,6 +401,33 @@ class ToolError(Exception):
 def _run(cmd: list[str]) -> tuple[int, str, str]:
     p = subprocess.run(cmd, cwd=ROOT, capture_output=True, text=True)
     return p.returncode, p.stdout, p.stderr
+
+
+def head_repo() -> str:
+    """SHA HEAD repo saat ini; kosong bila git tidak bisa ditanya (jangan menebak)."""
+    code, out, _ = _run(["git", "rev-parse", "HEAD"])
+    return out.strip() if code == 0 else ""
+
+
+def catatan_pin_audit(sha_laporan: str | None) -> str:
+    """Catatan kesegaran pin untuk kanal audit-isi (peringatan, BUKAN penurunan verdict).
+
+    Audit isi tidak memutuskan merge, jadi laporan lama tetap sah sebagai riwayat; yang wajib
+    terlihat adalah apakah laporan itu masih bicara tentang isi yang sama dengan HEAD sekarang.
+    Ini saudara dari T-59 di kanal PR: di sana pin yang salah membuat hijau ditolak, di sini pin
+    yang salah membuat umur laporan dinyatakan terang-terangan.
+    """
+    head = head_repo()
+    if not sha_laporan:
+        return ("  \u26a0 judul tidak memuat pin `@<sha7>` — tidak bisa dipastikan laporan ini memeriksa"
+                " keadaan yang mana; jangan dibaca sebagai laporan atas HEAD sekarang.")
+    if not head:
+        return "  \u26a0 HEAD repo tidak terbaca — kesegaran pin tidak bisa diperiksa."
+    a, b = sha_laporan.strip().lower(), head.lower()
+    if a == b or b.startswith(a) or a.startswith(b):
+        return f"  pin laporan: `{sha_laporan}` == HEAD repo sekarang (laporan bicara tentang isi terkini)."
+    return (f"  \u26a0 pin laporan `{sha_laporan}` != HEAD repo sekarang `{head[:12]}` — laporan ini"
+            " memeriksa keadaan LAMA. Sah sebagai riwayat, tetapi jangan dipakai menyimpulkan isi hari ini.")
 
 
 def gh_tersedia() -> None:
@@ -391,10 +548,16 @@ def cetak_berkas(path: Path) -> int:
     print(f"HASIL AUDIT ISI (kanal BERKAS ter-commit) — {path.relative_to(ROOT)}")
     print(f"Judul : {m.group(0).lstrip('# ').strip() if m else '(tidak berpola AUDIT <objek> @<sha>)'}")
     print(f"Panjang: {len(teks.splitlines())} baris")
+    print(catatan_pin_audit(m.group("sha") if m else None))
     print("=" * 78)
     print(teks)
     print("=" * 78)
-    print(f"VERDICT TERBACA OTOMATIS: {simpulkan(teks)}")
+    bagian = verdict_per_putaran(teks)
+    if len(bagian) > 1:
+        print("VERDICT PER PUTARAN (berkas append-only — putaran lanjutan TIDAK menutup yang pertama):")
+        for nomor, v in bagian:
+            print(f"  putaran {nomor if nomor is not None else '(di luar bagian putaran)'}: {v}")
+    print(f"VERDICT TERBACA OTOMATIS: {ringkas_berkas(teks)}")
     print("Membaca verdict BUKAN menyetujuinya: bertindak atas temuan tetap butuh keputusan pemilik.")
     return 0
 
@@ -430,6 +593,7 @@ def cetak_issue(nomor: int, diharapkan: int | None = None) -> int:
         print(f"objek ter-pin: `{m.group('objek')}` · sha: `{m.group('sha')}`")
     else:
         print("objek ter-pin: TIDAK TERBACA dari judul (judul tidak mengikuti pola `AUDIT <objek> @<sha>`)")
+    print(catatan_pin_audit(m.group("sha") if m else None))
     print("=" * 78)
     print(f"\nVERDICT (terbaca otomatis): {simpulkan(body)}")
     print("\n----- BADAN ISSUE -----")
@@ -476,8 +640,10 @@ def cetak_pr(nomor: int, diharapkan: int | None = None, putaran: int | None = No
     print(f"PR #{d.get('number')} — {d.get('title')}")
     print(f"state: {d.get('state')} · head: {(d.get('headRefOid') or '')[:12]} · base: {d.get('baseRefName')}")
     print("=" * 78)
-    kumpul: list[str] = []
-    pasangan: list[tuple[str, int | None]] = []      # (verdict, putaran) untuk laporan kuorum per putaran
+    head = (d.get("headRefOid") or "").strip()
+    slot: list[dict] = []                              # {"v", "r", "pin", "sah", "dipakai"}
+    kumpul: list[str] = []                             # diisi di blok putusan pin (T-59)
+    pasangan: list[tuple[str, int | None, bool]] = []  # (verdict, putaran, sah-pin) — T-59
     bukan_slot = 0
     if reviews:
         print(f"\n----- {len(reviews)} REVIEW -----")
@@ -486,9 +652,9 @@ def cetak_pr(nomor: int, diharapkan: int | None = None, putaran: int | None = No
             print(f"\n### review {i} — {r.get('author', {}).get('login', '?')} · state: {r.get('state')}")
             if rb.strip():
                 v = simpulkan(rb)
-                kumpul.append(v)
-                pasangan.append((v, putaran_dari(rb)))
-                print(f"VERDICT (terbaca otomatis): {v}")
+                pin = pin_verdict(rb, head)
+                slot.append({"v": v, "r": putaran_dari(rb), "pin": pin})
+                print(f"VERDICT (terbaca otomatis): {v} · pin SHA laporan: {pin}")
                 print(rb.strip())
     if comments:
         print(f"\n----- {len(comments)} KOMENTAR -----")
@@ -501,9 +667,9 @@ def cetak_pr(nomor: int, diharapkan: int | None = None, putaran: int | None = No
                 print(cb.strip())
                 continue
             v = simpulkan(cb)
-            kumpul.append(v)
-            pasangan.append((v, putaran_dari(cb)))
-            print(f"VERDICT (terbaca otomatis): {v}")
+            pin = pin_verdict(cb, head)
+            slot.append({"v": v, "r": putaran_dari(cb), "pin": pin})
+            print(f"VERDICT (terbaca otomatis): {v} · pin SHA laporan: {pin}")
             print(cb.strip())
     if not reviews and not comments:
         print("\nTIDAK ADA review maupun komentar pada PR ini.")
@@ -512,6 +678,27 @@ def cetak_pr(nomor: int, diharapkan: int | None = None, putaran: int | None = No
     print("\n" + "=" * 78)
     print("AGREGASI FAIL-CLOSED (aturan pemilik 17 Sep 2026: \"Selagi ada yang merah, maka harus diperbaiki\")")
     print("=" * 78)
+    # T-59: putusan pin SHA. Hanya putaran yang DIPUTUS yang boleh menurunkan verdict hijau;
+    # putaran lama dibiarkan apa adanya (hijau mereka sah untuk head mereka sendiri), tetapi status
+    # pinnya tetap dilaporkan supaya riwayat tidak terbaca sebagai bukti atas head hari ini.
+    if slot:
+        ada_putaran = [x["r"] for x in slot if x["r"] is not None]
+        target = putaran if putaran is not None else (max(ada_putaran) if ada_putaran else None)
+        if not head:
+            print("\n  \u26a0 head PR TIDAK TERBACA dari API — validasi pin SHA tidak bisa dijalankan;")
+            print("    fail-closed, hijau tidak dinyatakan untuk putaran yang diputus.")
+        for x in slot:
+            x["sah"] = sah_untuk_head(x["pin"])
+            dipakai = x["v"]
+            if x["r"] == target and x["v"] in HIJAU_SET and not x["sah"]:
+                dipakai = (f"TIDAK SAH UNTUK HEAD INI (laporan menyebut {x['v']} tetapi pin SHA-nya "
+                           f"{x['pin']}; head yang diadili {(head or '?')[:12]})")
+            x["dipakai"] = dipakai
+            kumpul.append(dipakai)
+            pasangan.append((dipakai, x["r"], x["sah"]))
+        cocok = sum(1 for x in slot if x["sah"])
+        print(f"  pin SHA: {cocok} dari {len(slot)} slot menunjuk head yang diadili ({(head or '?')[:12]}).")
+        print("  Slot putaran lama yang pin-nya berbeda itu WAJAR — yang menentukan putaran yang diputus.")
     for i, v in enumerate(kumpul, 1):
         print(f"  hakim {i}: {v}")
     print(f"\n  slot hakim terbaca: {len(kumpul)} · komentar bukan slot (penulis/non-laporan): {bukan_slot}")
@@ -643,6 +830,77 @@ FIX_PR = {
         {"author": {"login": "bot"}, "createdAt": "3", "body": "## Head yang hendak diputuskan: `ac25de0`\n"},
     ],
 }
+
+
+# ---------------------------------------------------------------------------
+# KUNCI REGRESI T-59 (pin SHA) + T-60 (agregasi kanal berkas) — dua temuan P1 putaran 8
+# PR #74 yang direproduksi independen oleh dua hakim. Norma repo: mekanisme baru wajib diuji
+# dengan fixture/mutasi, bukan hanya dijalankan sekali lalu terlihat hijau.
+KASUS_PIN = [
+    # (nama, teks laporan, head yang diadili, harapan status pin)
+    ("pin cocok: head disebut di baris berpemarkah",
+     "## Review independen PR #74 — putaran 8 — VERDICT: HIJAU\n\n- **Head yang dinilai:** `e698272`\n",
+     "e69827297cb0fefbc955958ee8c82872e8309629", "cocok"),
+    ("pin cocok: sha penuh 40 karakter di laporan, head API pendek",
+     "## Review — putaran 8 — HIJAU\n- head ter-pin: e69827297cb0fefbc955958ee8c82872e8309629\n",
+     "e69827297cb0", "cocok"),
+    ("pin cocok: pola judul kanal berkas `@<sha7>`",
+     "# AUDIT _meta @e698272\n\n## Putaran 1\n- **VERDICT:** BERSIH\n",
+     "e69827297cb0", "cocok"),
+    ("REGRESI T-59: laporan hijau TANPA sha tidak boleh jadi bukti",
+     "## Review independen PR #74 — putaran 8 — VERDICT: HIJAU\n\nSemua cek hijau, tanpa BLOCKER.\n",
+     "e69827297cb0", "tanpa-pin"),
+    ("REGRESI T-59: laporan hijau untuk head LAIN tidak boleh jadi bukti",
+     "## Review independen PR #74 — putaran 8 — VERDICT: HIJAU\n\n- **Head yang dinilai:** `c1b618b`\n",
+     "e69827297cb0", "beda:c1b618b"),
+    ("sha yang cuma muncul di dalam pagar kode bukan pin",
+     "## Review — putaran 8 — HIJAU\n\n```bash\ngit diff 6798bb2 e698272\n```\n",
+     "e69827297cb0", "tanpa-pin"),
+    ("head tidak terbaca dari API -> tidak pernah sah (fail-closed)",
+     "## Review — putaran 8 — HIJAU\n- head dinilai: `e698272`\n", "", "head-tak-terbaca"),
+    ("token bukan heks atau terlalu pendek tidak dihitung sebagai pin",
+     "## Review — putaran 8 — HIJAU\n- head: `zz12` lalu `12345`\n", "e69827297cb0", "tanpa-pin"),
+]
+
+KASUS_BERKAS = [
+    # (nama, teks laporan, substring WAJIB ada, substring DILARANG ada)
+    ("REGRESI T-60: putaran 2 ADA TEMUAN tidak boleh diringkas BERSIH",
+     "# AUDIT _meta @e698272\n\n## Putaran 1\n- **VERDICT:** BERSIH\n\n## Putaran 2\n"
+     "- **VERDICT:** ADA TEMUAN\n\nTemuan baru belum ditutup.\n",
+     "ADA TEMUAN — MENAHAN", None),
+    ("REGRESI T-60: tiga putaran, yang terakhir MERAH, tetap menahan",
+     "# AUDIT _meta @e698272\n\n## Putaran 1\n- **VERDICT:** BERSIH\n\n## Putaran 2\n"
+     "- **VERDICT:** BERSIH\n\n## Putaran 3\n- **VERDICT:** MERAH\n",
+     "MERAH — MENAHAN: 1 dari 3", None),
+    ("temuan putaran 1 yang disebut sudah ditutup putaran 2 TETAP menahan (fail-closed)",
+     "# AUDIT _meta @e698272\n\n## Putaran 1\n- **VERDICT:** ADA TEMUAN\n\n## Putaran 2\n"
+     "- **VERDICT:** BERSIH\n", "ADA TEMUAN/MENAHAN".replace("/", " — MENAHAN: 1 dari 2 putaran bukan hijau (putaran 1: ADA TEMUAN").split(" — ")[0], None),
+    ("semua putaran hijau -> hijau, jumlahnya disebut",
+     "# AUDIT _meta @e698272\n\n## Putaran 1\n- **VERDICT:** BERSIH\n\n## Putaran 2\n"
+     "- **VERDICT:** BERSIH\n", "semua 2 putaran hijau", "MENAHAN"),
+    ("berkas satu verdict tanpa bagian putaran: perilaku lama tidak berubah",
+     "# AUDIT _meta @e698272\n\n- **VERDICT:** ADA TEMUAN\n\nRincian.\n",
+     "ADA TEMUAN", "MENAHAN"),
+]
+
+KASUS_PIN_KUORUM = [
+    # (nama, pasangan slot, diharapkan, putaran diputus, WAJIB ada, DILARANG ada)
+    ("REGRESI T-59: tiga hijau tanpa pin BUKAN kuorum lengkap",
+     [("HIJAU", 8, False), ("HIJAU", 8, False), ("HIJAU", 8, False)], 3, 8,
+     "kuorum SAH 0/3", "LENGKAP (0 bukan hijau)"),
+    ("REGRESI T-59: campuran dua sah + satu tanpa pin belum lengkap",
+     [("HIJAU", 8, True), ("HIJAU", 8, True), ("HIJAU", 8, False)], 3, 8,
+     "kuorum SAH 2/3", "3/3 LENGKAP"),
+    ("tiga hijau ter-pin pada head yang diadili = kuorum lengkap",
+     [("HIJAU", 8, True), ("HIJAU", 8, True), ("HIJAU", 8, True)], 3, 8,
+     "kuorum 3/3 LENGKAP (0 bukan hijau)", "BELUM LENGKAP"),
+    ("merah tanpa pin TETAP menahan, tidak dibuang",
+     [("MERAH", 8, False), ("HIJAU", 8, True), ("HIJAU", 8, True)], 3, 8,
+     "BELUM LENGKAP", "LENGKAP (0 bukan hijau)"),
+    ("pemanggil lama dengan pasangan dua unsur tidak berubah perilakunya",
+     [("HIJAU", 2), ("HIJAU", 2), ("HIJAU", 2)], 3, 2,
+     "kuorum 3/3 LENGKAP (0 bukan hijau)", "BELUM LENGKAP"),
+]
 
 
 def uji() -> int:
@@ -781,15 +1039,42 @@ def uji() -> int:
     if bocor5 < 1:
         gagal += 1
 
+    print("UJI pin SHA laporan (T-59 — hijau butuh bukti ia bicara tentang head yang diadili)")
+    for nama, teks, head, harap in KASUS_PIN:
+        got = pin_verdict(teks, head)
+        ok = got == harap
+        print(f"  [{'OK ' if ok else 'GAGAL'}] {nama}")
+        if not ok:
+            print(f"        harapan: {harap} · dapat: {got}")
+            gagal += 1
+    print("UJI agregasi kanal berkas append-only (T-60 — putaran pertama tidak menutup yang kemudian)")
+    for nama, teks, wajib, dilarang in KASUS_BERKAS:
+        got = ringkas_berkas(teks)
+        ok = (wajib is None or wajib in got) and (dilarang is None or dilarang not in got)
+        print(f"  [{'OK ' if ok else 'GAGAL'}] {nama}")
+        if not ok:
+            print(f"        wajib: {wajib!r} · dilarang: {dilarang!r} · dapat: {got}")
+            gagal += 1
+    print("UJI kuorum dengan pin SHA (T-59 — laporan tak ter-pin bukan pemenuh kuorum)")
+    for nama, pasangan, diharapkan, put, wajib, dilarang in KASUS_PIN_KUORUM:
+        got = kuorum_putaran(pasangan, diharapkan, put)
+        ok = (wajib is None or wajib in got) and (dilarang is None or dilarang not in got)
+        print(f"  [{'OK ' if ok else 'GAGAL'}] {nama}")
+        if not ok:
+            print(f"        wajib: {wajib!r} · dilarang: {dilarang!r}")
+            print("        dapat: " + got.replace("\n", " / "))
+            gagal += 1
+
     total = (len(KASUS) + len(KASUS_GABUNG) + len(KASUS_SLOT) + len(KASUS_GABUNG2)
-             + len(KASUS_PUTARAN) + 7)
+             + len(KASUS_PUTARAN) + len(KASUS_PIN) + len(KASUS_BERKAS) + len(KASUS_PIN_KUORUM) + 7)
     if gagal:
         print(f"\nHASIL: {gagal} GAGAL dari {total} pemeriksaan")
         return 1
     print(f"\nHASIL: PASS {total}/{total} pemeriksaan "
           f"({len(KASUS)} pembacaan + {len(KASUS_GABUNG) + len(KASUS_GABUNG2)} agregasi "
           f"+ {len(KASUS_SLOT)} klasifikasi slot + {len(KASUS_PUTARAN)} kuorum per putaran "
-          f"+ 6 mutasi + 1 smoke kanal)")
+          f"+ {len(KASUS_PIN)} pin SHA + {len(KASUS_BERKAS)} agregasi berkas "
+          f"+ {len(KASUS_PIN_KUORUM)} kuorum berpin + 6 mutasi + 1 smoke kanal)")
     return 0
 
 def main() -> int:

@@ -704,8 +704,9 @@ for _lg in _berkas_log:
 #   (e) sha-nya HEAD atau paling tua HEAD~3 - satu giliran boleh membuat sampai
 #       tiga commit (perbaikan, penutup utang, rekaman).
 #
-# (b), (c), (e) HANYA berlaku selama log itu "live", yaitu disentuh oleh salah satu
-# dari 4 commit terakhir. Sebabnya DIUKUR, bukan diduga (temuan #2 hakim C, saya
+# (b), (c), (e) HANYA berlaku selama log itu "live", yaitu disentuh oleh salah satu dari 4 commit
+# terakhir, DAN tidak ada merge commit di dalam jendela itu (RP24, 20 Sep 2026). Sebabnya DIUKUR,
+# bukan diduga (temuan #2 hakim C, saya
 # reproduksi sendiri di clone terpisah pada main terbaru): sesudah PR ini di-merge,
 # kedua log OPEN milik sesi ini tidak bisa lagi disegarkan oleh sesi lain
 # (append-only + kepemilikan log), sehingga `VALIDATION FAILED` terjadi SEKETIKA -
@@ -846,6 +847,16 @@ def _tanpa_pagar_kode(text):
 segar_warnings = []
 _n_fi_hidup, _versi_manifest, _jendela = _fi_hidup(), _versi_hidup(), _jendela_sha()
 _git_ada = _jendela is not None
+# RP24 (ditemukan dari uji sesudah-merge pada pohon yang sudah di-commit, aturan C8, saat menutup
+# putaran 8 PR #74): merge commit di jendela 4 commit berarti pohon ini BARU MENYERAP pekerjaan sesi
+# lain. Cap `- **Segar pada:**` di log OPEN milik sesi yang digabung tidak bisa disegarkan oleh sesi
+# yang menyerapnya (kepemilikan log + append-only kronologi), jadi bagian (b) dan (c) diperlakukan
+# sama seperti bagian (e): turun menjadi warning beralasan. Sebelumnya hanya (e) yang mengenal
+# keadaan ini, akibatnya merge sebuah PR yang membawa log OPEN + dokumen FI yang bergerak di sisi
+# `main` membuat VALIDATION FAILED di pohon hasil merge - penjaga memerahkan pohon yang tidak bisa
+# memperbaikinya, persis kelas cacat yang C8 larang. Gigi penjaga TIDAK dilonggarkan untuk keadaan
+# biasa: tanpa merge di jendela, (b) dan (c) tetap keras (dikunci RP24a).
+_merge_di_jendela = bool(_git_ada) and _ada_merge_di_jendela()
 if not _git_ada and any(_pola_open.search(p.read_text(encoding="utf-8")) for p in _berkas_log):
     segar_warnings.append(
         "WARNING kesegaran header: git tidak tersedia atau riwayatnya terlalu dangkal di pohon ini, "
@@ -916,16 +927,28 @@ for _lg in _berkas_log:
         )
         continue
     if _n_fi_hidup is not None and _n != _n_fi_hidup:
-        errors.append(
-            f"{_rel}: header OPEN mengklaim FI {_n} padahal `_meta/FAILURE_INJECTION_TESTS.md` hidup "
-            f"mencetak {_n_fi_hidup} - header BASI (segarkan baris `- **Segar pada:**`, jangan sunting "
-            "kronologinya)"
-        )
+        _pesan_b = (f"header OPEN mengklaim FI {_n} padahal `_meta/FAILURE_INJECTION_TESTS.md` hidup "
+                    f"mencetak {_n_fi_hidup} - header BASI (segarkan baris `- **Segar pada:**`, jangan "
+                    "sunting kronologinya)")
+        if _merge_di_jendela:
+            segar_warnings.append(
+                f"WARNING kesegaran header {_rel}: {_pesan_b} - DITURUNKAN menjadi warning karena satu "
+                "dari 4 commit terakhir adalah MERGE COMMIT: pohon ini baru menyerap pekerjaan sesi lain "
+                "dan cap log OPEN milik sesi yang digabung tidak bisa disegarkan oleh sesi yang "
+                "menyerapnya (aturan C8, alasan yang sama dengan bagian (e))")
+        else:
+            errors.append(f"{_rel}: {_pesan_b}")
     if _versi_manifest is not None and _ver != _versi_manifest:
-        errors.append(
-            f"{_rel}: header OPEN mengklaim manifest v{_ver} padahal `_meta/SYSTEM_MANIFEST.md` hidup "
-            f"v{_versi_manifest} - header BASI"
-        )
+        _pesan_c = (f"header OPEN mengklaim manifest v{_ver} padahal `_meta/SYSTEM_MANIFEST.md` hidup "
+                    f"v{_versi_manifest} - header BASI")
+        if _merge_di_jendela:
+            segar_warnings.append(
+                f"WARNING kesegaran header {_rel}: {_pesan_c} - DITURUNKAN menjadi warning karena satu "
+                "dari 4 commit terakhir adalah MERGE COMMIT: pohon ini baru menyerap pekerjaan sesi lain "
+                "dan cap log OPEN milik sesi yang digabung tidak bisa disegarkan oleh sesi yang "
+                "menyerapnya (aturan C8, alasan yang sama dengan bagian (e))")
+        else:
+            errors.append(f"{_rel}: {_pesan_c}")
     if not _git_ada:
         continue
     if not _sha_dikenal(_sha):
