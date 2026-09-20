@@ -146,13 +146,14 @@ Brief tidak menyimpan data acara sendiri — ia **menyerahkannya ke skema
 | **G1** | ujung Tahap 2 | data acara **lengkap & valid** terhadap skema 03; yang kurang dinyatakan sadar | **Sedang** — konfirmasi ringkas + catatan (pencatatan sesuai levelnya; dokumen ini tidak mengubah klasifikasi) |
 | **G2** | ujung Tahap 3 | **desain & format dikunci** (template, font, palet, daftar format yang dijanjikan) | **Besar** — review isi lengkap oleh pemilik |
 
-**Catatan pelabelan (dilaporkan, tidak diputus sepihak):** baris "Titik approval
-Besar" di `SYSTEM_MANIFEST.md` menulis **G2 (brief & struktur data)** sedangkan
-`00_RENCANA_KERANGKA.md` bagian 4 menulis G2 = **desain & format dikunci**.
-Kedua dokumen sepakat G2 = **Besar**; yang berbeda hanya label isinya. Cara
-dokumen ini memperlakukannya: keputusan format dari brief **dikunci di G2**
-(apa pun labelnya) — pemilik boleh menyelaraskan labelnya di Log Keputusan
-dokumen manapun (Log Keputusan baris 2).
+**Catatan pelabelan (DISelaraskan — putusan pemilik, review isi PR #90, 20 Sep 2026,
+sesi slot 44):** baris "Titik approval Besar" di `SYSTEM_MANIFEST.md` menulis
+"G2 (brief & struktur data)" sedangkan `00_RENCANA_KERANGKA.md` bagian 4
+menulis G2 = **desain & format dikunci**; siklus 00 bagian 2.3 sendiri menaruh
+brief di G0 (Tahap 1) dan data di G1 (Tahap 2), sehingga label manifest tidak
+konsisten dengan siklus. **Putusan pemilik: selaraskan manifest ke 00 bagian 4** —
+baris manifest sudah dikoreksi di PR yang sama; dokumen ini mengikuti 00 bagian 4
+(Log Keputusan baris 2 — laporan; baris 4 — putusan).
 
 ### 8. Cara Pakai Template Ini per Undangan
 
@@ -173,3 +174,4 @@ dokumen manapun (Log Keputusan baris 2).
 | 2026-09-20 | **Dokumen diisi — ROADMAP b1 (2/2)**: brief Tahap 1–2 + gerbang yang dilewatinya; banner kerangka dicabut; `_sistem/validate_system.py` diperluas (8 kerangka → **7 kerangka + 4 terisi**; diuji mutasi); manifest v0.5.0→**v0.6.0**; `STATUS.md` diperbarui — **satu commit** | Handoff log sesi slot 43 (disetujui pemilik; sesi slot 44): *"…04_TEMPLATE_BRIEF_UNDANGAN.md sebagai template biasa yang diturunkan dari field L2 pernikahan"*. Isinya penurunan dari siklus & gerbang (00 bagian 2.3/4) + L1 (§6 harga & masa aktif, §7 amplop, §8 serah terima, §10 batasan mutlak) + L2 (§3 etika, §5 field, §6 konvensi & fallback, §8 siklus, §9 fitur) + skema 03. **Tidak ada keputusan baru pemilik**; review isi = PR normal tanpa auto-merge |
 | 2026-09-20 | **Benturan label G2 dilaporkan, tidak diputus sepihak**: manifest = "G2 (brief & struktur data)" vs `00_RENCANA_KERANGKA.md` bagian 4 = "G2 — desain & format dikunci" | Norma repo: konflik dilaporkan, bukan ditebak (preseden benturan klasifikasi G1 di dokumen 02). **Kedua dokumen sepakat G2 = Besar**; cara perlakukan dokumen ini (keputusan format dari brief dikunci di G2) = interpretasi agent, **pemilik boleh koreksi** saat review; penyelarasan label = keputusan pemilik di Log Keputusan dokumen manapun |
 | 2026-09-20 | **Tenggat di bawah siklus = dinyatakan + diputuskan (jalur cepat dan/atau potong format), bukan diterima diam-diam** | **Keputusan agent, dinyatakan sadar** — dasar: siklus terukur 02 bagian 8 (H-30…H-14 digital dst.) + L1 bagian 6 (jalur cepat: produksi digital lincah; revisi tak terbatas sebelum terbit). Dokumen induk (00 bagian 2.3 Tahap 1) mewajibkan agen menuntun, bukan menerima mentah; mekanisme "nyatakan + putuskan + catat" adalah penurunan dari aturan adaptif L3 (yang kurang dinyatakan sadar). Dapat ditolak/diperketat saat review PR |
+| 2026-09-20 | **Review isi PR #90 dijalankan PEMILIK (sesi slot 44): "setuju semua rekomendasi"** — (1) benturan label G2 (baris 2) **DISelaraskan oleh putusan pemilik**: baris "Titik approval Besar" manifest dikoreksi menjadi "desain & format dikunci" mengikuti 00 bagian 4 (koreksi manifest = keputusan pemilik, bukan agent); (2) **tenggat di bawah siklus = dinyatakan + diputuskan** (baris 3) **dikonfirmasi pemilik** | Putusan pemilik di chat review isi (log sesi slot 44); koreksi manifest + catatan ini satu commit di PR #90 (draft menunggu merge — tanpa auto-merge) |
