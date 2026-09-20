@@ -12,7 +12,7 @@
 - **Tahap:** `draft` — `01_IDENTITAS_PEMILIK.md` terisi (Discovery 01, 20 Sep 2026; **G0 menunggu review isi lengkap pemilik di PR — tanpa auto-merge**); ubah ke `siap-pakai` saat sistem siap dipakai (cek W-01/W-02/W-03 kembali ketat; lihat `03_KONTRAK_WARISAN.md` bagian "Tahap pembangunan")
 - **Status:** `Draft`
 - **Tanggal dibuat:** 2026-09-17
-- **Audit terakhir:** belum ada — isi pertama (`01_IDENTITAS_PEMILIK.md`) baru terisi 20 Sep 2026 dan **menunggu review isi lengkap pemilik (G0)**; audit independen berikutnya: sesudah G0
+- **Audit terakhir:** belum ada — **G0 LULUS 20 Sep 2026** (review isi lengkap oleh pemilik + PR #86 merged, `36c63d4`); audit independen isi L1: terbuka atas permintaan pemilik; kelulusan pegangan W-01 menunggu jalur audit-nya sendiri (Syarat 4)
 - **Quality protocol:** **BELUM DIBUAT** di tahap kerangka. Direncanakan sebagai `QUALITY_ASSURANCE_AND_EVOLUTION.md` DI DALAM folder sistem ini (butir W-06 — wajib self-contained). Rujukan ke _meta/QUALITY_ASSURANCE_AND_EVOLUTION.md hanyalah provenance (asal aturan), BUKAN aturan aktif (sistem harus tetap berfungsi penuh saat foldernya diunduh jadi repo sendiri — lihat `03_KONTRAK_WARISAN.md`)
 
 ## Bentuk Sistem
