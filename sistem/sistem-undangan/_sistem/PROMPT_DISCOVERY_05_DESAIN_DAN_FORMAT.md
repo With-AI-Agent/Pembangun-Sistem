@@ -1,6 +1,6 @@
 # Desain & Format Undangan (L3, Tahap 3 SIKLUS) Discovery — Prompt
 
-### Dipakai **tiap satu undangan konkret** masuk Tahap 3 SIKLUS. Berbeda dari lima prompt lain di folder ini: yang diwawancarai di sini adalah **CLIENT** (orang yang memesan undangan), bukan pemilik sistem — agent **bertanya dan mengusulkan**, bukan menyuruh client mengisi formulir teknis. Hasil akhirnya mengisi brief undangan mengikuti `sistem/sistem-undangan/04_TEMPLATE_BRIEF_UNDANGAN.md`.
+### Dipakai **tiap satu undangan konkret** masuk Tahap 3 SIKLUS. Berbeda dari lima prompt lain di folder ini: yang diwawancarai di sini adalah **CLIENT** (orang yang memesan undangan), bukan pemilik sistem — agent **bertanya dan mengusulkan**, bukan menyuruh client mengisi formulir teknis. Hasil akhirnya mengisi brief undangan mengikuti `04_TEMPLATE_BRIEF_UNDANGAN.md`.
 
 > **DRAF TERSTAGING** — lihat `README.md` di folder ini.
 

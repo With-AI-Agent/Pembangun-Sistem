@@ -1,6 +1,6 @@
 # Identitas Pemilik (L1) Discovery — Prompt
 
-### Dipakai **sekali** untuk mengunci Lapis 1 sistem undangan — merek pemilik, font & palet default, nada bahasa, kebijakan serah terima, dan data amplop digital. Dijalankan di sesi lmarena Agent yang sama dengan repo ini (mode **diskusi dulu**, baru dieksekusi jadi berkas begitu matang). Hasil akhirnya mengisi `sistem/sistem-undangan/01_IDENTITAS_PEMILIK.md`.
+### Dipakai **sekali** untuk mengunci Lapis 1 sistem undangan — merek pemilik, font & palet default, nada bahasa, kebijakan serah terima, dan data amplop digital. Dijalankan di sesi lmarena Agent yang sama dengan repo ini (mode **diskusi dulu**, baru dieksekusi jadi berkas begitu matang). Hasil akhirnya mengisi `01_IDENTITAS_PEMILIK.md`.
 
 > **DRAF TERSTAGING** — lihat `README.md` di folder ini soal kenapa berkas ini belum di folder sistem
 > dan ke mana ia pindah sesudah PR #74 merge.
@@ -110,7 +110,7 @@ push, dan siapkan PR untuk aku review sebelum merge ke main.
 
 ## Setelah selesai
 
-1. Hasilnya tersimpan di `sistem/sistem-undangan/01_IDENTITAS_PEMILIK.md`, sudah lewat PR dan merge ke `main`, dan **G0 dinyatakan lulus oleh pemilik** (bukan oleh penulisnya — Syarat 4 Standar Kelulusan Manual melarang penulis menilai sendiri).
+1. Hasilnya tersimpan di `01_IDENTITAS_PEMILIK.md`, sudah lewat PR dan merge ke `main`, dan **G0 dinyatakan lulus oleh pemilik** (bukan oleh penulisnya — Syarat 4 Standar Kelulusan Manual melarang penulis menilai sendiri).
 2. Validator sistem dijalankan ulang dan **hijau**; cakupan barunya sudah termasuk dokumen yang baru terisi.
 3. Lanjut ke `PROMPT_DISCOVERY_02_PROFIL_JENIS_ACARA.md` (L2) — L2 mewarisi L1, jadi urutan ini tidak boleh dibalik.
 4. Setiap perubahan L1 sesudah ini = **kewajiban memeriksa ulang semua undangan yang belum lewat G2**, dicatat di Log Keputusan dokumen dan di log sesi.

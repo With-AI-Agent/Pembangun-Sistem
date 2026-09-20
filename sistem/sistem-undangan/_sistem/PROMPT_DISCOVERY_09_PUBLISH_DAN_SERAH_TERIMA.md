@@ -1,6 +1,6 @@
 # Publish & Serah Terima (Tahap 6–7) Discovery — Prompt
 
-### Dipakai **sekali** untuk mengunci cara undangan diterbitkan dan cara kepemilikannya diserahkan ke client. Ditulis untuk orang yang **tidak punya basic coding** — termasuk versi final dokumennya. Hasil akhirnya mengisi `sistem/sistem-undangan/09_PANDUAN_PUBLISH_DAN_SERAH_TERIMA.md`.
+### Dipakai **sekali** untuk mengunci cara undangan diterbitkan dan cara kepemilikannya diserahkan ke client. Ditulis untuk orang yang **tidak punya basic coding** — termasuk versi final dokumennya. Hasil akhirnya mengisi `09_PANDUAN_PUBLISH_DAN_SERAH_TERIMA.md`.
 
 > **DRAF TERSTAGING** — lihat `README.md` di folder ini.
 
@@ -122,7 +122,7 @@ tanggal + alasan + approval-ku, lalu commit, push, dan siapkan PR untuk aku revi
 
 ## Setelah selesai
 
-1. Hasilnya tersimpan di `sistem/sistem-undangan/09_PANDUAN_PUBLISH_DAN_SERAH_TERIMA.md`, sudah lewat PR dan merge ke `main`, dan **G5 dinyatakan lulus oleh pemilik**.
+1. Hasilnya tersimpan di `09_PANDUAN_PUBLISH_DAN_SERAH_TERIMA.md`, sudah lewat PR dan merge ke `main`, dan **G5 dinyatakan lulus oleh pemilik**.
 2. **Skema path yang dipilih dicatat sebagai keputusan permanen** di Log Keputusan dokumen ini **dan** di `10_ARSITEKTUR_WEBSITE_INDUK.md` — keduanya harus menyebut skema yang sama, karena satu berkas yang membantah berkas lain adalah temuan review.
 3. Daftar periksa Terbit dan daftar periksa Serah Terima diuji pada **satu undangan nyata** sebelum panduan ini dinyatakan layak pakai — panduan yang belum pernah dipakai sekali pun belum terbukti.
 4. Kelulusan **pegangan pengguna** (Standar Kelulusan Manual syarat 4) tetap tidak boleh dinyatakan oleh penulisnya; yang dicatat adalah keadaannya dan apa yang masih kurang (audit lensa kemudahan pakai + uji pemakaian nyata oleh pemilik).

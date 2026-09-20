@@ -1,6 +1,6 @@
 # Profil Jenis Acara (L2) Discovery — Prompt
 
-### Dipakai **tiap kali satu jenis acara baru mau didukung** (pernikahan, khitanan, webinar, ulang tahun, aqiqah, tasyakuran, dsb.). Dijalankan di sesi lmarena Agent yang sama dengan repo ini — diskusi dulu, baru dieksekusi jadi berkas. Hasil akhirnya mengisi satu bagian di `sistem/sistem-undangan/02_PROFIL_JENIS_ACARA.md`.
+### Dipakai **tiap kali satu jenis acara baru mau didukung** (pernikahan, khitanan, webinar, ulang tahun, aqiqah, tasyakuran, dsb.). Dijalankan di sesi lmarena Agent yang sama dengan repo ini — diskusi dulu, baru dieksekusi jadi berkas. Hasil akhirnya mengisi satu bagian di `02_PROFIL_JENIS_ACARA.md`.
 
 > **DRAF TERSTAGING** — lihat `README.md` di folder ini.
 
@@ -104,7 +104,7 @@ approval-ku, lalu commit, push, dan siapkan PR untuk aku review.
 
 ## Setelah selesai
 
-1. Hasilnya tersimpan di `sistem/sistem-undangan/02_PROFIL_JENIS_ACARA.md` sebagai **satu bagian per jenis acara**, sudah lewat PR dan merge ke `main`, dan **G1 dinyatakan lulus oleh pemilik**.
+1. Hasilnya tersimpan di `02_PROFIL_JENIS_ACARA.md` sebagai **satu bagian per jenis acara**, sudah lewat PR dan merge ke `main`, dan **G1 dinyatakan lulus oleh pemilik**.
 2. Ulangi prompt ini untuk jenis acara berikutnya — **jangan** menggabungkan beberapa jenis dalam satu putaran diskusi; campurannya akan membuat kata baku dan etika saling menimpa.
 3. Sesudah minimal satu jenis acara terisi, `03_TEMPLATE_DATA_ACARA.md` dan `04_TEMPLATE_BRIEF_UNDANGAN.md` bisa langsung dibuat sebagai template biasa (tidak perlu prompt Discovery — kolom "Cara diisi" di kerangkanya berkata begitu).
 4. Benturan L1 vs L2 yang muncul selama diskusi **wajib** tercatat di Log Keputusan kedua dokumen, bukan hanya diselesaikan di chat.

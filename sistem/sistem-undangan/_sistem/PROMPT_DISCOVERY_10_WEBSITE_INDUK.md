@@ -1,9 +1,9 @@
 # Arsitektur Website Induk Discovery — Prompt
 
-### Dipakai **sekali** untuk mengunci arsitektur website induk yang mengelola semua undangan + datanya, lalu **dibuka lagi per fase** kalau ada keputusan baru. Hasil akhirnya mengisi `sistem/sistem-undangan/10_ARSITEKTUR_WEBSITE_INDUK.md`.
+### Dipakai **sekali** untuk mengunci arsitektur website induk yang mengelola semua undangan + datanya, lalu **dibuka lagi per fase** kalau ada keputusan baru. Hasil akhirnya mengisi `10_ARSITEKTUR_WEBSITE_INDUK.md`.
 
 > **DRAF TERSTAGING** — lihat `README.md` di folder ini. Bahan diskusi giliran 31 pemilik (20 Sep 2026)
-> sudah tertulis di `_meta/_internal/DISKUSI_MENTAH_sistem-pembuat-undangan_2026-09-17.md` bagian
+> sudah tertulis di _meta/_internal/DISKUSI_MENTAH_sistem-pembuat-undangan_2026-09-17.md bagian
 > **Giliran 31** — prompt ini menyerap hasilnya, jadi jangan mengulang diskusinya dari nol.
 
 ---
@@ -160,8 +160,8 @@ alasan + approval-ku, lalu commit, push, dan siapkan PR untuk aku review.
 
 ## Setelah selesai
 
-1. Hasilnya tersimpan di `sistem/sistem-undangan/10_ARSITEKTUR_WEBSITE_INDUK.md`, sudah lewat PR dan merge ke `main`, dan keputusan arsitekturnya dinyatakan lulus oleh pemilik.
+1. Hasilnya tersimpan di `10_ARSITEKTUR_WEBSITE_INDUK.md`, sudah lewat PR dan merge ke `main`, dan keputusan arsitekturnya dinyatakan lulus oleh pemilik.
 2. **Skema path** yang dipilih di sini disalin ke `09_PANDUAN_PUBLISH_DAN_SERAH_TERIMA.md` — keduanya harus menyebut skema yang sama (syarat PATH stabil lintas fase).
 3. **Fase 0 (antrean berkas)** bisa dijalankan sebelum dokumen ini final: ia hanya butuh kesepakatan bentuk satu entri antrean, dan justru memberi bahan nyata untuk mengisi dokumen ini.
-4. Keputusan yang lahir di sini memperbarui baris **T-63** di `_meta/DAFTAR_PEKERJAAN_TERBUKA.md`; keempat keputusan (a)–(d) T-63 tetap milik pemilik sampai ia memutuskannya sendiri.
+4. Keputusan yang lahir di sini memperbarui baris **T-63** di daftar pekerjaan terbuka area master; keempat keputusan (a)–(d) T-63 tetap milik pemilik sampai ia memutuskannya sendiri.
 5. Setiap plafon yang tercatat sebagai **risiko aktif** (bagian H) wajib punya satu baris mitigasi di dokumen final — risiko yang dicatat tanpa mitigasi akan tetap jadi risiko.

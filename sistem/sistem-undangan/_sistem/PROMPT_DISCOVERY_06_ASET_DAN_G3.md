@@ -1,6 +1,6 @@
 # Spesifikasi Aset & Gerbang G3 Discovery — Prompt
 
-### Dipakai **sekali** untuk mengunci dua tingkat aset (layar vs cetak) dan aturan gerbang **G3** yang fail-closed. Berbeda dari prompt Discovery lain: **angkanya sudah terukur dan tidak untuk digali ulang** — yang digali di sini adalah **keputusan berisiko yang belum diambil** (siapa menanggung apa, apa yang terjadi saat ditolak, bagaimana gerbang ditegakkan). Hasil akhirnya mengisi `sistem/sistem-undangan/06_SPESIFIKASI_ASET_DAN_RESOLUSI.md`.
+### Dipakai **sekali** untuk mengunci dua tingkat aset (layar vs cetak) dan aturan gerbang **G3** yang fail-closed. Berbeda dari prompt Discovery lain: **angkanya sudah terukur dan tidak untuk digali ulang** — yang digali di sini adalah **keputusan berisiko yang belum diambil** (siapa menanggung apa, apa yang terjadi saat ditolak, bagaimana gerbang ditegakkan). Hasil akhirnya mengisi `06_SPESIFIKASI_ASET_DAN_RESOLUSI.md`.
 
 > **DRAF TERSTAGING** — lihat `README.md` di folder ini.
 
@@ -109,8 +109,8 @@ dengan tanggal + alasan + approval-ku, lalu commit, push, dan siapkan PR untuk a
 
 ## Setelah selesai
 
-1. Hasilnya tersimpan di `sistem/sistem-undangan/06_SPESIFIKASI_ASET_DAN_RESOLUSI.md`, sudah lewat PR dan merge ke `main`, dan **G3 dinyatakan lulus oleh pemilik**.
+1. Hasilnya tersimpan di `06_SPESIFIKASI_ASET_DAN_RESOLUSI.md`, sudah lewat PR dan merge ke `main`, dan **G3 dinyatakan lulus oleh pemilik**.
 2. Setiap angka di dalamnya **punya sumber yang tertulis di dokumen itu sendiri** — ini yang membuat angka bisa diaudit tanpa membaca riwayat diskusi, dan yang mencegah penulisan ulang dari ingatan di sesi berikutnya.
 3. `07_SPESIFIKASI_CETAK_PREPRESS.md` bisa langsung diisi sebagai template biasa (risetnya sudah lengkap di bagian C `00_RENCANA_KERANGKA.md`) — **tidak** perlu prompt Discovery.
-4. Gap skill yang disentuh dokumen ini (**upscaling raster** terisi sebagian oleh `fal-upscale`, **vectorization** belum terisi sama sekali) tetap terbuka di `_meta/DAFTAR_PEKERJAAN_TERBUKA.md` sebagai **T-06 butir 9**; pemasangan skill apa pun butuh persetujuan pemilik per butir.
+4. Gap skill yang disentuh dokumen ini (**upscaling raster** terisi sebagian oleh `fal-upscale`, **vectorization** belum terisi sama sekali) tetap terbuka di daftar pekerjaan terbuka area master sebagai **T-06 butir 9**; pemasangan skill apa pun butuh persetujuan pemilik per butir.
 5. Kalau pengukuran baru dilakukan sesudah dokumen ini terbit, hasilnya **menimpa** ringkasan di dokumen ini dan perubahannya dicatat di Log Keputusan — bukan diselipkan diam-diam.
