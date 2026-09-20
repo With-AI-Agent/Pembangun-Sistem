@@ -51,6 +51,7 @@ Kedua dokumen ini (Bank Konsistensi Visual dan Persona & Voice) TETAP terpisah s
 **Prinsip Checkpoint & Verifikasi Konsistensi.** Karena sesi kerja bisa sangat panjang, ada 2 lapis pertahanan terhadap risiko agent "melenceng" dari yang sudah disepakati:
 - **Checkpoint otomatis** — setiap kali sesi pindah dari 1 tahap besar ke tahap besar berikutnya, agent WAJIB berhenti sejenak dan meringkas ulang apa yang sudah disepakati, dengan cara membaca ulang sumber resmi (bukan mengandalkan ingatan sesi).
 - **Perintah manual "cek konsistensi"** — bisa kamu panggil kapan saja, agent akan membandingkan hasil kerja terbaru dengan sumber resmi (Channel Brief, Bank Konsistensi Visual, Persona & Voice) dan melaporkan kalau ada yang melenceng.
+- **Sync check sebelum melanjutkan setelah jeda** — setiap kali kerja dilanjutkan setelah jeda (jendela chat sama yang baru dibuka lagi, sesi baru, atau setelah menunggu approval lama di gerbang), agent WAJIB dulu membandingkan branch dengan `main` (mis. `git fetch origin`, lalu `git merge-base --is-ancestor origin/main HEAD` — exit 1 = `main` sudah lebih maju). Kalau `main` sudah maju: rebase branch ke `origin/main`, **baca ulang** dokumen yang berubah (terutama Channel Brief), asesmen dampak terhadap output yang sudah dikunci; kalau dampaknya kategori Besar → minta approval ulang bagian terdampak sesuai gerbangnya (G2/G3); catat di Log Keputusan. Kata "lanjut"/"setuju" dari pemilik adalah approval isi, **bukan pengganti** sync check ini.
 
 ---
 
@@ -211,6 +212,7 @@ Tabel ini mengikat: begitu tujuan sesi diketahui (langkah 3), agent WAJIB membac
   2. **Lanjutkan hanya dari tahap yang terbukti selesai.** Jangan mengulang tahap yang output-nya sudah ada, dan jangan melompat ke tahap yang dependency-nya belum ada.
   3. **Approval dibaca per kode gerbang.** `G1` tahap mana pun **tidak pernah** berarti `G2` atau `G3` (lihat Prinsip Approval Bertingkat di atas). Pernyataan lama seperti "sudah dikonfirmasi"/"sudah oke" **tanpa kode gerbang bukan approval** — minta gerbangnya diulang secara eksplisit.
   4. **Kalau output diklaim ada tapi tidak ditemukan: berhenti dan melapor.** Jangan membuat ulang diam-diam, jangan menebak isinya, jangan mengoreksi atau menghapus `STATUS.md` tanpa keputusan pengguna. Ini fail-closed sesuai FI-02 di _meta/FAILURE_INJECTION_TESTS.md (provenance).
+  5. **Sync check sebelum melanjutkan produksi terputus.** Kalau `main` sudah lebih maju sejak branch ini bercabang (cek: `git fetch origin` + `git merge-base --is-ancestor origin/main HEAD`), rebase dulu ke `origin/main` dan jalankan urutan sync check di Prinsip Checkpoint (baca ulang dokumen berubah → asesmen dampak → approval ulang bila kategori Besar → Log Keputusan) SEBELUM melanjutkan dari tahap yang terbukti selesai.
 
 ### Aturan Kerja Bersamaan (Obsidian ↔ Agent ↔ PR)
 
@@ -226,7 +228,7 @@ Repo ini disentuh dari beberapa arah sekaligus: kamu lewat Obsidian (dengan plug
 **Kalau konflik tetap terjadi:**
 
 - **Konflik teks di file yang sama** — jangan hapus salah satu versi supaya "cepat beres". Baca keduanya, tentukan mana yang lebih baru/benar berdasarkan Log Keputusan dan `STATUS.md`, gabungkan secara sadar, lalu catat di Log Keputusan bahwa terjadi konflik dan bagaimana diselesaikan.
-- **Dua branch mengubah Channel Brief yang sama** — merge yang lebih dulu selesai, lalu branch kedua WAJIB rebase/merge dari `main` dan **membaca ulang** brief hasil merge sebelum melanjutkan. Jangan lanjut di atas versi brief yang sudah usang.
+- **Divergensi versi dokumen di `main`** — mencakup dua branch mengubah Channel Brief yang sama ATAU dokumen (Channel Brief / Model Konten Brief / aturan) berubah di `main` lewat PR sesi lain selama branch ini bekerja/jeda: branch yang masih bekerja WAJIB rebase/merge dari `main` dan **membaca ulang** versi hasil merge SEBELUM melanjutkan; asesmen dampak + approval ulang bila kategori Besar; catat di Log Keputusan. Jangan lanjut di atas versi dokumen yang sudah usang. (Kapan wajib dicek: Prinsip Checkpoint — sync check sebelum melanjutkan setelah jeda.)
 - **Push otomatis plugin git di tengah sesi agent** — kalau agent menemukan commit baru yang bukan buatannya di branch yang sama, agent berhenti dan melapor, bukan menimpa. 
 - **PR lama masih terbuka saat sesi baru dimulai** — dilaporkan di Entry Point langkah 2. Putuskan dulu: merge, tutup, atau lanjutkan di branch itu. Jangan mulai kerja baru yang menyentuh file sama sebelum itu diputuskan.
 - **Branch keliru** — kalau ternyata kerja dilakukan di branch yang salah, jangan hapus branch atau `main`. Buat PR dari branch itu apa adanya, atau cherry-pick commit yang relevan ke branch yang benar; keputusan dicatat.
