@@ -2699,3 +2699,234 @@ lagi putaran review yang memperpanjang lingkaran ini — sesuai keputusan pemili
 **tidak** bisa dijanjikan siapa pun adalah "nol temuan selamanya": perbaikan di commit ini
 diverifikasi oleh alat dan gerbang repo, **bukan** oleh hakim independen, karena putaran 8 adalah
 putaran terakhir. Itu risiko sisa yang dinyatakan terbuka, bukan disembunyikan.
+
+---
+
+## Giliran 31 (20 Sep 2026) — pemilik mengulang rancangan website dengan detail LENGKAP, minta dikritisi dan dimaksimalkan
+
+> **Kenapa bagian ini ada.** Kritik + rekomendasi urutan atas rancangan website dinyatakan sudah
+> diserahkan di giliran 30 (sel Bukti T-63 menulis *"Kritik + rekomendasi urutan sudah diberikan agent
+> di giliran 30"*), tetapi **kritik itu hanya ada di chat** — dan chat sesi `arena/01a0ae7a` **eror total**.
+> Terukur: berkas ini berhenti di paragraf "Sikap agent terhadap *pastikan ga bakal ada masalah lagi*",
+> **tidak memuat satu baris pun kritik rancangan website**. Ini persis mode kegagalan yang membuat
+> mekanisme LOG_SESI/DISKUSI_MENTAH ada (fakta platform #3). Karena itu giliran 31 **ditulis ulang ke
+> berkas**, bukan dijawab di chat saja.
+
+### Kutipan UTUH pemilik (tanpa suntingan — ejaan, singkatan, tanda baca dipertahankan)
+
+> Aduh, verdict nya ada merah lagi merah lagi ya?. Aku capek. Ga beres-beres. Gimana sebaiknya nih? Kapan sistem nya bisa dipake klo gini terus?
+>
+> Chat aku ini agak panjang, jadi pastikan ga ada yang terlupakan sedikitpun. Semua harus terrespon.
+>
+> kamu kan udh tau bahwa sistem ini nantinya perlu semacam website yang aku akses buat mantau segala yang perlu dipantau dan mengelola semuanya. Nah, aku juga mau website itu terhubung ke github. Aku mau nanti ada beberapa macam mekanisme kerja:
+>
+> 1. Yang sebelumnya kan kamu udh tau, aku klo mau buat undangan tinggal buka sesi baru dan dan masukin satu prompt generik dan setelah itu agent bakal terus membimbing dan mengerjakan semuanya sampe selesai.
+> 2. Aku mau cara opsi 2, yaitu aku tinggal input di website. jadi di website itu ada semacam laman yang di situ aku bisa milih untuk buat undangan, kemudian ngisi semua info yang dibutuhkan, ada yang dibuat sistematis (tabel-tabel atau form yang diisi sesuai fungsinya seperti nama acara, tanggal, dan sebagainya. Dan bahkan itu selain bisa diisi manual dia bisa juga pake semacam select/pilih opsi2 yg udh tersedia), ada juga kolom buat isi hal lain-lain (misalnya ada detai yang mau aku jelasin secara manual). Dan bahkan ada juga template yang bisa dipilih. Setelah semu info itu aku masukin, aku tinggal klik semacam suatu tombol, misalnya tombol kirim ke agent. Maka itu otomatis akan masuk github. Dan setelah itu aku tinggal jalanin suatu prompt ke sesi lmarena agent, maka agent akan mengeksekusi semua yang harus dieksekusi, bahkan jika ada beberapa projek sekaligus maka agent akan melakukan sistem maraton untuk selesaikan semuanya, dan tidak berhenti kecuali setelah selesai atau ketika ada yang mengaruskan berhenti (seperti ada yang harus aku putuskan dan sebagainya). Paham kan maksud aku? Bagus ga ide aku> Dan mungkin ga itu diterapin? Tolong krtisi dan beri saran terbaik.
+> 3. Selain yang nomor 2, aku juga mau ada fitur editor seperti photoshop atau canva dan sejenisnya. Jadi di situ aku bisa ubah hal-hal yang perlu aku ubah secara manual, seperti teks, objek, dan sebagainya. Dan itu juga ditenagai dengan sambungan ke agent juga. Jadi nanti aku bisa pilih suatu objek atau bahkan beberapa objek sekaligus atau bahkan halaman, kemudian aku masukkan hal yang mau aku ubah (misalnya aku mau regenerate untuk objek png bunga nya atau mau ubah gaya teks nya dan sebagainya), kemudian aku klik semacam tombol, maka itu terkirim ke github, dan nanti aku tinggal jalanin prompt generik yang sama seperti di cara 2, maka agent akan eksekusi semuanya.
+>
+> Di website itu juga aku mau bisa atur segalanya, kelola segalanya. Bisa kan? Tolong kritisi ini semua, maksimalkan ide ini untuk bisa dieksekusi. Kamu bisa gunakan skill mu untuk kebutuhan ini jika memang ada skill yang relevan dan kamu juga bisa lakukan riset di internet jika itu dibutuhkan.
+
+**Enam permintaan di pesan itu, tidak ada yang boleh hilang:** (1) keluh lelah atas verdict merah
+berulang + pertanyaan *"gimana sebaiknya"*; (2) *"kapan sistem nya bisa dipake klo gini terus"*;
+(3) tuntutan eksplisit **tidak ada yang terlewat, semua harus terespons**; (4) mekanisme 1 (prompt
+generik — sudah ada); (5) mekanisme 2 (form → GitHub → prompt generik → maraton) + tiga pertanyaan
+langsung: *paham kan maksud aku*, *bagus ga ide aku*, *mungkin ga diterapin*; (6) mekanisme 3 (editor
+visual mirip Photoshop/Canva, pilih objek/beberapa objek/halaman → tulis perubahan → GitHub → prompt
+generik yang sama) + tuntutan "atur segalanya, kelola segalanya" + izin memakai skill dan riset internet.
+
+### A. Diagnosis "kenapa merah terus" — diukur, bukan dirasakan
+
+Angka yang bergerak selama 3 hari, semuanya ke arah **pabrik**, bukan **produk**:
+
+| Yang diadili | Sebelum (main, 17 Sep) | Sesudah (head final PR #74) |
+|---|---|---|
+| Versi meta-sistem | v1.14.0 | **v1.35.6** |
+| Skenario failure-injection | 78 | **208** |
+| Berkas wajib validator | 29 | **35** |
+| Dokumen aktif terpindai | 104 | **122** |
+| Rujukan path diperiksa | 381 | **651** |
+| Register utang | T-1…T-58 | **T-1…T-68** |
+| Putaran review PR #74 | — | **8 putaran, ~22 slot hakim** |
+| **`sistem-undangan`** | kerangka | **MASIH kerangka — 11 dokumen domain kosong, 0 undangan pernah dibuat** |
+
+Klasifikasi 6 temuan unik putaran 8 (satu-satunya putaran yang temuannya masih bisa diklasifikasi
+segar): **2 cacat kode nyata** (fail-open di alat pengumpul verdict: pin SHA tidak divalidasi; kanal
+berkas berhenti di verdict pertama), **1 kontradiksi dokumen** (petunjuk kanal penyerahan audit),
+**3 administratif** (deklarasi berkas pelindung + 2 angka basi di body PR). Komentar penutup putaran 8
+menyatakan sendiri: **"nol temuan menyentuh `sistem-undangan`"**.
+
+**Kesimpulan yang tidak enak tetapi terukur:** lingkaran review selama tiga hari ini mengadili **alat
+yang mengadili**, bukan sistem undangan. Register sudah memuat kritik ini dari tangan agent sesi itu
+sendiri (T-18): *"berhenti memperluas meta di sini dan mulai T-18 — fondasi yang tidak pernah dipakai
+membangun apa pun tidak bisa dibuktikan benar."* Itu ditulis 17 Sep dan tidak dijalankan.
+
+### B. Jawaban atas "kapan sistemnya bisa dipakai"
+
+**Tidak bergantung pada verdict hijau.** Bergantung pada 6 langkah berbatas ini (dibaca dari
+`sistem/sistem-undangan/STATUS.md` + `00_RENCANA_KERANGKA.md`, bukan dikarang):
+
+1. **PR #74 merge** → folder `sistem-undangan` resmi ada di `main`. (Teknis: sudah `mergeable_state=clean`.)
+2. **6 prompt Discovery detail** ditulis (dokumen 01, 02, 05, 06, 09, 10). Tanpa ini, isi lahir tanpa
+   penggalian — dan mengulangi persis kegagalan yang ditemukan Discovery Level-0: *risetnya tercatat
+   tetapi keputusan desainnya tidak*.
+3. **Discovery dijalankan** (diskusi dengan pemilik) → 11 dokumen domain terisi.
+4. **Kelulusan pegangan pengguna dinilai** oleh sesi independen + **uji pemakaian nyata oleh pemilik**
+   (Syarat 4 melarang penulis menilai sendiri). Ini **syarat naik Tahap**, bukan pelengkap.
+5. **`12_LOG_SESI.md` (W-02)** + **`QUALITY_ASSURANCE_AND_EVOLUTION.md` turunan (W-06)** dibuat.
+6. **SATU undangan nyata, end-to-end, disetujui pemilik.**
+
+**Butir 6 adalah definisi "bisa dipakai" yang sesungguhnya.** Bukan "0 temuan review". Undangan pertama
+yang terbit akan membuktikan atau membatalkan lebih banyak hal daripada putaran review ke-9 mana pun —
+persis alasan T-18 menulis kalimat itu.
+
+**Usulan menghentikan pendarahan (butuh keputusan pemilik, agent tidak memutuskannya sendiri):**
+- **(a) Merge PR #74 sekarang.** Gerbang hijau dan sudah direproduksi independen oleh garis sesi lain
+  (FI 208 PASSED · validate PASSED 651 rujukan 0 unresolved · selfcontained PASS · `ambil_verdict --uji`
+  58/58 · build_template PASS · backup_verify PASSED 43 berkas · check_manuals 0 kandidat).
+- **(b) BEKUKAN META.** Tidak ada perubahan `_meta/` + `tools/` sampai undangan pertama terbit, kecuali
+  cacat yang benar-benar menghalangi kerja. Ini satu-satunya cara menghentikan lingkaran: selama meta
+  boleh berubah, setiap perubahan melahirkan review, dan setiap review melahirkan temuan tentang review.
+- **(c) Ubah kebijakan review, jangan dihentikan.** Bukan 3 hakim × N putaran untuk semua hal. Cukup
+  **1 hakim, hanya diff, hanya untuk perubahan yang menyentuh gerbang/alat** — persis mitigasi murah
+  yang diusulkan komentar penutup putaran 8. Kerja domain (isi undangan) memakai gerbang yang **sudah
+  ada dan sudah terbukti**: G1/G2/G3 — 10+ unit produksi Sistem Konten Kreator terbit lewat jalur itu
+  tanpa satu pun putaran review berantai.
+- **(d) Definisi selesai diganti.** Dari "nol temuan" menjadi "satu undangan nyata terbit + pemilik bisa
+  membuat yang kedua tanpa bertanya".
+
+### C. Kritik + maksimalkan rancangan website (T-63)
+
+#### C.1 Yang BENAR dari rancangan pemilik — dan kenapa ia lebih kuat dari yang pemilik kira
+
+1. **GitHub sebagai antrean = keputusan yang tepat**, karena tiga alasan terukur di repo ini, bukan
+   selera: (i) agent **tidak punya API untuk dipicu** (fakta pengikat T12: *"lmarena agent tidak bisa
+   dipakai sebagai AI yang mentenagai website karena tidak ada API key"*), jadi antrean harus berada di
+   tempat yang bisa dibaca agent = **repo**; (ii) pembuatan **Issue terblokir 403** untuk token agent
+   (T-02, terverifikasi `gh api .../permissions` → semua izin `false`), jadi Issue **bukan** kanal yang
+   andal — dan itu sebabnya `PROTOKOL_AUDIT_ISI.md` menetapkan **Kanal A (berkas ter-commit)** sebagai
+   utama; (iii) **dua insiden platform dalam satu hari** (chat mati total; `.git` diganti clone dangkal
+   dan working tree jadi state sebagian) — antrean di chat hilang, antrean di git bertahan.
+2. **"Maraton sampai selesai atau sampai butuh keputusan pemilik" = tepat**, dan mekanismenya **sudah
+   ada**: `STATUS.md` per unit kerja dengan **kosakata deterministik** (`abandoned/approved/blocked/
+   in-progress/merged/ready-for-review`) yang dibaca parser bersama `tools/checkpoint_core.py`. Maraton
+   = loop atas folder antrean; berhenti = state `blocked`. Tidak perlu mekanisme baru.
+3. **Form sistematis + select + kolom bebas + pilihan template = tepat**, karena memetakan persis ke
+   dokumen yang sudah dirancang: `03_TEMPLATE_DATA_ACARA.md` (field terstruktur) +
+   `04_TEMPLATE_BRIEF_UNDANGAN.md` (brief) + kolom bebas = "detail lain-lain". Jadi UI-nya **bukan**
+   karangan baru; ia **wajah dari skema yang sudah ada**.
+
+#### C.2 Lima jebakan yang harus ditutup (kritik, bukan penolakan)
+
+1. **Pemilik tetap pemicunya — dan itu tidak bisa dihilangkan.** Tidak ada API key agent. Alur nyata:
+   website → GitHub → **pemilik buka sesi + tempel 1 prompt generik** → agent jalan. Jangan pernah
+   dijanjikan "otomatis penuh". **Maksimalkan yang mungkin:** website menampilkan **"prompt siap salin"**
+   per antrean + tombol salin + tautan "buka sesi baru", memakai `PROMPT_ENTRI_UNIVERSAL.md` yang sudah
+   ada. Gesekan minimum yang fisika platform izinkan = **1 klik + 1 tempel**.
+2. **"Tidak berhenti kecuali selesai" bertabrakan dengan gerbang approval pemilik sendiri.** Repo ini
+   hidup dari approval bertingkat (G1/G2/G3). Maraton yang tidak boleh berhenti akan **menebak**
+   keputusan milik pemilik — persis kelas cacat yang berkali-kali ditangkap hakim. **Solusi yang membuat
+   idemu benar-benar bisa dijalankan:** state **`blocked`** + berkas **`KEPUTUSAN_DIBUTUHKAN.md`** per
+   projek, dan website menampilkannya sebagai **KOTAK MASUK KEPUTUSAN** (badge, daftar pertanyaan, tombol
+   jawab yang menulis jawaban kembali ke antrean). Dengan itu agent **lanjut ke projek berikutnya**
+   (maraton tidak macet) **tanpa menebak** (keputusan tetap milik pemilik). Ini bagian yang paling
+   meningkatkan nilai rancangan pemilik, dan tidak ada di rancangan aslinya.
+3. **Editor visual (mekanisme 3) paling mahal, paling terakhir, paling mudah salah.** Sebab terukur:
+   **agent tidak bisa melihat layar pemilik.** "Pilih objek lalu minta ubah" hanya bisa dieksekusi kalau
+   desainnya berupa **data terstruktur dengan ID objek yang stabil** (scene JSON). Prasyaratnya: dokumen
+   03/04/06 terisi + format desain terkunci. Membangun editor sebelum model data ada = membangun UI untuk
+   skema yang belum ada. **Hasil riset (20 Sep 2026):** **Polotno SDK** = editor Canva-like siap pakai,
+   satu skema JSON untuk editor/API/renderer, import JSON/SVG/PDF/PSD, export PNG/JPEG/PDF/PPTX/GIF/MP4,
+   React-first — **tetapi SDK-nya berlisensi komersial**, bertabrakan dengan kendala pengikat pemilik
+   **nol biaya bulanan**. **Konva.js** (penulis yang sama dengan Polotno, open source, ±1 juta unduhan
+   npm/minggu) dan **Fabric.js** = gratis, tetapi **UI editor, sistem template, dan pipeline export harus
+   dibangun sendiri**. **Rekomendasi: Konva.js** — karena Polotno dibangun di atas Konva, jadi kalau kelak
+   pemilik memilih berbayar, arah migrasinya searah dan skema datanya tidak dibuang. Mulai dari
+   **penyuntingan terstruktur** (daftar objek per halaman: ubah teks, ganti gambar, atur posisi),
+   **bukan kanvas bebas** — ini persis butir (d) T-63 yang sudah tercatat.
+4. **"Atur segalanya, kelola segalanya" punya batas yang harus dinyatakan, dan satu bahaya nyata.**
+   Batasnya: website bisa **menampilkan dan mengantrekan** segalanya, tetapi **tidak bisa mengeksekusi**
+   (tidak ada API agent). Bahayanya: kalau website menyimpan datanya sendiri, pemilik punya **dua sumber
+   kebenaran** — persis penyakit yang membuat `INDEKS_SISTEM.md` basi hari ini (baris Sistem Klinik masih
+   menulis *"PR #63 menunggu merge pemilik"* padahal PR #63 **MERGED** 2026-09-16, terverifikasi API).
+   **Aturan yang harus dikunci sejak awal: repo = satu-satunya sumber kebenaran; website = jendela +
+   antrean.** Semua yang ditampilkan dibaca dari repo; **tidak ada database kedua** untuk data projek.
+   D1/KV hanya untuk yang memang bukan milik repo: **RSVP / ucapan / check-in tamu** (runtime, volume
+   tinggi, sudah dianggarkan di bagian H).
+5. **Token GitHub tidak boleh ada di browser.** Pola yang benar: **Cloudflare Pages Functions** sebagai
+   proxy (free tier 100 ribu request/hari), token disimpan sebagai **secret sisi server**, memakai
+   **fine-grained PAT** yang dibatasi ke **satu repo itu saja**, izin **Contents: read/write** (ditambah
+   Issues hanya bila perlu), masa berlaku pendek, dan **hanya boleh menulis ke jalur antrean**
+   (`_antrean/**`) — supaya kalau bocor, riwayat repo tidak bisa ditulis ulang. Skill `security-review`
+   sudah ada di daftar kandidat bagian G dan memang untuk keperluan ini. **Batas kejujuran: ini satu-satunya
+   bagian yang tidak bisa dibuat nol-risiko.** Token bocor = orang bisa menulis ke repo. Mitigasi di atas
+   **menurunkan dampak**, bukan menghapus kemungkinan.
+
+#### C.3 Bentuk akhir yang direkomendasikan — dimaksimalkan, tetap nol biaya, dan bisa dicicil
+
+| Fase | Apa | Butuh | Kapan mungkin |
+|---|---|---|---|
+| **0** | Antrean tanpa website: folder `_antrean/<tanggal>-<slug>/INTAKE.md` (field terstruktur + kolom bebas + pilihan template), ditulis pemilik atau dituliskan agent dari chat | tidak ada — murni konvensi repo | **SEKARANG, sebelum sistem matang.** Gunanya membuktikan skema intake sebelum ada UI yang harus diubah |
+| **1** | Dashboard **baca-saja**: daftar projek + status + **kotak masuk keputusan** + prompt siap salin | Cloudflare Pages statis + GitHub API read-only | segera sesudah Fase 0 dipakai 1–2 projek nyata |
+| **2** | Form → antrean (**mekanisme 2 hidup**): Pages Functions + fine-grained PAT terbatas `_antrean/**` → tulis `INTAKE.md` via Contents API | keputusan token + hosting | sesudah skema intake stabil |
+| **3** | Editor **terstruktur** (**mekanisme 3 hidup**): Konva.js, baca/tulis scene JSON per halaman, "minta perubahan" = ID objek + instruksi → antrean yang sama | dokumen 03/04/06 terisi + format desain terkunci | sesudah undangan pertama terbit |
+| **4** | Kanvas bebas + template visual + kolase | Fase 3 terbukti dipakai | terakhir, dan **hanya kalau** dibutuhkan |
+
+**Kenapa urutan ini, bukan yang lain:** Fase 0–1 bisa jalan **sebelum** `sistem-undangan` matang — bahkan
+**membantunya** matang, karena memaksa field intake jadi konkret (itulah isi dokumen 03/04). Fase 3–4
+**mustahil** sebelum model data desain terkunci. Membalik urutannya = membangun editor untuk skema yang
+belum ada, lalu menulis ulang keduanya.
+
+**Plafon yang mengikat (sudah terukur di bagian H, jangan diperkirakan ulang):** D1 free 5 juta baris
+dibaca/hari · 100 ribu ditulis/hari · 5 GB · **sejak 1 Sep 2026 melewati plafon = HARD FAIL sampai reset
+00:00 UTC**; KV 1 GB · 100 ribu operasi/hari; R2 10 GB · 1 juta operasi/bulan · **tanpa biaya egress**.
+Cloudflare dipilih karena **free tier-nya tidak tidur**, sedangkan Supabase free **pause 7 hari tanpa
+backup** — gagal syarat untuk undangan yang harus hidup sampai hari-H.
+
+### D. Pemetaan 805 skill di `Input-Pengguna/agent-skills-hub-main.zip` terhadap 9 gap T-06 (terukur)
+
+Diukur dengan `unzip -l` + pencocokan nama skill, bukan diperkirakan. **Total 805 skill** di hub itu.
+
+| Gap T-06 | Tertutup hub? | Skill yang cocok |
+|---|---|---|
+| 1. Video / Remotion | **YA** | `remotion-best-practices` |
+| 2. Prepress / PDF cetak (CMYK, bleed, PDF-X) | **SEBAGIAN** | `pdf-official`, `document-skills/pdf` — tetapi `cmyk`/`prepress`/`ghostscript` = **0 hasil** |
+| 3. Generate gambar / aset | **YA** | `generate-image`, `imagen`, `fal-image-edit` |
+| 4. QR code | **TIDAK** | satu-satunya kecocokan `cqrs-implementation` = **positif palsu** (bukan QR code) |
+| 5. Font management / subsetting `.woff2` | **TIDAK** | `font` = **0 hasil** |
+| 6. WhatsApp | **YA** | `automate-whatsapp`, `observe-whatsapp` |
+| 7. Pembayaran / amplop digital | **YA** | `payment-integration`, `stripe-integration` |
+| 8. i18n / bahasa daerah + kaligrafi Islami | **SEBAGIAN** | `i18n-localization` — **tidak ada** kaligrafi/bahasa daerah |
+| 9. Upscaling raster & vectorization | **SEBAGIAN** | `fal-upscale` (upscaling) — `svg`/vectorization = **0 hasil** |
+
+**Ringkas: 4 gap tertutup penuh (1, 3, 6, 7), 3 sebagian (2, 8, 9), 2 tidak sama sekali (4, 5).**
+
+**Temuan yang lebih penting daripada tabel di atas:** kata `cloudflare` dan `wrangler` menghasilkan
+**0 skill** di hub berisi 805 skill itu — padahal **arsitektur yang sudah diputuskan adalah Cloudflare**
+Pages/Workers/D1/KV/R2 (bagian H). Jadi hub ini **tidak menutup gap infrastruktur** yang justru paling
+dibutuhkan T-63. Yang relevan untuk T-63 dari hub: `github-workflow-automation`, `address-github-comments`,
+`kpi-dashboard-design`, `nextjs-app-router-patterns`, `vercel-deployment`, `canvas-design`.
+
+**Catatan aturan yang mengikat (T-06, dikunci 17 Sep 2026):** cara pasang = git clone + salin folder
+skill + **vendor project-scoped** ke dalam repo, dengan **4 aturan keamanan wajib** — baca `SKILL.md` +
+semua skrip SEBELUM di-commit · catat provenance (repo sumber + **sha commit** + tanggal + lisensi) ·
+tolak skill yang meminta data sensitif atau memanggil API eksternal (semuanya terblokir di lingkungan
+agent) · **skill yang gagal diuji tidak boleh dinyatakan terpasang**. Dan: **tidak ada yang dipasang
+diam-diam** — tiap butir butuh persetujuan pemilik. Bagian ini **belum** mengeksekusi pemasangan apa pun;
+ia hanya memetakan.
+
+### E. Yang masih butuh keputusan pemilik (tidak diputuskan agent)
+
+1. **Merge PR #74 atau tidak** — dan kalau ya, apakah pakai satu hakim tunggal atas diff penutup
+   `0319ed2…3ea796a` dulu (mitigasi murah yang diusulkan komentar penutup putaran 8), atau langsung merge.
+2. **Bekukan meta atau tidak** (usul B(b)) — ini keputusan kebijakan, bukan teknis.
+3. **T-63(a)** merge PR #74 → sama dengan butir 1.
+4. **T-63(b)** bentuk lapisan antrean → **rekomendasi agent: berkas kerja di repo** (`_antrean/`), bukan
+   Issue (403 terukur) dan bukan API (tidak ada pemicu agent).
+5. **T-63(c)** hosting + domain + tempat token → **rekomendasi agent: Cloudflare Pages + Pages Functions,
+   subdomain gratis dulu (keputusan lama pemilik), token = fine-grained PAT sebagai secret server-side
+   yang hanya boleh menulis `_antrean/**`.**
+6. **T-63(d)** editor visual paling akhir, mulai dari penyuntingan terstruktur → **sudah sesuai rancangan
+   pemilik; agent menambahkan alasannya (agent tidak bisa melihat layar) dan pilihan pustakanya (Konva.js,
+   bukan Polotno SDK yang berlisensi komersial).**
+7. **Pemasangan skill** — 4 gap tertutup penuh oleh hub; tiap butir tetap butuh persetujuan pemilik
+   per aturan T-06, dan **belum ada yang dipasang**.
