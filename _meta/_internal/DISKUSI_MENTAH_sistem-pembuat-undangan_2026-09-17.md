@@ -2930,3 +2930,65 @@ ia hanya memetakan.
    bukan Polotno SDK yang berlisensi komersial).**
 7. **Pemasangan skill** — 4 gap tertutup penuh oleh hub; tiap butir tetap butuh persetujuan pemilik
    per aturan T-06, dan **belum ada yang dipasang**.
+
+### Keputusan giliran 31 — jawaban pemilik lewat kotak pilihan, dan dua putusan yang didelegasikan ke agent
+
+Empat pertanyaan diajukan lewat kotak pilihan (bukan diketik pemilik), jawabannya:
+
+| Pertanyaan | Jawaban pemilik |
+|---|---|
+| PR #74 mau diapakan? | **"Merge sekarang"** |
+| Bekukan meta sampai undangan pertama terbit? | **"Aku ikut yang menurutmu terbaik"** (delegasi) |
+| Kerja apa yang paling berguna sekarang? | **"Aku ikut yang menurutmu terbaik"** (delegasi) |
+| Apakah 10 ZIP skill di `Input-Pengguna/` memang untuk T-06? | **"Aku blm sempet cek"** |
+
+**Putusan agent atas delegasi (2) — META DIBEKUKAN + kebijakan review diubah.** Tidak ada perubahan
+`_meta/` + `tools/` sampai undangan pertama terbit, kecuali cacat yang benar-benar menghalangi kerja.
+Review diubah dari 3 hakim × N putaran menjadi **1 hakim, hanya diff, hanya untuk perubahan yang
+menyentuh gerbang/alat**; kerja domain memakai G1/G2/G3 yang sudah terbukti. **Alasan terukur:** dari 6
+temuan unik putaran 8 hanya **2 cacat kode nyata**, sisanya dokumen/administratif, dan komentar penutup
+putaran 8 menyatakan sendiri **nol temuan menyentuh `sistem-undangan`** — tiga hari review mengadili
+**alat yang mengadili**. **Batas freeze dinyatakan eksplisit** supaya aturan ini tidak membantah dirinya
+sendiri: yang beku adalah **mesin level repo** (`_meta/` + `tools/`); **catatan keputusan, log sesi,
+ledger, dan register DIKECUALIKAN** (itu jejak audit, bukan mesin); **validator milik sistem**
+(`sistem/sistem-undangan/_sistem/`) **tidak ikut beku**, karena T-69 justru mensyaratkan ia berubah
+bersamaan dengan isi.
+
+**Putusan agent atas delegasi (3) — jalankan langkah 6 rencana kerangka: tulis 6 prompt Discovery
+detail.** Dipilih karena ini satu-satunya langkah yang membuka T-18 **tanpa membutuhkan masukan pemilik
+lebih dulu**, dan karena `00_RENCANA_KERANGKA.md` bagian 11 langkah 6 mengunci *"tulis 6 prompt
+Discovery detail (bagian 7) — **bukan** langsung menulis isi sistemnya"*. Keenam dokumen generator itu
+teridentifikasi dari kolom "Cara diisi" masing-masing kerangka: **01, 02, 05, 06** (generator) + **09,
+10** (generator lintas). Lima dokumen lain tidak butuh prompt: `03`, `04`, `11` cukup template biasa;
+`07` cukup template (risetnya sudah lengkap di bagian C); `08` cukup template + **1 keputusan pemilik**
+(lisensi Remotion).
+
+**Kenapa ditulis TERSTAGING, bukan langsung di folder sistem:** langkah 6 berbunyi *"**Sesudah merge**"*,
+dan PR #74 **masih OPEN** saat draf ditulis. Keputusan yang sudah tercatat: T-18 dijalankan sesudah merge
+supaya hanya **satu garis** yang menyentuh folder itu. Jadi drafnya ditaruh di
+`_meta/_internal/draft-prompt-discovery-undangan/` (README + 6 berkas), mengikuti **preseden yang sudah
+ada di repo ini** — Log Keputusan `00_RENCANA_KERANGKA.md` 2026-09-17: *"Draft ini ditulis di
+`_meta/_internal/`, bukan di folder sistem … Preseden: keputusan yang sama untuk DISKUSI_MENTAH."*
+Pemindahannya dicatat sebagai **T-70**; bentuk tiap prompt mengikuti
+`sistem/sistem-konten-kreator/_sistem/02_CHANNEL_DISCOVERY_PROMPT.md` persis.
+
+**Jebakan yang ditemukan saat menyiapkan draf, dan belum tercatat di mana pun sebelumnya (T-69):**
+`sistem/sistem-undangan/_sistem/validate_system.py` menuntut tiap dokumen kerangka memuat kata `KERANGKA`
+dan bagian `Log Keputusan` (alasan alatnya: anti-"kerangka yang menyamar jadi dokumen jadi"), sedangkan
+banner `STATUS: KERANGKA — BELUM ADA ISI` **wajib dicabut** saat dokumen diisi supaya dokumen tidak
+membantah dirinya sendiri. **Akibatnya: mengisi dokumen kerangka pertama akan memerahkan validator sistem
+itu sendiri.** Docstring alatnya sudah mengantisipasi (*"Cakupan ini wajib diperluas saat Tahap naik ke
+`siap-pakai`"*), jadi ini perilaku yang dijanjikan, bukan kerusakan — tetapi kalau tidak dicatat,
+pengisian pertama akan dikira kegagalan. Pengisian dokumen pertama **wajib satu commit** dengan: (a)
+perluasan cakupan validator, (b) `SYSTEM_MANIFEST.md` (Tahap/Versi), (c) `STATUS.md`.
+
+**(1) Merge PR #74 TIDAK dilakukan agent.** PR ini menyentuh alat pengadil, jadi hanya pemilik yang boleh
+menekan tombolnya (keputusan pemilik yang tercatat, bukan kebijakan agent). Keadaan terukur saat jawaban
+datang: `state=OPEN`, `mergeable=MERGEABLE`, `mergeable_state=CLEAN`, head `3ea796a`, `mergedAt=null`.
+Tautan merge diserahkan ke pemilik.
+
+**(4) Skill: tidak ada yang dipasang dan tidak ada yang disentuh.** T-06 mensyaratkan persetujuan pemilik
+**per butir** + baca `SKILL.md` dan semua skrip sebelum commit + provenance/sha/lisensi, dan pemilik
+menjawab belum sempat memeriksa. Pemetaan 805 skill di bagian D di atas tetap tersedia untuk diputuskan
+nanti; temuan **0 skill `cloudflare`/`wrangler`** di hub itu tetap berlaku dan tetap penting, karena stack
+yang diputuskan adalah Cloudflare.
