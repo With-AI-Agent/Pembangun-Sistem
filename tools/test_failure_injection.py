@@ -183,6 +183,7 @@ def regression_scenarios(base_dir: Path):
             ignore=shutil.ignore_patterns(
                 ".git", "backups", "template_clean", "template_clean.zip"),
         )
+        segarkan_cap_log_salinan(cp)   # landasan sah: lihat docstring fungsi
         idx = cp / "_meta" / "INDEKS_SISTEM.md"
         idx_backup = idx.read_text(encoding="utf-8")
 
@@ -328,9 +329,12 @@ def segarkan_cap_log_sintetis(log_path: Path, root: Path) -> bool:
     salah, melainkan karena log sintetis yang dibangun harness sendiri tidak sah. Terukur 20 Sep 2026 pada
     merge PR #74 ke `main` `a2efcae`: cap menulis FI 199, dokumen hidup sudah 200.
 
-    Cap log `OPEN` sungguhan TIDAK PERNAH disentuh fungsi ini: menyegarkannya akan menyembunyikan kebasiannya,
-    padahal kebasiannya justru yang harus ditangkap penjaga. Tanggal dan sha cap dibiarkan apa adanya — di
-    salinan belum ada `.git` pada tahap ini, jadi bagian sha tidak diperiksa, dan tanggal lama masih sah.
+    Pembagian tanggung jawab (dipertegas v1.35.6): di POHON NYATA cap log `OPEN` tidak pernah disentuh —
+    kebasiannya di sana justru yang harus ditangkap penjaga, dan ``validate_repo.py`` memang menolaknya.
+    Di SALINAN percobaan, seluruh log OPEN disegarkan oleh ``segarkan_cap_log_salinan`` segera sesudah
+    ``copytree``, supaya mutasi yang diuji tidak tenggelam oleh sebab lain (lihat docstring fungsi itu).
+    Tanggal dan sha cap dibiarkan apa adanya — di salinan belum ada `.git` pada tahap ini, jadi bagian sha
+    tidak diperiksa, dan tanggal lama masih sah.
     """
     teks = log_path.read_text(encoding="utf-8")
     m = re.search(POLA_SEGAR_PADA, teks, re.M)
@@ -380,6 +384,34 @@ def pilih_log_untuk_uji_kesegaran(log_dir: Path, root: Path = None):
     if root is not None:
         segarkan_cap_log_sintetis(f, root)
     return [f], True
+
+
+def segarkan_cap_log_salinan(root: Path) -> int:
+    """Segarkan cap KEPALA di SEMUA log OPEN milik sebuah SALINAN percobaan.
+
+    Dipanggil segera sesudah ``shutil.copytree`` (dan sesudah mutasi dokumen yang disengaja, tepat sebelum
+    pengukuran) — BUKAN di pohon nyata. Alasannya terukur, bukan teoritis: pada pohon gabungan hasil merge
+    PR #74 ke `main` `a2efcae`, dokumen inventaris FI bertambah satu unit nyata karena `main` menambahkannya,
+    sementara cap di log OPEN tetap angka cabang. Penjaga kesegaran bagian (b) lalu menolak SEMUA mutasi, dan
+    14 skenario (RP22a-h, RP23a/d/f, TI1/5/6) gagal karena sebab di luar yang diuji. Uji yang gagal karena
+    sebab lain tidak membuktikan apa pun: ia bisa menutupi kegagalan sesungguhnya maupun memberi lolos palsu.
+
+    Fungsi ini TIDAK melonggarkan penjaga. Pohon nyata tetap dinilai apa adanya oleh ``validate_repo.py`` —
+    cap yang benar-benar basi di sana tetap ditolak, dan itu benar; justru itulah yang dikunci RP22a/RP22c
+    dan RP25a. Yang diselaraskan hanyalah salinan tempat mutasi diuji, supaya sebab kegagalan terisolasi pada
+    mutasinya sendiri. Prinsipnya sama dengan penyelarasan versi manifest yang sudah lebih dulu ada di
+    ``versi_status`` (v1.34.0); di sini digeneralisasi ke seluruh isi cap dan ke semua log OPEN sekaligus.
+
+    Return: banyaknya log OPEN yang capnya disegarkan (0 bila tidak ada, mis. semua sesi sudah CLOSED).
+    """
+    n = 0
+    for f in sorted((root / "_log-sesi").glob("LOG_SESI_*.md")):
+        t = f.read_text(encoding="utf-8")
+        if not re.search(r"^- \*\*Keadaan:\*\*\s*`?OPEN`?", t, re.M):
+            continue
+        if segarkan_cap_log_sintetis(f, root):
+            n += 1
+    return n
 
 
 def klaim_total(baris: str) -> int:
@@ -563,6 +595,7 @@ def review_prompt_scenarios(base_dir: Path):
             ".git", "backups", "template_clean", "template_clean.zip",
             "__pycache__", "dist"),
     )
+    segarkan_cap_log_salinan(cp)   # landasan sah: lihat docstring fungsi
     rp = _load_review_prompt(cp, "review_prompt_regression")
 
     fake_pr = {
@@ -1990,6 +2023,56 @@ def review_prompt_scenarios(base_dir: Path):
 
     f22.write_text(asli22, encoding="utf-8")
 
+    # ------------------------------------------------------------------
+    # RP25 (v1.35.6) - normalisasi cap log SALINAN adalah PRASYARAT, bukan pelonggaran penjaga.
+    # Sebabnya terukur pada pohon gabungan uji coba merge PR #74 (dua resolusi, `main` `a2efcae`):
+    # dokumen FI gabungan mencetak satu unit nyata lebih banyak daripada cap log OPEN cabang, jadi
+    # penjaga bagian (b) menolak segalanya dan 14 skenario gagal karena sebab di luar yang diuji.
+    # Dikunci dua arah supaya perbaikannya tidak bisa dipakai menyelundupkan pelonggaran:
+    #   (a) salinan TANPA normalisasi  -> validator MENOLAK (kondisinya nyata, bukan karangan);
+    #   (b) salinan DENGAN normalisasi -> validator LULUS  (mutasi terisolasi pada sebabnya sendiri).
+    # Dipakai salinan + log sintetis milik sendiri supaya hasilnya identik di pohon cabang maupun
+    # di pohon gabungan, dan supaya tidak menyentuh keadaan skenario lain di fungsi ini.
+    with TemporaryDirectory(dir=str(base_dir)) as _d25:
+        _cp25 = Path(_d25) / "repo"
+        shutil.copytree(ROOT, _cp25, ignore=shutil.ignore_patterns(
+            ".git", "backups", "template_clean", "template_clean.zip", "__pycache__", "dist"))
+        _lg25 = _cp25 / "_log-sesi/LOG_SESI_2026-01-01_rp25.md"
+        _lg25.write_text(
+            "# LOG RP25 (sintetis, hanya ada di salinan sementara)\n\n"
+            "## Keadaan Sesi\n\n"
+            "- **Keadaan:** `OPEN`\n"
+            "- **Segar pada:** 2026-01-01 · FI 1 · manifest v0.0.1 · head terukur `0000000`\n",
+            encoding="utf-8")
+        _doc25 = _cp25 / "_meta/FAILURE_INJECTION_TESTS.md"
+        _t25 = _doc25.read_text(encoding="utf-8")
+        _m25 = re.search(r"^\*\*Jumlah:\*\*\s*(\d+)\s*skenario di master", _t25, re.M)
+        if _m25 is None:
+            checks.append(("RP25 TIDAK BISA DIUJI: baris `**Jumlah:**` tidak ditemukan di dokumen FI "
+                           "- fail-closed, dinyatakan GAGAL, bukan dilewati diam-diam", False))
+        else:
+            _n25 = int(_m25.group(1))
+            _doc25.write_text(_t25.replace(f"**Jumlah:** {_n25} skenario",
+                                           f"**Jumlah:** {_n25 + 1} skenario", 1), encoding="utf-8")
+            assert f"**Jumlah:** {_n25 + 1} skenario" in _doc25.read_text(encoding="utf-8"), \
+                "mutasi RP25 tidak menempel - uji tidak valid"
+            _rc25a, _out25a = run_tool_out(_cp25, "tools/validate_repo.py")
+            checks.append((
+                f"RP25a diuji-mutasi: dokumen FI naik {_n25} -> {_n25 + 1} di salinan yang capnya TIDAK "
+                "dinormalisasi -> validator MENOLAK (bukti kondisi nyata pohon gabungan; normalisasi "
+                "bukan penyelundupan pelonggaran)",
+                _rc25a != 0 and "header BASI" in _out25a,
+            ))
+            _nseg25 = segarkan_cap_log_salinan(_cp25)
+            _cap25b = re.search(POLA_SEGAR_PADA, _lg25.read_text(encoding="utf-8"), re.M)
+            _rc25b, _out25b = run_tool_out(_cp25, "tools/validate_repo.py")
+            checks.append((
+                "RP25b dipulihkan: segarkan_cap_log_salinan menaikkan cap SEMUA log OPEN di salinan "
+                f"({_nseg25} log) -> validator LULUS, mutasi terisolasi pada sebabnya sendiri",
+                _rc25b == 0 and _nseg25 >= 1 and _cap25b is not None
+                and int(_cap25b.group(2)) == _n25 + 1,
+            ))
+
     return checks
 
 
@@ -2048,6 +2131,7 @@ def check_selfcontained_scenarios(base_dir: Path):
             ".git", "backups", "template_clean", "template_clean.zip",
             "__pycache__", "dist"),
     )
+    segarkan_cap_log_salinan(cp)   # landasan sah: lihat docstring fungsi
     tool_path = cp / "tools" / "check_selfcontained.py"
     original = tool_path.read_text(encoding="utf-8")
 
@@ -2387,6 +2471,7 @@ def table_integrity_scenarios(base_dir: Path):
         ignore=shutil.ignore_patterns(
             ".git", "backups", "template_clean", "template_clean.zip", "__pycache__", "dist"),
     )
+    segarkan_cap_log_salinan(cp)   # landasan sah: lihat docstring fungsi
 
     # TI1 - KONTROL POSITIF: pohon bersih harus LOLOS. Tanpa uji ini empat uji berikutnya bisa
     # "lolos" karena validatornya memang selalu gagal (tautologi) - pelajaran yang sudah tercatat.
@@ -2608,6 +2693,7 @@ def run():
         with TemporaryDirectory() as d:
             cp = Path(d) / "repo"
             shutil.copytree(ROOT, cp, ignore=shutil.ignore_patterns(".git"))
+            segarkan_cap_log_salinan(cp)   # landasan sah: lihat docstring fungsi
             mp = cp / "_meta/SYSTEM_MANIFEST.md"
             mt = mp.read_text(encoding="utf-8")
             old = "verdict PASS 0-warning; angka stabil tetap"
@@ -2652,6 +2738,10 @@ def run():
                         r"(^- \*\*Segar pada:\*\* \d{4}-\d{2}-\d{2} \u00b7 FI \d+ "
                         r"\u00b7 manifest v)\d+\.\d+\.\d+",
                         lambda mo: mo.group(1) + _v, _t, flags=re.M), encoding="utf-8")
+            # Penyelarasan di atas hanya mencakup versi manifest; angka FI di salinan bisa basi karena
+            # sebab lain (mis. pohon gabungan hasil merge). Segarkan seluruh cap tepat sebelum pengukuran
+            # supaya sebab kegagalan tetap terisolasi pada mutasi Status/Versi yang sedang diuji.
+            segarkan_cap_log_salinan(cp)
             r = subprocess.run([sys.executable, "tools/validate_repo.py"], cwd=cp,
                                capture_output=True, text=True)
             return r.returncode, r.stdout
