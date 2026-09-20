@@ -8,11 +8,11 @@
 - **Tujuan utama:** mengubah **info acara + identitas pemilik** menjadi undangan **multi-format** (laman web, video, flyer, siap cetak) yang **konsisten dari satu sumber data**, sampai **terbit dan diserahkan ke client** — dipandu agent supaya pemilik yang tidak punya latar coding tidak perlu memikirkan hal teknis.
 - **Pengguna/consumer:** pemilik repo (operator, **tidak punya basic coding**) + **client** penerima akhir undangan (tamu melihat hasilnya).
 - **Pemilik keputusan:** pemilik repo.
-- **Versi:** `0.2.0`
-- **Tahap:** kerangka — ubah ke `siap-pakai` saat sistem siap dipakai (cek W-01/W-02/W-03 kembali ketat; lihat `03_KONTRAK_WARISAN.md` bagian "Tahap pembangunan")
-- **Status:** `Proposed`
+- **Versi:** `0.3.0`
+- **Tahap:** `draft` — `01_IDENTITAS_PEMILIK.md` terisi (Discovery 01, 20 Sep 2026; **G0 menunggu review isi lengkap pemilik di PR — tanpa auto-merge**); ubah ke `siap-pakai` saat sistem siap dipakai (cek W-01/W-02/W-03 kembali ketat; lihat `03_KONTRAK_WARISAN.md` bagian "Tahap pembangunan")
+- **Status:** `Draft`
 - **Tanggal dibuat:** 2026-09-17
-- **Audit terakhir:** belum ada — sistem masih `Tahap: kerangka`, belum ada isi untuk diaudit
+- **Audit terakhir:** belum ada — isi pertama (`01_IDENTITAS_PEMILIK.md`) baru terisi 20 Sep 2026 dan **menunggu review isi lengkap pemilik (G0)**; audit independen berikutnya: sesudah G0
 - **Quality protocol:** **BELUM DIBUAT** di tahap kerangka. Direncanakan sebagai `QUALITY_ASSURANCE_AND_EVOLUTION.md` DI DALAM folder sistem ini (butir W-06 — wajib self-contained). Rujukan ke _meta/QUALITY_ASSURANCE_AND_EVOLUTION.md hanyalah provenance (asal aturan), BUKAN aturan aktif (sistem harus tetap berfungsi penuh saat foldernya diunduh jadi repo sendiri — lihat `03_KONTRAK_WARISAN.md`)
 
 ## Bentuk Sistem
@@ -26,7 +26,7 @@
 ## Dokumen Navigasi
 
 - **Entry point:** `PROMPT_ENTRI_UNIVERSAL.md` (W-01) — **sudah dibuat 18 Sep 2026**, jadi entry point tidak lagi sementara. Untuk memakai sistem: tempel blok prompt di berkas itu. Untuk memahami rancangan sistem: `00_RENCANA_KERANGKA.md` + `STATUS.md`. Untuk pegangan lengkap: `PANDUAN_PENGGUNA.md`
-- **Dokumen instruksi aktif:** **belum ada** — di tahap kerangka semua dokumen masih berupa kerangka
+- **Dokumen instruksi aktif:** `01_IDENTITAS_PEMILIK.md` (**isi — draft G0**, 20 Sep 2026); 10 dokumen domain lainnya masih kerangka
 - **Living documents:** `01_IDENTITAS_PEMILIK.md`, `02_PROFIL_JENIS_ACARA.md`, `03_TEMPLATE_DATA_ACARA.md`, `06_SPESIFIKASI_ASET_DAN_RESOLUSI.md`, `10_ARSITEKTUR_WEBSITE_INDUK.md`
 - **Log keputusan:** bagian **"Log Keputusan"** di `00_RENCANA_KERANGKA.md` (W-05)
 - **Ringkasan cadangan:** **belum ada** — W-09 dikerjakan saat sistem mendekati `siap-pakai`
@@ -88,7 +88,7 @@ Status butir `03_KONTRAK_WARISAN.md` untuk sistem ini — disalin dari bagian "W
 
 ## Acceptance
 
-- [ ] Semua dokumen wajib tersedia — **belum: tahap kerangka, 11 dokumen masih berupa kerangka**
+- [ ] Semua dokumen wajib tersedia — **belum: 10 dokumen masih kerangka + 1 terisi (01, draft G0)**
 - [ ] Semua dependency valid — **sebagian: dependency penerbitan belum diuji dari lingkungan ini**
 - [x] Status dan versi sudah diperbarui
 - [x] Approval yang diperlukan sudah ada — **konfirmasi final pemilik 17 Sep 2026 untuk rencana kerangka (kategori BESAR)**
