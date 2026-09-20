@@ -8,11 +8,11 @@
 - **Tujuan utama:** mengubah **info acara + identitas pemilik** menjadi undangan **multi-format** (laman web, video, flyer, siap cetak) yang **konsisten dari satu sumber data**, sampai **terbit dan diserahkan ke client** — dipandu agent supaya pemilik yang tidak punya latar coding tidak perlu memikirkan hal teknis.
 - **Pengguna/consumer:** pemilik repo (operator, **tidak punya basic coding**) + **client** penerima akhir undangan (tamu melihat hasilnya).
 - **Pemilik keputusan:** pemilik repo.
-- **Versi:** `0.4.0`
-- **Tahap:** `draft` — `01_IDENTITAS_PEMILIK.md` terisi (**G0 LULUS** 20 Sep 2026, dinyatakan pemilik) + `02_PROFIL_JENIS_ACARA.md` terisi jenis acara pertama: pernikahan (Discovery 02, 20 Sep 2026; **G1 menunggu review isi lengkap pemilik di PR — tanpa auto-merge**); ubah ke `siap-pakai` saat sistem siap dipakai (cek W-01/W-02/W-03 kembali ketat; lihat `03_KONTRAK_WARISAN.md` bagian "Tahap pembangunan")
+- **Versi:** `0.5.0`
+- **Tahap:** `draft` — `01_IDENTITAS_PEMILIK.md` terisi (**G0 LULUS** 20 Sep 2026, dinyatakan pemilik) + `02_PROFIL_JENIS_ACARA.md` terisi jenis acara pertama: pernikahan (**G1 LULUS 20 Sep 2026 — putusan pemilik via merge PR #88 `f60e950`, 16:48 UTC**) + `03_TEMPLATE_DATA_ACARA.md` terisi (**roadmap b1, template biasa — penurunan dari field L2 pernikahan; draft menunggu review isi PR — tanpa auto-merge**); ubah ke `siap-pakai` saat sistem siap dipakai (cek W-01/W-02/W-03 kembali ketat; lihat `03_KONTRAK_WARISAN.md` bagian "Tahap pembangunan")
 - **Status:** `Draft`
 - **Tanggal dibuat:** 2026-09-17
-- **Audit terakhir:** belum ada — **G0 LULUS 20 Sep 2026** (review isi lengkap oleh pemilik + PR #86 merged, `36c63d4`); **G1 (isi L2 pernikahan) LULUS 20 Sep 2026 — putusan pemilik via merge PR #88 (`f60e950`, 16:48 UTC)**; sifat putusan direkam jujur di log sesi slot 43 (dasar = approval butir-per-butir di chat, tanpa review dalam tersendiri; audit independen pasca-merge tersedia atas permintaan pemilik); benturan klasifikasi G1 (prompt 02 BESAR vs manifest Kecil vs rencana kerangka bagian 4 gerbang produksi-Sedang) **diputus pemilik: dibiarkan pada keadaan tercatat** — tidak memblokir, bisa dibuka lewat Log Keputusan dokumen 02; audit independen isi L1: terbuka atas permintaan pemilik; kelulusan pegangan W-01 menunggu jalur audit-nya sendiri (Syarat 4)
+- **Audit terakhir:** belum ada — **G0 LULUS 20 Sep 2026** (review isi lengkap oleh pemilik + PR #86 merged, `36c63d4`); **G1 (isi L2 pernikahan) LULUS 20 Sep 2026 — putusan pemilik via merge PR #88 (`f60e950`, 16:48 UTC)**; sifat putusan direkam jujur di log sesi slot 43 (dasar = approval butir-per-butir di chat, tanpa review dalam tersendiri; audit independen pasca-merge tersedia atas permintaan pemilik); benturan klasifikasi G1 (prompt 02 BESAR vs manifest Kecil vs rencana kerangka bagian 4 gerbang produksi-Sedang) **diputus pemilik: dibiarkan pada keadaan tercatat** — tidak memblokir, bisa dibuka lewat Log Keputusan dokumen 02; **03_TEMPLATE_DATA_ACARA.md terisi 20 Sep 2026 (UTC) — roadmap b1 (template biasa, tanpa keputusan baru pemilik; draft menunggu review isi PR)**; audit independen isi L1: terbuka atas permintaan pemilik; kelulusan pegangan W-01 menunggu jalur audit-nya sendiri (Syarat 4)
 - **Quality protocol:** **BELUM DIBUAT** di tahap kerangka. Direncanakan sebagai `QUALITY_ASSURANCE_AND_EVOLUTION.md` DI DALAM folder sistem ini (butir W-06 — wajib self-contained). Rujukan ke _meta/QUALITY_ASSURANCE_AND_EVOLUTION.md hanyalah provenance (asal aturan), BUKAN aturan aktif (sistem harus tetap berfungsi penuh saat foldernya diunduh jadi repo sendiri — lihat `03_KONTRAK_WARISAN.md`)
 
 ## Bentuk Sistem
@@ -26,7 +26,7 @@
 ## Dokumen Navigasi
 
 - **Entry point:** `PROMPT_ENTRI_UNIVERSAL.md` (W-01) — **sudah dibuat 18 Sep 2026**, jadi entry point tidak lagi sementara. Untuk memakai sistem: tempel blok prompt di berkas itu. Untuk memahami rancangan sistem: `00_RENCANA_KERANGKA.md` + `STATUS.md`. Untuk pegangan lengkap: `PANDUAN_PENGGUNA.md`
-- **Dokumen instruksi aktif:** `01_IDENTITAS_PEMILIK.md` (**isi — G0 LULUS**, 20 Sep 2026); `02_PROFIL_JENIS_ACARA.md` (**isi — draft G1**, jenis acara pertama: pernikahan, 20 Sep 2026); 9 dokumen domain lainnya masih kerangka
+- **Dokumen instruksi aktif:** `01_IDENTITAS_PEMILIK.md` (**isi — G0 LULUS**, 20 Sep 2026); `02_PROFIL_JENIS_ACARA.md` (**isi — G1 LULUS**, jenis acara pertama: pernikahan, 20 Sep 2026); `03_TEMPLATE_DATA_ACARA.md` (**isi — draft roadmap b1**, template biasa, 20 Sep 2026 (UTC)); 8 dokumen domain lainnya masih kerangka
 - **Living documents:** `01_IDENTITAS_PEMILIK.md`, `02_PROFIL_JENIS_ACARA.md`, `03_TEMPLATE_DATA_ACARA.md`, `06_SPESIFIKASI_ASET_DAN_RESOLUSI.md`, `10_ARSITEKTUR_WEBSITE_INDUK.md`
 - **Log keputusan:** bagian **"Log Keputusan"** di `00_RENCANA_KERANGKA.md` (W-05)
 - **Ringkasan cadangan:** **belum ada** — W-09 dikerjakan saat sistem mendekati `siap-pakai`
@@ -88,7 +88,7 @@ Status butir `03_KONTRAK_WARISAN.md` untuk sistem ini — disalin dari bagian "W
 
 ## Acceptance
 
-- [ ] Semua dokumen wajib tersedia — **belum: 9 dokumen masih kerangka + 2 terisi (01 — G0 lulus; 02 — draft G1, jenis acara pernikahan)**
+- [ ] Semua dokumen wajib tersedia — **belum: 8 dokumen masih kerangka + 3 terisi (01 — G0 LULUS; 02 — G1 LULUS, jenis acara pernikahan; 03 — draft roadmap b1, menunggu review isi PR)**
 - [ ] Semua dependency valid — **sebagian: dependency penerbitan belum diuji dari lingkungan ini**
 - [x] Status dan versi sudah diperbarui
 - [x] Approval yang diperlukan sudah ada — **konfirmasi final pemilik 17 Sep 2026 untuk rencana kerangka (kategori BESAR)**
