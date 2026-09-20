@@ -32,16 +32,20 @@ BANNER_KERANGKA = "STATUS: KERANGKA — BELUM ADA ISI"
 
 # (T-69) daftar menyusut: 01_IDENTITAS_PEMILIK.md pindah ke DOC_ISI (diisi 2026-09-20, Discovery 01).
 # (mekanika prompt 02) 2026-09-20: 02_PROFIL_JENIS_ACARA.md pindah ke DOC_ISI (diisi, Discovery 02 —
-# jenis acara pertama: pernikahan). Daftar ini WAJIB menyusut lagi setiap pengisian dokumen berikutnya.
+# jenis acara pertama: pernikahan).
+# (ROADMAP b1) 2026-09-20: 03_TEMPLATE_DATA_ACARA.md + 04_TEMPLATE_BRIEF_UNDANGAN.md pindah ke
+# DOC_ISI (diisi sebagai template biasa, roadmap b1 — penurunan dari field L2 pernikahan; tanpa
+# keputusan baru pemilik).
+# Daftar ini WAJIB menyusut lagi setiap pengisian dokumen berikutnya.
 DOC_KERANGKA = [
-    "03_TEMPLATE_DATA_ACARA.md", "04_TEMPLATE_BRIEF_UNDANGAN.md",
     "05_DISCOVERY_DESAIN_PROMPT.md", "06_SPESIFIKASI_ASET_DAN_RESOLUSI.md",
     "07_SPESIFIKASI_CETAK_PREPRESS.md", "08_PIPELINE_VIDEO.md", "09_PANDUAN_PUBLISH_DAN_SERAH_TERIMA.md",
     "10_ARSITEKTUR_WEBSITE_INDUK.md", "11_AMPLOP_DIGITAL.md",
 ]
 
 # (T-69) dokumen yang sudah terisi + bagian isi wajibnya (anti-"isi yang kosong/kurang tanpa tercatat").
-DOC_ISI = ["01_IDENTITAS_PEMILIK.md", "02_PROFIL_JENIS_ACARA.md"]
+DOC_ISI = ["01_IDENTITAS_PEMILIK.md", "02_PROFIL_JENIS_ACARA.md", "03_TEMPLATE_DATA_ACARA.md",
+           "04_TEMPLATE_BRIEF_UNDANGAN.md"]
 ISI_WAJIB: dict[str, list[str]] = {
     "01_IDENTITAS_PEMILIK.md": [
         "Merek / Nama", "Font Default", "Palet Default", "Gaya Ornament", "Nada Bahasa",
@@ -53,6 +57,15 @@ ISI_WAJIB: dict[str, list[str]] = {
         "Etika Penulisan dan Titik Sensitif", "Matriks Variasi", "Daftar Field Default",
         "Konvensi Desain dan Pantangan", "Katalog model", "Hal yang Selalu Konsisten",
         "Waktu dan Siklus", "Bawaan L2 vs Per-Undangan", "Catatan untuk L3", "Log Keputusan",
+    ],
+    "03_TEMPLATE_DATA_ACARA.md": [
+        "Aturan Satu-Sumber", "Struktur Rekaman", "Tabel Field", "Aturan Adaptif",
+        "Field Sensitif", "Diubah Setelah Terbit", "Validasi Data", "Log Keputusan",
+    ],
+    "04_TEMPLATE_BRIEF_UNDANGAN.md": [
+        "Posisi Brief dalam Siklus", "Identitas dan Paket", "Permintaan Client",
+        "Anggaran dan Tenggat", "Batasan", "Data Acara", "Gerbang yang Dilewati",
+        "Log Keputusan",
     ],
 }
 

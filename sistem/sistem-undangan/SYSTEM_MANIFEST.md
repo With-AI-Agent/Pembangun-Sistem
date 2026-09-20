@@ -8,11 +8,11 @@
 - **Tujuan utama:** mengubah **info acara + identitas pemilik** menjadi undangan **multi-format** (laman web, video, flyer, siap cetak) yang **konsisten dari satu sumber data**, sampai **terbit dan diserahkan ke client** — dipandu agent supaya pemilik yang tidak punya latar coding tidak perlu memikirkan hal teknis.
 - **Pengguna/consumer:** pemilik repo (operator, **tidak punya basic coding**) + **client** penerima akhir undangan (tamu melihat hasilnya).
 - **Pemilik keputusan:** pemilik repo.
-- **Versi:** `0.4.0`
-- **Tahap:** `draft` — `01_IDENTITAS_PEMILIK.md` terisi (**G0 LULUS** 20 Sep 2026, dinyatakan pemilik) + `02_PROFIL_JENIS_ACARA.md` terisi jenis acara pertama: pernikahan (Discovery 02, 20 Sep 2026; **G1 menunggu review isi lengkap pemilik di PR — tanpa auto-merge**); ubah ke `siap-pakai` saat sistem siap dipakai (cek W-01/W-02/W-03 kembali ketat; lihat `03_KONTRAK_WARISAN.md` bagian "Tahap pembangunan")
+- **Versi:** `0.6.0`
+- **Tahap:** `draft` — `01_IDENTITAS_PEMILIK.md` terisi (**G0 LULUS** 20 Sep 2026, dinyatakan pemilik) + `02_PROFIL_JENIS_ACARA.md` terisi jenis acara pertama: pernikahan (**G1 LULUS 20 Sep 2026 — putusan pemilik via merge PR #88 `f60e950`, 16:48 UTC**) + `03_TEMPLATE_DATA_ACARA.md` terisi (**roadmap b1 (1/2), template biasa** — penurunan dari field L2 pernikahan; review isi pemilik selesai 20 Sep 2026 (PR #90) — menunggu merge — tanpa auto-merge) + `04_TEMPLATE_BRIEF_UNDANGAN.md` terisi (**roadmap b1 (2/2), template biasa** — brief Tahap 1–2; review isi pemilik selesai 20 Sep 2026 (PR #90) — menunggu merge — tanpa auto-merge); ubah ke `siap-pakai` saat sistem siap dipakai (cek W-01/W-02/W-03 kembali ketat; lihat `03_KONTRAK_WARISAN.md` bagian "Tahap pembangunan")
 - **Status:** `Draft`
 - **Tanggal dibuat:** 2026-09-17
-- **Audit terakhir:** belum ada — **G0 LULUS 20 Sep 2026** (review isi lengkap oleh pemilik + PR #86 merged, `36c63d4`); **G1 (isi L2 pernikahan) LULUS 20 Sep 2026 — putusan pemilik via merge PR #88 (`f60e950`, 16:48 UTC)**; sifat putusan direkam jujur di log sesi slot 43 (dasar = approval butir-per-butir di chat, tanpa review dalam tersendiri; audit independen pasca-merge tersedia atas permintaan pemilik); benturan klasifikasi G1 (prompt 02 BESAR vs manifest Kecil vs rencana kerangka bagian 4 gerbang produksi-Sedang) **diputus pemilik: dibiarkan pada keadaan tercatat** — tidak memblokir, bisa dibuka lewat Log Keputusan dokumen 02; audit independen isi L1: terbuka atas permintaan pemilik; kelulusan pegangan W-01 menunggu jalur audit-nya sendiri (Syarat 4)
+- **Audit terakhir:** belum ada — **G0 LULUS 20 Sep 2026** (review isi lengkap oleh pemilik + PR #86 merged, `36c63d4`); **G1 (isi L2 pernikahan) LULUS 20 Sep 2026 — putusan pemilik via merge PR #88 (`f60e950`, 16:48 UTC)**; sifat putusan direkam jujur di log sesi slot 43 (dasar = approval butir-per-butir di chat, tanpa review dalam tersendiri; audit independen pasca-merge tersedia atas permintaan pemilik); benturan klasifikasi G1 (prompt 02 BESAR vs manifest Kecil vs rencana kerangka bagian 4 gerbang produksi-Sedang) **diputus pemilik: dibiarkan pada keadaan tercatat** — tidak memblokir, bisa dibuka lewat Log Keputusan dokumen 02; **roadmap b1 tuntas sampai draft 20 Sep 2026 (UTC): `03_TEMPLATE_DATA_ACARA.md` + `04_TEMPLATE_BRIEF_UNDANGAN.md` terisi (template biasa, tanpa keputusan baru pemilik; draft menunggu review isi PR)** — benturan label G2 (manifest vs 00 bagian 4) dilaporkan di Log Keputusan dokumen 04, tidak diputus sepihak; audit independen isi L1: terbuka atas permintaan pemilik; kelulusan pegangan W-01 menunggu jalur audit-nya sendiri (Syarat 4); **review isi PR b1 (03+04) dijalankan PEMILIK 20 Sep 2026 (sesi slot 44, log sesi): "setuju semua rekomendasi" — benturan label G2 DISelaraskan (baris Titik approval Besar di atas mengikuti 00 bagian 4) + baris Acceptance pegangan dikoreksi (fakta basi, koreksi 20 Sep 2026); draft menunggu merge PR #90 (tanpa auto-merge)**
 - **Quality protocol:** **BELUM DIBUAT** di tahap kerangka. Direncanakan sebagai `QUALITY_ASSURANCE_AND_EVOLUTION.md` DI DALAM folder sistem ini (butir W-06 — wajib self-contained). Rujukan ke _meta/QUALITY_ASSURANCE_AND_EVOLUTION.md hanyalah provenance (asal aturan), BUKAN aturan aktif (sistem harus tetap berfungsi penuh saat foldernya diunduh jadi repo sendiri — lihat `03_KONTRAK_WARISAN.md`)
 
 ## Bentuk Sistem
@@ -20,13 +20,13 @@
 - **Bentuk:** [ ] Bertingkat  [ ] Flat  [ ] Siklus  [x] Gabungan — **BERTINGKAT 3 lapis + SIKLUS 7 tahap** (dikunci pemilik 17 Sep 2026; alasan dan rinciannya di `00_RENCANA_KERANGKA.md` bagian 2)
 - **Unit kerja utama:** **satu undangan konkret** (Lapis 3) — dari prompt pembuka sampai terbit & diserahkan
 - **Kriteria satu unit selesai:** tayang/terbit + diserahkan ke client (Tahap 7 SIKLUS) + `STATUS.md` unit tertutup + aset & data acara terarsip
-- **Titik approval Besar:** **G0** (identitas pemilik/L1), **G2** (brief & struktur data), **G5** (sebelum terbit/serah terima), dan **perubahan apa pun di L1** — semuanya **review isi lengkap oleh pemilik**
+- **Titik approval Besar:** **G0** (identitas pemilik/L1), **G2** (desain & format dikunci — diselaraskan 2026-09-20, putusan pemilik, review isi PR #90; mengikuti `00_RENCANA_KERANGKA.md` bagian 4), **G5** (sebelum terbit/serah terima), dan **perubahan apa pun di L1** — semuanya **review isi lengkap oleh pemilik**
 - **Titik approval Kecil:** **G1** (profil jenis acara/L2), **G3** (gerbang aset & resolusi), **G4** (pratinjau desain per format) — boleh diwakilkan agent dengan pencatatan
 
 ## Dokumen Navigasi
 
 - **Entry point:** `PROMPT_ENTRI_UNIVERSAL.md` (W-01) — **sudah dibuat 18 Sep 2026**, jadi entry point tidak lagi sementara. Untuk memakai sistem: tempel blok prompt di berkas itu. Untuk memahami rancangan sistem: `00_RENCANA_KERANGKA.md` + `STATUS.md`. Untuk pegangan lengkap: `PANDUAN_PENGGUNA.md`
-- **Dokumen instruksi aktif:** `01_IDENTITAS_PEMILIK.md` (**isi — G0 LULUS**, 20 Sep 2026); `02_PROFIL_JENIS_ACARA.md` (**isi — draft G1**, jenis acara pertama: pernikahan, 20 Sep 2026); 9 dokumen domain lainnya masih kerangka
+- **Dokumen instruksi aktif:** `01_IDENTITAS_PEMILIK.md` (**isi — G0 LULUS**, 20 Sep 2026); `02_PROFIL_JENIS_ACARA.md` (**isi — G1 LULUS**, jenis acara pertama: pernikahan, 20 Sep 2026); `03_TEMPLATE_DATA_ACARA.md` (**isi — draft roadmap b1 (1/2)**, template biasa, 20 Sep 2026 (UTC)); `04_TEMPLATE_BRIEF_UNDANGAN.md` (**isi — draft roadmap b1 (2/2)**, template biasa, 20 Sep 2026 (UTC)); 7 dokumen domain lainnya masih kerangka
 - **Living documents:** `01_IDENTITAS_PEMILIK.md`, `02_PROFIL_JENIS_ACARA.md`, `03_TEMPLATE_DATA_ACARA.md`, `06_SPESIFIKASI_ASET_DAN_RESOLUSI.md`, `10_ARSITEKTUR_WEBSITE_INDUK.md`
 - **Log keputusan:** bagian **"Log Keputusan"** di `00_RENCANA_KERANGKA.md` (W-05)
 - **Ringkasan cadangan:** **belum ada** — W-09 dikerjakan saat sistem mendekati `siap-pakai`
@@ -88,10 +88,10 @@ Status butir `03_KONTRAK_WARISAN.md` untuk sistem ini — disalin dari bagian "W
 
 ## Acceptance
 
-- [ ] Semua dokumen wajib tersedia — **belum: 9 dokumen masih kerangka + 2 terisi (01 — G0 lulus; 02 — draft G1, jenis acara pernikahan)**
+- [ ] Semua dokumen wajib tersedia — **belum: 7 dokumen masih kerangka + 4 terisi (01 — G0 LULUS; 02 — G1 LULUS, jenis acara pernikahan; 03 + 04 — draft roadmap b1, menunggu review isi PR)**
 - [ ] Semua dependency valid — **sebagian: dependency penerbitan belum diuji dari lingkungan ini**
 - [x] Status dan versi sudah diperbarui
 - [x] Approval yang diperlukan sudah ada — **konfirmasi final pemilik 17 Sep 2026 untuk rencana kerangka (kategori BESAR)**
 - [ ] Audit terakhir tercatat — **belum ada isi untuk diaudit**
 - [ ] Ringkasan cadangan sinkron — **W-09 dikerjakan saat mendekati siap-pakai**
-- [ ] Pegangan pengguna tersedia di dalam folder sistem — **belum, dan ini syarat naik ke `siap-pakai`**
+- [ ] Pegangan pengguna tersedia di dalam folder sistem — **berkasnya SUDAH dibuat 18 Sep 2026** (`PANDUAN_PENGGUNA.md` + `PROMPT_ENTRI_UNIVERSAL.md`); **kelulusannya belum dinyatakan** (Standar Kelulusan Manual syarat 4 — penulis tidak menilai sendiri; wajib audit sesi independen + uji pemakaian nyata pemilik) — **syarat naik ke `siap-pakai`**
