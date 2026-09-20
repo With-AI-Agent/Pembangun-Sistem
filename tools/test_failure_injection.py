@@ -315,6 +315,38 @@ def regression_scenarios(base_dir: Path):
 
 
 
+POLA_SEGAR_PADA = (r"^- \*\*Segar pada:\*\* (\d{4}-\d{2}-\d{2}) \u00b7 FI (\d+) "
+                 r"\u00b7 manifest v(\d+\.\d+\.\d+) \u00b7 head terukur `([0-9a-f]{7,40})`\s*$")
+
+
+def pilih_log_untuk_uji_kesegaran(log_dir: Path):
+    """Pilih log OPEN untuk menguji penjaga kesegaran; bila tidak ada, buka log terbaru DI SALINAN.
+
+    Mengembalikan `(daftar_log, dibuka_di_salinan)`. Ditemukan 19 Sep 2026: sesudah kedua log sesi PR #74
+    ditutup (keputusan pemilik giliran 27, demi keamanan merge ke `main`), harness ini crash
+    `IndexError: list index out of range` karena memilih `open22[0]` tanpa cabang kosong — seluruh gerbang
+    failure-injection mati persis ketika penjaga kesegaran paling perlu diuji. Repo yang tidak punya log
+    OPEN adalah keadaan SAH (semua sesi selesai), jadi yang cacat adalah ujinya, bukan repo-nya. Fallback
+    ini menulis **hanya di salinan sementara**, tidak pernah di repo, dan memilih log terbaru yang baris
+    cap-nya sudah berformat baru supaya regresi yang membaca cap tetap bisa jalan.
+    """
+    logs = sorted(log_dir.glob("LOG_SESI_*.md")) if log_dir.is_dir() else []
+    pola_open = r"^- \*\*Keadaan:\*\*\s*`?OPEN`?"
+    terbuka = [f for f in logs if re.search(pola_open, f.read_text(encoding="utf-8"), re.M)]
+    if terbuka:
+        return terbuka, False
+    if not logs:
+        return [], False
+    kandidat = [f for f in logs if re.search(POLA_SEGAR_PADA, f.read_text(encoding="utf-8"), re.M)] or logs
+    f = kandidat[-1]
+    teks = f.read_text(encoding="utf-8")
+    m = re.search(r"^- \*\*Keadaan:\*\*\s*`?CLOSED`?", teks, re.M)
+    if m is None:
+        return [], False
+    f.write_text(teks.replace(m.group(0), m.group(0).replace("CLOSED", "OPEN", 1), 1), encoding="utf-8")
+    return [f], True
+
+
 def klaim_total(baris: str) -> int:
     """Hitung KLAIM TOTAL pada baris '**Jumlah:**' dokumen inventaris FI (pengetatan D-2b).
 
@@ -1577,18 +1609,25 @@ def review_prompt_scenarios(base_dir: Path):
     # bergantung git supaya bisa diuji di salinan tanpa `.git` (harness ini ignore ".git");
     # bagian sha (HEAD..HEAD~3) hanya jalan bila git tersedia.
     # ------------------------------------------------------------------
-    log22 = sorted((cp / "_log-sesi").glob("LOG_SESI_*.md"))
-    open22 = [f for f in log22
-              if re.search(r"^- \*\*Keadaan:\*\*\s*`?OPEN`?", f.read_text(encoding="utf-8"), re.M)]
+    open22, dibuka22 = pilih_log_untuk_uji_kesegaran(cp / "_log-sesi")
     checks.append((
         "RP22a kontrol positif: salinan punya log OPEN berbaris `- **Segar pada:**` dan validator "
-        "LULUS - supaya empat uji mutasi di bawah bukan tautologi",
+        "LULUS - supaya empat uji mutasi di bawah bukan tautologi"
+        + (" (repo ini tidak punya log OPEN - keadaan sah sesudah semua sesi ditutup - jadi harness "
+           "membuka log terbaru DI SALINAN, bukan di repo; sebelum fallback ini ada, harness crash "
+           "IndexError dan seluruh gerbang FI mati)" if dibuka22 else ""),
         bool(open22) and run_tool(cp, "tools/validate_repo.py") == 0,
     ))
+    if not open22:
+        checks.append((
+            "RP22 TIDAK BISA DIUJI: salinan tidak punya log OPEN dan tidak ada log CLOSED berbaris "
+            "`Keadaan` yang bisa dibuka di salinan (fail-closed, dinyatakan GAGAL - bukan dilewati diam-diam)",
+            False,
+        ))
+        return checks
     f22 = open22[0]
     asli22 = f22.read_text(encoding="utf-8")
-    pola22 = (r"^- \*\*Segar pada:\*\* (\d{4}-\d{2}-\d{2}) \u00b7 FI (\d+) "
-              r"\u00b7 manifest v(\d+\.\d+\.\d+) \u00b7 head terukur `([0-9a-f]{7,40})`\s*$")
+    pola22 = POLA_SEGAR_PADA
     m22 = re.search(pola22, asli22, re.M)
     checks.append(("RP22a2 baris segar FORMAT BARU di log OPEN nyata terbaca oleh pola regresi (bukan "
                    "cuma oleh validator); format lama `head <sha> · <tanggal> · FI <N> · manifest v<X>` "
@@ -2644,6 +2683,59 @@ def run():
         "D-2d tanpa .git asal-usul unit tidak bisa ditentukan -> penjaga gagal keras (fail-closed), "
         "tidak menebak bahwa selisihnya efek merge",
         _boleh5 is False and "tidak ada .git" in _alasan5,
+    ))
+
+    # RP22-pre: fallback pemilihan log. Dikunci karena crash-nya nyata terjadi (19 Sep 2026) dan
+    # mematikan SELURUH gerbang FI, bukan satu pemeriksaan.
+    with TemporaryDirectory() as _d22:
+        _ld = Path(_d22) / "_log-sesi"
+        _ld.mkdir()
+        (_ld / "LOG_SESI_2026-09-01.md").write_text(
+            "# Log\n\n## Keadaan Sesi\n- **Keadaan:** `CLOSED` — selesai\n"
+            "- **Segar pada:** 2026-09-01 · FI 100 · manifest v1.0.0 · head terukur `aaaaaaa`\n",
+            encoding="utf-8")
+        (_ld / "LOG_SESI_2026-09-02.md").write_text(
+            "# Log\n\n## Keadaan Sesi\n- **Keadaan:** `CLOSED` — selesai\n"
+            "- **Segar pada:** 2026-09-02 · FI 101 · manifest v1.0.1 · head terukur `bbbbbbb`\n",
+            encoding="utf-8")
+        _pilih, _dibuka = pilih_log_untuk_uji_kesegaran(_ld)
+        checks.append((
+            "RP22-pre1 repo TANPA log OPEN (semua CLOSED - keadaan sah sesudah semua sesi ditutup): helper "
+            "membuka log terbaru di salinan dan mengembalikannya, bukan crash IndexError yang mematikan "
+            "seluruh gerbang FI",
+            _dibuka is True and len(_pilih) == 1 and _pilih[0].name == "LOG_SESI_2026-09-02.md"
+            and "`OPEN`" in _pilih[0].read_text(encoding="utf-8"),
+        ))
+        _pilih2, _dibuka2 = pilih_log_untuk_uji_kesegaran(_ld)
+        checks.append((
+            "RP22-pre2 sesudah fallback, log yang sama sudah OPEN: pemanggilan berikutnya mengembalikannya "
+            "apa adanya dan tidak menyunting berkas lagi (idempoten)",
+            _dibuka2 is False and len(_pilih2) == 1 and _pilih2[0].name == "LOG_SESI_2026-09-02.md",
+        ))
+    with TemporaryDirectory() as _d22c:
+        _lc = Path(_d22c) / "_log-sesi"
+        _lc.mkdir()
+        (_lc / "LOG_SESI_2026-09-01.md").write_text(
+            "# Log\n\n## Keadaan Sesi\n- **Keadaan:** `CLOSED` — selesai\n"
+            "- **Segar pada:** 2026-09-01 · FI 100 · manifest v1.0.0 · head terukur `aaaaaaa`\n",
+            encoding="utf-8")
+        (_lc / "LOG_SESI_2026-09-03.md").write_text(
+            "# Log\n\n## Keadaan Sesi\n- **Keadaan:** `OPEN` — berjalan\n", encoding="utf-8")
+        _pilih3, _dibuka3 = pilih_log_untuk_uji_kesegaran(_lc)
+        checks.append((
+            "RP22-pre3 bila repo punya log OPEN sungguhan, helper memakainya dan TIDAK membuka log CLOSED "
+            "lain - fallback tidak boleh menimpa keadaan normal. Diuji di folder terpisah dengan keadaan "
+            "awal yang bersih, bukan di folder sisa RP22-pre1 yang log-nya sudah terlanjur dibuka fallback",
+            _dibuka3 is False and [f.name for f in _pilih3] == ["LOG_SESI_2026-09-03.md"]
+            and "`CLOSED`" in (_lc / "LOG_SESI_2026-09-01.md").read_text(encoding="utf-8"),
+        ))
+    with TemporaryDirectory() as _d22b:
+        _pilih4, _dibuka4 = pilih_log_untuk_uji_kesegaran(
+            Path(_d22b) / "folder-log-yang-tidak-ada")
+    checks.append((
+        "RP22-pre4 folder log tidak ada: helper mengembalikan daftar kosong supaya pemanggil fail-closed "
+        "dengan pesan terbaca, bukan menebak atau crash",
+        _pilih4 == [] and _dibuka4 is False,
     ))
 
     n_synth = len(checks)
