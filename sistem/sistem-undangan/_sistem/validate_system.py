@@ -40,16 +40,20 @@ BANNER_KERANGKA = "STATUS: KERANGKA — BELUM ADA ISI"
 # sebagai dokumen generator — prompt client-facing Tahap 3 + batas janji; keputusan pemilik atas
 # paket B1-B6: menu arah desain, batas format fase portofolio, lead time, moderasi & data ucapan,
 # penyelesaian konflik urutan dokumen 09 vs 10).
+# (ROADMAP b2, Discovery 06) 2026-09-21: 06_SPESIFIKASI_ASET_DAN_RESOLUSI.md pindah ke DOC_ISI
+# (dokumen generator — dua tingkat aset + gerbang G3 fail-closed; angka dikutip dari 00 bagian
+# 4.3-4.5, keputusan pemilik atas paket C1-C6: pembagian kerja aset, definisi fotografis, nasib
+# aset ditolak, cetak uji + CMYK ditunda, sumber ornament vektor, penegakan G3).
 # Daftar ini WAJIB menyusut lagi setiap pengisian dokumen berikutnya.
 DOC_KERANGKA = [
-    "06_SPESIFIKASI_ASET_DAN_RESOLUSI.md",
     "07_SPESIFIKASI_CETAK_PREPRESS.md", "08_PIPELINE_VIDEO.md", "09_PANDUAN_PUBLISH_DAN_SERAH_TERIMA.md",
     "10_ARSITEKTUR_WEBSITE_INDUK.md", "11_AMPLOP_DIGITAL.md",
 ]
 
 # (T-69) dokumen yang sudah terisi + bagian isi wajibnya (anti-"isi yang kosong/kurang tanpa tercatat").
 DOC_ISI = ["01_IDENTITAS_PEMILIK.md", "02_PROFIL_JENIS_ACARA.md", "03_TEMPLATE_DATA_ACARA.md",
-           "04_TEMPLATE_BRIEF_UNDANGAN.md", "05_DISCOVERY_DESAIN_PROMPT.md"]
+           "04_TEMPLATE_BRIEF_UNDANGAN.md", "05_DISCOVERY_DESAIN_PROMPT.md",
+           "06_SPESIFIKASI_ASET_DAN_RESOLUSI.md"]
 ISI_WAJIB: dict[str, list[str]] = {
     "01_IDENTITAS_PEMILIK.md": [
         "Merek / Nama", "Font Default", "Palet Default", "Gaya Ornament", "Nada Bahasa",
@@ -78,6 +82,14 @@ ISI_WAJIB: dict[str, list[str]] = {
         "Batas Janji", "Menu Arah Desain", "Format yang Boleh Dijanjikan",
         "Waktu, Revisi, dan Masa Aktif", "Ucapan & RSVP", "Prompt Siap-Tempel",
         "Hasil Tahap 3", "Log Keputusan",
+    ],
+    # (ROADMAP b2, Discovery 06) dua tingkat aset + gerbang G3 — bagian yang wajib ada:
+    # Langkah 0, dua tingkat, definisi fotografis, tiga hasil, aset ditolak, cetak uji,
+    # sumber ornament, penegakan G3, perubahan sesudah tayang, angka & sumbernya.
+    "06_SPESIFIKASI_ASET_DAN_RESOLUSI.md": [
+        "Langkah 0", "Dua Tingkat Aset", "Fotografis", "Tiga Hasil", "Aset Ditolak",
+        "Cetak Uji", "Ornamen", "Penegakan G3", "Sesudah Tayang", "Angka & Sumbernya",
+        "Log Keputusan",
     ],
 }
 
