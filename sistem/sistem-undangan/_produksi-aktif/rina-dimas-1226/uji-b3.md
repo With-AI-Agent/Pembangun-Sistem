@@ -9,7 +9,9 @@
 
 - **Tanggal:** 2026-09-21 (UTC) · sesi slot 45
 - **Pelaksana:** agent (langkah mekanis) + **pemilik** (langkah yang butuh mata & HP — masih menunggu)
-- **Lingkungan:** sandbox sesi; server pratinjau nyata di `https://8080-i2b08gpk69xbcgdahr1nq.e2b.app`
+- **Lingkungan:** sandbox sesi; server pratinjau nyata di alamat sesi `https://8080-i2b08gpk69xbcgdahr1nq.e2b.app`
+  — **alamat ini terikat masa hidup sandbox, BUKAN alamat permanen** (alamat permanen fase 1 baru ada sesudah
+  deploy Cloudflare oleh pemilik). Kalau mati, hidupkan lagi dengan perintah di bagian 7.
   (bind `0.0.0.0:8080`); **Cloudflare TIDAK bisa dijangkau** dari sini (API eksternal diblokir — item
   terbuka yang sudah tercatat)
 - **Data:** seluruhnya fiktif, ditandai pita **"MODE UJI COBA b3"** di bagian paling atas halaman dan
@@ -117,10 +119,30 @@ Yang **gagal: 0**.
 
 ## 7. Langkah pemilik sesudah berkas ini (supaya b3 benar-benar tuntas)
 
-1. Buka `https://8080-i2b08gpk69xbcgdahr1nq.e2b.app` **di HP** — jalankan butir 1, 2, 7, 8 daftar
-   periksa Terbit dengan mata sendiri.
+1. Buka **alamat sesi** `https://8080-i2b08gpk69xbcgdahr1nq.e2b.app` **di HP** — jalankan butir 1, 2, 7, 8
+   daftar periksa Terbit dengan mata sendiri.
 2. Buka `?uji=amplop` dan `?tamu=Nama Anda` — periksa tampilan amplop uji + personalisasi.
 3. Buka `web/flyer-portrait.svg` & `web/flyer-landscape.svg` (butir 9).
 4. Kalau sudah oke: **jalankan deploy Cloudflare** mengikuti `09` bagian 4 (klik-klik, tanpa terminal) —
    sesudah itu Tahap 6 yang sesungguhnya tuntas dan barisnya dicatat di `catatan-versi.md`.
 5. Kalau ada yang ganjil: tulis di sini / chat — **jangan diperbaiki langsung** supaya jejaknya jelas.
+
+### Catatan alamat pratinjau — temuan 21 Sep 2026 (dilaporkan terbuka, bukan disembunyikan)
+
+Pemilik membuka alamat sesi di atas dan mendapat **"Sandbox Not Found"**. Sebabnya **bukan** berkas
+undangannya: berkasnya lengkap dan sudah ter-commit (`83cd786`); yang hilang adalah **server pratinjau +
+rutenya**, karena alamat `…e2b.app` hidup selama sandbox sesi hidup. Sesudah server dinyalakan ulang,
+terukur lagi: **11 berkas HTTP 200** (halaman, gaya, skrip, data, QR, 2 flyer, 2 aset, vendor QR).
+
+**Cara menyalakan ulang (satu perintah, dari akar repo):**
+
+```
+python3 -m http.server 8080 --bind 0.0.0.0 --directory sistem/sistem-undangan/_produksi-aktif/rina-dimas-1226/web
+```
+
+lalu buka **alamat sesi yang ditampilkan Arena** untuk proses itu (bukan alamat yang dihafal).
+
+**Akibat untuk dokumen 09 (dan kenapa ini penting):** alamat sesi **tidak boleh** dipakai sebagai tautan
+sebar ke tamu — tautan sebar baru sah sesudah **deploy Cloudflare** (Tahap 6 yang sesungguhnya), yang
+memang dijalankan pemilik menurut `09` bagian 4. Kata "terbit" di berkas ini selalu berarti
+**pratinjau nyata**, bukan alamat permanen.
