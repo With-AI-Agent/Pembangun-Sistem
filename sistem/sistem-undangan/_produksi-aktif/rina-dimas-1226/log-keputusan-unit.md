@@ -1,0 +1,20 @@
+# Log Keputusan Unit — `rina-dimas-1226` (uji coba b3)
+
+> Aturan warisan L3 (`00_RENCANA_KERANGKA.md` bagian 2.2): penyimpangan dari L1/L2 dan keputusan
+> per-undangan **wajib tercatat di sini**, tidak boleh diam-diam. Unit adalah unit **uji coba**,
+> jadi "client" = pemilik studio sebagai operator; keputusan yang menyangkut selera/taste tetap
+> milik pemilik dan diambil lewat paket keputusan **E1–E4** (21 Sep 2026).
+
+| Tanggal | Keputusan | Alasan / approval |
+|---|---|---|
+| 2026-09-21 | **Unit uji coba b3 dibuat** dengan data **fiktif** berlabel di layar; slug `rina-dimas-1226` | Roadmap b3 (handoff log sesi slot 44; scope sesi "(0)→(3) semua"). Slug mengikuti pola dokumen 09 bagian 3 (nama mempelai + bulan-tahun) dan **tidak akan diubah** |
+| 2026-09-21 | **Struktur folder unit: `_produksi-aktif/<slug>/`** + `STATUS.md` unit + brief + spesifikasi desain + log ini + **folder `web/` sebagai folder terbit** | **Putusan pemilik paket E1** (21 Sep 2026, *"setuju semua"*). Preseden repo: `_produksi-aktif/` sudah dikenali alat (`tools/validate_repo.py`, `tools/checkpoint_core.py`) |
+| 2026-09-21 | **Penyimpangan mikro dari E1 (dinyatakan terbuka):** rekaman data diletakkan di `web/data-acara.json`, **bukan** di akar unit | Alasannya justru memperkuat aturan satu-sumber: `web/` adalah folder yang terbit, jadi **rekaman dan situsnya satu folder** — tidak ada salinan kedua yang bisa berbeda. Kalau pemilik ingin tetap di akar unit, cukup dipindah + jalur di `app.js` diubah (satu baris) |
+| 2026-09-21 | **Model desain: Modern minimalis** (bukan Luxury gold / Islami-Arab) | **Putusan pemilik paket E2** — dipilih karena paling ringan dibuka di HP murah (menguji syarat utama sistem), dan memberi ruang uji "nyaris tanpa ornamen" |
+| 2026-09-21 | **Format: web + flyer statis (portrait & landscape) dalam SVG** | Batas fase portofolio (`05` bagian 3: web + flyer boleh; video & cetak belum). SVG dipilih karena teks tetap dari font & ornament vektor — **Langkah 0 dipatuhi tanpa aset raster** |
+| 2026-09-21 | **Amplop digital TIDAK diaktifkan**; ditambah **jalur uji `?uji=amplop`** dengan nomor jelas fiktif + label UJI COBA di layar | **Putusan pemilik paket E3** (nomor rekening nyata tidak layak ditaruh di repo). Yang diuji: (a) data kosong → bagian tidak dirender, (b) render + tombol salin + tampilan, tanpa satu pun nomor nyata |
+| 2026-09-21 | **Tanpa foto, tanpa musik, tanpa tanggal Hijriah, tanpa kontak RSVP** — semuanya **dinyatakan sadar** di brief Bagian D + `data-acara.json` | Aturan `03` bagian 4: yang kurang **dinyatakan**, tidak dikarang. Konsekuensi jujur: **G3 tidak teruji** pada unit ini (0 aset raster) |
+| 2026-09-21 | **Ucapan/RSVP memakai penyimpanan sementara di perangkat tamu** dan **ditandai di layar** sebagai mode uji coba | Penyimpanan data runtime = keputusan **dokumen 10** yang ditunda (`09` bagian 11 butir 2). Menampilkannya diam-diam seolah tersimpan permanen = mengklaim kemampuan yang belum ada |
+| 2026-09-21 | **Gerbang data (03 bagian 7) ditegakkan ALAT BARU** `_sistem/validate_unit.py` (bukan lagi janji tertulis) | Prinsip repo: *gerbang tanpa bukti = diklaim hijau tanpa dijalankan* (`06` bagian 8). Alat ini juga menegakkan **bukti per aset** (raster wajib punya baris di `daftar-aset.json`) dan aturan "field kosong wajib beralasan". Diuji mutasi (lihat `uji-b3.md`) |
+| 2026-09-21 | **"Terbit" untuk b3 = pratinjau nyata dari server sesi**; deploy Cloudflare dilakukan **pemilik** mengikuti dokumen 09 bagian 4 | Lingkungan sesi tidak bisa menembus Cloudflare (API eksternal diblokir; item sudah tercatat terbuka di `STATUS.md` sistem). Kalimat "sudah terbit di lee-studio.pages.dev" **belum boleh** diucapkan sampai pemilik menjalankannya |
+| 2026-09-21 | **Susunan acara terisi detail** (blok BAWAAN + detail), meski `02` pernah bentrok antara OPSIONAL 14 (§5) dan BAWAAN 11 (§9) | Dokumen `03` sudah memutuskan perlakuan "blok bawaan, detail opsional" (dan dikonfirmasi pemilik di review PR #90). Pada uji coba, detail diisi pemilik sebagai operator |

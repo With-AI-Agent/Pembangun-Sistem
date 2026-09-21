@@ -1,0 +1,124 @@
+{
+  "meta": {
+    "unit": "rina-dimas-1226",
+    "slug": "rina-dimas-1226",
+    "jenis_acara": "pernikahan",
+    "profil_l2": "02_PROFIL_JENIS_ACARA.md bagian Pernikahan (cakupan umum, G1 LULUS)",
+    "paket_studio": "fase portofolio L1 (bukan client nyata — UJI COBA internal b3)",
+    "kontak_client": "tidak berlaku — uji coba internal pemilik studio (tidak ada data client nyata)",
+    "peringatan_uji": "SELURUH DATA DI BERKAS INI FIKTIF (uji coba b3). Tidak ada nama, alamat, nomor, atau tanggal acara orang nyata.",
+    "versi_rekaman": "v1 — 2026-09-21 (UTC)"
+  },
+  "nama_mempelai": [
+    { "nama_lengkap": "Rina Ayu Lestari, S.Pd.", "nama_panggilan": "Rina" },
+    { "nama_lengkap": "Dimas Bayu Pratama, S.T.", "nama_panggilan": "Dimas" }
+  ],
+  "pola_tuan_rumah": "orang_tua",
+  "orang_tua": [
+    { "pihak": "mempelai_1", "nama_lengkap": "Bapak H. Sutrisno Wijaya", "gelar_utuh": "H." },
+    { "pihak": "mempelai_1", "nama_lengkap": "Ibu Hj. Endang Suryani", "gelar_utuh": "Hj." },
+    { "pihak": "mempelai_2", "nama_lengkap": "Bapak Ir. Bambang Pratama", "gelar_utuh": "Ir." },
+    { "pihak": "mempelai_2", "nama_lengkap": "Ibu Retno Wulandari", "gelar_utuh": "— (tanpa gelar)" }
+  ],
+  "turut_mengundang": [
+    "Keluarga besar Wijaya",
+    "Keluarga besar Pratama",
+    "Sahabat dan rekan kerja kedua mempelai"
+  ],
+  "titik_sensitif_terkonfirmasi": {
+    "ya": true,
+    "catatan": "UJI COBA — konfirmasi dicatat 2026-09-21 (UTC) dari pemilik studio di sesi b3: seluruh data fiktif, tidak ada pihak keluarga nyata. Yang wajib dikonfirmasi pada client nyata dan TIDAK dipakai di sini: urutan orang tua, gelar keagamaan, sebutan alm./wali, status pernikahan orang tua, dan beda agama."
+  },
+  "bentuk_acara": "akad_nikah",
+  "dengan_resepsi": true,
+  "istilah_resepsi": "Resepsi Pernikahan",
+  "acara": [
+    {
+      "nama_acara": "Akad Nikah",
+      "hari": "Sabtu",
+      "tanggal": "2026-12-12",
+      "jam_mulai": "08:00",
+      "jam_selesai": "10:00",
+      "zona_waktu": "WIB",
+      "venue": "Masjid Al-Ikhlas Cendana (nama fiktif)",
+      "alamat": "Jl. Cendana No. 12, Bandung, Jawa Barat (alamat fiktif)",
+      "tautan_peta": "https://www.google.com/maps?q=-6.9175,107.6191"
+    },
+    {
+      "nama_acara": "Resepsi Pernikahan",
+      "hari": "Sabtu",
+      "tanggal": "2026-12-12",
+      "jam_mulai": "11:00",
+      "jam_selesai": "14:00",
+      "zona_waktu": "WIB",
+      "venue": "Gedung Serbaguna Cendana (nama fiktif)",
+      "alamat": "Jl. Cendana No. 20, Bandung, Jawa Barat (alamat fiktif)",
+      "tautan_peta": "https://www.google.com/maps?q=-6.9147,107.6098"
+    }
+  ],
+  "tanggal_hijriah": {
+    "nilai": null,
+    "alasan": "tidak diisi — uji coba b3. Tanggal Hijriah adalah fakta yang harus benar, jadi nilainya baru diisi setelah dikonfirmasi keluarga pada client nyata (02 bagian 5); mengarang nilainya melanggar 03 bagian 4 butir 2."
+  },
+  "pembuka": {
+    "teks": "Bismillahirrahmanirrahim. Assalamu'alaikum Warahmatullahi Wabarakatuh.",
+    "sumber": "kandidat default L2 untuk bentuk Islami (02 bagian 2); ayat/hadits tidak dikutip pada uji coba agar tidak ada kutipan kitab yang salah"
+  },
+  "susunan_acara": [
+    { "waktu": "08:00", "kegiatan": "Pembukaan dan pembacaan doa" },
+    { "waktu": "08:30", "kegiatan": "Prosesi akad nikah" },
+    { "waktu": "09:30", "kegiatan": "Doa restu keluarga" },
+    { "waktu": "11:00", "kegiatan": "Ramah tamah — resepsi pernikahan" },
+    { "waktu": "13:30", "kegiatan": "Penutup" }
+  ],
+  "sapaan_tamu": {
+    "teks": "Kepada Yth. Bapak/Ibu/Saudara/i",
+    "personalisasi": {
+      "aktif": true,
+      "mekanisme": "nama tamu dibaca dari parameter tautan (?tamu=Nama), bukan dari nilai yang diketik ulang per format",
+      "catatan": "daftar nama tamu nyata TIDAK diisi pada uji coba (tidak ada nilai karangan)"
+    }
+  },
+  "ucapan_doa": {
+    "teks": "Merupakan suatu kehormatan dan kebahagiaan bagi kami apabila Bapak/Ibu/Saudara/i berkenan hadir untuk memberikan doa restu.",
+    "buku_tamu_publik": {
+      "aktif": true,
+      "mode_uji": "penyimpanan sementara di perangkat tamu (localStorage) — ditandai jelas di layar sebagai mode uji coba",
+      "mekanisme_produksi": "belum ditetapkan — butuh keputusan dokumen 10 (TERBUKA, dokumen 09 bagian 11 butir 2)"
+    }
+  },
+  "rsvp": {
+    "batas_waktu": "2026-12-05",
+    "kontak": null,
+    "alasan_kontak": "tidak diisi — kontak client belum ada pada uji coba; tidak boleh diisi nilai karangan (03 bagian 4 butir 2). Namun form RSVP + rekap tetap wajib ada (02 bagian 9 butir 8)"
+  },
+  "teks_wa_sebar": {
+    "aktif": true,
+    "catatan": "dihasilkan dari rekaman ini (bukan diketik manual) — teks contoh ada di web/index.html dan dapat disalin dari tombol salin"
+  },
+  "penutup": {
+    "teks": "Merupakan suatu kebahagiaan bagi kami apabila Bapak/Ibu/Saudara/i berkenan hadir dan memberikan doa restu.",
+    "credit": "Lee-Studio"
+  },
+  "dress_code": "Batik atau pakaian rapi bernuansa netral",
+  "amplop_digital": null,
+  "amplop_alasan_kosong": "tidak diaktifkan pada uji coba (putusan E3, 21 Sep 2026): rekening pemilik belum ada dan nomor rekening nyata tidak boleh ditaruh di repo. Menguji dua hal sekaligus — (a) aturan 'data kosong -> bagian tidak dirender', (b) jalur uji dengan penanda ?uji=amplop yang memakai nomor yang JELAS fiktif.",
+  "galeri": null,
+  "galeri_alasan_kosong": "tidak diisi — uji coba tanpa foto (sesuai 02 bagian 6: 'tanpa foto = sah -> desain ornament-driven'). Foto nyata akan lewat gerbang G3 (dokumen 06); pada uji coba ini tidak ada aset raster sama sekali",
+  "musik": null,
+  "musik_alasan_kosong": "tidak diaktifkan — belum ada berkas audio berlisensi jelas (aturan lisensi L1 bagian 10: provenance wajib). Fitur ini opsional (02 bagian 5)",
+  "countdown": { "aktif": true, "target": "2026-12-12T08:00:00+07:00", "catatan": "target default = mulai acara inti (02 bagian 5)" },
+  "streaming": null,
+  "hashtag": null,
+  "qr_checkin": false,
+  "info_tamu": null,
+  "format_tambahan": [],
+  "format_tambahan_catatan": "kosong = tidak ada video/cetak/story WA (dokumen 07/08 ditunda). Format yang dijanjikan pada G2: web + flyer statis (dokumen 05 bagian 3)",
+  "catatan_keluarga": null,
+  "publikasi": {
+    "url_pratinjau_b3": "server pratinjau sesi (b3) — alamat nyata dicatat di uji-b3.md",
+    "url_rencana_fase_1": "lee-studio.pages.dev/rina-dimas-1226",
+    "catatan_versi": "v1 — 2026-09-21 (UTC), uji coba b3",
+    "path_stabil": "slug rina-dimas-1226 tidak boleh berubah (dokumen 09 bagian 3)"
+  }
+}

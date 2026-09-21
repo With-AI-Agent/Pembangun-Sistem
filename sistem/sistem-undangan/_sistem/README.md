@@ -45,6 +45,18 @@ kerusakan — docstring alatnya sudah mengantisipasi (*"Cakupan ini wajib diperl
 2. pembaruan `SYSTEM_MANIFEST.md` (field **Tahap** dan **Versi**),
 3. pembaruan `STATUS.md`.
 
+## Gerbang kedua: per unit produksi (`validate_unit.py`)
+
+Sejak uji coba pertama (b3, 21 Sep 2026) ada **dua** pemeriksa, bukan satu:
+
+| Alat | Menjawab | Kapan dijalankan |
+|---|---|---|
+| `_sistem/validate_system.py` | apakah *sistemnya* utuh (dokumen, kerangka, manifest, warisan) | setiap commit sistem |
+| `_sistem/validate_unit.py` | apakah *satu undangan* layak jalan (gerbang data `03` bagian 7, bukti per aset `06` bagian 8, field deterministik unit) | sebelum tiap undangan diserahkan / di-deploy |
+
+`validate_unit.py` **tanpa argumen** memeriksa semua unit di `_produksi-aktif/`; dengan argumen path,
+satu unit saja. Tanpa unit sama sekali alat ini lulus dengan catatan — populasi kosong bukan kelulusan.
+
 ## Batasan yang dinyatakan jujur (W-07), jangan disembunyikan
 
 Beberapa prompt di folder ini menyuruh agent membaca **riset yang tersimpan di area internal master**
