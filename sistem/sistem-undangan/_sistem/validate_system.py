@@ -44,16 +44,20 @@ BANNER_KERANGKA = "STATUS: KERANGKA — BELUM ADA ISI"
 # (dokumen generator — dua tingkat aset + gerbang G3 fail-closed; angka dikutip dari 00 bagian
 # 4.3-4.5, keputusan pemilik atas paket C1-C6: pembagian kerja aset, definisi fotografis, nasib
 # aset ditolak, cetak uji + CMYK ditunda, sumber ornament vektor, penegakan G3).
+# (ROADMAP b2, Discovery 11 - amplop digital) 2026-09-21: 11_AMPLOP_DIGITAL.md pindah ke DOC_ISI
+# (template biasa - ruang lingkup & kunci Level-0, kapan tampil/tidak, aturan satu-sumber,
+# etika per jenis acara, aturan teknis kode fungsional QRIS + cetak uji, penegakan titik
+# verifikasi rekening G2/G5, batas janji, serah terima, yang ditunda, yang wajib diukur di b3).
 # Daftar ini WAJIB menyusut lagi setiap pengisian dokumen berikutnya.
 DOC_KERANGKA = [
     "07_SPESIFIKASI_CETAK_PREPRESS.md", "08_PIPELINE_VIDEO.md", "09_PANDUAN_PUBLISH_DAN_SERAH_TERIMA.md",
-    "10_ARSITEKTUR_WEBSITE_INDUK.md", "11_AMPLOP_DIGITAL.md",
+    "10_ARSITEKTUR_WEBSITE_INDUK.md",
 ]
 
 # (T-69) dokumen yang sudah terisi + bagian isi wajibnya (anti-"isi yang kosong/kurang tanpa tercatat").
 DOC_ISI = ["01_IDENTITAS_PEMILIK.md", "02_PROFIL_JENIS_ACARA.md", "03_TEMPLATE_DATA_ACARA.md",
            "04_TEMPLATE_BRIEF_UNDANGAN.md", "05_DISCOVERY_DESAIN_PROMPT.md",
-           "06_SPESIFIKASI_ASET_DAN_RESOLUSI.md"]
+           "06_SPESIFIKASI_ASET_DAN_RESOLUSI.md", "11_AMPLOP_DIGITAL.md"]
 ISI_WAJIB: dict[str, list[str]] = {
     "01_IDENTITAS_PEMILIK.md": [
         "Merek / Nama", "Font Default", "Palet Default", "Gaya Ornament", "Nada Bahasa",
@@ -90,6 +94,14 @@ ISI_WAJIB: dict[str, list[str]] = {
         "Langkah 0", "Dua Tingkat Aset", "Fotografis", "Tiga Hasil", "Aset Ditolak",
         "Cetak Uji", "Ornamen", "Penegakan G3", "Sesudah Tayang", "Angka & Sumbernya",
         "Log Keputusan",
+    ],
+    # (ROADMAP b2, Discovery 11) amplop digital - bagian yang wajib ada:
+    # kunci Level-0, kapan tampil/tidak, satu-sumber, etika per acara, aturan teknis,
+    # titik verifikasi rekening G2/G5, batas janji, serah terima, yang ditunda, uji b3.
+    "11_AMPLOP_DIGITAL.md": [
+        "Tidak Ditawar Ulang", "Kapan Amplop Muncul", "Satu-Sumber", "Etika per Jenis Acara",
+        "Aturan Teknis Minimum", "Titik Verifikasi Rekening", "Batas Janji", "Serah Terima",
+        "Belum Ada / Ditunda", "Uji Coba Nyata Pertama", "Log Keputusan",
     ],
 }
 
