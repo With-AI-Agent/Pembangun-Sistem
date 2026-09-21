@@ -36,16 +36,34 @@ BANNER_KERANGKA = "STATUS: KERANGKA — BELUM ADA ISI"
 # (ROADMAP b1) 2026-09-20: 03_TEMPLATE_DATA_ACARA.md + 04_TEMPLATE_BRIEF_UNDANGAN.md pindah ke
 # DOC_ISI (diisi sebagai template biasa, roadmap b1 — penurunan dari field L2 pernikahan; tanpa
 # keputusan baru pemilik).
+# (ROADMAP b2, Discovery 05) 2026-09-21: 05_DISCOVERY_DESAIN_PROMPT.md pindah ke DOC_ISI (diisi
+# sebagai dokumen generator — prompt client-facing Tahap 3 + batas janji; keputusan pemilik atas
+# paket B1-B6: menu arah desain, batas format fase portofolio, lead time, moderasi & data ucapan,
+# penyelesaian konflik urutan dokumen 09 vs 10).
+# (ROADMAP b2, Discovery 06) 2026-09-21: 06_SPESIFIKASI_ASET_DAN_RESOLUSI.md pindah ke DOC_ISI
+# (dokumen generator — dua tingkat aset + gerbang G3 fail-closed; angka dikutip dari 00 bagian
+# 4.3-4.5, keputusan pemilik atas paket C1-C6: pembagian kerja aset, definisi fotografis, nasib
+# aset ditolak, cetak uji + CMYK ditunda, sumber ornament vektor, penegakan G3).
+# (ROADMAP b2, prompt Discovery 09 - publish & serah terima) 2026-09-21: 09 pindah ke DOC_ISI
+# (dokumen gerbang G5 kategori BESAR - keputusan pemilik paket D1-D6: hosting fase 1 di akun
+# studio, skema path permanen, naik fase tanpa mematikan tautan, belum ada CMS di fase 1, masa
+# aktif & nasib data, biaya/plafon + jalur darurat; bagian yang butuh dokumen 10 dinyatakan
+# terbuka sesuai putusan B6).
+# (ROADMAP b2, Discovery 11 - amplop digital) 2026-09-21: 11_AMPLOP_DIGITAL.md pindah ke DOC_ISI
+# (template biasa - ruang lingkup & kunci Level-0, kapan tampil/tidak, aturan satu-sumber,
+# etika per jenis acara, aturan teknis kode fungsional QRIS + cetak uji, penegakan titik
+# verifikasi rekening G2/G5, batas janji, serah terima, yang ditunda, yang wajib diukur di b3).
 # Daftar ini WAJIB menyusut lagi setiap pengisian dokumen berikutnya.
 DOC_KERANGKA = [
-    "05_DISCOVERY_DESAIN_PROMPT.md", "06_SPESIFIKASI_ASET_DAN_RESOLUSI.md",
-    "07_SPESIFIKASI_CETAK_PREPRESS.md", "08_PIPELINE_VIDEO.md", "09_PANDUAN_PUBLISH_DAN_SERAH_TERIMA.md",
-    "10_ARSITEKTUR_WEBSITE_INDUK.md", "11_AMPLOP_DIGITAL.md",
+    "07_SPESIFIKASI_CETAK_PREPRESS.md", "08_PIPELINE_VIDEO.md",
+    "10_ARSITEKTUR_WEBSITE_INDUK.md",
 ]
 
 # (T-69) dokumen yang sudah terisi + bagian isi wajibnya (anti-"isi yang kosong/kurang tanpa tercatat").
 DOC_ISI = ["01_IDENTITAS_PEMILIK.md", "02_PROFIL_JENIS_ACARA.md", "03_TEMPLATE_DATA_ACARA.md",
-           "04_TEMPLATE_BRIEF_UNDANGAN.md"]
+           "04_TEMPLATE_BRIEF_UNDANGAN.md", "05_DISCOVERY_DESAIN_PROMPT.md",
+           "06_SPESIFIKASI_ASET_DAN_RESOLUSI.md", "09_PANDUAN_PUBLISH_DAN_SERAH_TERIMA.md",
+           "11_AMPLOP_DIGITAL.md"]
 ISI_WAJIB: dict[str, list[str]] = {
     "01_IDENTITAS_PEMILIK.md": [
         "Merek / Nama", "Font Default", "Palet Default", "Gaya Ornament", "Nada Bahasa",
@@ -66,6 +84,41 @@ ISI_WAJIB: dict[str, list[str]] = {
         "Posisi Brief dalam Siklus", "Identitas dan Paket", "Permintaan Client",
         "Anggaran dan Tenggat", "Batasan", "Data Acara", "Gerbang yang Dilewati",
         "Log Keputusan",
+    ],
+    # (ROADMAP b2, Discovery 05) prompt client-facing Tahap 3 — bagian yang wajib ada:
+    # batas janji, menu arah, batas format, janji waktu/revisi/masa aktif, aturan ucapan & RSVP,
+    # prompt siap-tempel, jalur hasil -> G2.
+    "05_DISCOVERY_DESAIN_PROMPT.md": [
+        "Batas Janji", "Menu Arah Desain", "Format yang Boleh Dijanjikan",
+        "Waktu, Revisi, dan Masa Aktif", "Ucapan & RSVP", "Prompt Siap-Tempel",
+        "Hasil Tahap 3", "Log Keputusan",
+    ],
+    # (ROADMAP b2, Discovery 06) dua tingkat aset + gerbang G3 — bagian yang wajib ada:
+    # Langkah 0, dua tingkat, definisi fotografis, tiga hasil, aset ditolak, cetak uji,
+    # sumber ornament, penegakan G3, perubahan sesudah tayang, angka & sumbernya.
+    "06_SPESIFIKASI_ASET_DAN_RESOLUSI.md": [
+        "Langkah 0", "Dua Tingkat Aset", "Fotografis", "Tiga Hasil", "Aset Ditolak",
+        "Cetak Uji", "Ornamen", "Penegakan G3", "Sesudah Tayang", "Angka & Sumbernya",
+        "Log Keputusan",
+    ],
+    # (ROADMAP b2, prompt Discovery 09) publish & serah terima (G5, BESAR) - bagian wajib:
+    # istilah awam, keputusan terkunci D1-D6, skema path permanen, langkah terbit + daftar
+    # periksa, naik fase tanpa mematikan tautan, serah terima 5 item + daftar periksa,
+    # perubahan sesudah tayang, masa aktif & data, pemulihan, biaya/plafon, bagian terbuka
+    # (butuh dokumen 10), tabel angka & sumbernya.
+    "09_PANDUAN_PUBLISH_DAN_SERAH_TERIMA.md": [
+        "Cara Membaca", "Keputusan yang Sudah Dikunci", "Skema Path Permanen", "Terbit (Tahap 6)",
+        "Naik Fase Domain", "Serah Terima (Tahap 7)", "Perubahan Sesudah Tayang",
+        "Masa Aktif & Nasib Data", "Pemulihan (Rencana Darurat)", "Biaya & Plafon",
+        "Yang Belum / Dinyatakan TERBUKA", "Angka & Sumbernya", "Log Keputusan",
+    ],
+    # (ROADMAP b2, Discovery 11) amplop digital - bagian yang wajib ada:
+    # kunci Level-0, kapan tampil/tidak, satu-sumber, etika per acara, aturan teknis,
+    # titik verifikasi rekening G2/G5, batas janji, serah terima, yang ditunda, uji b3.
+    "11_AMPLOP_DIGITAL.md": [
+        "Tidak Ditawar Ulang", "Kapan Amplop Muncul", "Satu-Sumber", "Etika per Jenis Acara",
+        "Aturan Teknis Minimum", "Titik Verifikasi Rekening", "Batas Janji", "Serah Terima",
+        "Belum Ada / Ditunda", "Uji Coba Nyata Pertama", "Log Keputusan",
     ],
 }
 

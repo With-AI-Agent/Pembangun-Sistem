@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Monogram vektor: huruf tetap TEKS dari font (Langkah 0 dokumen 06 bagian 1) — bukan gambar huruf.
+     Dipakai di flyer & (opsional) halaman web. Tidak ada aset raster. -->
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 120 120" width="120" height="120" role="img" aria-label="Monogram R dan D">
+  <circle cx="60" cy="60" r="46" fill="none" stroke="#B08D57" stroke-width="1"/>
+  <text x="60" y="72" text-anchor="middle" font-family="'Playfair Display', ui-serif, Georgia, serif" font-size="40" fill="#2B2B2B">R<tspan fill="#B08D57"> &amp; </tspan>D</text>
+</svg>

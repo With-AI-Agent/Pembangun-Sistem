@@ -1,0 +1,174 @@
+/* Undangan — unit uji coba rina-dimas-1226
+   Model: Modern minimalis (02 bagian 6) · Palet L1: ivory / abu gelap / aksen emas
+   Disiplin L1: maks 2 font · maks 3 warna · whitespace lega
+   Warna (hanya tiga):
+     --latar  #FAF7F2  (ivory, bidang utama)
+     --teks   #2B2B2B  (abu sangat gelap, isi)
+     --aksen  #B08D57  (emas tua, garis & judul kecil saja)
+*/
+
+:root {
+  --latar: #FAF7F2;
+  --teks: #2B2B2B;
+  --aksen: #B08D57;
+  --lebar: 34rem;
+  --jarak: 4.5rem;
+  --font-judul: "Playfair Display", ui-serif, Georgia, serif;
+  --font-isi: "Montserrat", system-ui, "Segoe UI", Roboto, sans-serif;
+}
+
+* { box-sizing: border-box; }
+
+html { -webkit-text-size-adjust: 100%; }
+
+body {
+  margin: 0;
+  background: var(--latar);
+  color: var(--teks);
+  font-family: var(--font-isi);
+  font-weight: 300;
+  line-height: 1.75;
+  font-size: 1rem;
+}
+
+.pita-uji {
+  background: #92700f;
+  color: #fff;
+  font-size: 0.78rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  text-align: center;
+  padding: 0.55rem 1rem;
+}
+
+.undangan {
+  max-width: var(--lebar);
+  margin: 0 auto;
+  padding: 2.5rem 1.25rem 3rem;
+}
+
+section {
+  padding: 1.75rem 0;
+  border-top: 1px solid rgba(176, 141, 87, 0.35);
+  text-align: center;
+}
+section:first-child { border-top: 0; }
+
+/* garis aksen tipis (ornament vektor — bukan motif ramai) */
+.garis {
+  width: 4rem;
+  height: 0.75rem;
+  margin: 0 auto 1.25rem;
+  display: block;
+}
+
+h1, h2, h3 {
+  font-family: var(--font-judul);
+  font-weight: 600;
+  line-height: 1.3;
+  margin: 0 0 0.5rem;
+}
+h1 { font-size: clamp(1.75rem, 8vw, 2.75rem); letter-spacing: 0.01em; }
+h2 { font-size: clamp(1.15rem, 4.5vw, 1.5rem); font-weight: 400; }
+h3 { font-size: 1rem; letter-spacing: 0.16em; text-transform: uppercase; color: var(--aksen); font-family: var(--font-isi); font-weight: 500; }
+
+p { margin: 0 0 0.75rem; }
+.kecil { font-size: 0.85rem; opacity: 0.8; }
+.lebih-kecil { font-size: 0.78rem; opacity: 0.75; }
+
+.pembuka-teks { font-style: italic; opacity: 0.9; }
+
+.sapaan { font-size: 0.95rem; }
+.sapaan-nama { font-family: var(--font-judul); font-size: 1.15rem; }
+
+.pasangan { display: grid; gap: 1.5rem; margin: 1rem 0 0.5rem; }
+.pasangan .orang { font-family: var(--font-judul); font-size: 1.35rem; }
+.pasangan .dan { color: var(--aksen); font-size: 1.1rem; }
+
+.daftar-ortu, .daftar-mengundang { list-style: none; padding: 0; margin: 0.5rem 0 0; font-size: 0.9rem; }
+.daftar-mengundang li { margin-bottom: 0.25rem; }
+
+.kartu-acara {
+  border: 1px solid rgba(176, 141, 87, 0.45);
+  border-radius: 0.5rem;
+  padding: 1.25rem 1rem;
+  margin-bottom: 1rem;
+  background: rgba(255, 255, 255, 0.45);
+}
+.kartu-acara h3 { margin-bottom: 0.35rem; }
+.kartu-acara .tanggal { font-family: var(--font-judul); font-size: 1.15rem; }
+.kartu-acara .jam { font-size: 0.95rem; }
+.kartu-acara .tempat { font-size: 0.95rem; margin-top: 0.5rem; }
+.kartu-acara .zona { color: var(--aksen); font-size: 0.85rem; letter-spacing: 0.06em; }
+
+a.peta, button.tombol {
+  display: inline-block;
+  margin-top: 0.75rem;
+  padding: 0.5rem 1.1rem;
+  border: 1px solid var(--aksen);
+  border-radius: 999px;
+  background: transparent;
+  color: var(--aksen);
+  font-family: var(--font-isi);
+  font-size: 0.82rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  text-decoration: none;
+  cursor: pointer;
+}
+a.peta:hover, button.tombol:hover { background: rgba(176, 141, 87, 0.12); }
+button.tombol[disabled] { opacity: 0.5; cursor: default; }
+
+.hitung-mundur { display: flex; gap: 0.75rem; justify-content: center; margin-top: 0.75rem; }
+.hitung-mundur div { min-width: 3.6rem; }
+.hitung-mundur .angka { font-family: var(--font-judul); font-size: 1.55rem; display: block; }
+.hitung-mundur .label { font-size: 0.7rem; letter-spacing: 0.1em; text-transform: uppercase; opacity: 0.75; }
+
+.daftar-susunan { list-style: none; padding: 0; margin: 0; text-align: left; max-width: 22rem; margin-inline: auto; }
+.daftar-susunan li { display: flex; gap: 0.85rem; padding: 0.35rem 0; border-bottom: 1px dashed rgba(176, 141, 87, 0.3); }
+.daftar-susunan .waktu { color: var(--aksen); min-width: 3.2rem; font-variant-numeric: tabular-nums; }
+
+form { display: grid; gap: 0.6rem; text-align: left; max-width: 22rem; margin: 0.5rem auto 0; }
+label { font-size: 0.82rem; letter-spacing: 0.04em; }
+input, select, textarea {
+  font-family: var(--font-isi);
+  font-size: 0.95rem;
+  padding: 0.55rem 0.7rem;
+  border: 1px solid rgba(43, 43, 43, 0.25);
+  border-radius: 0.35rem;
+  background: #fff;
+  color: var(--teks);
+  width: 100%;
+}
+textarea { min-height: 5rem; resize: vertical; }
+
+.daftar-ucapan { list-style: none; padding: 0; margin: 1rem 0 0; text-align: left; font-size: 0.9rem; }
+.daftar-ucapan li { padding: 0.5rem 0; border-bottom: 1px solid rgba(176, 141, 87, 0.25); }
+.daftar-ucapan .dari { font-weight: 500; }
+.daftar-ucapan .kapan { font-size: 0.75rem; opacity: 0.7; }
+
+.catatan-mode {
+  margin-top: 0.75rem;
+  padding: 0.6rem 0.75rem;
+  border-left: 3px solid var(--aksen);
+  background: rgba(176, 141, 87, 0.08);
+  font-size: 0.8rem;
+  text-align: left;
+}
+
+.amplop-nomor {
+  font-variant-numeric: tabular-nums;
+  font-size: 1.05rem;
+  letter-spacing: 0.06em;
+  margin: 0.25rem 0;
+}
+
+.kaki { border-top: 1px solid rgba(176, 141, 87, 0.35); padding: 1.5rem 1.25rem 2.5rem; text-align: center; }
+.credit { font-family: var(--font-judul); font-size: 0.9rem; letter-spacing: 0.12em; opacity: 0.75; margin: 0; }
+/* aturan L1 bagian 1: credit kecil, tipis, memakai warna undangan sendiri, <=10-15% bidang */
+
+.sembunyi { display: none; }
+
+@media (prefers-reduced-motion: reduce) {
+  * { animation: none !important; transition: none !important; }
+}

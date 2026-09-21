@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Flyer dibuat otomatis oleh web/buat-flyer.py dari web/data-acara.json — JANGAN diedit tangan.
+     Unit uji coba b3 · model Modern minimalis · teks dari font, ornament vektor (Langkah 0). -->
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 600 900" width="600" height="900" role="img" aria-label="Undangan pernikahan Rina &amp; Dimas (uji coba)">
+  <rect width="600" height="900" fill="#FAF7F2"/>
+  <rect x="14" y="14" width="572" height="872" fill="none" stroke="#B08D57" stroke-width="1"/>
+  <text x="300.0" y="66" font-family="'Montserrat', system-ui, 'Segoe UI', sans-serif" font-size="11" fill="#B08D57" text-anchor="middle" letter-spacing="2">UNDANGAN PERNIKAHAN — UJI COBA</text>
+  <g stroke="#B08D57" stroke-width="1" fill="none">
+    <line x1="229.0" y1="92" x2="288.0" y2="92"/>
+    <line x1="312.0" y1="92" x2="371.0" y2="92"/>
+    <path d="M300.0 87 L306.0 92 L300.0 97 L294.0 92 Z"/>
+  </g>
+  <text x="300.0" y="168" font-family="'Playfair Display', ui-serif, Georgia, serif" font-size="26" fill="#2B2B2B" text-anchor="middle">Rina Ayu Lestari, S.Pd.</text>
+  <text x="300.0" y="202" font-family="'Playfair Display', ui-serif, Georgia, serif" font-size="20" fill="#B08D57" text-anchor="middle">&amp;</text>
+  <text x="300.0" y="238" font-family="'Playfair Display', ui-serif, Georgia, serif" font-size="26" fill="#2B2B2B" text-anchor="middle">Dimas Bayu Pratama, S.T.</text>
+  <g stroke="#B08D57" stroke-width="1" fill="none">
+    <line x1="229.0" y1="274" x2="288.0" y2="274"/>
+    <line x1="312.0" y1="274" x2="371.0" y2="274"/>
+    <path d="M300.0 269 L306.0 274 L300.0 279 L294.0 274 Z"/>
+  </g>
+  <text x="300.0" y="340" font-family="'Playfair Display', ui-serif, Georgia, serif" font-size="18" fill="#B08D57" text-anchor="middle">Akad Nikah</text>
+  <text x="300.0" y="367" font-family="'Playfair Display', ui-serif, Georgia, serif" font-size="18" fill="#2B2B2B" text-anchor="middle">Sabtu, 12 Desember 2026</text>
+  <text x="300.0" y="392" font-family="'Montserrat', system-ui, 'Segoe UI', sans-serif" font-size="15" fill="#2B2B2B" text-anchor="middle">08:00–10:00 WIB</text>
+  <text x="300.0" y="419" font-family="'Montserrat', system-ui, 'Segoe UI', sans-serif" font-size="15" fill="#2B2B2B" text-anchor="middle">Masjid Al-Ikhlas Cendana (nama fiktif)</text>
+  <text x="300.0" y="444" font-family="'Montserrat', system-ui, 'Segoe UI', sans-serif" font-size="13" fill="#2B2B2B" text-anchor="middle">Jl. Cendana No. 12, Bandung, Jawa Barat (alamat fiktif)</text>
+  <text x="300.0" y="490" font-family="'Playfair Display', ui-serif, Georgia, serif" font-size="18" fill="#B08D57" text-anchor="middle">Resepsi Pernikahan</text>
+  <text x="300.0" y="517" font-family="'Playfair Display', ui-serif, Georgia, serif" font-size="18" fill="#2B2B2B" text-anchor="middle">Sabtu, 12 Desember 2026</text>
+  <text x="300.0" y="542" font-family="'Montserrat', system-ui, 'Segoe UI', sans-serif" font-size="15" fill="#2B2B2B" text-anchor="middle">11:00–14:00 WIB</text>
+  <text x="300.0" y="569" font-family="'Montserrat', system-ui, 'Segoe UI', sans-serif" font-size="15" fill="#2B2B2B" text-anchor="middle">Gedung Serbaguna Cendana (nama fiktif)</text>
+  <text x="300.0" y="594" font-family="'Montserrat', system-ui, 'Segoe UI', sans-serif" font-size="13" fill="#2B2B2B" text-anchor="middle">Jl. Cendana No. 20, Bandung, Jawa Barat (alamat fiktif)</text>
+  <text x="300.0" y="826" font-family="'Montserrat', system-ui, 'Segoe UI', sans-serif" font-size="12" fill="#2B2B2B" text-anchor="middle">Merupakan suatu kebahagiaan bagi kami apabila Bapak/Ibu/Saudara/i berkenan hadir dan memberikan </text>
+  <text x="300.0" y="860" font-family="'Playfair Display', ui-serif, Georgia, serif" font-size="12" fill="#B08D57" text-anchor="middle" letter-spacing="3">Lee-Studio</text>
+</svg>
