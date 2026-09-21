@@ -36,16 +36,20 @@ BANNER_KERANGKA = "STATUS: KERANGKA — BELUM ADA ISI"
 # (ROADMAP b1) 2026-09-20: 03_TEMPLATE_DATA_ACARA.md + 04_TEMPLATE_BRIEF_UNDANGAN.md pindah ke
 # DOC_ISI (diisi sebagai template biasa, roadmap b1 — penurunan dari field L2 pernikahan; tanpa
 # keputusan baru pemilik).
+# (ROADMAP b2, Discovery 05) 2026-09-21: 05_DISCOVERY_DESAIN_PROMPT.md pindah ke DOC_ISI (diisi
+# sebagai dokumen generator — prompt client-facing Tahap 3 + batas janji; keputusan pemilik atas
+# paket B1-B6: menu arah desain, batas format fase portofolio, lead time, moderasi & data ucapan,
+# penyelesaian konflik urutan dokumen 09 vs 10).
 # Daftar ini WAJIB menyusut lagi setiap pengisian dokumen berikutnya.
 DOC_KERANGKA = [
-    "05_DISCOVERY_DESAIN_PROMPT.md", "06_SPESIFIKASI_ASET_DAN_RESOLUSI.md",
+    "06_SPESIFIKASI_ASET_DAN_RESOLUSI.md",
     "07_SPESIFIKASI_CETAK_PREPRESS.md", "08_PIPELINE_VIDEO.md", "09_PANDUAN_PUBLISH_DAN_SERAH_TERIMA.md",
     "10_ARSITEKTUR_WEBSITE_INDUK.md", "11_AMPLOP_DIGITAL.md",
 ]
 
 # (T-69) dokumen yang sudah terisi + bagian isi wajibnya (anti-"isi yang kosong/kurang tanpa tercatat").
 DOC_ISI = ["01_IDENTITAS_PEMILIK.md", "02_PROFIL_JENIS_ACARA.md", "03_TEMPLATE_DATA_ACARA.md",
-           "04_TEMPLATE_BRIEF_UNDANGAN.md"]
+           "04_TEMPLATE_BRIEF_UNDANGAN.md", "05_DISCOVERY_DESAIN_PROMPT.md"]
 ISI_WAJIB: dict[str, list[str]] = {
     "01_IDENTITAS_PEMILIK.md": [
         "Merek / Nama", "Font Default", "Palet Default", "Gaya Ornament", "Nada Bahasa",
@@ -66,6 +70,14 @@ ISI_WAJIB: dict[str, list[str]] = {
         "Posisi Brief dalam Siklus", "Identitas dan Paket", "Permintaan Client",
         "Anggaran dan Tenggat", "Batasan", "Data Acara", "Gerbang yang Dilewati",
         "Log Keputusan",
+    ],
+    # (ROADMAP b2, Discovery 05) prompt client-facing Tahap 3 — bagian yang wajib ada:
+    # batas janji, menu arah, batas format, janji waktu/revisi/masa aktif, aturan ucapan & RSVP,
+    # prompt siap-tempel, jalur hasil -> G2.
+    "05_DISCOVERY_DESAIN_PROMPT.md": [
+        "Batas Janji", "Menu Arah Desain", "Format yang Boleh Dijanjikan",
+        "Waktu, Revisi, dan Masa Aktif", "Ucapan & RSVP", "Prompt Siap-Tempel",
+        "Hasil Tahap 3", "Log Keputusan",
     ],
 }
 
